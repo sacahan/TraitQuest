@@ -99,7 +99,7 @@ TraitQuest/
 │   ├── spec.md                          # 系統需求說明書
 │   ├── contract.md                      # API 用戶端協議
 │   └── assets.md                        # 遊戲資產庫 (ID 對照表)
-├── traitquest/                          # 核心介面與原型 (原 demo)
+├── demo/                                # 核心介面與原型 (原 demo)
 │   ├── index/                           # 首頁
 │   ├── enneagram/                       # 九型人格介紹
 │   ├── mbti/                            # MBTI 介紹
