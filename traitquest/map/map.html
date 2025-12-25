@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-Hant">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>TraitQuest - 世界地圖</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#11D452",
+            "primary-hover": "#0fb847",
+            "background-light": "#f6f8f6",
+            "background-dark": "#102216",
+            "surface": "#1a3323",
+            "guild-border": "#23482f",
+            "map-water": "#0d1b2a",
+            "map-land": "#1a3323",
+            "region-mbti": "#22d3ee",
+            "region-big5": "#10b981",
+            "region-disc": "#dc2626",
+            "region-enneagram": "#a78bfa",
+            "region-gallup": "#fbbf24",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "Noto Sans TC", "sans-serif"],
+            "body": ["Noto Sans TC", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+          boxShadow: {
+            'glow': '0 0 20px rgba(17, 212, 82, 0.4)',
+            'glow-hover': '0 0 30px rgba(17, 212, 82, 0.6)',
+            'glow-mbti': '0 0 25px rgba(34, 211, 238, 0.5)',
+            'glow-big5': '0 0 25px rgba(16, 185, 129, 0.5)',
+            'glow-disc': '0 0 25px rgba(220, 38, 38, 0.5)',
+            'glow-ennea': '0 0 25px rgba(167, 139, 250, 0.5)',
+            'glow-gallup': '0 0 25px rgba(251, 191, 36, 0.5)',
+          },
+          animation: {
+            'float': 'float 3s ease-in-out infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'spin-slow': 'spin 10s linear infinite',
+            'spin-reverse': 'spin-reverse 12s linear infinite',
+            'fog-flow': 'float 6s ease-in-out infinite alternate',
+            'twinkle': 'twinkle 4s ease-in-out infinite',
+            "breathing-glow": "breathing-glow 3s ease-in-out infinite",
+          },
+          keyframes: {
+            "breathing-glow": {
+              "0%, 100%": { boxShadow: "0 0 5px rgba(17, 212, 82, 0.3)" },
+              "50%": { boxShadow: "0 0 20px rgba(17, 212, 82, 0.7)" }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            'spin-reverse': {
+              'from': { transform: 'rotate(360deg)' },
+              'to': { transform: 'rotate(0deg)' },
+            },
+            twinkle: {
+              '0%, 100%': { opacity: 0.2, transform: 'scale(1)' },
+              '50%': { opacity: 0.8, transform: 'scale(1.2)' },
+            }
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #112217;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #23482f;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #13ec5b;
+    }
+
+    .magic-bg {
+      background-image:
+        radial-gradient(circle at 15% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 20%, rgba(167, 139, 250, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(220, 38, 38, 0.05) 0%, transparent 45%),
+        url("https://lh3.googleusercontent.com/aida-public/AB6AXuAskoVlrSvlm0UJiofdOGCILkqEkm9CRTcX1KJ3MQH4x5z75QN9otgjF8acHumAHFXIT0bdlGUSjZjhN4O77SPeme7q6laVzYpKCxFTyFOJErQ5zSnVCwEHaR9INHh1HxMm1NvXw86Xgm1GylVWi1p784WMspiIUPAJaCmtAOlMIvjXYQkvbg2Mdkmw9025LB_S5kaKK6_3DN04eqsKMV1GhH1pdogXtpL8idBzZcsN8TM8GDcq6WhQ5DVgILYSjEKoRT0s5Qqqjx5U");
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.5) contrast(1.2) saturate(1.2);
+    }
+
+    .star-overlay {
+      background-image:
+        radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)),
+        radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 50px 160px, #ffffff, rgba(0, 0, 0, 0)),
+        radial-gradient(1.5px 1.5px at 90px 40px, #ffffff, rgba(0, 0, 0, 0));
+      background-size: 200px 200px;
+      background-repeat: repeat;
+      opacity: 0.15;
+      animation: twinkle 5s infinite alternate;
+    }
+
+    .banner-shape {
+      clip-path: polygon(100% 0, 100% 100%, 50% 85%, 0 100%, 0 0);
+    }
+  </style>
+</head>
+
+<body class="bg-background-dark text-white font-display overflow-x-hidden min-h-screen flex flex-col">
+  <header
+    class="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
+    <div class="w-full px-4 md:px-10 py-3">
+      <div class="flex items-center justify-between w-full">
+        <div
+          class="flex items-center gap-2 text-slate-900 dark:text-white cursor-pointer mr-auto hover:opacity-80 transition-opacity"
+          onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+          <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+          <h2 class="text-xl font-display font-black leading-tight tracking-tight">TraitQuest</h2>
+        </div>
+        <div class="flex items-center gap-4 md:gap-8 ml-auto">
+          <nav class="hidden md:flex items-center gap-6">
+            <a class="text-sm font-bold text-primary relative group" href="#">
+              世界地圖
+              <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-primary transition-all duration-300"></span>
+            </a>
+            <a class="text-sm font-bold hover:text-primary transition-colors relative group"
+              href="../bulletinboard_公會佈告欄頁/bulletinboard_公會佈告欄頁.html">
+              公會大廳
+              <span
+                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            </a>
+          </nav>
+          <button
+            class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary hover:bg-primary-hover text-[#112217] text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 active:brightness-125 animate-breathing-glow shadow-[0_0_15px_rgba(17,212,82,0.3)] hover:shadow-[0_0_25px_rgba(17,212,82,0.6)]">
+            <span class="truncate">Google 登入</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="flex-grow flex flex-col relative overflow-hidden">
+    <div class="absolute inset-0 z-0 bg-[#0a160e]">
+      <div class="absolute inset-0 opacity-60 bg-cover bg-center magic-bg"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-[#112217] via-transparent to-[#112217]"></div>
+      <div class="absolute inset-0 star-overlay pointer-events-none"></div>
+      <div
+        class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC4wMDUiIG51bU9jdGF2ZXM9IjUiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbikiIG9wYWNpdHk9IjAuMyIvPjwvc3ZnPg==')] opacity-20 mix-blend-overlay animate-fog-flow">
+      </div>
+    </div>
+    <div class="relative z-10 w-full px-6 py-6 pointer-events-none">
+      <div class="max-w-[1400px] mx-auto flex justify-between items-start">
+        <div
+          class="bg-[#112217]/80 backdrop-blur-md border border-[#23482f] p-6 rounded-2xl max-w-md pointer-events-auto shadow-xl ring-1 ring-white/5">
+          <h1 class="text-3xl font-black text-white mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">public</span>
+            心靈大陸地圖
+          </h1>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            歡迎來到 TraitQuest 的世界。請點擊地圖上的據點，進入不同的人格試煉。每個區域都由強大的守護者鎮守。
+          </p>
+          <div class="mt-4 flex gap-2">
+            <div class="flex items-center gap-1 text-xs text-gray-500">
+              <span class="w-3 h-3 rounded-full bg-primary animate-pulse"></span>
+              當前區域: 安全區
+            </div>
+          </div>
+        </div>
+        <div class="hidden lg:flex flex-col gap-3 pointer-events-auto">
+          <div
+            class="bg-[#112217]/80 backdrop-blur-md border border-[#23482f] p-4 rounded-xl shadow-xl ring-1 ring-white/5">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">區域圖例</h3>
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3 text-sm text-gray-300">
+                <span
+                  class="material-symbols-outlined text-region-mbti text-lg drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]">account_balance</span>
+                <span>MBTI 聖殿 <span class="text-region-mbti text-xs ml-1">(已征服)</span></span>
+              </li>
+              <li class="flex items-center gap-3 text-sm text-gray-300">
+                <span
+                  class="material-symbols-outlined text-region-big5 text-lg drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]">water_drop</span>
+                <span>Big Five 屬性之泉</span>
+              </li>
+              <li class="flex items-center gap-3 text-sm text-gray-300">
+                <span
+                  class="material-symbols-outlined text-region-enneagram text-lg drop-shadow-[0_0_5px_rgba(167,139,250,0.8)]">temple_hindu</span>
+                <span>九型人格塔</span>
+              </li>
+              <li class="flex items-center gap-3 text-sm text-gray-300">
+                <span
+                  class="material-symbols-outlined text-region-disc text-lg drop-shadow-[0_0_5px_rgba(220,38,38,0.8)]">swords</span>
+                <span>DISC 戰鬥叢林</span>
+              </li>
+              <li class="flex items-center gap-3 text-sm text-gray-500">
+                <span class="material-symbols-outlined text-gray-500 text-lg">diamond</span>
+                <span>蓋洛普祭壇 <span class="text-gray-600 text-xs ml-1">(未解鎖)</span></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="relative w-full h-[600px] lg:h-[800px] max-w-[1400px] mx-auto mt-4 lg:mt-0 perspective-1000">
+      <div class="absolute top-[15%] left-[10%] md:left-[18%] group z-20">
+        <div class="relative flex flex-col items-center cursor-pointer">
+          <div
+            class="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-80 bg-gradient-to-t from-region-mbti/30 via-region-mbti/5 to-transparent blur-xl pointer-events-none z-0 animate-pulse-slow">
+          </div>
+          <div class="absolute -top-12 -right-8 z-30 animate-float origin-bottom">
+            <div class="relative transform rotate-6 group-hover:rotate-0 transition-transform duration-300">
+              <div class="w-1 h-16 bg-gray-400 absolute left-0 top-0 rounded shadow-md"></div>
+              <div
+                class="w-10 h-7 bg-region-mbti absolute left-0.5 top-1 banner-shape shadow-[0_0_15px_rgba(34,211,238,0.6)] flex items-center justify-center border-t border-r border-white/30">
+                <span class="material-symbols-outlined text-[#112217] text-[18px] font-black">check</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="w-20 h-20 bg-[#122023] border-2 border-region-mbti rounded-2xl flex items-center justify-center shadow-glow-mbti transform group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 z-20 relative ring-2 ring-region-mbti/30 ring-offset-4 ring-offset-[#112217]">
+            <span
+              class="material-symbols-outlined text-region-mbti text-4xl drop-shadow-[0_0_5px_rgba(34,211,238,1)]">account_balance</span>
+            <div class="absolute -bottom-2 rotate-45 w-4 h-4 bg-region-mbti z-0 shadow-[0_0_10px_rgba(34,211,238,0.8)]">
+            </div>
+          </div>
+          <div
+            class="mt-8 bg-black/60 backdrop-blur px-4 py-1.5 rounded-full border border-region-mbti/50 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+            <span class="text-region-mbti font-extrabold text-sm tracking-widest flex items-center gap-2">
+              MBTI 聖殿
+              <span
+                class="text-[10px] bg-region-mbti/20 px-1.5 py-0.5 rounded text-region-mbti border border-region-mbti/30">已征服</span>
+            </span>
+          </div>
+          <div
+            class="absolute top-0 left-full ml-6 w-72 bg-[#122023] border border-region-mbti/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0 z-50 pointer-events-none group-hover:pointer-events-auto ring-1 ring-white/10">
+            <div class="relative h-32 w-full mb-3 rounded-lg overflow-hidden border border-white/10">
+              <div class="absolute inset-0 bg-cover bg-center"
+                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_H_FnQrEU4a1xs5rsL9kablIllbLgpEjhuS6bO9jTAP7ImrnFVqv8NtA1zzhDo4LK3SvUyAur5QGFnqesfreyeBACBaYbYbZuPjHZZpc23PDm-swnZzIhz6G-CN5QwiCbTYg3evbELEUZdwcbZRJb9EIOaDZr_9x5h8I1jUfBJXIYyfM1W_6K-9ozWQD-QYsyTanNfBDTrIB62q7_Ny-u7VaBqW0gGxjvMQAnWAVdl63XgUvVrmmHWwkjvTnXgtmw07vc__99Pn_-");'>
+              </div>
+              <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <div
+                  class="bg-region-mbti text-[#112217] px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                  <span class="material-symbols-outlined text-sm">emoji_events</span>
+                  已完成
+                </div>
+              </div>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">16型人格聖殿</h3>
+            <p class="text-xs text-gray-300 mb-3">你已成功探索思維維度。點擊查看你的詳細報告。</p>
+            <button
+              class="w-full py-2 bg-region-mbti hover:bg-cyan-300 text-[#112217] rounded-lg text-xs font-bold transition-colors shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+              查看報告
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="absolute top-[20%] right-[10%] md:right-[22%] group z-20">
+        <div class="relative flex flex-col items-center cursor-pointer">
+          <div
+            class="absolute inset-[-20px] rounded-full border border-region-big5/30 animate-[ping_3s_ease-in-out_infinite] z-0">
+          </div>
+          <div
+            class="w-18 h-18 p-4 bg-[#0f251b] border-2 border-region-big5 rounded-full flex items-center justify-center shadow-glow-big5 transform group-hover:scale-110 group-hover:-translate-y-2 transition-all duration-300 z-20 relative animate-float ring-2 ring-region-big5/20 ring-offset-2 ring-offset-[#112217]">
+            <span
+              class="material-symbols-outlined text-region-big5 text-4xl drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]">water_drop</span>
+          </div>
+          <div
+            class="mt-4 bg-black/60 backdrop-blur px-3 py-1 rounded-full border border-region-big5/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+            <span class="text-region-big5 font-bold text-sm tracking-widest">Big Five 屬性之泉</span>
+          </div>
+          <div
+            class="absolute top-0 right-full mr-4 w-72 bg-[#0f251b] border border-region-big5/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-x-[10px] group-hover:translate-x-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+            <div class="relative h-32 w-full mb-3 rounded-lg overflow-hidden border border-white/10">
+              <div class="absolute inset-0 bg-cover bg-center"
+                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCTDuzgwlyj-15QISA3f5qvVkYFqRbxtHS3Q2oC8EqnzLL4D7TLg0SRLyXBdsmvG2WpWwcevDYTtvmuatQwgjP5EtgLZCSynwVdxpPGFKHiUj9b7aO4h-yzvzMrOmCzYGhuVgJ4lsb4zYd_0tf2Qs-7jFdBiTuqDy5KHZXFHasvVyBbpguLu3By5W3GX6OclBriiwj5r5xjBfcThaPkZ5hpGOFP75HALhP5O3SBpu5HUG74l4YzFn7JSeRmAkq--NnXNHtvgPj0HZff");'>
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[#0f251b] to-transparent"></div>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">五大屬性之泉</h3>
+            <p class="text-xs text-gray-300 mb-3">在生命之泉中照見真實自我，繪製你的個性雷達。</p>
+            <button
+              class="w-full py-2 bg-region-big5/20 hover:bg-region-big5 text-region-big5 hover:text-[#112217] border border-region-big5/50 rounded-lg text-xs font-bold transition-colors">
+              前往泉源
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="absolute top-[48%] left-[50%] -translate-x-1/2 group z-30">
+        <div class="relative flex flex-col items-center cursor-pointer">
+          <div class="absolute inset-[-10px] border border-region-enneagram/20 rounded-full animate-spin-slow z-0">
+          </div>
+          <div
+            class="w-28 h-28 bg-[#181126] border-2 border-region-enneagram rounded-full flex items-center justify-center shadow-glow-ennea transform group-hover:scale-105 transition-all duration-300 z-20 relative ring-4 ring-region-enneagram/10">
+            <span
+              class="material-symbols-outlined text-region-enneagram text-6xl drop-shadow-[0_0_10px_rgba(167,139,250,0.8)]">temple_hindu</span>
+          </div>
+          <div
+            class="mt-5 bg-black/60 backdrop-blur px-5 py-2 rounded-full border border-region-enneagram/40 shadow-[0_0_15px_rgba(167,139,250,0.3)]">
+            <span class="text-region-enneagram font-extrabold text-base tracking-[0.2em] uppercase">九型人格塔</span>
+          </div>
+          <div
+            class="absolute top-full mt-6 w-80 bg-[#181126] border border-region-enneagram/50 rounded-xl p-5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[-10px] group-hover:translate-y-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+            <div class="relative h-40 w-full mb-4 rounded-lg overflow-hidden border border-white/10">
+              <div class="absolute inset-0 bg-cover bg-center"
+                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCvDrGplJ_AYJAwPYdCWvaC6BCgCR7EYyisfQFNpbwjc6sdNsoekUjfOittUYvwaD7BgwnilDHtrmHXuMuKJydJEiKQunC9XjwuGgkHdBKJwx2NxMsN6KT8F3U3Lrpjp-8bTCRnPrtJio_U54JJDhCIVOw6qm1f-gGIr_46G23KuNUYY9or0DW82evmIJ9ol--_B-Phy50cLvvaU8AFXeDRlMPFPP6q09--J8cEWsXHcuxmFDh6fMdqGQOygoTtRnPtdj8fdnhI5ogC");'>
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[#181126] to-transparent"></div>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-1">九型冥想塔</h3>
+            <p class="text-sm text-gray-300 mb-4">攀登高塔，深入靈魂深處，覺醒你的心靈原力。</p>
+            <button
+              class="w-full py-3 bg-region-enneagram/20 hover:bg-region-enneagram text-region-enneagram hover:text-[#181126] border border-region-enneagram/50 rounded-lg text-sm font-bold transition-colors">
+              進入高塔
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="absolute bottom-[18%] left-[15%] md:left-[22%] group z-20">
+        <div class="relative flex flex-col items-center cursor-pointer">
+          <div class="absolute inset-[-5px] bg-region-disc/10 rotate-45 z-0 animate-pulse-slow"></div>
+          <div
+            class="w-20 h-20 bg-[#2b1010] border-2 border-region-disc rounded-lg transform rotate-3 flex items-center justify-center shadow-glow-disc hover:rotate-0 transition-all duration-300 z-20 relative ring-1 ring-region-disc/40">
+            <span
+              class="material-symbols-outlined text-region-disc text-4xl transform -rotate-3 group-hover:rotate-0 transition-transform duration-300 drop-shadow-[0_0_5px_rgba(220,38,38,0.8)]">swords</span>
+            <div class="absolute top-1 right-1 w-2 h-2 bg-region-disc rounded-full opacity-50"></div>
+            <div class="absolute bottom-1 left-1 w-2 h-2 bg-region-disc rounded-full opacity-50"></div>
+          </div>
+          <div
+            class="mt-8 bg-black/60 backdrop-blur px-3 py-1 rounded-full border border-region-disc/30 shadow-[0_0_10px_rgba(220,38,38,0.2)]">
+            <span class="text-region-disc font-bold text-sm tracking-widest">DISC 戰鬥叢林</span>
+          </div>
+          <div
+            class="absolute bottom-full mb-4 w-72 bg-[#2b1010] border border-region-disc/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[10px] group-hover:translate-y-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+            <div class="relative h-32 w-full mb-3 rounded-lg overflow-hidden border border-white/10">
+              <div class="absolute inset-0 bg-cover bg-center"
+                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAGGrBLD3DE7c97ZGQ0cPPeL7daiJaXGqy6evNvRv-JUBHgx6qaCMT-se1lcr--hJEnINbp_LOG5BaAR7F0HsqHHkruPuto7ShshwLaPurcSmgAkI2yAfeIytD--wTRTOZ9w_7DUJg3sTVrJYlAVsfEdoGxRzYlR2OyywzX4QuSsATcl23bKuEy3kVwVWCqcvEGq29jTjs8bBNJ9sHcinzTsdOrx-MSQK_rBHjGqyHPRcd1xXRwpG8UGgUFivb5C3oNSVp9CAU97IE4");'>
+              </div>
+              <div class="absolute inset-0 bg-gradient-to-t from-[#2b1010] to-transparent"></div>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-1">行為風格戰場</h3>
+            <p class="text-xs text-gray-300 mb-3">在叢林法則中，D.I.S.C 四大流派，誰主沉浮？</p>
+            <button
+              class="w-full py-2 bg-region-disc/20 hover:bg-region-disc text-region-disc hover:text-white border border-region-disc/50 rounded-lg text-xs font-bold transition-colors">
+              加入戰鬥
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="absolute bottom-[22%] right-[15%] md:right-[18%] group z-20">
+        <div class="relative flex flex-col items-center cursor-not-allowed">
+          <div class="absolute inset-[-40px] rounded-full bg-amber-900/40 blur-2xl z-0 pointer-events-none"></div>
+          <div
+            class="absolute inset-[-30px] rounded-full border border-dashed border-region-gallup/40 animate-spin-slow z-0 pointer-events-none">
+          </div>
+          <div
+            class="absolute inset-[-12px] rounded-full border border-region-gallup/30 animate-spin-reverse z-0 pointer-events-none">
+            <div
+              class="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-region-gallup rounded-full shadow-[0_0_8px_#fbbf24]">
+            </div>
+          </div>
+          <div
+            class="w-18 h-18 bg-[#291e0a] border-2 border-gray-600 rounded-tr-3xl rounded-bl-3xl flex items-center justify-center grayscale opacity-80 z-10 relative ring-2 ring-gray-700">
+            <span class="material-symbols-outlined text-region-gallup text-4xl opacity-50">diamond</span>
+          </div>
+          <div class="absolute inset-0 z-20 flex items-center justify-center">
+            <span
+              class="material-symbols-outlined text-white text-3xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] opacity-90 animate-bounce">lock</span>
+          </div>
+          <div
+            class="mt-4 bg-gray-900/80 backdrop-blur px-3 py-1 rounded-full border border-gray-600/50 z-20 shadow-lg">
+            <span class="text-region-gallup/70 font-bold text-sm tracking-widest flex items-center gap-1">
+              蓋洛普祭壇
+              <span class="text-[10px] bg-gray-800 px-1 rounded border border-gray-700 text-gray-500">未解鎖</span>
+            </span>
+          </div>
+          <div
+            class="absolute bottom-full right-full mb-4 w-64 bg-[#1a3323] border border-gray-600 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[10px] group-hover:translate-y-0 z-50 pointer-events-auto">
+            <div class="flex items-center gap-2 mb-2 text-gray-400 border-b border-gray-700 pb-2">
+              <span class="material-symbols-outlined text-lg">lock</span>
+              <span class="text-xs font-bold uppercase">區域未解鎖</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-300 mb-1">遠古優勢祭壇</h3>
+            <p class="text-xs text-gray-500 mb-3">此聖地被魔法屏障封鎖。需先完成「DISC 戰鬥叢林」方可進入。</p>
+            <div class="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+              <div class="w-[40%] h-full bg-region-gallup"></div>
+            </div>
+            <p class="text-[10px] text-right text-gray-500 mt-1">解鎖進度: 40%</p>
+          </div>
+        </div>
+      </div>
+      <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter height="140%" id="glowLine" width="140%" x="-20%" y="-20%">
+            <feGaussianBlur result="blur" stdDeviation="2"></feGaussianBlur>
+            <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
+          </filter>
+        </defs>
+        <path d="M 22% 20% Q 50% 10% 82% 25%" fill="none" filter="url(#glowLine)" stroke="#22d3ee"
+          stroke-dasharray="5,5" stroke-width="2"></path>
+        <path d="M 18% 22% Q 25% 60% 22% 78%" fill="none" filter="url(#glowLine)" stroke="#22d3ee"
+          stroke-dasharray="5,5" stroke-width="2"></path>
+        <path d="M 82% 25% Q 75% 50% 50% 48%" fill="none" filter="url(#glowLine)" stroke="#10b981"
+          stroke-dasharray="5,5" stroke-width="2"></path>
+        <path d="M 50% 48% Q 50% 70% 82% 78%" fill="none" filter="url(#glowLine)" stroke="#a78bfa"
+          stroke-dasharray="5,5" stroke-width="2"></path>
+        <path d="M 22% 78% L 50% 48%" fill="none" filter="url(#glowLine)" stroke="#dc2626" stroke-dasharray="5,5"
+          stroke-width="2"></path>
+      </svg>
+    </div>
+    <div class="lg:hidden px-4 pb-10 flex flex-col gap-4 relative z-10">
+      <h3 class="text-center text-gray-400 text-sm mb-2">或選擇列表模式瀏覽</h3>
+      <div
+        class="bg-[#1a3323] border border-region-mbti p-4 rounded-xl flex items-center gap-4 relative overflow-hidden shadow-[0_0_15px_rgba(34,211,238,0.1)]">
+        <div
+          class="absolute top-0 right-0 bg-region-mbti text-[#112217] text-[10px] font-bold px-2 py-0.5 rounded-bl-lg">
+          已征服</div>
+        <div class="w-16 h-16 rounded-lg bg-cover bg-center shrink-0 border-2 border-region-mbti"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_H_FnQrEU4a1xs5rsL9kablIllbLgpEjhuS6bO9jTAP7ImrnFVqv8NtA1zzhDo4LK3SvUyAur5QGFnqesfreyeBACBaYbYbZuPjHZZpc23PDm-swnZzIhz6G-CN5QwiCbTYg3evbELEUZdwcbZRJb9EIOaDZr_9x5h8I1jUfBJXIYyfM1W_6K-9ozWQD-QYsyTanNfBDTrIB62q7_Ny-u7VaBqW0gGxjvMQAnWAVdl63XgUvVrmmHWwkjvTnXgtmw07vc__99Pn_-");'>
+        </div>
+        <div>
+          <h4 class="text-region-mbti font-bold flex items-center gap-2">MBTI 聖殿 <span
+              class="material-symbols-outlined text-sm">flag</span></h4>
+          <p class="text-xs text-gray-300">16型人格迷宮，尋找本命職業。</p>
+        </div>
+        <button class="ml-auto bg-region-mbti text-[#112217] p-2 rounded-full font-bold shadow-glow-mbti"><span
+            class="material-symbols-outlined">visibility</span></button>
+      </div>
+      <div
+        class="bg-[#1a3323] border border-region-enneagram/50 p-4 rounded-xl flex items-center gap-4 shadow-[0_0_15px_rgba(167,139,250,0.1)]">
+        <div class="w-16 h-16 rounded-lg bg-cover bg-center shrink-0 border border-region-enneagram/30"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCvDrGplJ_AYJAwPYdCWvaC6BCgCR7EYyisfQFNpbwjc6sdNsoekUjfOittUYvwaD7BgwnilDHtrmHXuMuKJydJEiKQunC9XjwuGgkHdBKJwx2NxMsN6KT8F3U3Lrpjp-8bTCRnPrtJio_U54JJDhCIVOw6qm1f-gGIr_46G23KuNUYY9or0DW82evmIJ9ol--_B-Phy50cLvvaU8AFXeDRlMPFPP6q09--J8cEWsXHcuxmFDh6fMdqGQOygoTtRnPtdj8fdnhI5ogC");'>
+        </div>
+        <div>
+          <h4 class="text-region-enneagram font-bold">九型人格塔</h4>
+          <p class="text-xs text-gray-300">覺醒心靈原力，直面核心恐懼。</p>
+        </div>
+        <button
+          class="ml-auto bg-region-enneagram/20 p-2 rounded-full text-region-enneagram border border-region-enneagram/30"><span
+            class="material-symbols-outlined">arrow_forward</span></button>
+      </div>
+      <div
+        class="bg-[#1a3323] border border-region-big5/50 p-4 rounded-xl flex items-center gap-4 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+        <div class="w-16 h-16 rounded-lg bg-cover bg-center shrink-0 border border-region-big5/30"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCTDuzgwlyj-15QISA3f5qvVkYFqRbxtHS3Q2oC8EqnzLL4D7TLg0SRLyXBdsmvG2WpWwcevDYTtvmuatQwgjP5EtgLZCSynwVdxpPGFKHiUj9b7aO4h-yzvzMrOmCzYGhuVgJ4lsb4zYd_0tf2Qs-7jFdBiTuqDy5KHZXFHasvVyBbpguLu3By5W3GX6OclBriiwj5r5xjBfcThaPkZ5hpGOFP75HALhP5O3SBpu5HUG74l4YzFn7JSeRmAkq--NnXNHtvgPj0HZff");'>
+        </div>
+        <div>
+          <h4 class="text-region-big5 font-bold">Big Five 屬性之泉</h4>
+          <p class="text-xs text-gray-300">繪製你的個性雷達圖。</p>
+        </div>
+        <button class="ml-auto bg-region-big5/20 p-2 rounded-full text-region-big5 border border-region-big5/30"><span
+            class="material-symbols-outlined">arrow_forward</span></button>
+      </div>
+      <div
+        class="bg-[#1a3323] border border-region-disc/50 p-4 rounded-xl flex items-center gap-4 shadow-[0_0_15px_rgba(220,38,38,0.1)]">
+        <div class="w-16 h-16 rounded-lg bg-cover bg-center shrink-0 border border-region-disc/30"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAGGrBLD3DE7c97ZGQ0cPPeL7daiJaXGqy6evNvRv-JUBHgx6qaCMT-se1lcr--hJEnINbp_LOG5BaAR7F0HsqHHkruPuto7ShshwLaPurcSmgAkI2yAfeIytD--wTRTOZ9w_7DUJg3sTVrJYlAVsfEdoGxRzYlR2OyywzX4QuSsATcl23bKuEy3kVwVWCqcvEGq29jTjs8bBNJ9sHcinzTsdOrx-MSQK_rBHjGqyHPRcd1xXRwpG8UGgUFivb5C3oNSVp9CAU97IE4");'>
+        </div>
+        <div>
+          <h4 class="text-region-disc font-bold">DISC 戰鬥叢林</h4>
+          <p class="text-xs text-gray-300">行為風格競技場。</p>
+        </div>
+        <button class="ml-auto bg-region-disc/20 p-2 rounded-full text-region-disc border border-region-disc/30"><span
+            class="material-symbols-outlined">arrow_forward</span></button>
+      </div>
+      <div class="bg-[#101a14] border border-gray-700 p-4 rounded-xl flex items-center gap-4 opacity-70">
+        <div
+          class="w-16 h-16 rounded-lg bg-cover bg-center shrink-0 grayscale opacity-50 relative border border-gray-600"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAYvrLaw1ItcvLuNKFm5pEnXIAzwcBxaspLHb2D5rP90Pih7MMR_Wk5hw6A1-f9eLq_LRmGIhrqzujHdBo3nkXNJ_LjeXyAxYvn4WTIdto9bMjPtRkvj8KeqIhK-cPj6xw3jIYdzcM2jN1ql4juJl0ARxdd_-po5XFU5yFj9eVMWpFjTkQ6swrmHossK5gVv-bB8wsNQykcM2zYVHnlTzr98K8szl7fYTxfrpYGSekRWLNcqfvmua0yR2EGRsUv81uwXKqs-6GMSgBG");'>
+          <div class="absolute inset-0 flex items-center justify-center bg-black/50">
+            <span class="material-symbols-outlined text-white">lock</span>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-gray-500 font-bold">蓋洛普祭壇</h4>
+          <p class="text-xs text-gray-600">需完成前置任務解鎖。</p>
+        </div>
+        <button class="ml-auto bg-gray-800 p-2 rounded-full text-gray-500 cursor-not-allowed"><span
+            class="material-symbols-outlined">lock</span></button>
+      </div>
+    </div>
+  </main>
+  <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12 mt-12 relative z-50">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+      <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
+        onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+        <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+        <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">隱私政策</a>
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">服務條款</a>
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">關於我們</a>
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">聯絡公會</a>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
+      <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by Psychological Wisdom.
+      </p>
+    </div>
+  </footer>
+</body>
+
+</html>

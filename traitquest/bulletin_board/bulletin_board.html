@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-Hant">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>TraitQuest - 冒險者公會</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#11D452",
+            "primary-hover": "#0fb847",
+            "background-light": "#f6f8f6",
+            "background-dark": "#102216",
+            "surface": "#1a3323",
+            "guild-panel": "#1a3323",
+            "guild-border": "#23482f",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "Noto Sans TC", "sans-serif"],
+            "body": ["Noto Sans TC", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+          keyframes: {
+            "breathing-glow": {
+              "0%, 100%": { boxShadow: "0 0 5px rgba(17, 212, 82, 0.3)" },
+              "50%": { boxShadow: "0 0 20px rgba(17, 212, 82, 0.7)" }
+            },
+            "breathing-white": {
+              "0%, 100%": { boxShadow: "0 0 5px rgba(255, 255, 255, 0.2)" },
+              "50%": { boxShadow: "0 0 20px rgba(255, 255, 255, 0.6)" }
+            },
+            "float": {
+              "0%": { transform: "translateY(0px)" },
+              "50%": { transform: "translateY(-5px)" },
+              "100%": { transform: "translateY(0px)" }
+            }
+          },
+          animation: {
+            "breathing-glow": "breathing-glow 3s ease-in-out infinite",
+            "breathing-white": "breathing-white 3s ease-in-out infinite",
+            "float": "float 6s ease-in-out infinite",
+            "pulse-glow": "breathing-glow 3s ease-in-out infinite"
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .guild-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .guild-scroll::-webkit-scrollbar-track {
+      background: #102216;
+      border-radius: 4px;
+    }
+
+    .guild-scroll::-webkit-scrollbar-thumb {
+      background: #23482f;
+      border-radius: 4px;
+    }
+
+    .guild-scroll::-webkit-scrollbar-thumb:hover {
+      background: #13ec5b;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden min-h-screen flex flex-col selection:bg-primary/30">
+  <header
+    class="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
+    <div class="w-full px-4 md:px-10 py-3">
+      <div class="flex items-center justify-between w-full">
+        <div
+          class="flex items-center gap-2 text-slate-900 dark:text-white cursor-pointer mr-auto hover:opacity-80 transition-opacity"
+          onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+          <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+          <h2 class="text-xl font-display font-black leading-tight tracking-tight">TraitQuest</h2>
+        </div>
+        <div class="flex items-center gap-4 md:gap-8 ml-auto">
+          <nav class="hidden md:flex items-center gap-6">
+            <a class="text-sm font-bold hover:text-primary transition-colors relative group" href="#">
+              世界地圖
+              <span
+                class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            </a>
+            <a class="text-sm font-bold text-primary relative group"
+              href="../bulletinboard_公會佈告欄頁/bulletinboard_公會佈告欄頁.html">
+              公會大廳
+              <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-primary transition-all duration-300"></span>
+            </a>
+          </nav>
+          <button
+            class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary hover:bg-primary-hover text-[#112217] text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 active:brightness-125 animate-breathing-glow shadow-[0_0_15px_rgba(17,212,82,0.3)] hover:shadow-[0_0_25px_rgba(17,212,82,0.6)]">
+            <span class="truncate">Google 登入</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="flex-grow flex flex-col items-center w-full px-4 md:px-10 py-6 gap-6">
+    <div class="w-full max-w-[1200px] flex flex-col gap-6">
+      <div class="w-full rounded-2xl overflow-hidden relative shadow-2xl border border-guild-border group">
+        <div
+          class="h-[320px] w-full bg-cover bg-center transition-transform duration-[2s] ease-in-out group-hover:scale-105"
+          style='background-image: linear-gradient(to bottom, rgba(16,34,22,0.3), rgba(16,34,22,0.95)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAskoVlrSvlm0UJiofdOGCILkqEkm9CRTcX1KJ3MQH4x5z75QN9otgjF8acHumAHFXIT0bdlGUSjZjhN4O77SPeme7q6laVzYpKCxFTyFOJErQ5zSnVCwEHaR9INHh1HxMm1NvXw86Xgm1GylVWi1p784WMspiIUPAJaCmtAOlMIvjXYQkvbg2Mdkmw9025LB_S5kaKK6_3DN04eqsKMV1GhH1pdogXtpL8idBzZcsN8TM8GDcq6WhQ5DVgILYSjEKoRT0s5Qqqjx5U");'>
+        </div>
+        <div class="absolute inset-0 p-6 md:p-10 flex flex-col justify-between z-10 pointer-events-none">
+          <div class="flex justify-between items-start pointer-events-auto">
+            <div
+              class="bg-[#102216]/80 backdrop-blur-md px-4 py-2 rounded-lg border border-primary/20 flex items-center gap-2 hover:border-primary/60 transition-colors shadow-lg">
+              <span class="material-symbols-outlined text-primary animate-pulse">apartment</span>
+              <span class="text-white font-bold tracking-wider text-sm">公會大廳 Guild Hall</span>
+            </div>
+            <div
+              class="hidden md:flex bg-black/40 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-mono text-primary border border-primary/20 shadow-[0_0_10px_rgba(19,236,91,0.1)]">
+              Server Time: 12:45 PM
+            </div>
+          </div>
+          <div class="flex items-end gap-4 md:gap-6 mt-auto pointer-events-auto">
+            <div
+              class="relative w-20 h-20 md:w-24 md:h-24 shrink-0 rounded-2xl overflow-hidden border-2 border-primary shadow-[0_0_20px_rgba(19,236,91,0.3)] bg-[#1a3323] hover:scale-105 transition-transform duration-300">
+              <img alt="Guild Receptionist" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTDuzgwlyj-15QISA3f5qvVkYFqRbxtHS3Q2oC8EqnzLL4D7TLg0SRLyXBdsmvG2WpWwcevDYTtvmuatQwgjP5EtgLZCSynwVdxpPGFKHiUj9b7aO4h-yzvzMrOmCzYGhuVgJ4lsb4zYd_0tf2Qs-7jFdBiTuqDy5KHZXFHasvVyBbpguLu3By5W3GX6OclBriiwj5r5xjBfcThaPkZ5hpGOFP75HALhP5O3SBpu5HUG74l4YzFn7JSeRmAkq--NnXNHtvgPj0HZff" />
+              <div
+                class="absolute bottom-0 w-full bg-black/60 text-[10px] text-center text-white py-0.5 backdrop-blur-sm">
+                接待員 莉莉</div>
+            </div>
+            <div
+              class="bg-white text-slate-900 p-4 md:p-5 rounded-2xl rounded-bl-none shadow-xl max-w-xl animate-float relative hover:shadow-2xl transition-shadow">
+              <div class="absolute -left-2 bottom-6 w-4 h-4 bg-white transform rotate-45"></div>
+              <h3 class="font-bold text-sm text-primary mb-1 uppercase tracking-wider flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm animate-bounce">campaign</span> 公會快訊
+              </h3>
+              <p class="font-medium text-sm md:text-base leading-relaxed">
+                "歡迎來到冒險者公會，旅行者！新的<span class="text-red-600 font-bold">「九型人格」</span>副本已經開放了。完成試煉可以獲得傳說級稱號喔！"
+              </p>
+              <div class="mt-3 flex gap-2">
+                <button
+                  class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 hover:shadow-md text-xs font-bold rounded-md transition-all text-slate-700 active:scale-95">查看詳情</button>
+                <button
+                  class="px-4 py-1.5 bg-primary text-[#102216] hover:bg-[#20ff6b] hover:shadow-[0_0_15px_rgba(19,236,91,0.5)] text-xs font-bold rounded-md transition-all active:scale-95 animate-pulse-glow">接受任務</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div class="lg:col-span-4 flex flex-col gap-6">
+          <div
+            class="bg-guild-panel border border-guild-border rounded-2xl p-1 shadow-lg relative overflow-hidden group hover:border-primary/40 transition-colors">
+            <div
+              class="h-2 w-full bg-gradient-to-r from-primary/50 via-primary to-primary/50 rounded-t-xl opacity-70 group-hover:opacity-100 transition-opacity">
+            </div>
+            <div class="p-5">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-white font-bold text-lg flex items-center gap-2">
+                  <span
+                    class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">badge</span>
+                  冒險者執照
+                </h3>
+                <span
+                  class="text-xs text-gray-400 font-mono bg-[#102216] px-2 py-1 rounded border border-guild-border">ID:
+                  #GUEST-001</span>
+              </div>
+              <div class="flex items-center gap-4 mb-5">
+                <div
+                  class="w-16 h-16 rounded-full bg-[#102216] border-2 border-gray-600 flex items-center justify-center text-gray-500 overflow-hidden shrink-0 group-hover:border-primary transition-colors duration-500 shadow-inner">
+                  <span
+                    class="material-symbols-outlined text-4xl group-hover:text-primary transition-colors">account_circle</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="text-white font-bold text-xl truncate">未知旅人</div>
+                  <div class="text-primary text-sm font-medium">初心者 Novice</div>
+                </div>
+              </div>
+              <div class="mb-6">
+                <div class="flex justify-between items-end mb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-white font-bold font-display text-sm">Lv.1</span>
+                  </div>
+                  <span class="text-[10px] text-primary font-mono font-bold">100 / 1000 XP</span>
+                </div>
+                <div
+                  class="relative w-full h-4 bg-[#0a160e] rounded-full p-[2px] border border-guild-border shadow-inner">
+                  <div
+                    class="h-full bg-gradient-to-r from-[#13ec5b] to-[#4ade80] rounded-full w-[10%] shadow-[0_0_8px_rgba(19,236,91,0.4)] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse"></div>
+                  </div>
+                </div>
+                <div
+                  class="mt-2 flex items-center gap-2 bg-[#102216] rounded-lg p-2 border border-white/5 shadow-sm hover:border-primary/30 transition-colors cursor-help">
+                  <div
+                    class="w-7 h-7 rounded bg-gradient-to-br from-yellow-600/20 to-yellow-800/20 flex items-center justify-center shrink-0 border border-yellow-500/30">
+                    <span class="material-symbols-outlined text-[16px] text-yellow-500 animate-pulse">lock_open</span>
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-[10px] text-gray-400 uppercase font-bold tracking-wider leading-none mb-0.5">Next
+                      Reward</div>
+                    <div class="text-xs text-white font-medium">解鎖「隊伍招募」功能</div>
+                  </div>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2 mb-6">
+                <div
+                  class="bg-[#102216] p-2 rounded border border-guild-border flex items-center gap-2 hover:bg-[#152e1e] transition-colors">
+                  <span class="material-symbols-outlined text-yellow-500 text-sm">stars</span>
+                  <div>
+                    <div class="text-[10px] text-gray-400">成就點數</div>
+                    <div class="text-white font-bold text-sm">0</div>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#102216] p-2 rounded border border-guild-border flex items-center gap-2 hover:bg-[#152e1e] transition-colors">
+                  <span class="material-symbols-outlined text-blue-400 text-sm">workspace_premium</span>
+                  <div>
+                    <div class="text-[10px] text-gray-400">排名</div>
+                    <div class="text-white font-bold text-sm">---</div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="w-full py-2 bg-[#23482f] hover:bg-primary text-primary hover:text-[#102216] border border-primary/30 hover:border-transparent rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 group hover:shadow-[0_0_15px_rgba(19,236,91,0.4)] active:scale-95 active:bg-primary/90">
+                <span class="material-symbols-outlined text-sm group-hover:scale-110 transition-transform">edit</span>
+                編輯檔案
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-8 flex flex-col gap-6">
+          <div class="bg-guild-panel border border-guild-border rounded-2xl overflow-hidden shadow-xl">
+            <div class="bg-[#112217] p-4 border-b border-guild-border flex justify-between items-center">
+              <h3 class="text-white font-bold text-lg flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary animate-pulse">assignment</span>
+                委託佈告欄 (Quest Board)
+              </h3>
+              <div class="flex gap-2">
+                <span
+                  class="px-3 py-1 bg-[#23482f] text-primary text-xs font-bold rounded-full border border-primary/20 shadow-[0_0_5px_rgba(19,236,91,0.1)]">Available:
+                  3</span>
+              </div>
+            </div>
+            <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div
+                class="bg-[#102216] border border-guild-border hover:border-primary hover:shadow-[0_0_20px_rgba(19,236,91,0.15)] p-4 rounded-xl transition-all duration-300 group cursor-pointer relative hover:-translate-y-1 active:scale-[0.98] active:translate-y-0">
+                <div class="absolute top-3 right-3">
+                  <span
+                    class="material-symbols-outlined text-gray-600 group-hover:text-primary transition-colors group-hover:translate-x-1 duration-300">arrow_forward</span>
+                </div>
+                <div class="flex items-start gap-3 mb-3">
+                  <div
+                    class="p-2 bg-blue-900/30 text-blue-400 rounded-lg border border-blue-500/30 group-hover:bg-blue-900/50 group-hover:scale-110 transition-all">
+                    <span class="material-symbols-outlined">psychology</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold text-sm group-hover:text-primary transition-colors">初次試煉：MBTI</h4>
+                    <p class="text-xs text-gray-400 mt-1">完成 16型人格測試並儲存結果</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-2 pt-3 border-t border-white/5">
+                  <div class="flex items-center gap-1 text-xs text-yellow-500 font-mono">
+                    <span class="material-symbols-outlined text-[14px]">monetization_on</span>
+                    <span>500 G</span>
+                  </div>
+                  <span
+                    class="text-[10px] bg-red-900/40 text-red-300 px-2 py-0.5 rounded border border-red-500/30 shadow-sm">Main
+                    Quest</span>
+                </div>
+              </div>
+              <div
+                class="bg-[#102216] border border-guild-border hover:border-primary hover:shadow-[0_0_20px_rgba(19,236,91,0.15)] p-4 rounded-xl transition-all duration-300 group cursor-pointer relative hover:-translate-y-1 active:scale-[0.98] active:translate-y-0">
+                <div class="absolute top-3 right-3">
+                  <span
+                    class="material-symbols-outlined text-gray-600 group-hover:text-primary transition-colors group-hover:translate-x-1 duration-300">arrow_forward</span>
+                </div>
+                <div class="flex items-start gap-3 mb-3">
+                  <div
+                    class="p-2 bg-purple-900/30 text-purple-400 rounded-lg border border-purple-500/30 group-hover:bg-purple-900/50 group-hover:scale-110 transition-all">
+                    <span class="material-symbols-outlined">share</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold text-sm group-hover:text-primary transition-colors">冒險傳聞</h4>
+                    <p class="text-xs text-gray-400 mt-1">分享你的分析結果到社群媒體</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-2 pt-3 border-t border-white/5">
+                  <div class="flex items-center gap-1 text-xs text-yellow-500 font-mono">
+                    <span class="material-symbols-outlined text-[14px]">monetization_on</span>
+                    <span>100 G</span>
+                  </div>
+                  <span
+                    class="text-[10px] bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30 shadow-sm">Daily</span>
+                </div>
+              </div>
+              <div
+                class="bg-[#102216] border border-guild-border p-4 rounded-xl transition-all relative opacity-70 hover:opacity-100 group">
+                <div
+                  class="absolute inset-0 bg-[#102216]/60 backdrop-blur-[1px] flex items-center justify-center z-10 rounded-xl group-hover:bg-[#102216]/40 transition-colors">
+                  <div
+                    class="flex items-center gap-2 text-gray-400 font-bold text-sm bg-black/80 px-4 py-2 rounded-full border border-gray-700 shadow-lg group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-sm">lock</span>
+                    需等級 Lv.5
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 mb-3">
+                  <div class="p-2 bg-orange-900/30 text-orange-400 rounded-lg border border-orange-500/30">
+                    <span class="material-symbols-outlined">swords</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold text-sm">大師挑戰</h4>
+                    <p class="text-xs text-gray-400 mt-1">與其他冒險者進行性格匹配對決</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-2 pt-3 border-t border-white/5">
+                  <div class="flex items-center gap-1 text-xs text-yellow-500 font-mono">
+                    <span class="material-symbols-outlined text-[14px]">monetization_on</span>
+                    <span>1000 G</span>
+                  </div>
+                  <span
+                    class="text-[10px] bg-purple-900/40 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">Epic</span>
+                </div>
+              </div>
+              <div
+                class="bg-[#102216]/50 border border-dashed border-guild-border p-4 rounded-xl flex flex-col items-center justify-center text-gray-500 gap-2 min-h-[120px] hover:border-primary/50 hover:text-primary transition-colors cursor-wait">
+                <span class="material-symbols-outlined animate-bounce">more_horiz</span>
+                <span class="text-xs">更多任務更新中...</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-guild-panel border border-guild-border rounded-2xl overflow-hidden shadow-xl flex flex-col">
+            <div class="bg-[#112217] p-4 border-b border-guild-border flex justify-between items-center">
+              <h3 class="text-white font-bold text-lg flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">trophy</span>
+                英雄榜 (Leaderboard)
+              </h3>
+              <div class="flex gap-2">
+                <button
+                  class="text-[10px] font-bold px-2 py-1 bg-primary text-[#112217] rounded shadow-[0_0_5px_rgba(19,236,91,0.3)] hover:scale-105 transition-transform">本週</button>
+                <button
+                  class="text-[10px] font-bold px-2 py-1 bg-[#102216] text-gray-400 hover:text-white hover:bg-[#23482f] rounded transition-all">總排行</button>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-gray-400">
+                <thead class="bg-[#102216] text-xs uppercase font-bold text-gray-500">
+                  <tr>
+                    <th class="px-6 py-3">Rank</th>
+                    <th class="px-6 py-3">Adventurer</th>
+                    <th class="px-6 py-3">Class</th>
+                    <th class="px-6 py-3 text-right">Score</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-guild-border">
+                  <tr class="hover:bg-[#102216] transition-colors group cursor-default">
+                    <td class="px-6 py-4">
+                      <div
+                        class="w-8 h-8 rounded bg-yellow-500/20 text-yellow-500 border border-yellow-500/50 flex items-center justify-center font-bold font-mono shadow-[0_0_10px_rgba(234,179,8,0.2)] group-hover:scale-110 transition-transform">
+                        1</div>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-cover bg-center border border-gray-600 group-hover:border-yellow-500 transition-colors"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAGGrBLD3DE7c97ZGQ0cPPeL7daiJaXGqy6evNvRv-JUBHgx6qaCMT-se1lcr--hJEnINbp_LOG5BaAR7F0HsqHHkruPuto7ShshwLaPurcSmgAkI2yAfeIytD--wTRTOZ9w_7DUJg3sTVrJYlAVsfEdoGxRzYlR2OyywzX4QuSsATcl23bKuEy3kVwVWCqcvEGq29jTjs8bBNJ9sHcinzTsdOrx-MSQK_rBHjGqyHPRcd1xXRwpG8UGgUFivb5C3oNSVp9CAU97IE4");'>
+                      </div>
+                      <span class="group-hover:text-yellow-500 transition-colors">DragonSlayer99</span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="inline-flex items-center gap-1 rounded-full bg-red-900/30 px-2 py-1 text-xs font-medium text-red-400 border border-red-500/20 group-hover:border-red-500/50 transition-colors">
+                        Commander (ENTJ)
+                      </span>
+                    </td>
+                    <td
+                      class="px-6 py-4 text-right font-mono text-primary font-bold group-hover:text-white transition-colors">
+                      12,450</td>
+                  </tr>
+                  <tr class="hover:bg-[#102216] transition-colors group cursor-default">
+                    <td class="px-6 py-4">
+                      <div
+                        class="w-8 h-8 rounded bg-gray-400/20 text-gray-300 border border-gray-400/50 flex items-center justify-center font-bold font-mono group-hover:scale-110 transition-transform">
+                        2</div>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-cover bg-center border border-gray-600 group-hover:border-gray-400 transition-colors"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCvDrGplJ_AYJAwPYdCWvaC6BCgCR7EYyisfQFNpbwjc6sdNsoekUjfOittUYvwaD7BgwnilDHtrmHXuMuKJydJEiKQunC9XjwuGgkHdBKJwx2NxMsN6KT8F3U3Lrpjp-8bTCRnPrtJio_U54JJDhCIVOw6qm1f-gGIr_46G23KuNUYY9or0DW82evmIJ9ol--_B-Phy50cLvvaU8AFXeDRlMPFPP6q09--J8cEWsXHcuxmFDh6fMdqGQOygoTtRnPtdj8fdnhI5ogC");'>
+                      </div>
+                      <span class="group-hover:text-gray-300 transition-colors">MysticAura</span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="inline-flex items-center gap-1 rounded-full bg-blue-900/30 px-2 py-1 text-xs font-medium text-blue-400 border border-blue-500/20 group-hover:border-blue-500/50 transition-colors">
+                        Mediator (INFP)
+                      </span>
+                    </td>
+                    <td
+                      class="px-6 py-4 text-right font-mono text-primary font-bold group-hover:text-white transition-colors">
+                      10,880</td>
+                  </tr>
+                  <tr class="hover:bg-[#102216] transition-colors group cursor-default">
+                    <td class="px-6 py-4">
+                      <div
+                        class="w-8 h-8 rounded bg-orange-700/20 text-orange-600 border border-orange-700/50 flex items-center justify-center font-bold font-mono group-hover:scale-110 transition-transform">
+                        3</div>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-cover bg-center border border-gray-600 group-hover:border-orange-500 transition-colors"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_H_FnQrEU4a1xs5rsL9kablIllbLgpEjhuS6bO9jTAP7ImrnFVqv8NtA1zzhDo4LK3SvUyAur5QGFnqesfreyeBACBaYbYbZuPjHZZpc23PDm-swnZzIhz6G-CN5QwiCbTYg3evbELEUZdwcbZRJb9EIOaDZr_9x5h8I1jUfBJXIYyfM1W_6K-9ozWQD-QYsyTanNfBDTrIB62q7_Ny-u7VaBqW0gGxjvMQAnWAVdl63XgUvVrmmHWwkjvTnXgtmw07vc__99Pn_-");'>
+                      </div>
+                      <span class="group-hover:text-orange-500 transition-colors">IronShield</span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <span
+                        class="inline-flex items-center gap-1 rounded-full bg-green-900/30 px-2 py-1 text-xs font-medium text-green-400 border border-green-500/20 group-hover:border-green-500/50 transition-colors">
+                        Defender (ISFJ)
+                      </span>
+                    </td>
+                    <td
+                      class="px-6 py-4 text-right font-mono text-primary font-bold group-hover:text-white transition-colors">
+                      9,240</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="bg-[#102216] p-3 text-center border-t border-guild-border">
+              <button
+                class="text-xs text-gray-400 hover:text-white hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.5)] transition-all flex items-center justify-center gap-1 w-full py-2 active:scale-95">
+                查看完整榜單 <span class="material-symbols-outlined text-xs animate-bounce">expand_more</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12 mt-12">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+      <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
+        onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+        <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+        <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">隱私政策</a>
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">服務條款</a>
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">關於我們</a>
+        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+          href="#">聯絡公會</a>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
+      <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by Psychological Wisdom.
+      </p>
+    </div>
+  </footer>
+  <div
+    class="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent pointer-events-none z-50 animate-pulse">
+  </div>
+</body>
+
+</html>

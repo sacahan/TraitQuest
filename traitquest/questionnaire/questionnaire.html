@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-TW">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TraitQuest - 靈魂試煉</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11D452",
+                        "primary-hover": "#0fb847",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface": "#1a3323",
+                        "guild-border": "#23482f",
+                        "magic-cyan": "#00f0ff",
+                        "magic-purple": "#bd00ff",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "Noto Sans TC", "sans-serif"],
+                        "body": ["Noto Sans TC", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                    backgroundImage: {
+                        'runes-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2311D452' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+                    },
+                    keyframes: {
+                        "breathing-glow": {
+                            "0%, 100%": { boxShadow: "0 0 5px rgba(17, 212, 82, 0.3)" },
+                            "50%": { boxShadow: "0 0 20px rgba(17, 212, 82, 0.7)" }
+                        },
+                        "breathing-white": {
+                            "0%, 100%": { boxShadow: "0 0 5px rgba(255, 255, 255, 0.2)" },
+                            "50%": { boxShadow: "0 0 20px rgba(255, 255, 255, 0.6)" }
+                        }
+                    },
+                    animation: {
+                        "breathing-glow": "breathing-glow 3s ease-in-out infinite",
+                        "breathing-white": "breathing-white 3s ease-in-out infinite"
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .text-glow {
+            text-shadow: 0 0 15px rgba(11, 218, 115, 0.6);
+        }
+
+        .box-glow {
+            box-shadow: 0 0 40px rgba(11, 218, 115, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bg-obsidian-glass {
+            background: linear-gradient(145deg, rgba(20, 40, 30, 0.9) 0%, rgba(5, 26, 16, 0.95) 100%);
+        }
+
+        @keyframes crystal-breathe {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(11, 218, 115, 0.1), inset 0 0 10px rgba(0, 240, 255, 0.05);
+                border-color: rgba(11, 218, 115, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(11, 218, 115, 0.25), inset 0 0 20px rgba(0, 240, 255, 0.15);
+                border-color: rgba(11, 218, 115, 0.5);
+            }
+        }
+
+        @keyframes nebula-flow {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        .option-button {
+            background: linear-gradient(135deg, rgba(10, 20, 30, 0.4) 0%, rgba(20, 50, 40, 0.3) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: crystal-breathe 6s ease-in-out infinite;
+        }
+
+        .option-button::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            border: 1px dashed rgba(11, 218, 115, 0.2);
+            border-radius: 12px;
+            pointer-events: none;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .option-button:hover::after {
+            border-color: rgba(0, 240, 255, 0.5);
+            border-style: solid;
+            opacity: 1;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .option-button::before {
+            content: '';
+            position: absolute;
+            inset: -50%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(189, 0, 255, 0.1) 0%, transparent 20%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.2'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3Ccircle cx='80' cy='80' r='1'/%3E%3Ccircle cx='50' cy='50' r='0.5'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+            filter: blur(1px);
+            z-index: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .option-button:hover::before {
+            opacity: 0.8;
+            animation: nebula-flow 20s linear infinite;
+        }
+
+        .option-button-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .option-button:hover {
+            transform: translateY(-4px) scale(1.02);
+            animation: none;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2);
+            border-color: rgba(0, 240, 255, 0.6);
+        }
+
+        .option-button:active {
+            transform: scale(0.96);
+        }
+
+        .click-halo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(0, 240, 255, 0.4) 40%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .option-button:active .click-halo {
+            animation: halo-expand 0.6s ease-out forwards;
+        }
+
+        @keyframes halo-expand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.8;
+            }
+
+            100% {
+                width: 300px;
+                height: 300px;
+                opacity: 0;
+            }
+        }
+
+        .rune-glow {
+            text-shadow: 0 0 10px currentColor;
+        }
+    </style>
+
+
+</head>
+
+<body
+    class="bg-background-dark text-white font-body overflow-x-hidden min-h-screen relative selection:bg-primary selection:text-black">
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div
+            class="absolute top-[20%] left-[50%] -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]">
+        </div>
+        <div class="absolute top-1/4 left-10 w-64 h-64 bg-magic-cyan/10 rounded-full blur-[80px] animate-pulse"
+            style="animation-duration: 4s;"></div>
+        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-[#1a4031] rounded-full blur-[100px] opacity-60 animate-pulse"
+            style="animation-duration: 6s;"></div>
+    </div>
+    <div class="relative z-10 flex flex-col min-h-screen">
+        <header
+            class="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
+            <div class="w-full px-4 md:px-10 py-3">
+                <div class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white cursor-pointer mr-auto hover:opacity-80 transition-opacity"
+                        onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+                        <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+                        <h2 class="text-xl font-display font-black leading-tight tracking-tight">TraitQuest</h2>
+                    </div>
+                    <div class="flex items-center gap-4 md:gap-8 ml-auto">
+                        <div
+                            class="flex items-center gap-2 bg-[#0e1f18]/80 backdrop-blur-md px-4 py-2 rounded-full border border-primary/20 shadow-[0_0_15px_rgba(0,0,0,0.3)] cursor-default">
+                            <span class="material-symbols-outlined text-magic-cyan animate-pulse">eco</span>
+                            <span class="font-bold text-magic-cyan tracking-wider font-mono text-lg">04:52</span>
+                        </div>
+                        <div class="size-11 rounded-full bg-cover bg-center border-2 border-[#162e24] shadow-lg relative"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuANNrMPUrDFkpv9K1YNrERUWYqg1EXjc5wDASzVQLe6GH41WwiFblJjz_ijk-W03AS9KXyQU7cqVALwZlW4e3NOXJxA2tP41wcfgs8mwfO33ChvI1A0GfnGZxskiSvFo-HGESAc69jyjTa4k30AdEcbLwP-znzsNro91T0WVthP1wKR6A6MG13SHuna2LfjpP4ZHS4wl5T5uiWJzclt-WmaqBVTOTXiulyAYlIc7JmZJYmvRhnGqegX-H5Pq7JuA7UMeWNXEyyd532H');">
+                            <div
+                                class="absolute bottom-0 right-0 size-3 bg-primary rounded-full border-2 border-[#051a10]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="w-full max-w-3xl mx-auto px-6 mt-2 mb-6">
+            <div class="flex justify-between text-sm font-bold tracking-wide text-primary/80 mb-2 px-1">
+                <span class="uppercase text-xs tracking-widest text-white/50">Mana Charge</span>
+                <span>25%</span>
+            </div>
+            <div
+                class="h-6 w-full bg-[#08120d] rounded-full p-1 border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] relative overflow-hidden">
+                <div
+                    class="h-full bg-gradient-to-r from-green-900 via-primary to-[#4fffb0] rounded-full w-1/4 relative overflow-hidden shadow-[0_0_15px_#0bda73]">
+                    <div
+                        class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMiIvPjwvc3ZnPg==')] opacity-30">
+                    </div>
+                    <div class="absolute top-0 right-0 bottom-0 w-4 bg-white/40 blur-md"></div>
+                </div>
+            </div>
+            <div class="text-center text-xs text-primary/40 font-mono mt-2 tracking-[0.2em] uppercase">Question Sequence
+                05 / 20</div>
+        </div>
+        <main class="flex-1 flex items-center justify-center px-4 pb-12 w-full max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 w-full items-center">
+                <div
+                    class="hidden lg:flex lg:col-span-3 flex-col items-center justify-center relative animate-float z-20">
+                    <div
+                        class="relative bg-[#11251c] border border-primary/30 p-5 rounded-2xl rounded-bl-sm mb-6 shadow-2xl max-w-[260px] backdrop-blur-sm">
+                        <p class="text-white text-base font-medium leading-relaxed italic text-white/90">
+                            <span
+                                class="text-primary text-xs font-bold uppercase block mb-2 tracking-wider not-italic">Guide
+                                · Abby</span>
+                            "凝視這面心靈之鏡... 剝去表象的偽裝，那個在寂靜中凝視著你的，是怎樣的存在？"
+                        </p>
+                        <div
+                            class="absolute -bottom-2 left-6 w-4 h-4 bg-[#11251c] border-b border-l border-primary/30 transform -rotate-45">
+                        </div>
+                    </div>
+                    <div
+                        class="size-56 rounded-full border-4 border-[#162e24] shadow-[0_0_50px_rgba(11,218,115,0.2)] overflow-hidden relative group">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-magic-purple/40 to-transparent opacity-70 z-10 mix-blend-overlay">
+                        </div>
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuALB3zMDLh0ZWJoBkhmPIXtt5FlCE0IJfPQWPFiTwnBygEK5ZbnMDcraqOgpzCQx898DaMVZvnfEo4BsFbAjhq3-bBjfa2dpSJIE4fjv5kCQBjsVFo7eDTOLybHxFedkiSlrwCsyZH9Gn5GBh3UjR7KJ6a_HkdF4X4glgpPEbhx0jtkiS8v_7K-Wd6zQ5J2NVxainpwlgyEONtkYS1Z4jAy4-KieGW0eZrVP6y9efxpO3C2BBxJ8Rk4zYElecBqJJ-IppfaaVku2Zgh'); filter: hue-rotate(240deg) brightness(0.7) saturate(0.5) contrast(1.3);">
+                        </div>
+                        <div
+                            class="absolute inset-0 rounded-full border-2 border-white/10 z-20 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-9 relative flex flex-col">
+                    <div class="lg:hidden flex items-end gap-4 mb-6 animate-float px-2">
+                        <div class="size-16 shrink-0 rounded-full border-2 border-primary/50 overflow-hidden bg-cover bg-center shadow-[0_0_15px_rgba(11,218,115,0.3)]"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqU1PFkoOjT44mxHTGuZBitq6FJv2wY7Drg2xlNNP37Q0x_9Hd1UX2pHMXfz0UKqisUl6LdNg7XADGimTVFCSb7d5xAKwwGf2g3PKyFc4-UTfMW17wfSUp2eh3OoK43sk87QozOG8y-QdI7TFY9sEpFigQ8CpceQ5uBPRJInukPmv0yEUUaC4Ow-85g-MGwvylZ0Sng-8Mj0XfDWP3nAMxXNJLDKjAOAy7E9mTS3m8_zAgoB7d5nzeFEgp1bC1U8vXGCxURgKIkSqV'); filter: hue-rotate(240deg) brightness(0.7) saturate(0.5) contrast(1.3);">
+                        </div>
+                        <div
+                            class="bg-[#11251c]/90 border border-primary/30 px-5 py-3 rounded-2xl rounded-bl-sm shadow-lg flex-1 backdrop-blur-sm">
+                            <p class="text-white text-sm font-medium italic">"凝視這面心靈之鏡... 剝去表象的偽裝..."</p>
+                        </div>
+                    </div>
+                    <div
+                        class="relative bg-obsidian-glass backdrop-blur-xl border border-white/10 rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 overflow-hidden box-glow w-full">
+                        <div
+                            class="absolute inset-0 bg-runes-pattern opacity-30 pointer-events-none mix-blend-overlay animate-[pulse_10s_infinite]">
+                        </div>
+                        <div
+                            class="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-magic-cyan/60 to-transparent shadow-[0_0_10px_#00f0ff]">
+                        </div>
+                        <div class="relative z-10 flex flex-col gap-8 md:gap-12">
+                            <div class="flex flex-col gap-6">
+                                <div class="flex items-center gap-2 mb-1 opacity-60">
+                                    <span class="material-symbols-outlined text-primary text-lg">auto_awesome</span>
+                                    <span class="text-primary text-xs font-bold tracking-[0.2em] uppercase">Spirit
+                                        Resonance Check</span>
+                                </div>
+                                <h2
+                                    class="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight text-white tracking-wide drop-shadow-lg">
+                                    當你面對未知的挑戰時，<br />
+                                    <span
+                                        class="text-primary text-glow transition-all duration-500 hover:text-[#4fffb0]">你是否會感到興奮多於恐懼？</span>
+                                </h2>
+                            </div>
+                            <div class="w-full flex items-center gap-4 opacity-30">
+                                <div class="h-px bg-white flex-1"></div>
+                                <div class="size-2 bg-primary rotate-45"></div>
+                                <div class="h-px bg-white flex-1"></div>
+                            </div>
+                            <div class="w-full py-2 md:py-4">
+                                <div class="mb-8">
+                                    <div class="flex justify-between items-end mb-4 px-2">
+                                        <span class="text-base font-bold text-white/90 flex items-center gap-2">
+                                            <span
+                                                class="material-symbols-outlined text-primary text-sm">psychology</span>
+                                            靈魂共鳴強度 (Resonance)
+                                        </span>
+                                    </div>
+                                    <div class="grid grid-cols-5 gap-3 md:gap-4">
+                                        <button
+                                            class="group flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all duration-300 option-button h-32 md:h-40">
+                                            <div class="click-halo"></div>
+                                            <span
+                                                class="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/20 rounded-tl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute top-2 right-2 w-2 h-2 border-t border-r border-white/20 rounded-tr-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white/20 rounded-bl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white/20 rounded-br-sm group-hover:border-magic-cyan/60"></span>
+                                            <div class="option-button-content flex flex-col items-center gap-2">
+                                                <div
+                                                    class="w-10 h-10 md:w-14 md:h-14 rounded-full border border-white/5 bg-white/5 group-hover:bg-white/10 group-hover:border-magic-cyan/50 flex items-center justify-center transition-all relative">
+                                                    <span
+                                                        class="font-serif text-2xl md:text-3xl text-white/70 group-hover:text-magic-cyan rune-glow">ᚠ</span>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] md:text-xs font-bold text-white/40 group-hover:text-primary tracking-widest uppercase transition-colors">絕不</span>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="group flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all duration-300 option-button h-32 md:h-40">
+                                            <div class="click-halo"></div>
+                                            <span
+                                                class="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/20 rounded-tl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute top-2 right-2 w-2 h-2 border-t border-r border-white/20 rounded-tr-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white/20 rounded-bl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white/20 rounded-br-sm group-hover:border-magic-cyan/60"></span>
+                                            <div class="option-button-content flex flex-col items-center gap-2">
+                                                <div
+                                                    class="w-10 h-10 md:w-14 md:h-14 rounded-full border border-white/5 bg-white/5 group-hover:bg-white/10 group-hover:border-magic-cyan/50 flex items-center justify-center transition-all relative">
+                                                    <span
+                                                        class="font-serif text-2xl md:text-3xl text-white/70 group-hover:text-magic-cyan rune-glow">ᚢ</span>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] md:text-xs font-bold text-white/40 group-hover:text-primary tracking-widest uppercase transition-colors">很少</span>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="group flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all duration-300 option-button h-32 md:h-40">
+                                            <div class="click-halo"></div>
+                                            <span
+                                                class="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/20 rounded-tl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute top-2 right-2 w-2 h-2 border-t border-r border-white/20 rounded-tr-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white/20 rounded-bl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white/20 rounded-br-sm group-hover:border-magic-cyan/60"></span>
+                                            <div class="option-button-content flex flex-col items-center gap-2">
+                                                <div
+                                                    class="w-10 h-10 md:w-14 md:h-14 rounded-full border border-white/5 bg-white/5 group-hover:bg-white/10 group-hover:border-magic-cyan/50 flex items-center justify-center transition-all relative">
+                                                    <span
+                                                        class="font-serif text-2xl md:text-3xl text-white/70 group-hover:text-magic-cyan rune-glow">ᚦ</span>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] md:text-xs font-bold text-white/40 group-hover:text-primary tracking-widest uppercase transition-colors">普通</span>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="group flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all duration-300 option-button h-32 md:h-40">
+                                            <div class="click-halo"></div>
+                                            <span
+                                                class="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/20 rounded-tl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute top-2 right-2 w-2 h-2 border-t border-r border-white/20 rounded-tr-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white/20 rounded-bl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white/20 rounded-br-sm group-hover:border-magic-cyan/60"></span>
+                                            <div class="option-button-content flex flex-col items-center gap-2">
+                                                <div
+                                                    class="w-10 h-10 md:w-14 md:h-14 rounded-full border border-white/5 bg-white/5 group-hover:bg-white/10 group-hover:border-magic-cyan/50 flex items-center justify-center transition-all relative">
+                                                    <span
+                                                        class="font-serif text-2xl md:text-3xl text-white/70 group-hover:text-magic-cyan rune-glow">ᚨ</span>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] md:text-xs font-bold text-white/40 group-hover:text-primary tracking-widest uppercase transition-colors">經常</span>
+                                            </div>
+                                        </button>
+                                        <button
+                                            class="group flex flex-col items-center justify-center gap-2 p-3 rounded-2xl transition-all duration-300 option-button h-32 md:h-40">
+                                            <div class="click-halo"></div>
+                                            <span
+                                                class="absolute top-2 left-2 w-2 h-2 border-t border-l border-white/20 rounded-tl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute top-2 right-2 w-2 h-2 border-t border-r border-white/20 rounded-tr-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 left-2 w-2 h-2 border-b border-l border-white/20 rounded-bl-sm group-hover:border-magic-cyan/60"></span>
+                                            <span
+                                                class="absolute bottom-2 right-2 w-2 h-2 border-b border-r border-white/20 rounded-br-sm group-hover:border-magic-cyan/60"></span>
+                                            <div class="option-button-content flex flex-col items-center gap-2">
+                                                <div
+                                                    class="w-10 h-10 md:w-14 md:h-14 rounded-full border border-white/5 bg-white/5 group-hover:bg-white/10 group-hover:border-magic-cyan/50 flex items-center justify-center transition-all relative">
+                                                    <span
+                                                        class="font-serif text-2xl md:text-3xl text-white/70 group-hover:text-magic-cyan rune-glow">ᚱ</span>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] md:text-xs font-bold text-white/40 group-hover:text-primary tracking-widest uppercase transition-colors">總是</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="w-full">
+                                    <label class="text-base font-bold text-white/90 flex items-center gap-2 mb-4 px-2">
+                                        <span class="material-symbols-outlined text-primary text-sm">auto_stories</span>
+                                        心靈迴響 (Echoes)
+                                    </label>
+                                    <div class="relative group">
+                                        <div
+                                            class="absolute inset-0 bg-primary/5 rounded-2xl blur-sm group-hover:bg-primary/10 transition-colors">
+                                        </div>
+                                        <textarea
+                                            class="relative block w-full bg-[#0a1612] border border-white/10 rounded-2xl text-white placeholder-white/20 text-sm p-4 md:p-5 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] hover:border-white/20 resize-none leading-relaxed"
+                                            placeholder="在此刻，如果你的靈魂能說話，它會說些什麼..." rows="4"></textarea>
+                                        <div class="absolute bottom-4 right-4 pointer-events-none">
+                                            <span
+                                                class="material-symbols-outlined text-white/10 group-focus-within:text-primary/40 transition-colors">edit</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center pt-2">
+                                <button
+                                    class="text-white/40 hover:text-white text-sm font-medium flex items-center gap-2 transition-colors">
+                                    <span class="material-symbols-outlined">history</span>
+                                    <span>重置 (Reset)</span>
+                                </button>
+                                <button
+                                    class="group relative px-10 py-4 rounded-xl bg-primary text-[#051a10] font-black text-base tracking-wider overflow-hidden shadow-[0_0_30px_rgba(11,218,115,0.4)] hover:shadow-[0_0_50px_rgba(11,218,115,0.6)] transition-all transform hover:-translate-y-1">
+                                    <span class="relative z-10 flex items-center gap-3">
+                                        確認共鳴
+                                        <span
+                                            class="material-symbols-outlined text-xl transition-transform group-hover:translate-x-1">arrow_forward</span>
+                                    </span>
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out">
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12 mt-12 relative z-50">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
+                    onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+                    <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+                    <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="#">隱私政策</a>
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="#">服務條款</a>
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="#">關於我們</a>
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="#">聯絡公會</a>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
+                <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by
+                    Psychological Wisdom.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

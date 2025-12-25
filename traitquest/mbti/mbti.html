@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-Hant">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TraitQuest - MBTI 專屬介紹頁</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11D452",
+                        "primary-hover": "#0fb847",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface": "#1a3323",
+                        "guild-border": "#23482f",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "Noto Sans TC", "sans-serif"],
+                        "body": ["Noto Sans TC", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                    keyframes: {
+                        "breathing-glow": {
+                            "0%, 100%": { boxShadow: "0 0 5px rgba(17, 212, 82, 0.3)" },
+                            "50%": { boxShadow: "0 0 20px rgba(17, 212, 82, 0.7)" }
+                        },
+                        "breathing-white": {
+                            "0%, 100%": { boxShadow: "0 0 5px rgba(255, 255, 255, 0.2)" },
+                            "50%": { boxShadow: "0 0 20px rgba(255, 255, 255, 0.6)" }
+                        }
+                    },
+                    animation: {
+                        "breathing-glow": "breathing-glow 3s ease-in-out infinite",
+                        "breathing-white": "breathing-white 3s ease-in-out infinite"
+                    }
+                },
+            },
+        }
+    </script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Be Vietnam Pro", "Noto Sans TC", sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 1,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+
+        .rpg-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(11, 218, 115, 0.1), 0 4px 6px -2px rgba(11, 218, 115, 0.05);
+            border-color: #0bda73;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #102219;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #31684d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0bda73;
+        }
+    </style>
+</head>
+
+<body>
+    <div
+        class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark dark text-[#e0eadd] group/design-root overflow-x-hidden">
+        <header
+            class="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
+            <div class="w-full px-4 md:px-10 py-3">
+                <div class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white cursor-pointer mr-auto hover:opacity-80 transition-opacity"
+                        onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+                        <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+                        <h2 class="text-xl font-display font-black leading-tight tracking-tight">TraitQuest</h2>
+                    </div>
+                    <div class="flex items-center gap-4 md:gap-8 ml-auto">
+                        <nav class="hidden md:flex items-center gap-6">
+                            <a class="text-sm font-bold hover:text-primary transition-colors relative group" href="#">
+                                世界地圖
+                                <span
+                                    class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                            </a>
+                            <a class="text-sm font-bold hover:text-primary transition-colors relative group"
+                                href="../bulletinboard_公會佈告欄頁/bulletinboard_公會佈告欄頁.html">
+                                公會大廳
+                                <span
+                                    class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                            </a>
+                        </nav>
+                        <button
+                            class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary hover:bg-primary-hover text-[#112217] text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 active:brightness-125 animate-breathing-glow shadow-[0_0_15px_rgba(17,212,82,0.3)] hover:shadow-[0_0_25px_rgba(17,212,82,0.6)]">
+                            <span class="truncate">Google 登入</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="flex-1 w-full flex flex-col items-center">
+            <div class="w-full max-w-[1200px] px-4 py-10 md:px-6 lg:py-20">
+                <div class="flex flex-col-reverse lg:flex-row gap-10 items-center">
+                    <div class="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
+                        <div
+                            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-dark border border-surface-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
+                            <span class="material-symbols-outlined text-sm">auto_awesome</span>
+                            RPG 風格人格測驗
+                        </div>
+                        <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
+                            探索你的<br /><span class="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">靈魂屬性</span>
+                        </h1>
+                        <h2 class="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
+                            TraitQuest 邀請你進入人格的冒險世界。解鎖你的天賦技能樹，透過 MBTI 理論了解你的潛在能力，並尋找你的最佳公會隊友。
+                        </h2>
+                        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
+                            <button
+                                class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] animate-breath hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group">
+                                <span class="truncate group-hover:scale-105 transition-transform">開始你的冒險 (Google
+                                    登入)</span>
+                            </button>
+                            <button
+                                class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-surface-dark border border-surface-border text-white text-base font-bold hover:bg-[#1e4030] hover:border-primary/50 transition-colors w-full sm:w-auto">
+                                <span class="truncate">了解更多理論</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="flex-1 w-full max-w-[600px] aspect-square md:aspect-video lg:aspect-square relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#183426] group hover:border-primary/50 transition-colors duration-500">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                            data-alt="Anime style illustration of 4 stylized adventurers sitting around a campfire in a magical glowing forest at night"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDxaGvTpns0oJvAFnehM1lqoUSMkZQB_Ts3Xxn9NVIBm1IujbX6XCHLPgNvPLGDo5ZY09u2L4cDR2C9Fzq45j785iyhJ6Tm9wX58IzJJl7l_fYrZ27v2IqcGIFM_FjkdhdvT6e2zx_NUjslEtukdKBKoBNRa2xvE3l4c48hfKi292BhgomrJsOCjKBAFlP7FFGO4NYbZ5XznCqbOOLv7rTVW6X1X0QB5uK0Lq8YNMLqm_AhtRQnk75SmFp9p7JZAZPuaH5F2s5Ukb8_");'>
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-[#102219] via-transparent to-transparent opacity-80">
+                            </div>
+                        </div>
+                        <div
+                            class="absolute bottom-4 left-4 right-4 bg-[#102219]/90 border border-[#31684d] p-4 rounded-xl backdrop-blur-sm">
+                            <div class="flex gap-3 items-center">
+                                <div
+                                    class="size-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary text-primary animate-pulse">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-[#90cbad]">系統提示</p>
+                                    <p class="text-sm font-bold text-white">歡迎來到 TraitQuest 世界，冒險者！</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-[#0d1c14] py-16 border-y border-[#1e4030]">
+                <div class="w-full max-w-[1200px] px-4 md:px-6 mx-auto">
+                    <div class="flex flex-col gap-2 mb-10 text-center">
+                        <h2 class="text-primary text-sm font-bold tracking-widest uppercase">Attributes</h2>
+                        <h3 class="text-white text-3xl font-bold">四大維度屬性 (Stats)</h3>
+                        <p class="text-[#90cbad] max-w-[600px] mx-auto mt-2">如同 RPG 遊戲中的力量與敏捷，MBTI 用四個維度來定義你的心理基礎數值。</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div
+                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
+                            <div
+                                class="size-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">bolt</span>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-lg font-bold mb-1">E / I 能量來源</h4>
+                                <div class="text-xs font-bold text-purple-400 mb-2">MANA RECOVERY</div>
+                                <p class="text-[#90cbad] text-sm leading-relaxed">
+                                    <span class="text-white font-medium">外向 (Extraversion)</span> 從社交互動中吸取魔力，而 <span
+                                        class="text-white font-medium">內向 (Introversion)</span> 需要獨處冥想來回復能量。
+                                </p>
+                            </div>
+                            <div class="mt-auto pt-4">
+                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                    <div
+                                        class="bg-purple-500 h-full w-2/3 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
+                            <div
+                                class="size-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">map</span>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-lg font-bold mb-1">S / N 感知模式</h4>
+                                <div class="text-xs font-bold text-blue-400 mb-2">WORLD MAP</div>
+                                <p class="text-[#90cbad] text-sm leading-relaxed">
+                                    <span class="text-white font-medium">實感 (Sensing)</span> 注重眼前的具體地形與細節，<span
+                                        class="text-white font-medium">直覺 (Intuition)</span> 則擅長預測未來的版圖與隱藏路徑。
+                                </p>
+                            </div>
+                            <div class="mt-auto pt-4">
+                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                    <div
+                                        class="bg-blue-500 h-full w-1/2 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
+                            <div
+                                class="size-12 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center border border-red-500/30 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">swords</span>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-lg font-bold mb-1">T / F 決策依據</h4>
+                                <div class="text-xs font-bold text-red-400 mb-2">COMBAT STYLE</div>
+                                <p class="text-[#90cbad] text-sm leading-relaxed">
+                                    <span class="text-white font-medium">思考 (Thinking)</span> 依靠邏輯與數據進行精確打擊，<span
+                                        class="text-white font-medium">情感 (Feeling)</span> 則依賴價值觀與和諧來守護隊友。
+                                </p>
+                            </div>
+                            <div class="mt-auto pt-4">
+                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                    <div
+                                        class="bg-red-500 h-full w-3/4 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
+                            <div
+                                class="size-12 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center border border-yellow-500/30 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-3xl">calendar_month</span>
+                            </div>
+                            <div>
+                                <h4 class="text-white text-lg font-bold mb-1">J / P 生活態度</h4>
+                                <div class="text-xs font-bold text-yellow-400 mb-2">QUEST LOG</div>
+                                <p class="text-[#90cbad] text-sm leading-relaxed">
+                                    <span class="text-white font-medium">判斷 (Judging)</span> 喜歡按部就班完成任務清單，<span
+                                        class="text-white font-medium">感知 (Perceiving)</span> 則偏好隨機觸發的支線劇情與彈性。
+                                </p>
+                            </div>
+                            <div class="mt-auto pt-4">
+                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                    <div
+                                        class="bg-yellow-500 h-full w-2/5 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.5)]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full max-w-[1200px] px-4 md:px-6 py-16 lg:py-24" id="archetypes">
+                <div class="text-center mb-12">
+                    <h2 class="text-primary text-sm font-bold tracking-widest uppercase mb-3">Class Selection</h2>
+                    <h3 class="text-white text-3xl md:text-4xl font-black mb-4">十六種冒險者職業 (Archetypes)</h3>
+                    <p class="text-[#90cbad] max-w-2xl mx-auto">
+                        四大陣營，十六種傳奇職業。在 TraitQuest 的世界中，你的性格代碼決定了你的戰鬥風格與天賦技能。
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="flex flex-col gap-5">
+                        <div
+                            class="relative rounded-2xl overflow-hidden bg-[#2d1b3e] border border-purple-500/50 p-4 flex items-center gap-4 mb-2 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBkNo0-0lOo2kRHL5DKK8ePKXRdnIu8F98P37UCs-1TwU0V3SSqo6cPnCumGndb58a_ECeyxd9KKYQafj_SJKPpHViNiPmXZXFydV5gB1qsLMxxrrqAyRzs5IhjV2qv8SjwgqHKAtR1QsHlpd1FlO36-Ik4WVHCX8O6fYv_bFBQIw7tmjfl4Va_3TThXuzejdKoxmqnvmdIRGItxi5EI22cvzpNZSQLafSqENsmqu8FyWMHlNLSfYeC7CMDYNlHnOAoSL4bXX01oB9R');">
+                            </div>
+                            <div class="relative z-10 flex items-center gap-4 w-full">
+                                <div
+                                    class="size-12 rounded-xl bg-purple-900/80 backdrop-blur-sm border border-purple-400/50 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-purple-300">psychology</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold text-lg leading-none">智慧議會</h4>
+                                    <p class="text-purple-400 text-[10px] font-bold tracking-widest uppercase mt-1">The
+                                        Analysts</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-purple-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-purple-400 transform rotate-12">strategy</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-purple-500/50 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">strategy</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">INTJ</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-purple-400 tracking-wider">建築師</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-purple-300 transition-colors">
+                                    戰略法師</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    富有想像力與戰略性的思想家，總是有計畫地對付 Boss。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-purple-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-purple-400 transform rotate-12">science</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-purple-500/50 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">science</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">INTP</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-purple-400 tracking-wider">邏輯學家</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-purple-300 transition-colors">
+                                    煉金術士</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    對萬物充滿好奇的發明家，致力於研究世界運行的真理。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-purple-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-purple-400 transform rotate-12">military_tech</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-purple-500/50 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">military_tech</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ENTJ</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-purple-400 tracking-wider">指揮官</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-purple-300 transition-colors">
+                                    領主騎士</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    大膽、富有想像力且意志強大的領導者，總能找到開路的方法。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-purple-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-purple-400 transform rotate-12">psychology</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-purple-500/50 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">psychology</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ENTP</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-purple-400 tracking-wider">辯論家</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-purple-300 transition-colors">
+                                    混沌術士</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    聰明好奇的思想者，無法抗拒智力挑戰與打破常規的誘惑。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-5">
+                        <div
+                            class="relative rounded-2xl overflow-hidden bg-[#1a382e] border border-primary/50 p-4 flex items-center gap-4 mb-2 shadow-[0_0_15px_rgba(11,218,115,0.2)]">
+                            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBlDvE1vGhrQr6KuCHMCBCtphIEsq2VA_XaAvn6g32JqReEX5jBcqnH0Av6Lr2R5fMEqXW9nrNEtZOQp00BNmSNant6F4msjrGm4J5AKnLGMvCZpgT67UUR4wPXEFi2qNaO4jzre0jLUoDr8rHuyNa1DT8qQ_4V93W3fFT4sTFpen9sUuK-84pUBFh8pl7ENeO2NNdwOXL6fSylxtdfpkZz9PB_fslFRPuq2f2sYTyPu654NipNa-rvN6xDbbCUzMcb4OVbt7ntsaEv');">
+                            </div>
+                            <div class="relative z-10 flex items-center gap-4 w-full">
+                                <div
+                                    class="size-12 rounded-xl bg-green-900/80 backdrop-blur-sm border border-primary/50 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-primary">spa</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold text-lg leading-none">外交使節</h4>
+                                    <p class="text-primary text-[10px] font-bold tracking-widest uppercase mt-1">The
+                                        Diplomats</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-primary hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(11,218,115,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-primary transform rotate-12">spa</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-primary/50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">spa</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">INFJ</h5>
+                                    <span class="text-[10px] uppercase font-bold text-primary tracking-wider">提倡者</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-primary transition-colors">
+                                    神聖牧師</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    安靜而神秘，同時鼓舞人心且不知疲倦的理想主義者。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-primary hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(11,218,115,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-primary transform rotate-12">lyrics</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-primary/50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">lyrics</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">INFP</h5>
+                                    <span class="text-[10px] uppercase font-bold text-primary tracking-wider">調停者</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-primary transition-colors">
+                                    吟遊詩人</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    詩意，善良的利他主義者，總是熱情地幫助隊友補血。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-primary hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(11,218,115,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-primary transform rotate-12">shield</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-primary/50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">shield</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ENFJ</h5>
+                                    <span class="text-[10px] uppercase font-bold text-primary tracking-wider">主人公</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-primary transition-colors">
+                                    光明聖騎士</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    富有魅力且鼓舞人心的領導者，有能力讓聽眾為之著迷。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-primary hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(11,218,115,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-primary transform rotate-12">auto_awesome</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-primary/50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">auto_awesome</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ENFP</h5>
+                                    <span class="text-[10px] uppercase font-bold text-primary tracking-wider">競選者</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-primary transition-colors">
+                                    元素召喚師</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    熱情，富有創造力愛社交的自由靈魂，總能找到微笑的理由。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-5">
+                        <div
+                            class="relative rounded-2xl overflow-hidden bg-[#152e3d] border border-blue-500/50 p-4 flex items-center gap-4 mb-2 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB0XHvlNp5wP-IqFa7urevzR2SmzpO5vVtwdmMaeC8sVtT23kizXut2fLKLin3hVJj841VbG_PJ7AoiS_DxYvcmNaero2Gh8J5KSBGJoW5Fo-KCk_80cbON34-rMBUKVCqMlzT7KH_qgnYf4gTwY8snUv4rETLlxBvzMf4bOLVKy-smDCggRTEyu5XfhsUqGDt7I0QS58CALRkMUkOLKca_LDCJxg_rqlu8hhNJbYbliq0CNNeeFQv7pfddYPDMt8YOBfg7fYJZdX6O');">
+                            </div>
+                            <div class="relative z-10 flex items-center gap-4 w-full">
+                                <div
+                                    class="size-12 rounded-xl bg-blue-900/80 backdrop-blur-sm border border-blue-400/50 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-blue-300">shield</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold text-lg leading-none">皇家守衛</h4>
+                                    <p class="text-blue-400 text-[10px] font-bold tracking-widest uppercase mt-1">The
+                                        Sentinels</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-blue-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-blue-400 transform rotate-12">inventory</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-blue-500/50 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">inventory</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ISTJ</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-blue-400 tracking-wider">物流師</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-blue-300 transition-colors">
+                                    重裝守衛</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    事實求是，可靠的現實主義者，不願讓外物干擾自己的職責。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-blue-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-blue-400 transform rotate-12">local_hospital</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-blue-500/50 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">local_hospital</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ISFJ</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-blue-400 tracking-wider">守衛者</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-blue-300 transition-colors">
+                                    守護治療師</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    非常專注而溫暖的守護者，時刻準備著保護所愛之人。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-blue-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-blue-400 transform rotate-12">gavel</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-blue-500/50 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">gavel</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ESTJ</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-blue-400 tracking-wider">總經理</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-blue-300 transition-colors">
+                                    秩序騎士</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    出色的管理者，能夠在混亂的戰場上管理事情與人員。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-blue-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-blue-400 transform rotate-12">diversity_3</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-blue-500/50 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">diversity_3</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ESFJ</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-blue-400 tracking-wider">執政官</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-blue-300 transition-colors">
+                                    輔助神官</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    極有同情心，愛社交受歡迎的人，總是熱心提供幫助。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-5">
+                        <div
+                            class="relative rounded-2xl overflow-hidden bg-[#3d3115] border border-yellow-500/50 p-4 flex items-center gap-4 mb-2 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+                            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC0ZE0yM9MCA2gCB6rABbGTEITgSZn11-yck9Szsl_15zXUiNxPP9sQEvSqERR3me9x2sH6JKzHM22naZrkCqcvm9_DAhD0RjS43hPc82ssgR1Fe_6l31V3qw-qK9NebLMNxQcOFFXCzIEWMxZLuF5GFISlYWSEtmXF5l2mR_4jzeosK1BDIuyhZ6oz7QPL7c1gRmi4CBYt3U8F1NGFmHC--1oEbZp6zcFHDtDDU8e45Mzifg0PFd1ZR3-9KqsK2hwlmnauoEspNJ2C');">
+                            </div>
+                            <div class="relative z-10 flex items-center gap-4 w-full">
+                                <div
+                                    class="size-12 rounded-xl bg-yellow-900/80 backdrop-blur-sm border border-yellow-400/50 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined text-yellow-300">construction</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-bold text-lg leading-none">探險者公會</h4>
+                                    <p class="text-yellow-400 text-[10px] font-bold tracking-widest uppercase mt-1">The
+                                        Explorers</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-yellow-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-yellow-400 transform rotate-12">construction</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-yellow-500/50 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">construction</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ISTP</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-yellow-400 tracking-wider">鑑賞家</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-yellow-300 transition-colors">
+                                    武器工匠</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    大膽而實際的實驗家，擅長使用所有形式的工具。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-yellow-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-yellow-400 transform rotate-12">palette</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-yellow-500/50 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">palette</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ISFP</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-yellow-400 tracking-wider">探險家</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-yellow-300 transition-colors">
+                                    森林遊俠</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    靈活有魅力的藝術家，時刻準備著探索和體驗新鮮事物。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-yellow-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-yellow-400 transform rotate-12">bolt</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-yellow-500/50 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">bolt</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ESTP</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-yellow-400 tracking-wider">企業家</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-yellow-300 transition-colors">
+                                    暗影刺客</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    聰明，精力充沛善於感知的人，真心享受冒險邊緣的生活。</p>
+                            </div>
+                        </div>
+                        <div
+                            class="group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 hover:border-yellow-500 hover:bg-[#1a3a2b] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] cursor-pointer overflow-hidden">
+                            <div
+                                class="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+                                <span
+                                    class="material-symbols-outlined text-7xl text-yellow-400 transform rotate-12">theater_comedy</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3 relative z-10">
+                                <div
+                                    class="size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-yellow-500/50 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+                                    <span class="material-symbols-outlined">theater_comedy</span>
+                                </div>
+                                <div>
+                                    <h5 class="text-2xl font-black text-white leading-none">ESFP</h5>
+                                    <span
+                                        class="text-[10px] uppercase font-bold text-yellow-400 tracking-wider">表演者</span>
+                                </div>
+                            </div>
+                            <div class="relative z-10">
+                                <h6
+                                    class="text-white font-bold text-lg mb-1 group-hover:text-yellow-300 transition-colors">
+                                    幻術舞者</h6>
+                                <p
+                                    class="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">
+                                    自發性強，精力充沛且熱情的表演者，隊伍裡的氣氛擔當。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full bg-[#183426] py-16 lg:py-24 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-5"
+                    style="background-image: radial-gradient(#0bda73 1px, transparent 1px); background-size: 20px 20px;">
+                </div>
+                <div
+                    class="w-full max-w-[1000px] px-6 mx-auto relative z-10 flex flex-col md:flex-row gap-12 items-center">
+                    <div class="flex-1 space-y-6">
+                        <div
+                            class="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider">
+                            <span class="material-symbols-outlined text-lg">menu_book</span>
+                            Guild Manual
+                        </div>
+                        <h3 class="text-white text-3xl font-bold">榮格的心理功能理論</h3>
+                        <p class="text-[#e0eadd] text-lg leading-relaxed">
+                            MBTI 的基礎建立在心理學家卡爾·榮格 (Carl Jung) 的認知功能理論之上。
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                    1</div>
+                                <p class="text-[#90cbad]">每個人都有一套獨特的「技能組合」，決定了我們如何與世界互動。</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                    2</div>
+                                <p class="text-[#90cbad]">了解你的主導功能 (Dominant Function) 就像了解你的大招，能讓你發揮最大潛力。</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                    3</div>
+                                <p class="text-[#90cbad]">這不是將人分類的標籤，而是幫助你成長的地圖。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <div
+                            class="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <div class="flex justify-between items-center mb-4 border-b border-[#31684d] pb-2">
+                                <span class="text-xs text-[#90cbad]">System.log</span>
+                                <div class="flex gap-1">
+                                    <div class="size-2 rounded-full bg-red-500"></div>
+                                    <div class="size-2 rounded-full bg-yellow-500"></div>
+                                    <div class="size-2 rounded-full bg-green-500"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 font-mono text-xs md:text-sm text-primary/80">
+                                <p>&gt; Initializing Cognitive Functions...</p>
+                                <p>&gt; Loading <span class="text-white">Ni (Introverted Intuition)</span>... <span
+                                        class="text-green-400">Done.</span></p>
+                                <p>&gt; Loading <span class="text-white">Fe (Extroverted Feeling)</span>... <span
+                                        class="text-green-400">Done.</span></p>
+                                <p>&gt; Analyzing user compatibility...</p>
+                                <p class="animate-pulse">&gt; Ready to start adventure.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full py-16 px-4 text-center" id="guild">
+                <div class="max-w-[600px] mx-auto flex flex-col items-center gap-6">
+                    <div
+                        class="size-16 bg-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(11,218,115,0.4)] mb-2 animate-breath">
+                        <span class="material-symbols-outlined text-[#10231a] text-4xl">stadia_controller</span>
+                    </div>
+                    <h2 class="text-white text-3xl font-bold">準備好加入公會了嗎？</h2>
+                    <p class="text-[#90cbad]">只需幾秒鐘，使用 Google 帳號登入，即可領取你的冒險者證書，並開始詳細的人格分析。</p>
+                    <button
+                        class="flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-primary text-[#10231a] text-lg font-bold shadow-[0_0_20px_rgba(11,218,115,0.6)] animate-breath hover:bg-[#34e28a] hover:scale-105 transition-all hover:shadow-[0_0_30px_rgba(11,218,115,0.8)]">
+                        <span class="truncate flex items-center gap-3">
+                            <span class="material-symbols-outlined">login</span>
+                            Google 快速登入
+                        </span>
+                    </button>
+                    <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12">
+                        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                            <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
+                                onclick="window.location.href='../traitquest_首頁/traitquest_首頁.html'">
+                                <span
+                                    class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+                                <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
+                            </div>
+                            <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                                    href="#">隱私政策</a>
+                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                                    href="#">服務條款</a>
+                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                                    href="#">關於我們</a>
+                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                                    href="#">聯絡公會</a>
+                            </div>
+                        </div>
+                        <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
+                            <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by
+                                Psychological Wisdom.</p>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
