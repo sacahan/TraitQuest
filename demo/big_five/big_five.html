@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>TraitQuest - Big Five 屬性轉化系統</title>
+    <title>TraitQuest - Big Five 介紹</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700;900&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap"
@@ -197,334 +197,356 @@
             </div>
         </div>
     </header>
-    <header class="relative flex flex-col items-center justify-center min-h-[500px] w-full px-4 overflow-hidden pt-10">
-        <div class="absolute inset-0 bg-grid-pattern bg-[size:40px_40px] opacity-20 pointer-events-none"></div>
-        <div
-            class="absolute inset-0 bg-gradient-to-b from-[#112217]/0 via-[#112217]/60 to-[#112217] pointer-events-none">
-        </div>
-        <div class="absolute inset-0 z-[-1] opacity-30">
-            <img alt="Mysterious Forest Background" class="w-full h-full object-cover object-center"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwcOf3E23H9kHWV_eM8EkKjLpcYMghC_fCwo17e9j0d0uTFofvJSHOVWDbIMaedxS3LwM2ZHziQyqNd-VyRDgRFKNltZOID2o8jeGao1tqhvr7OrF3Z6OeQQ9z6RfOX8U4I3MxB9mB6gkPz66wAyvk3vDJBZsabYC_O1IZcjAK9g0y3cb2ypcxSoctRFQBB2wlXf1mL-oHXQ-rsfdfg2pxiB5uGfXjoNupQozlbMqHVHRCYtAA_aZ181PXYmyENS1EkuAaNxGPpl0O" />
-        </div>
-        <div class="relative z-10 max-w-4xl text-center space-y-4">
-            <div
-                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#193322]/80 border border-[#23482f] text-primary text-xs font-bold uppercase tracking-wider mb-2 backdrop-blur-sm animate-[pulse_3s_ease-in-out_infinite] hover:animate-none hover:border-primary/60 transition-colors">
-                <span class="material-symbols-outlined text-sm">psychology</span>
-                <span>系統公告：屬性面板已更新</span>
-            </div>
-            <h1 class="text-4xl md:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-lg">
-                你的性格，決定你的<br />
-                <span
-                    class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#4ade80] text-shadow-glow">RPG
-                    戰鬥數值</span>
-            </h1>
-            <p class="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed mt-4">
-                TraitQuest 將經典的 Big Five 人格理論轉化為五大冒險屬性。<br />
-                查看下方的屬性對照表，找出你潛在的戰鬥天賦！
-            </p>
-        </div>
-    </header>
-    <section class="py-16 px-4 md:px-10 relative bg-[#112217]">
-        <div class="max-w-5xl mx-auto">
-            <div
-                class="flex flex-col md:flex-row gap-8 items-center bg-[#193322]/50 border border-[#23482f] rounded-2xl p-8 backdrop-blur-sm hover:shadow-[0_0_30px_rgba(15,189,73,0.1)] transition-shadow duration-500">
-                <div class="flex-1 space-y-4">
-                    <h2 class="text-2xl font-black text-white flex items-center gap-3 group">
-                        <span
-                            class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(15,189,73,0.4)]">
-                            <span class="material-symbols-outlined">auto_stories</span>
-                        </span>
-                        關於 Big Five (大五人格)
-                    </h2>
-                    <p class="text-gray-300 leading-relaxed">
-                        在心理學界，Big Five 是目前最具科學實證基礎的人格特質模型。它不是單純的標籤，而是五個光譜維度。在 TraitQuest
-                        的世界裡，我們將這些維度具象化為你的角色屬性，讓抽象的性格變成可視化的戰鬥力。
+    <main class="flex-1 w-full flex flex-col items-center">
+        <!-- Hero Section -->
+        <div class="w-full max-w-[1200px] px-4 py-10 md:px-6 lg:py-20">
+            <div class="flex flex-col-reverse lg:flex-row gap-10 items-center">
+                <div class="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
+                        <span class="material-symbols-outlined text-sm">water_drop</span>
+                        大五人格分析
+                        </div>
+                    <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
+                        你的性格，決定你的
+                        <span class="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">角色屬性</span>
+                        </h1>
+                    <p class="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
+                        TraitQuest 將經典的 Big Five 人格理論轉化為五大冒險屬性。查看下方的屬性對照表，找出你潛在的戰鬥天賦！
                     </p>
-                    <div class="flex gap-4 pt-2">
-                        <div
-                            class="flex items-center gap-2 text-xs text-gray-400 bg-[#112217] px-3 py-1.5 rounded-full border border-[#23482f] hover:border-primary/50 hover:text-white transition-colors cursor-default">
-                            <span class="material-symbols-outlined text-sm text-primary">check</span> 科學驗證
-                        </div>
-                        <div
-                            class="flex items-center gap-2 text-xs text-gray-400 bg-[#112217] px-3 py-1.5 rounded-full border border-[#23482f] hover:border-primary/50 hover:text-white transition-colors cursor-default">
-                            <span class="material-symbols-outlined text-sm text-primary">check</span> 數據驅動
-                        </div>
+                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
+                        <button
+                            class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] animate-breath hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group"
+                            onclick="window.location.href='../questionnaire/questionnaire.html'">
+                            <span class="truncate group-hover:scale-105 transition-transform">開始你的冒險 (Google
+                                登入)</span>
+                            </button>
+                            <button
+                                class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-surface-dark border border-surface-border text-white text-base font-bold hover:bg-[#1e4030] hover:border-primary/50 transition-colors w-full sm:w-auto"
+                                onclick="window.location.href='#lore'">
+                                <span class="truncate">了解更多</span>
+                        </button>
                     </div>
                 </div>
-                <div class="w-full md:w-48 flex justify-center opacity-80 hover:opacity-100 transition-opacity">
-                    <div class="relative w-40 h-40">
+                <div
+                    class="flex-1 w-full max-w-[600px] aspect-square md:aspect-video lg:aspect-square relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#183426] group hover:border-primary/50 transition-colors duration-500">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBwcOf3E23H9kHWV_eM8EkKjLpcYMghC_fCwo17e9j0d0uTFofvJSHOVWDbIMaedxS3LwM2ZHziQyqNd-VyRDgRFKNltZOID2o8jeGao1tqhvr7OrF3Z6OeQQ9z6RfOX8U4I3MxB9mB6gkPz66wAyvk3vDJBZsabYC_O1IZcjAK9g0y3cb2ypcxSoctRFQBB2wlXf1mL-oHXQ-rsfdfg2pxiB5uGfXjoNupQozlbMqHVHRCYtAA_aZ181PXYmyENS1EkuAaNxGPpl0O");'>
                         <div
-                            class="absolute inset-0 border-2 border-[#23482f] rounded-full flex items-center justify-center">
-                            <div class="w-2/3 h-2/3 border border-[#23482f] rotate-45"></div>
+                            class="absolute inset-0 bg-gradient-to-t from-[#102219] via-transparent to-transparent opacity-80">
                         </div>
-                        <img alt="Radar Chart Icon" class="w-full h-full object-contain p-4 animate-float"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmFaWtRLHPAZPCPVDjGce0pU8cLPywm6u_VLX5ukEEnkVbvHYWzRvvsuicYlPR4ev3lTovaWTturEwGsJuXGBqbwWOKZhkW0t0AmSTZ94NBQBic_RArLukb80iYtRtDP1BMsssDNniIIRaSZPiqp7lRf34qkROnOKPx74nqb8bAaOlZ8RFDIIuQlldeNj4IN40pJni4BcMFO6SK4YsiGpze89W1DU3RkUPMG1dfH5KvGKmhi8z4ZEwM_g7LsOuwP0Ou3IG65CP3JmJ" />
+                    </div>
+                    <div
+                        class="absolute bottom-4 left-4 right-4 bg-[#102219]/90 border border-[#31684d] p-4 rounded-xl backdrop-blur-sm">
+                        <div class="flex gap-3 items-center">
+                            <div
+                                class="size-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary text-primary animate-pulse">
+                                <span class="material-symbols-outlined">person</span>
+                            </div>
+                            <div>
+                                <p class="text-xs text-[#90cbad]">系統提示</p>
+                                <p class="text-sm font-bold text-white">準備好領取你的初始屬性了嗎？</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="py-20 px-4 md:px-10 bg-[#0d1a12] relative overflow-hidden">
-        <div class="absolute top-20 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute bottom-20 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="max-w-5xl mx-auto relative z-10">
-            <div class="text-center mb-12">
-                <span class="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-2 block animate-pulse">System
-                    Sync</span>
-                <h2 class="text-3xl md:text-4xl font-black text-white">屬性轉化對照表</h2>
-                <p class="text-gray-400 mt-2">Personality to Stats Conversion</p>
+
+        <!-- Lore Section (Guild Manual) -->
+        <div id="lore" class="w-full bg-[#112217] py-20 px-4 md:px-10 border-y border-[#23482f]">
+            <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
+                <div class="flex-1 space-y-6">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a3323] border border-[#23482f] text-primary font-bold text-sm">
+                        <span class="material-symbols-outlined text-lg">menu_book</span>
+                        Guild Manual
+                    </div>
+                    <h3 class="text-white text-3xl font-bold">科學實證的角色發展</h3>
+                    <p class="text-[#e0eadd] text-lg leading-relaxed">
+                        在心理學界，Big Five 是目前最具科學實證基礎的人格特質模型。它不是單純的標籤，而是五個光譜維度。在 TraitQuest 的世界裡，我們將這些維度具象化為你的角色屬性。
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div
+                                class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                1</div>
+                            <p class="text-[#90cbad]">個性即戰力：你的每個性格傾向都對應特定的戰鬥屬性。</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <div
+                                class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                2</div>
+                            <p class="text-[#90cbad]">光譜平衡：沒有絕對的好壞，只有不同的職能定位。</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                3</div>
+                            <p class="text-[#90cbad]">動態成長：透過對自我的認知，開啟潛在的技能分支。</p>
+                        </div>
+                        </div>
+                </div>
+                <div class="flex-1 w-full max-w-[500px]">
+                    <div
+                        class="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                        <div class="flex justify-between items-center mb-4 border-b border-[#31684d] pb-2">
+                            <span class="text-xs text-[#90cbad]">System.log</span>
+                            <div class="flex gap-1">
+                                <div class="size-2 rounded-full bg-red-500"></div>
+                                <div class="size-2 rounded-full bg-yellow-500"></div>
+                                <div class="size-2 rounded-full bg-green-500"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2 font-mono text-xs md:text-sm text-primary/80">
+                            <p>&gt; Analyzing Big Five Dimensions...</p>
+                            <p>&gt; OCEAN Model detected.</p>
+                            <p>&gt; Tip: <span class="text-white italic">「大五人格常被比喻為海洋生物 (OCEAN)
+                                    來便於理解，例如將高親和性者比作暖心的『海豚』，將高盡責性者比作目標精準的『劍魚』。」</span></p>
+                            <p>&gt; Syncing stats with RPG database...</p>
+                            <p class="animate-pulse">&gt; Initialization complete.</p>
+                        </div>
+                        </div>
+                        </div>
             </div>
-            <div class="flex flex-col gap-6">
-                <div
-                    class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-blue">
+            </div>
+            
+            <!-- Table Section -->
+            <section class="py-20 px-4 md:px-10 bg-[#0d1a12] relative overflow-hidden w-full">
+                <div class="max-w-5xl mx-auto relative z-10">
+                    <div class="text-center mb-12">
+                        <span class="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-2 block animate-pulse">System
+                            Sync</span>
+                        <h2 class="text-3xl md:text-4xl font-black text-white">屬性轉化對照表</h2>
+                    <p class="text-[#90cbad] mt-2">Personality to Stats Conversion</p>
+                    </div>
+                    <div class="flex flex-col gap-6">
+                    <!-- Trait Items (Keep original items but style consistent) -->
+                    <!-- ... (Existing content from line 278 to 502) ... -->
+                    <!-- I will keep the original table content logic but ensure it follows the structure -->
                     <div
-                        class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-blue-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-blue-900/40">
-                    </div>
-                    <div class="flex flex-col md:flex-row h-full">
+                        class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-blue">
                         <div
-                            class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="size-12 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 icon-hover-pop">
-                                    <span class="material-symbols-outlined text-2xl">auto_awesome</span>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-0.5">Trait
-                                        01</div>
-                                    <h3
-                                        class="text-xl font-bold text-white group-hover:text-blue-300 transition-colors">
-                                        開放性</h3>
-                                    <div class="text-xs text-gray-500">Openness</div>
-                                </div>
-                            </div>
+                            class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-blue-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-blue-900/40">
                         </div>
-                        <div
-                            class="hidden md:flex absolute left-1/3 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 size-8 bg-[#112217] border border-[#23482f] rounded-full items-center justify-center text-gray-500 group-hover:text-blue-400 group-hover:border-blue-400 group-hover:bg-[#112217] group-hover:scale-110 transition-all duration-300 shadow-sm">
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </div>
-                        <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
-                            <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center gap-3">
-                                    <span
-                                        class="text-3xl font-black text-blue-400 font-display group-hover:text-shadow-glow transition-all">智力</span>
-                                    <span
-                                        class="px-2 py-0.5 rounded text-xs font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">INT</span>
-                                </div>
-                                <span
-                                    class="material-symbols-outlined text-4xl text-blue-500/20 group-hover:text-blue-500/40 group-hover:rotate-12 transition-all duration-500">psychology</span>
-                            </div>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                <strong class="text-white">魔法與知識的泉源。</strong><br />
-                                高開放性代表你對新觀念的接受度極高，如同擁有無限魔力的法師。你善於學習新技能，能迅速理解複雜的魔法理論與世界觀，是隊伍中的戰術大腦。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-yellow">
-                    <div
-                        class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-yellow-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-yellow-900/40">
-                    </div>
-                    <div class="flex flex-col md:flex-row h-full">
-                        <div
-                            class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="size-12 rounded-lg bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 icon-hover-pop">
-                                    <span class="material-symbols-outlined text-2xl">assignment_turned_in</span>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-yellow-400 font-bold uppercase tracking-wider mb-0.5">Trait
-                                        02</div>
-                                    <h3
-                                        class="text-xl font-bold text-white group-hover:text-yellow-300 transition-colors">
-                                        盡責性</h3>
-                                    <div class="text-xs text-gray-500">Conscientiousness</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="hidden md:flex absolute left-1/3 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 size-8 bg-[#112217] border border-[#23482f] rounded-full items-center justify-center text-gray-500 group-hover:text-yellow-400 group-hover:border-yellow-400 group-hover:bg-[#112217] group-hover:scale-110 transition-all duration-300 shadow-sm">
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </div>
-                        <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
-                            <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center gap-3">
-                                    <span
-                                        class="text-3xl font-black text-yellow-400 font-display group-hover:text-shadow-glow transition-all">防禦</span>
-                                    <span
-                                        class="px-2 py-0.5 rounded text-xs font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">DEF</span>
-                                </div>
-                                <span
-                                    class="material-symbols-outlined text-4xl text-yellow-500/20 group-hover:text-yellow-500/40 group-hover:rotate-12 transition-all duration-500">shield</span>
-                            </div>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                <strong class="text-white">堅不可摧的自律之盾。</strong><br />
-                                高盡責性轉化為強大的物理防禦。透過周全的計畫與執行力，你能像重裝騎士般為隊伍抵擋混亂，確保任務在任何突發狀況下都能穩步推進。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-red">
-                    <div
-                        class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-red-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-red-900/40">
-                    </div>
-                    <div class="flex flex-col md:flex-row h-full">
-                        <div
-                            class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="size-12 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 icon-hover-pop">
-                                    <span class="material-symbols-outlined text-2xl">local_fire_department</span>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-0.5">Trait 03
+                        <div class="flex flex-col md:flex-row h-full">
+                            <div
+                                class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 icon-hover-pop">
+                                        <span class="material-symbols-outlined text-2xl">auto_awesome</span>
                                     </div>
-                                    <h3 class="text-xl font-bold text-white group-hover:text-red-300 transition-colors">
-                                        外向性</h3>
-                                    <div class="text-xs text-gray-500">Extraversion</div>
+                                    <div>
+                                        <div class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-0.5">Trait 01</div>
+                                        <h3 class="text-xl font-bold text-white group-hover:text-blue-300 transition-colors">開放性</h3>
+                                        <div class="text-xs text-gray-500">Openness</div>
+                                        </div>
+                                        </div>
+                                        </div>
+                            <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-3xl font-black text-blue-400 font-display transition-all">智力</span>
+                                        <span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">INT</span>
+                                        </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div
-                            class="hidden md:flex absolute left-1/3 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 size-8 bg-[#112217] border border-[#23482f] rounded-full items-center justify-center text-gray-500 group-hover:text-red-400 group-hover:border-red-400 group-hover:bg-[#112217] group-hover:scale-110 transition-all duration-300 shadow-sm">
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </div>
-                        <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
-                            <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center gap-3">
-                                    <span
-                                        class="text-3xl font-black text-red-400 font-display group-hover:text-shadow-glow transition-all">速度</span>
-                                    <span
-                                        class="px-2 py-0.5 rounded text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/30">SPD</span>
-                                </div>
-                                <span
-                                    class="material-symbols-outlined text-4xl text-red-500/20 group-hover:text-red-500/40 group-hover:rotate-12 transition-all duration-500">sprint</span>
-                            </div>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                <strong class="text-white">迅捷的社交反應力。</strong><br />
-                                高外向性賦予你極高的敏捷度。你總是充滿能量，在冒險者聚會中穿梭自如，能快速發起話題並帶動節奏，像狂戰士般衝鋒在互動的最前線。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-pink">
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    <strong class="text-white">魔法與知識的泉源。</strong><br />
+                                    高開放性代表你對新觀念的接受度極高，如同擁有無限魔力的法師。你善於學習新技能，能迅速理解複雜的魔法理論。
+                                    </p>
+                                    </div>
+                                    </div>
+                                    </div>
+
                     <div
-                        class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-pink-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-pink-900/40">
-                    </div>
-                    <div class="flex flex-col md:flex-row h-full">
+                        class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-yellow">
                         <div
-                            class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="size-12 rounded-lg bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 icon-hover-pop">
-                                    <span class="material-symbols-outlined text-2xl">volunteer_activism</span>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-pink-400 font-bold uppercase tracking-wider mb-0.5">Trait
-                                        04</div>
-                                    <h3
-                                        class="text-xl font-bold text-white group-hover:text-pink-300 transition-colors">
-                                        親和性</h3>
-                                    <div class="text-xs text-gray-500">Agreeableness</div>
-                                </div>
-                            </div>
+                            class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-yellow-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-yellow-900/40">
                         </div>
-                        <div
-                            class="hidden md:flex absolute left-1/3 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 size-8 bg-[#112217] border border-[#23482f] rounded-full items-center justify-center text-gray-500 group-hover:text-pink-400 group-hover:border-pink-400 group-hover:bg-[#112217] group-hover:scale-110 transition-all duration-300 shadow-sm">
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </div>
-                        <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
-                            <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center gap-3">
-                                    <span
-                                        class="text-3xl font-black text-pink-400 font-display group-hover:text-shadow-glow transition-all">魅力</span>
-                                    <span
-                                        class="px-2 py-0.5 rounded text-xs font-bold bg-pink-500/20 text-pink-300 border border-pink-500/30">CHA</span>
+                        <div class="flex flex-col md:flex-row h-full">
+                            <div class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center text-yellow-400 icon-hover-pop">
+                                        <span class="material-symbols-outlined text-2xl">assignment_turned_in</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-yellow-400 font-bold uppercase tracking-wider mb-0.5">Trait 02</div>
+                                        <h3 class="text-xl font-bold text-white group-hover:text-yellow-300 transition-colors">盡責性</h3>
+                                        <div class="text-xs text-gray-500">Conscientiousness</div>
+                                        </div>
+                                        </div>
+                                        </div>
+                            <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-3xl font-black text-yellow-400 font-display transition-all">防禦</span>
+                                        <span
+                                            class="px-2 py-0.5 rounded text-xs font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">DEF</span>
+                                        </div>
                                 </div>
-                                <span
-                                    class="material-symbols-outlined text-4xl text-pink-500/20 group-hover:text-pink-500/40 group-hover:rotate-12 transition-all duration-500">diamond</span>
-                            </div>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                <strong class="text-white">治癒人心的光環。</strong><br />
-                                高親和性是對應魅力的關鍵屬性。你能團結隊伍，化解衝突，並獲得 NPC 的好感度。如同擁有神聖光環的牧師，你是公會中最受歡迎的輔助力量。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-purple">
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    <strong class="text-white">堅不可摧的自律之盾。</strong><br />
+                                    高盡責性轉化為強大的物理防禦。透過周全的計畫與執行力，你能像重裝騎士般為隊伍抵擋混亂。
+                                    </p>
+                                    </div>
+                                    </div>
+                                    </div>
+
                     <div
-                        class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-purple-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-purple-900/40">
-                    </div>
-                    <div class="flex flex-col md:flex-row h-full">
+                        class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-red">
                         <div
-                            class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
-                            <div class="flex items-center gap-4">
-                                <div
-                                    class="size-12 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 icon-hover-pop">
-                                    <span class="material-symbols-outlined text-2xl">thunderstorm</span>
-                                </div>
-                                <div>
-                                    <div class="text-xs text-purple-400 font-bold uppercase tracking-wider mb-0.5">Trait
-                                        05</div>
-                                    <h3
-                                        class="text-xl font-bold text-white group-hover:text-purple-300 transition-colors">
-                                        神經質</h3>
-                                    <div class="text-xs text-gray-500">Neuroticism</div>
-                                </div>
-                            </div>
+                            class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-red-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-red-900/40">
                         </div>
+                        <div class="flex flex-col md:flex-row h-full">
+                            <div class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 icon-hover-pop">
+                                        <span class="material-symbols-outlined text-2xl">local_fire_department</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-red-400 font-bold uppercase tracking-wider mb-0.5">Trait 03</div>
+                                        <h3 class="text-xl font-bold text-white group-hover:text-red-300 transition-colors">外向性</h3>
+                                        <div class="text-xs text-gray-500">Extraversion</div>
+                                        </div>
+                                        </div>
+                                        </div>
+                            <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-3xl font-black text-red-400 font-display transition-all">速度</span>
+                                        <span class="px-2 py-0.5 rounded text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/30">SPD</span>
+                                        </div>
+                                </div>
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    <strong class="text-white">迅捷的社交反應力。</strong><br />
+                                    高外向性賦予你極高的敏捷度。你總是充滿能量，能快速發起話題並帶動節奏。
+                                    </p>
+                                    </div>
+                                    </div>
+                                    </div>
+
+                    <div
+                        class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-pink">
                         <div
-                            class="hidden md:flex absolute left-1/3 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 size-8 bg-[#112217] border border-[#23482f] rounded-full items-center justify-center text-gray-500 group-hover:text-purple-400 group-hover:border-purple-400 group-hover:bg-[#112217] group-hover:scale-110 transition-all duration-300 shadow-sm">
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-pink-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-pink-900/40">
                         </div>
-                        <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
-                            <div class="flex items-start justify-between mb-2">
-                                <div class="flex items-center gap-3">
-                                    <span
-                                        class="text-3xl font-black text-purple-400 font-display group-hover:text-shadow-glow transition-all">洞察</span>
-                                    <span
-                                        class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">INS</span>
+                        <div class="flex flex-col md:flex-row h-full">
+                            <div class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 icon-hover-pop">
+                                        <span class="material-symbols-outlined text-2xl">volunteer_activism</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-pink-400 font-bold uppercase tracking-wider mb-0.5">Trait 04</div>
+                                        <h3 class="text-xl font-bold text-white group-hover:text-pink-300 transition-colors">親和性</h3>
+                                        <div class="text-xs text-gray-500">Agreeableness</div>
+                                        </div>
+                                        </div>
+                                        </div>
+                            <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-3xl font-black text-pink-400 font-display transition-all">魅力</span>
+                                        <span class="px-2 py-0.5 rounded text-xs font-bold bg-pink-500/20 text-pink-300 border border-pink-500/30">CHA</span>
+                                        </div>
                                 </div>
-                                <span
-                                    class="material-symbols-outlined text-4xl text-purple-500/20 group-hover:text-purple-500/40 group-hover:rotate-12 transition-all duration-500">visibility</span>
-                            </div>
-                            <p class="text-gray-300 text-sm leading-relaxed">
-                                <strong class="text-white">預知危險的第六感。</strong><br />
-                                敏感並非弱點，而是極高的洞察力。雖然情緒波動如暗影，但這讓你比任何人更早察覺迷宮中的陷阱與危機，是盜賊與預言家必備的生存屬性。
-                            </p>
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    <strong class="text-white">治癒人心的光環。</strong><br />
+                                    高親和性是對應魅力的關鍵屬性。你能團結隊伍，獲得 NPC 的好感，是公會中最受歡迎的力量。
+                                    </p>
+                                    </div>
+                                    </div>
+                                    </div>
+
+                    <div
+                        class="group relative bg-[#193322] border-2 border-[#23482f] rounded-xl overflow-hidden transition-all duration-300 card-glow-purple">
+                        <div
+                            class="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-purple-900/20 to-transparent pointer-events-none transition-opacity duration-300 group-hover:from-purple-900/40">
                         </div>
+                        <div class="flex flex-col md:flex-row h-full">
+                            <div class="w-full md:w-1/3 p-6 flex items-center border-b md:border-b-0 md:border-r border-[#23482f] bg-[#14261b]">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-12 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 icon-hover-pop">
+                                        <span class="material-symbols-outlined text-2xl">thunderstorm</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-purple-400 font-bold uppercase tracking-wider mb-0.5">Trait 05</div>
+                                        <h3 class="text-xl font-bold text-white group-hover:text-purple-300 transition-colors">神經質</h3>
+                                        <div class="text-xs text-gray-500">Neuroticism</div>
+                                        </div>
+                                        </div>
+                                        </div>
+                            <div class="w-full md:w-2/3 p-6 flex flex-col justify-center">
+                                <div class="flex items-start justify-between mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-3xl font-black text-purple-400 font-display transition-all">洞察</span>
+                                        <span
+                                            class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-300 border border-blue-500/30">INS</span>
+                                        </div>
+                                </div>
+                                <p class="text-gray-300 text-sm leading-relaxed">
+                                    <strong class="text-white">預知危險的第六感。</strong><br />
+                                    雖然情緒波動如暗影，但這讓你比任何人更早察覺迷宮中的陷阱與危機。
+                                    </p>
+                                    </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </section>
+                        
+                        <!-- Benefits Section -->
+                        <section class="w-full bg-[#0d1c14] py-16 border-y border-[#1e4030]">
+                            <div class="w-full max-w-[1200px] px-4 md:px-6 mx-auto">
+                                <div class="flex flex-col gap-2 mb-10 text-center">
+                                    <h2 class="text-primary text-sm font-bold tracking-widest uppercase">Benefits</h2>
+                                    <h3 class="text-white text-3xl font-bold">解鎖你的冒險潛能</h3>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                    <div class="bg-[#1a3323] p-6 rounded-2xl border border-[#23482f] hover:border-primary transition-colors">
+                                        <span class="material-symbols-outlined text-primary text-4xl mb-4">analytics</span>
+                                        <h4 class="text-white text-xl font-bold mb-2">深度自我覺察</h4>
+                                        <p class="text-[#90cbad]">透過科學模型，了解自己在壓力下的防禦機制與天賦優勢。</p>
+                                    </div>
+                                    <div class="bg-[#1a3323] p-6 rounded-2xl border border-[#23482f] hover:border-primary transition-colors">
+                                        <span class="material-symbols-outlined text-primary text-4xl mb-4">groups</span>
+                                        <h4 class="text-white text-xl font-bold mb-2">團隊職能定位</h4>
+                                        <p class="text-[#90cbad]">找出你在公會中最適合的角色，不論是開拓者還是守護者。</p>
                     </div>
+                    <div class="bg-[#1a3323] p-6 rounded-2xl border border-[#23482f] hover:border-primary transition-colors">
+                        <span class="material-symbols-outlined text-primary text-4xl mb-4">trending_up</span>
+                        <h4 class="text-white text-xl font-bold mb-2">屬性優化指南</h4>
+                        <p class="text-[#90cbad]">獲得具體的「技能點建議」，提升你的社交與執行效率。</p>
+                    </div>
+                    </div>
+                    </div>
+                    </section>
+<!-- Final CTA section -->
+<section class="py-24 relative bg-background-dark w-full overflow-hidden" id="guild-cta">
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent"></div>
+    <div class="mx-auto max-w-3xl px-4 relative z-10 text-center">
+        <div class="mb-8 inline-block rounded-full bg-primary/10 p-4 border border-primary/20 animate-bounce cursor-pointer hover:bg-primary/20 hover:border-primary transition-colors"
+            style="animation-duration: 3s;">
+            <span class="material-symbols-outlined text-4xl text-primary">stadia_controller</span>
+        </div>
+        <h2 class="text-4xl font-black text-white mb-6">準備好登入你的角色了嗎？</h2>
+        <p class="text-xl text-gray-300 mb-10 text-[#90cbad]">
+            只需要 10 分鐘，即可獲得完整的角色屬性分析表與專屬職業徽章。
+        </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                        class="flex items-center justify-center gap-3 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-[#112217] shadow-[0_0_30px_rgba(17,212,82,0.3)] hover:bg-primary-hover transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(17,212,82,0.6)] animate-breathing-glow group"
+                        onclick="window.location.href='../questionnaire/questionnaire.html'">
+                        使用 Google 帳號登入
+                        </button>
                 </div>
-            </div>
-        </div>
-    </section>
-    <section class="relative py-24 px-4 overflow-hidden border-t border-[#23482f]">
-        <div class="max-w-3xl mx-auto text-center relative z-10">
-            <h2 class="text-4xl md:text-5xl font-black text-white mb-6">生成你的屬性面板</h2>
-            <p class="text-xl text-gray-300 mb-10">
-                想知道你的 INT 有多高？還是你的 DEF 已經滿級？<br />
-                立即開始測試，獲取你的專屬「TraitQuest 屬性卡」！
-            </p>
-            <button
-                class="relative group w-full max-w-md mx-auto flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-[#112217] px-8 py-4 rounded-xl font-bold text-lg shadow-[0_0_25px_rgba(255,255,255,0.2)] transition-all duration-300 transform hover:-translate-y-1 animate-breath hover:animate-none hover:shadow-[0_0_35px_rgba(15,189,73,0.6)] hover:scale-105"
-                onclick="window.location.href='../questionnaire/questionnaire.html'">
-                <img alt="Google G Logo" class="w-6 h-6 transition-transform duration-300 group-hover:scale-110"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-zaddfB9s0EytZ8qWxO4ZOeaPxu0BveAA1EPP6Ptu5sFQmnA5Y52Qzmi1yO-ud62_0IlKDytG7C-DL9LHvYGPsVZzsAEjf0aIaGUKeJmJmvZvhjsr4ccXSXZYcyq1wirz-YCbr2uP9dCwSyizP3FvNxc42iVWMgk_hISAFqt0agiTk9SreVdGFn82W7QKJlB0PkUVZdPoWM1eZaeou7eU7j1dzl7rJl1K3C9d9WQA7fQV_FlX1TpLRZgepS8icSQ4Or0PytdqtFQb" />
-                <span>使用 Google 帳號登入</span>
-                <span
-                    class="absolute right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 text-primary translate-x-[-10px] group-hover:translate-x-0">
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </span>
-            </button>
-            <p class="mt-4 text-xs text-gray-500">
-                開始即代表同意 <a class="underline hover:text-primary transition-colors" href="#">服務條款</a>
-            </p>
-        </div>
-    </section>
+                </div>
+                </section>
+    </main>
     <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
@@ -534,11 +556,11 @@
             </div>
             <div class="flex flex-wrap justify-center gap-6 md:gap-10">
                 <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                    href="#">隱私政策</a>
+                    href="../privacy/privacy.html">隱私政策</a>
                 <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                    href="#">服務條款</a>
+                    href="../services/services.html">服務條款</a>
                 <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                    href="#">關於我們</a>
+                    href="../about/about.html">關於我們</a>
                 <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
                     href="#">聯絡公會</a>
             </div>

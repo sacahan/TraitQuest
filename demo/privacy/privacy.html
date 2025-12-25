@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-Hant">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TraitQuest - 隱私政策</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11D452",
+                        "primary-hover": "#0fb847",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface": "#1a3323",
+                        "guild-border": "#23482f",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "Noto Sans TC", "sans-serif"],
+                        "body": ["Noto Sans TC", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                    keyframes: {
+                        "breathing-glow": {
+                            "0%, 100%": { boxShadow: "0 0 5px rgba(17, 212, 82, 0.3)" },
+                            "50%": { boxShadow: "0 0 20px rgba(17, 212, 82, 0.7)" }
+                        },
+                        "breathing-white": {
+                            "0%, 100%": { boxShadow: "0 0 5px rgba(255, 255, 255, 0.2)" },
+                            "50%": { boxShadow: "0 0 20px rgba(255, 255, 255, 0.6)" }
+                        }
+                    },
+                    animation: {
+                        "breathing-glow": "breathing-glow 3s ease-in-out infinite",
+                        "breathing-white": "breathing-white 3s ease-in-out infinite"
+                    }
+                },
+            },
+        }
+    </script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Space Grotesk", "Noto Sans TC", sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 1,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+
+        .rpg-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(17, 212, 82, 0.1), 0 4px 6px -2px rgba(17, 212, 82, 0.05);
+            border-color: #11D452;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #102216;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #23482f;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #11D452;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(17, 212, 82, 0.5);
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-[#e0eadd] selection:bg-primary selection:text-background-dark">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <!-- Header -->
+        <header
+            class="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
+            <div class="w-full px-4 md:px-10 py-3">
+                <div class="flex items-center justify-between w-full">
+                    <div class="flex items-center gap-2 text-slate-900 dark:text-white cursor-pointer mr-auto hover:opacity-80 transition-opacity"
+                        onclick="window.location.href='../index/index.html'">
+                        <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+                        <h2 class="text-xl font-display font-black leading-tight tracking-tight">TraitQuest</h2>
+                    </div>
+                    <div class="flex items-center gap-4 md:gap-8 ml-auto">
+                        <nav class="hidden md:flex items-center gap-6">
+                            <a class="text-sm font-bold hover:text-primary transition-colors relative group"
+                                href="../map/map.html">
+                                世界地圖
+                                <span
+                                    class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                            </a>
+                            <a class="text-sm font-bold hover:text-primary transition-colors relative group"
+                                href="../bulletin_board/bulletin_board.html">
+                                公會大廳
+                                <span
+                                    class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                            </a>
+                        </nav>
+                        <button
+                            class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary hover:bg-primary-hover text-[#112217] text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 active:brightness-125 animate-breathing-glow shadow-[0_0_15px_rgba(17,212,82,0.3)] hover:shadow-[0_0_25px_rgba(17,212,82,0.6)]">
+                            <span class="truncate">Google 登入</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex flex-col items-center relative">
+            <!-- Hero Section -->
+            <section class="w-full relative py-20 overflow-hidden border-b border-guild-border">
+                <div
+                    class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=2727&auto=format&fit=crop')] bg-cover bg-center opacity-10">
+                </div>
+                <div class="max-w-[1000px] mx-auto px-6 relative z-10 text-center">
+                    <div
+                        class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-primary text-sm">shield</span>
+                        <span class="text-primary text-xs font-bold uppercase tracking-wider">靈魂契約 (Privacy
+                            Scroll)</span>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl font-black text-white mb-6 leading-tight tracking-tight">
+                        <p class="mb-4">隱私卷軸</p><span class="text-primary glow-text">守護你的秘密</span>
+                    </h1>
+                    <p class="text-lg text-[#90cbad] max-w-2xl mx-auto leading-relaxed">
+                        在我們探索你的靈魂屬性之前，我們必須立下誓約。這份隱私卷軸詳細記載了我們如何收集、使用並守護你在冒險途中留下的足跡。
+                    </p>
+                </div>
+            </section>
+
+            <!-- Privacy Content -->
+            <div class="w-full max-w-[900px] px-6 py-20 flex flex-col gap-10">
+                <!-- Section 1 -->
+                <div
+                    class="bg-surface/30 border border-guild-border p-8 rounded-2xl flex flex-col gap-6 group hover:border-primary transition-colors">
+                    <div class="flex items-center gap-4">
+                        <span class="material-symbols-outlined text-3xl text-primary">auto_stories</span>
+                        <h3 class="text-2xl font-bold text-white">序章：我們的承諾</h3>
+                    </div>
+                    <p class="text-[#90cbad] leading-relaxed">
+                        當你使用 Google 帳號 (OAuth) 登入 TraitQuest
+                        世界時，你將一部分信任交給了我們。我們深知這份信任的重要性，並承諾像守護稀有裝備一樣守護你的資料。我們不會將你的靈魂碎片（個人數據）出售給任何黑暗勢力。
+                    </p>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="flex flex-col gap-8">
+                    <h2 class="text-white text-2xl font-bold flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">inventory_2</span>
+                        資料收集 (戰利品清單)
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div
+                            class="bg-surface/50 border border-guild-border p-6 rounded-xl hover:border-primary transition-colors">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="material-symbols-outlined text-primary">badge</span>
+                                <h4 class="text-white font-bold">Google OAuth 身份</h4>
+                            </div>
+                            <p class="text-sm text-[#90cbad]">我們會讀取你的基本個人資料（姓名、Email、頭像）以建立你的冒險者檔案卡。</p>
+                        </div>
+                        <div
+                            class="bg-surface/50 border border-guild-border p-6 rounded-xl hover:border-primary transition-colors">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="material-symbols-outlined text-primary">psychology_alt</span>
+                                <h4 class="text-white font-bold">冒險紀錄</h4>
+                            </div>
+                            <p class="text-sm text-[#90cbad]">為了計算你的性向屬性，我們需要收集你在測驗中的每一個抉擇。</p>
+                        </div>
+                        <div
+                            class="bg-surface/50 border border-guild-border p-6 rounded-xl hover:border-primary transition-colors">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="material-symbols-outlined text-primary">cookie</span>
+                                <h4 class="text-white font-bold">魔法餅乾 (Cookies)</h4>
+                            </div>
+                            <p class="text-sm text-[#90cbad]">用於記住你的登入狀態與冒險進度，確保地圖加載時進度不遺失。</p>
+                        </div>
+                        <div
+                            class="bg-surface/50 border border-guild-border p-6 rounded-xl hover:border-primary transition-colors">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="material-symbols-outlined text-primary">devices</span>
+                                <h4 class="text-white font-bold">裝置資訊</h4>
+                            </div>
+                            <p class="text-sm text-[#90cbad]">收集基本的裝置型號與瀏覽器版本，優化魔法捲軸的顯示效果。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="bg-surface/30 border border-guild-border p-8 rounded-2xl flex flex-col gap-6">
+                    <h2 class="text-white text-2xl font-bold flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">explore</span>
+                        資料使用 (任務目標)
+                    </h2>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-[#90cbad]">生成角色分析圖表</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-[#90cbad]">維護公會穩定運作</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-[#90cbad]">提供個人化冒險體驗</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+                            <span class="text-[#90cbad]">開發新的地下城功能</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
+                    onclick="window.location.href='../index/index.html'">
+                    <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+                    <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="../privacy/privacy.html">隱私政策</a>
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="../services/services.html">服務條款</a>
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="../about/about.html">關於我們</a>
+                    <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        href="#">聯絡公會</a>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
+                <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by
+                    Psychological Wisdom.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

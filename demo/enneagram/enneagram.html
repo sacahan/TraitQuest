@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>TraitQuest - Enneagram RPG Adventure</title>
+  <title>TraitQuest - Enneagram 介紹</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
@@ -119,496 +119,502 @@
         </div>
       </div>
     </header>
-    <section
-      class="relative w-full py-12 md:py-24 px-6 flex justify-center bg-[url('https://placeholder.pics/svg/1920x1080/102216-0e1f13/11d452-11d452/TraitQuest%20RPG%20Map%20Background')] bg-cover bg-center"
-      data-alt="Dark isometric RPG map background with forest texture">
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-[#102216]/80 via-[#102216]/60 to-[#102216] pointer-events-none">
-      </div>
-      <div class="relative z-10 layout-content-container flex flex-col max-w-[1080px] w-full">
-        <div class="@container">
-          <div class="flex flex-col-reverse gap-8 md:flex-row md:items-center md:gap-12">
-            <div class="flex flex-col gap-6 md:w-1/2">
-              <div
-                class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 w-fit animate-pulse">
-                <span class="material-symbols-outlined text-primary text-sm">auto_awesome</span>
-                <span class="text-primary text-xs font-bold uppercase tracking-wider">RPG 性格測試系統 v2.0</span>
+    <main class="flex-1 w-full flex flex-col items-center">
+      <!-- Hero Section -->
+      <div class="w-full max-w-[1200px] px-4 py-10 md:px-6 lg:py-20">
+        <div class="flex flex-col-reverse lg:flex-row gap-10 items-center">
+          <div class="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
+              <span class="material-symbols-outlined text-sm">stars</span>
+              九型人格屬性
               </div>
-              <h1
-                class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight font-display">
-                探索你的靈魂地圖：<br />
-                <span
-                  class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">Enneagram</span>
-                九型人格冒險
-              </h1>
-              <p class="text-slate-300 text-base md:text-lg leading-relaxed max-w-[540px]">
-                啟動你的心靈冒險！深入了解古老的自我探索工具，解鎖你的 RPG 職業屬性，發現你的潛在技能與隱藏弱點。
-              </p>
-              <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                <button
-                  class="group flex items-center justify-center gap-3 rounded-xl h-14 px-8 bg-primary hover:bg-primary-dark hover:scale-[1.02] transition-all text-[#102216] text-lg font-bold animate-breathing hover:animate-none hover:shadow-glow-strong border-b-4 border-green-700 active:border-b-0 active:translate-y-1"
-                  onclick="window.location.href='../questionnaire/questionnaire.html'">
-                  <span
-                    class="material-symbols-outlined group-hover:rotate-12 transition-transform duration-300">google_plus_reshare</span>
-                  <span>使用 Google 帳號開始冒險</span>
+              <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight font-display">
+                尋找你靈魂的歸屬
+                <span class="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">九型人格</span>
+                </h1>
+                <p class="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
+                  啟動你的心靈冒險！深入了解古老的自我探索工具，解鎖你的 RPG 種族天性，發現你的潛在技能與隱藏弱點。
+                  </p>
+                  <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
+                    <button
+                      class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] animate-breath hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group"
+                      onclick="window.location.href='../questionnaire/questionnaire.html'">
+                <span class="truncate group-hover:scale-105 transition-transform">開始你的冒險 (Google
+                  登入)</span>
                 </button>
                 <button
-                  class="group flex items-center justify-center gap-3 rounded-xl h-14 px-8 bg-card-dark border border-border-green hover:border-primary hover:shadow-glow-strong text-white text-lg font-bold transition-all">
-                  <span class="group-hover:translate-x-1 transition-transform">查看冒險指南</span>
+                  class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-surface-dark border border-surface-border text-white text-base font-bold hover:bg-[#1e4030] hover:border-primary/50 transition-colors w-full sm:w-auto"
+                  onclick="window.location.href='#lore'">
+                  <span class="truncate">了解更多</span>
                 </button>
-              </div>
-              <div class="flex items-center gap-2 text-xs text-slate-400 font-mono mt-2">
-                <span class="material-symbols-outlined text-base text-primary">verified_user</span>
-                安全登入 • 保存進度 • 解鎖全職業圖鑑
-              </div>
-            </div>
-            <div class="w-full md:w-1/2 flex justify-center relative">
-              <div
-                class="absolute inset-0 bg-primary/20 blur-[60px] rounded-full transform scale-75 animate-pulse-slow">
-              </div>
-              <div
-                class="relative w-full aspect-square md:aspect-[4/3] rounded-2xl overflow-hidden border-2 border-primary/30 shadow-2xl bg-[#1a3524]"
-                data-alt="Anime style group of RPG characters posing together: a knight, a mage, and a rogue"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBKhFe5XZ59HtVN_YUWfwkijB3yKxmy-XmTUt-NJNdBXz8rne1-rljSr4Zcg1AWWpnTABKoLRH3MrBz1irR7G-8ROtVNUqo5hc8TXAfzIm-12AJGV0bDsCRJFVfAoJ16-ZpK890oz_XQpprqT_sZe6fn6-CHvprSWsddpIZv241l3RTkF5KkqkKBXChXHho-xjkhK-w2QXbyB4gN1Lbj1vYmgeE4CN1-xS_iY1IwfacpmE79FSzpcg8QLFv5R7bkHfoFeEkEXroCdkc'); background-size: cover; background-position: center;">
+                </div>
+                </div>
                 <div
-                  class="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md rounded-lg p-3 border border-white/10 flex items-center gap-3">
-                  <div
-                    class="size-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary text-primary animate-pulse-slow">
-                    <span class="material-symbols-outlined">person</span>
-                  </div>
-                  <div class="flex flex-col flex-1">
-                    <div class="text-xs text-slate-300 uppercase">Status</div>
-                    <div class="text-sm font-bold text-white">等待冒險者登入...</div>
-                  </div>
-                  <div class="h-2 w-20 bg-gray-700 rounded-full overflow-hidden">
-                    <div class="h-full w-0 bg-primary animate-pulse"></div>
-                  </div>
+                  class="flex-1 w-full max-w-[600px] aspect-square md:aspect-video lg:aspect-square relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#183426] group hover:border-primary/50 transition-colors duration-500">
+                  <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBKhFe5XZ59HtVN_YUWfwkijB3yKxmy-XmTUt-NJNdBXz8rne1-rljSr4Zcg1AWWpnTABKoLRH3MrBz1irR7G-8ROtVNUqo5hc8TXAfzIm-12AJGV0bDsCRJFVfAoJ16-ZpK890oz_XQpprqT_sZe6fn6-CHvprSWsddpIZv241l3RTkF5KkqkKBXChXHho-xjkhK-w2QXbyB4gN1Lbj1vYmgeE4CN1-xS_iY1IwfacpmE79FSzpcg8QLFv5R7bkHfoFeEkEXroCdkc');">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#102219] via-transparent to-transparent opacity-80">
+                    </div>
+                    </div>
+                  <div class="absolute bottom-4 left-4 right-4 bg-[#102219]/90 border border-[#31684d] p-4 rounded-xl backdrop-blur-sm">
+                    <div class="flex gap-3 items-center">
+                      <div
+                        class="size-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary text-primary animate-pulse">
+                        <span class="material-symbols-outlined">person</span>
+                      </div>
+                      <div>
+                        <p class="text-xs text-[#90cbad]">系統提示</p>
+                        <p class="text-sm font-bold text-white">正在解析冒險者的靈魂種族...</p>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        <!-- Lore Section (Guild Manual) -->
+                <section id="lore" class="w-full px-4 py-16 bg-[#0d1c12] relative overflow-hidden border-y border-guild-border/50">
+                  <div class="max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="flex-1 space-y-6">
+                      <div
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a3323] border border-guild-border text-primary font-bold text-sm">
+                        <span class="material-symbols-outlined text-lg">menu_book</span>
+                        Guild Manual
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-black text-white">九型人格檔案室</h2>
+                        <p class="text-[#90cbad] text-lg leading-relaxed">
+                          九型人格不只是將人分類，更是一張揭示靈魂運作機制的藏寶圖。每個人的性格核心都受到特定的「基本恐懼」與「基本渴望」驅動，決定了你在面對挑戰時的戰鬥風格。
+                        </p>
+                        <div class="space-y-4">
+                          <div class="flex gap-4">
+                            <div
+                  class="shrink-0 size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                  1
                 </div>
+                <p class="text-[#90cbad]">識破 Debuff：找出制約你成長的無意識模式。</p>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="py-20 px-6 bg-background-dark relative overflow-hidden" id="classes">
-      <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent">
-      </div>
-      <div class="max-w-[1280px] mx-auto relative z-10">
-        <div class="text-center mb-16">
-          <h2 class="text-primary text-lg font-bold uppercase tracking-widest mb-2">Class Selection</h2>
-          <h3 class="text-white text-4xl font-black font-display mb-4">九大靈魂種族</h3>
-          <p class="text-slate-400 max-w-2xl mx-auto">
-            每個號碼都代表一種獨特的戰鬥風格與世界觀。你的靈魂屬於哪個公會？
-          </p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgvIXMVobauuWGFVzM7CSm6a1A7yMmU9V_g2UucMPMARuFF4Iy9WXKpW3k9SQoTe4iWrn7kah2V4HtbU8G82RfDAO8D1g5hdDxzSdg0td2GXNRvWGbaTI1l88bbNyQmLyErNdGnHembqWLbiHhjRstVvxHWOhNoYHn19EHDO1lJmb-8zUwKLLnHa3GccHfPOurYcZs8n0AJomGeBdf6A7G4JgMLbNJdLehLmoGYnVZ27NJUJCwCQHjEjQsFg86Cx2vwaZaD6flBG1x');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                1 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
+              <div class="flex gap-4">
                 <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">local_fire_department</span>
+                  class="shrink-0 size-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                  2
                 </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">鐵律族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">本能</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                追求秩序與完美的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">terrain</span>
-                <span>源自遠古法典之山</span>
+                <p class="text-[#90cbad]">解鎖必殺技：發揮你核心型號的最強優勢。</p>
               </div>
             </div>
           </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSbJ40JdF08uFP6-Vf4O26JhdTUnNSXJ9DNp62tBaYWa7yeNBrkpdP3VToxebdgrMsKXLhUauxeVcR4ZMSYzAj6DptWdHM_OWa0jhIE7l-6yj_qvya43RzX99ZZVK7KxB9rXd6lUD-qtYIHCgE1ndurtpWy5imBTCGl4eQl2Wy1bwDKe2PwEEjhIEXfUwODODzDIKk9D4Z7BSeYNQomZdsG4f8FffKXq4vjVLlINqc8GLWlELNI3SVeHVvxTjS_tCdkmOiBKwJ3C0x');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                2 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">favorite</span>
+          <div class="flex-1 w-full max-w-[500px]">
+            <div
+              class="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+              <div class="flex justify-between items-center mb-4 border-b border-[#31684d] pb-2">
+                <span class="text-xs text-[#90cbad]">Archive.log</span>
+                <div class="flex gap-1">
+                  <div class="size-2 rounded-full bg-red-500"></div>
+                  <div class="size-2 rounded-full bg-yellow-500"></div>
+                  <div class="size-2 rounded-full bg-green-500"></div>
                 </div>
               </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">聖靈族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">情感</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                渴望被愛與付出的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">water_drop</span>
-                <span>源自生命之泉</span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACzrH93D2kGIdug3sVNMAnU7slnLBYgbtuwOZYqMb-8XfkiIvazDQKV7CJfMFQzgKSsICN1nVBUh-BM8fWaArerW4ryVw7KOWyYrwQ-ZRhY4OTPK0WjY5Anm1I0IO-6-gSAHbZMsBHoRu0KeGr9khvL6XIjJ0KI-_mjBxxORC-PWecsBCEFR5t8Jbs0kpflc8RfKkGEr3hXsLst2FiooHrxz1wW3zAqWkwRW0Wvn8AfBGNy0UKxhH3mN9IfhkVu0jRAt8iGD_AA9n0');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                3 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">light_mode</span>
-                </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">輝光族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">情感</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                追求成就與注視的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">wb_sunny</span>
-                <span>源自永恆烈陽</span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzjkc0ILoYDKmrA94o1WbbvBulckZEUxwLZQUofCxE4TOXLwo35cBbm7BvAbER9LsTpqTigDeXPQ6BY66vXfUmqzlS-B0Fo3AQWDLnSKJnaMfwd7DfQetqkecWDPLy6oKkDJDI5LnP5RW-UJqA-ekmFWxrc-PJiDJiZYf3srWGyukIv-ARsYSgtPgyQzN50wK1Bqr943eaN3esoZh2x8_UpqNnfoolOxPHgZSnTP4IepGPzDterhTi_jZZAI99S3r8cyplHfxbe_BG');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                4 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">filter_vintage</span>
-                </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">幻影族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">情感</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                沉浸於獨特與憂傷的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">forest</span>
-                <span>源自迷霧森林</span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDWs2u5arXIKtUNVoC0bMya0GmEfhlw-3K3mi-7ISQM_drls4IBZ0MSA9d4rVG6eSd1gNC4Wx02rFp7kUpwhV6b0Xv8-nfgI1dPMezK-d2hY5nUWIIU5IDzUcDH-FLBmUL5ijLJ4Wjg9dMDCM_ir030iQKNkQwhT5zj6c-B4FTNsvOQRJan8-pmTis7FOA5Xqs48b5XRCeSs8QvxyLnMFZVxW3MncF37tpRSFjiwtwyldgaMA8S_Ie5J4x6LqESyGHMmv8oOwtxyVlG');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                5 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">menu_book</span>
-                </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">智者族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">精神</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                渴求知識與觀察的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">auto_stories</span>
-                <span>源自星辰圖書館</span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCa8WLPAE157_Li1SaTzEPjzfRonnmRJZrImoKKaDOtJgRYsO5JVY1HBMrCokO6gi_0dK5a3lKJz4sMyjD3-Wy-TlEapzVxwanFg7zPs89JBfMz2gfiZfOch_LSdPUkI3wTJ83wXfhB4nADCQCfg0wUX2JMvUOT-TxQOBANlzhDXIe1lRpsSQcdx3cnSFyPHjgHgFthRDQ_Yir0IT2sV2hoH8pwXXslLvNpqmLRyAxbBX3UoKKfArgna4-4P9LopnEx0c1nV2cjsVB1');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                6 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">security</span>
-                </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">堅盾族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">精神</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                追求安全與忠誠的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">castle</span>
-                <span>源自地下堡壘</span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvx-Ufr1OMFryrn-vPBuKUy5g_144YabKYpy8E6rKtrwyYztN7qTnp6F_bGbL7ef5vgEt0itv31eypxMisoY2-UjCQlyrnZM_7qGwKJFeQ4Vad0Y8aB3njpz3WQbCgL0fPYbPZYPD3tG0GP4tEQmVy9p6UVeurTvT306RkRTa3c1vK5lsBt1pqzAa5tsZtyTo7kVwCWCJrpQPZky7Xgfn07q8Qaz_Dp9U2iWt37kFMwenYaelKXYT67Q2EOWTPoVm45OsdklRvvqcw');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                7 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">air</span>
-                </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">秘風族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">精神</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                追求自由與新奇的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">cloud</span>
-                <span>源自流浪之雲</span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmdJ24tNREcqc59Q5fEZVq_6FzCRPyNFsmpawlK09v972bglRvwOGbs5HEPED4ixqfIdQrw1z0saZa_5zGulcXUz08J1Wbt7_kEujSKxG3FOUb80nso-GW8e5hG4afpLDQ3CFsqHefnnGOm1ClskFujsMel75rl0Zmk7lBVrVq_3-mzf8SzNu5-EddA7tbfBlXQbfQeX4Di1Su7duMrMs7Iz2RWkQIr4MZ19RN5hvzBlkQS3LmYiPYwbQiApMf6Y84ZiyrOHmL8O4D');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                8 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">volcano</span>
-                </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">霸龍族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">本能</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                追求力量與控制的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">landscape</span>
-                <span>源自火山熔岩</span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
-            <div class="h-44 relative overflow-hidden bg-[#000]">
-              <div
-                class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuABlwr7jv9t3VnADVF7delUv6jscgS85qZS_3Tv8YnPoeHiVquGqxEbC2QwxgajUfmQJdsgXr3MrUrRs5jpySUFY16LTE1ZRIZOf39CA6Ezp4S4yltUU8dDB5hZ6oaLCHfx5Ld0KFVbvGjE2e7zes613tfxQUX4dMPYO5P-wXmDIHJ7T-e6zrwz2cWvAtliGbS9UT9lbLI2CbaBhd4igM1sQWasgR2DOibnTc4amIVF5c8GlXawsmrUV95fj2gymIH_biL1KqmDpTFz');">
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
-              <div
-                class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
-                9 型
-              </div>
-            </div>
-            <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
-              <div class="-mt-10 mb-4 flex justify-start">
-                <div
-                  class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
-                  <span class="material-symbols-outlined text-3xl">spa</span>
-                </div>
-              </div>
-              <div class="flex items-baseline gap-2 mb-2">
-                <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">蒼翠族
-                </h4>
-                <span
-                  class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">本能</span>
-              </div>
-              <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
-                追求和平與融合的靈魂
-              </p>
-              <div
-                class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
-                <span class="material-symbols-outlined text-base">nature_people</span>
-                <span>源自萬物母林</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="py-24 px-6 bg-[#0e1f13] relative overflow-hidden" id="lore">
-      <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent">
-      </div>
-      <div class="max-w-[1920px] mx-auto w-full px-6 md:px-12">
-        <div
-          class="relative bg-card-dark border-2 border-border-green rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden group hover:border-[#11d452]/50 transition-colors duration-500">
-          <div
-            class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none animate-breathing">
-          </div>
-          <div class="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] pointer-events-none">
-          </div>
-          <div class="relative z-10 grid lg:grid-cols-12 gap-12">
-            <div class="lg:col-span-8 space-y-6">
-              <div class="flex items-center gap-4 border-b border-white/10 pb-6 mb-6">
-                <div
-                  class="size-14 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 text-primary shadow-glow animate-pulse-slow">
-                  <span class="material-symbols-outlined text-4xl">psychology</span>
-                </div>
-                <div>
-                  <h3 class="text-3xl font-bold text-white font-display">九型人格檔案室</h3>
-                  <p class="text-primary text-sm font-bold uppercase tracking-wider mt-1">Enneagram Archive</p>
-                </div>
-              </div>
-              <div class="space-y-6 text-slate-300 text-lg leading-relaxed">
-                <p>
-                  <span class="text-primary font-bold">九型人格 (Enneagram)</span> 源於希臘文 "Ennea" (九) 與 "Grammos"
-                  (圖形)，是一套古老而神秘的性格分析系統。它不只是將人分類，更是一張揭示靈魂運作機制的藏寶圖。
+              <div class="space-y-2 font-mono text-xs md:text-sm text-primary/80">
+                <p>&gt; Accessing Ancient Wisdom...</p>
+                <p>&gt; Counselor insights found.</p>
+                <p>&gt; Case Study: <span class="text-white italic">「Helen
+                    Palmer：『九型人格揭示了我們每個人是如何在無意識中，發展出一套保護自己、應對世界的防禦機制。』」</span>
                 </p>
-                <p>
-                  這套理論認為，每個人的性格核心都受到某種特定的「基本恐懼」與「基本渴望」驅動。就像 RPG 遊戲中的初始設定，這些核心動力決定了你在面對 Boss (生活挑戰) 時的戰鬥風格與決策模式。
-                </p>
-                <p>
-                  TraitQuest 利用這套古老智慧，協助你識別自己的「角色職業」。透過理解你的核心型號，你不僅能發現隱藏的必殺技 (優勢)，更能找到克服 Debuff (盲點) 的攻略法，在現實這場大型 MMORPG
-                  中升級進化！
-                </p>
-              </div>
-            </div>
-            <div class="lg:col-span-4 flex flex-col justify-center">
-              <div
-                class="bg-[#102216] border border-border-green rounded-2xl p-6 hover:border-primary/80 transition-all hover:-translate-y-1 duration-300 shadow-lg hover:shadow-glow-strong group cursor-pointer">
-                <div class="flex items-start gap-4">
-                  <div
-                    class="mt-1 size-12 rounded-full bg-primary/20 text-primary flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:bg-primary group-hover:text-[#102216] transition-all duration-300 animate-pulse-slow">
-                    <span class="material-symbols-outlined text-2xl">visibility</span>
-                  </div>
-                  <div>
-                    <h4 class="text-white text-lg font-bold mb-2 group-hover:text-primary transition-colors">自我覺察
-                      (Self-Awareness)</h4>
-                    <p class="text-slate-400 text-sm leading-relaxed">就像打開了狀態欄，讓你看清自己的 HP、MP
-                      與屬性值，不再盲目戰鬥。掌握核心動力，就是掌握了通關密碼。</p>
-                  </div>
-                </div>
+                <p>&gt; Scanning soul motivation...</p>
+                <p class="animate-pulse">&gt; Ready for deep awakening.</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    <section class="py-24 px-6 bg-[#0b1810]">
-      <div
-        class="max-w-[800px] mx-auto text-center rounded-2xl bg-card-dark border border-primary/20 p-12 relative overflow-hidden">
-        <div class="absolute -top-10 -left-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-breathing"></div>
-        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-breathing">
+      </section>
+
+      <section class="py-20 px-6 bg-background-dark relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent">
         </div>
-        <span class="material-symbols-outlined text-6xl text-primary mb-6 animate-float">stadia_controller</span>
-        <h2 class="text-white text-3xl md:text-4xl font-black mb-6 font-display">準備好開始你的旅程了嗎？</h2>
-        <p class="text-slate-400 text-lg mb-8">
-          只需 10 分鐘，即可獲得完整的角色屬性分析表與專屬職業徽章。
-        </p>
-        <div class="flex justify-center">
-          <button
-            class="group flex items-center justify-center gap-3 rounded-xl h-14 px-10 bg-primary hover:bg-primary-dark hover:scale-[1.02] transition-all text-[#102216] text-lg font-bold animate-breathing hover:animate-none hover:shadow-glow-strong border-b-4 border-green-700 active:border-b-0 active:translate-y-1 w-full sm:w-auto"
-            onclick="window.location.href='../questionnaire/questionnaire.html'">
-            <span
-              class="material-symbols-outlined group-hover:rotate-12 transition-transform duration-300">rocket_launch</span>
-            <span>立即創建角色 (Google 登入)</span>
-          </button>
-        </div>
-      </div>
-    </section>
+        <div class="max-w-[1280px] mx-auto relative z-10">
+          <div class="text-center mb-16">
+            <h2 class="text-primary text-lg font-bold uppercase tracking-widest mb-2">Class Selection</h2>
+            <h3 class="text-white text-4xl font-black font-display mb-4">九大靈魂種族</h3>
+            <p class="text-slate-400 max-w-2xl mx-auto">
+              每個號碼都代表一種獨特的戰鬥風格與世界觀。你的靈魂屬於哪個種族？
+              </p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgvIXMVobauuWGFVzM7CSm6a1A7yMmU9V_g2UucMPMARuFF4Iy9WXKpW3k9SQoTe4iWrn7kah2V4HtbU8G82RfDAO8D1g5hdDxzSdg0td2GXNRvWGbaTI1l88bbNyQmLyErNdGnHembqWLbiHhjRstVvxHWOhNoYHn19EHDO1lJmb-8zUwKLLnHa3GccHfPOurYcZs8n0AJomGeBdf6A7G4JgMLbNJdLehLmoGYnVZ27NJUJCwCQHjEjQsFg86Cx2vwaZaD6flBG1x');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      1 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">local_fire_department</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">鐵律族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">本能</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      追求秩序與完美的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">terrain</span>
+                      <span>源自遠古法典之山</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSbJ40JdF08uFP6-Vf4O26JhdTUnNSXJ9DNp62tBaYWa7yeNBrkpdP3VToxebdgrMsKXLhUauxeVcR4ZMSYzAj6DptWdHM_OWa0jhIE7l-6yj_qvya43RzX99ZZVK7KxB9rXd6lUD-qtYIHCgE1ndurtpWy5imBTCGl4eQl2Wy1bwDKe2PwEEjhIEXfUwODODzDIKk9D4Z7BSeYNQomZdsG4f8FffKXq4vjVLlINqc8GLWlELNI3SVeHVvxTjS_tCdkmOiBKwJ3C0x');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      2 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">favorite</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">聖靈族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">情感</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      渴望被愛與付出的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">water_drop</span>
+                      <span>源自生命之泉</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACzrH93D2kGIdug3sVNMAnU7slnLBYgbtuwOZYqMb-8XfkiIvazDQKV7CJfMFQzgKSsICN1nVBUh-BM8fWaArerW4ryVw7KOWyYrwQ-ZRhY4OTPK0WjY5Anm1I0IO-6-gSAHbZMsBHoRu0KeGr9khvL6XIjJ0KI-_mjBxxORC-PWecsBCEFR5t8Jbs0kpflc8RfKkGEr3hXsLst2FiooHrxz1wW3zAqWkwRW0Wvn8AfBGNy0UKxhH3mN9IfhkVu0jRAt8iGD_AA9n0');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      3 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">light_mode</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">輝光族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">情感</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      追求成就與注視的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">wb_sunny</span>
+                      <span>源自永恆烈陽</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzjkc0ILoYDKmrA94o1WbbvBulckZEUxwLZQUofCxE4TOXLwo35cBbm7BvAbER9LsTpqTigDeXPQ6BY66vXfUmqzlS-B0Fo3AQWDLnSKJnaMfwd7DfQetqkecWDPLy6oKkDJDI5LnP5RW-UJqA-ekmFWxrc-PJiDJiZYf3srWGyukIv-ARsYSgtPgyQzN50wK1Bqr943eaN3esoZh2x8_UpqNnfoolOxPHgZSnTP4IepGPzDterhTi_jZZAI99S3r8cyplHfxbe_BG');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      4 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">filter_vintage</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">幻影族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">情感</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      沉浸於獨特與憂傷的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">forest</span>
+                      <span>源自迷霧森林</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDWs2u5arXIKtUNVoC0bMya0GmEfhlw-3K3mi-7ISQM_drls4IBZ0MSA9d4rVG6eSd1gNC4Wx02rFp7kUpwhV6b0Xv8-nfgI1dPMezK-d2hY5nUWIIU5IDzUcDH-FLBmUL5ijLJ4Wjg9dMDCM_ir030iQKNkQwhT5zj6c-B4FTNsvOQRJan8-pmTis7FOA5Xqs48b5XRCeSs8QvxyLnMFZVxW3MncF37tpRSFjiwtwyldgaMA8S_Ie5J4x6LqESyGHMmv8oOwtxyVlG');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      5 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">menu_book</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">智者族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">精神</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      渴求知識與觀察的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">auto_stories</span>
+                      <span>源自星辰圖書館</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCa8WLPAE157_Li1SaTzEPjzfRonnmRJZrImoKKaDOtJgRYsO5JVY1HBMrCokO6gi_0dK5a3lKJz4sMyjD3-Wy-TlEapzVxwanFg7zPs89JBfMz2gfiZfOch_LSdPUkI3wTJ83wXfhB4nADCQCfg0wUX2JMvUOT-TxQOBANlzhDXIe1lRpsSQcdx3cnSFyPHjgHgFthRDQ_Yir0IT2sV2hoH8pwXXslLvNpqmLRyAxbBX3UoKKfArgna4-4P9LopnEx0c1nV2cjsVB1');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      6 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">security</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">堅盾族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">精神</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      追求安全與忠誠的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">castle</span>
+                      <span>源自地下堡壘</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvx-Ufr1OMFryrn-vPBuKUy5g_144YabKYpy8E6rKtrwyYztN7qTnp6F_bGbL7ef5vgEt0itv31eypxMisoY2-UjCQlyrnZM_7qGwKJFeQ4Vad0Y8aB3njpz3WQbCgL0fPYbPZYPD3tG0GP4tEQmVy9p6UVeurTvT306RkRTa3c1vK5lsBt1pqzAa5tsZtyTo7kVwCWCJrpQPZky7Xgfn07q8Qaz_Dp9U2iWt37kFMwenYaelKXYT67Q2EOWTPoVm45OsdklRvvqcw');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      7 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">air</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">秘風族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">精神</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      追求自由與新奇的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">cloud</span>
+                      <span>源自流浪之雲</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmdJ24tNREcqc59Q5fEZVq_6FzCRPyNFsmpawlK09v972bglRvwOGbs5HEPED4ixqfIdQrw1z0saZa_5zGulcXUz08J1Wbt7_kEujSKxG3FOUb80nso-GW8e5hG4afpLDQ3CFsqHefnnGOm1ClskFujsMel75rl0Zmk7lBVrVq_3-mzf8SzNu5-EddA7tbfBlXQbfQeX4Di1Su7duMrMs7Iz2RWkQIr4MZ19RN5hvzBlkQS3LmYiPYwbQiApMf6Y84ZiyrOHmL8O4D');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      8 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">volcano</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">霸龍族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">本能</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      追求力量與控制的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">landscape</span>
+                      <span>源自火山熔岩</span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="group relative bg-[#152e1f] rounded-2xl overflow-hidden border border-[#2d5e3f] hover:border-[#11d452] transition-all hover:-translate-y-2 duration-300 shadow-lg hover:shadow-glow-strong flex flex-col cursor-pointer">
+                  <div class="h-44 relative overflow-hidden bg-[#000]">
+                    <div
+                      class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-70"
+                      style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuABlwr7jv9t3VnADVF7delUv6jscgS85qZS_3Tv8YnPoeHiVquGqxEbC2QwxgajUfmQJdsgXr3MrUrRs5jpySUFY16LTE1ZRIZOf39CA6Ezp4S4yltUU8dDB5hZ6oaLCHfx5Ld0KFVbvGjE2e7zes613tfxQUX4dMPYO5P-wXmDIHJ7T-e6zrwz2cWvAtliGbS9UT9lbLI2CbaBhd4igM1sQWasgR2DOibnTc4amIVF5c8GlXawsmrUV95fj2gymIH_biL1KqmDpTFz');">
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#152e1f] via-transparent to-transparent"></div>
+                    <div
+                      class="absolute top-3 right-3 bg-[#102216]/80 backdrop-blur-sm text-[#11d452] text-xs font-bold px-3 py-1 rounded-full border border-[#11d452]/30 uppercase tracking-widest shadow-lg">
+                      9 型
+                    </div>
+                  </div>
+                  <div class="p-6 pt-2 flex flex-col flex-1 relative z-10">
+                    <div class="-mt-10 mb-4 flex justify-start">
+                      <div
+                        class="h-14 w-14 rounded-xl bg-[#102216] border-2 border-[#11d452] flex items-center justify-center shadow-lg relative z-10 text-[#11d452] animate-float group-hover:scale-110 group-hover:bg-[#11d452] group-hover:text-[#102216] transition-all duration-300">
+                        <span class="material-symbols-outlined text-3xl">spa</span>
+                      </div>
+                    </div>
+                    <div class="flex items-baseline gap-2 mb-2">
+                      <h4 class="text-xl font-bold text-white font-display group-hover:text-primary transition-colors">蒼翠族
+                      </h4>
+                      <span
+                        class="text-[10px] text-[#11d452] font-bold bg-[#11d452]/10 px-2 py-0.5 rounded border border-[#11d452]/20">本能</span>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-6 flex-1 leading-relaxed">
+                      追求和平與融合的靈魂
+                    </p>
+                    <div
+                      class="pt-4 border-t border-white/10 flex items-center gap-2 text-xs text-slate-500 font-mono group-hover:text-[#11d452] transition-colors">
+                      <span class="material-symbols-outlined text-base">nature_people</span>
+                      <span>源自萬物母林</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+              </section>
+              <!-- Benefits Section -->
+              <section class="w-full bg-[#102216] py-16 border-b border-guild-border/50">
+                <div class="w-full max-w-[1200px] px-4 mx-auto">
+                  <div class="flex flex-col gap-2 mb-10 text-center">
+                    <h2 class="text-primary text-sm font-bold tracking-widest uppercase">Benefits</h2>
+                    <h3 class="text-white text-3xl font-bold">開啟靈魂進化的三個維度</h3>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+                    <div class="bg-surface p-6 rounded-2xl border border-guild-border hover:border-primary transition-colors">
+                      <span class="material-symbols-outlined text-primary text-4xl mb-4">visibility</span>
+                      <h4 class="text-white text-xl font-bold mb-2">極致自我覺察</h4>
+                      <p class="text-[#90cbad]">看清自己的 HP、MP 與屬性值，不再盲目戰鬥，掌握通關密碼。</p>
+                    </div>
+                    <div class="bg-surface p-6 rounded-2xl border border-guild-border hover:border-primary transition-colors">
+                      <span class="material-symbols-outlined text-primary text-4xl mb-4">groups_3</span>
+                      <h4 class="text-white text-xl font-bold mb-2">深度共情力</h4>
+                      <p class="text-[#90cbad]">理解他人行為背後的動機，建立跨越公會的深刻聯結。</p>
+                    </div>
+                    <div class="bg-surface p-6 rounded-2xl border border-guild-border hover:border-primary transition-colors">
+                      <span class="material-symbols-outlined text-primary text-4xl mb-4">trending_up</span>
+                      <h4 class="text-white text-xl font-bold mb-2">清晰成長路徑</h4>
+                      <p class="text-[#90cbad]">透過壓力與整合方向，找到你從 Lv.1 邁向傳奇角色的唯一途徑。</p>
+                    </div>
+                  </div>
+                  </div>
+                  </section>
+                  <!-- Final CTA Section -->
+                  <section class="py-24 relative bg-background-dark w-full overflow-hidden" id="guild-cta">
+                    <div class="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent"></div>
+                    <div class="mx-auto max-w-3xl px-4 relative z-10 text-center">
+                      <div
+                        class="mb-8 inline-block rounded-full bg-primary/10 p-4 border border-primary/20 animate-bounce cursor-pointer hover:bg-primary/20 hover:border-primary transition-colors"
+                        style="animation-duration: 3s;">
+                        <span class="material-symbols-outlined text-4xl text-primary">stadia_controller</span>
+                      </div>
+                      <h2 class="text-4xl font-black text-white mb-6">準備好登入你的角色了嗎？</h2>
+                      <p class="text-xl text-gray-300 mb-10 text-[#90cbad]">
+                        只需要 10 分鐘，即可獲得完整的角色屬性分析表與專屬職業徽章。
+                      </p>
+                      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+              class="flex items-center justify-center gap-3 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-[#112217] shadow-[0_0_30px_rgba(17,212,82,0.3)] hover:bg-primary-hover transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(17,212,82,0.6)] animate-breathing-glow group"
+              onclick="window.location.href='../questionnaire/questionnaire.html'">
+              使用 Google 帳號登入
+              </button>
+              </div>
+              </div>
+              </section>
+    </main>
     <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12">
       <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
@@ -618,11 +624,11 @@
         </div>
         <div class="flex flex-wrap justify-center gap-6 md:gap-10">
           <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-            href="#">隱私政策</a>
+            href="../privacy/privacy.html">隱私政策</a>
           <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-            href="#">服務條款</a>
+            href="../services/services.html">服務條款</a>
           <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-            href="#">關於我們</a>
+            href="../about/about.html">關於我們</a>
           <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
             href="#">聯絡公會</a>
         </div>

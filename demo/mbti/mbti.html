@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>TraitQuest - MBTI 專屬介紹頁</title>
+    <title>TraitQuest - MBTI 介紹</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -128,14 +128,14 @@
                     <div class="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
                         <div
                             class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-dark border border-surface-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
-                            <span class="material-symbols-outlined text-sm">auto_awesome</span>
-                            RPG 風格人格測驗
+                            <span class="material-symbols-outlined text-sm">psychology</span>
+                            MBTI 測驗
                         </div>
                         <h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
-                            探索你的<br /><span class="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">靈魂屬性</span>
+                            探索你的<span class="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">英雄職業</span>
                         </h1>
                         <h2 class="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
-                            TraitQuest 邀請你進入人格的冒險世界。解鎖你的天賦技能樹，透過 MBTI 理論了解你的潛在能力，並尋找你的最佳公會隊友。
+                            TraitQuest 邀請你進入人格的冒險世界。透過 MBTI 理論了解你的潛在天賦，尋找你的最佳職業。
                         </h2>
                         <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
                             <button
@@ -145,8 +145,8 @@
                                     登入)</span>
                             </button>
                             <button
-                                class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-surface-dark border border-surface-border text-white text-base font-bold hover:bg-[#1e4030] hover:border-primary/50 transition-colors w-full sm:w-auto">
-                                <span class="truncate">了解更多理論</span>
+                                class="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-surface-dark border border-surface-border text-white text-base font-bold hover:bg-[#1e4030] hover:border-primary/50 transition-colors w-full sm:w-auto" onclick="window.location.href='#lore'">
+                                <span class="truncate">了解更多</span>
                             </button>
                         </div>
                     </div>
@@ -168,107 +168,69 @@
                                 </div>
                                 <div>
                                     <p class="text-xs text-[#90cbad]">系統提示</p>
-                                    <p class="text-sm font-bold text-white">歡迎來到 TraitQuest 世界，冒險者！</p>
+                                    <p class="text-sm font-bold text-white">歡迎來到 TraitQuest 大陸，冒險者！</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="w-full bg-[#0d1c14] py-16 border-y border-[#1e4030]">
-                <div class="w-full max-w-[1200px] px-4 md:px-6 mx-auto">
-                    <div class="flex flex-col gap-2 mb-10 text-center">
-                        <h2 class="text-primary text-sm font-bold tracking-widest uppercase">Attributes</h2>
-                        <h3 class="text-white text-3xl font-bold">四大維度屬性 (Stats)</h3>
-                        <p class="text-[#90cbad] max-w-[600px] mx-auto mt-2">如同 RPG 遊戲中的力量與敏捷，MBTI 用四個維度來定義你的心理基礎數值。</p>
+            <!-- Lore Section (Guild Manual) -->
+            <div id="lore" class="w-full bg-[#183426] py-16 lg:py-24 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-5"
+                    style="background-image: radial-gradient(#0bda73 1px, transparent 1px); background-size: 20px 20px;">
+                </div>
+                <div class="w-full max-w-[1000px] px-6 mx-auto relative z-10 flex flex-col md:flex-row gap-12 items-center">
+                    <div class="flex-1 space-y-6">
+                        <div class="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider">
+                            <span class="material-symbols-outlined text-lg">menu_book</span>
+                            Guild Manual
+                        </div>
+                        <h3 class="text-white text-3xl font-bold">榮格的心理功能理論</h3>
+                        <p class="text-[#e0eadd] text-lg leading-relaxed">
+                            MBTI 的基礎建立在心理學家卡爾·榮格 (Carl Jung) 的認知功能理論之上。
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                    1</div>
+                                <p class="text-[#90cbad]">每個人都有一套獨特的「技能組合」，決定了我們如何與世界互動。</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                    2</div>
+                                <p class="text-[#90cbad]">了解你的主導功能 (Dominant Function) 就像了解你的大招，能讓你發揮最大潛力。</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <div
+                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
+                                    3</div>
+                                <p class="text-[#90cbad]">這不是將人分類的標籤，而是幫助你成長的地圖。</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="flex-1 w-full">
                         <div
-                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
-                            <div
-                                class="size-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-3xl">bolt</span>
-                            </div>
-                            <div>
-                                <h4 class="text-white text-lg font-bold mb-1">E / I 能量來源</h4>
-                                <div class="text-xs font-bold text-purple-400 mb-2">MANA RECOVERY</div>
-                                <p class="text-[#90cbad] text-sm leading-relaxed">
-                                    <span class="text-white font-medium">外向 (Extraversion)</span> 從社交互動中吸取魔力，而 <span
-                                        class="text-white font-medium">內向 (Introversion)</span> 需要獨處冥想來回復能量。
-                                </p>
-                            </div>
-                            <div class="mt-auto pt-4">
-                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
-                                    <div
-                                        class="bg-purple-500 h-full w-2/3 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]">
-                                    </div>
+                            class="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                            <div class="flex justify-between items-center mb-4 border-b border-[#31684d] pb-2">
+                                <span class="text-xs text-[#90cbad]">System.log</span>
+                                <div class="flex gap-1">
+                                    <div class="size-2 rounded-full bg-red-500"></div>
+                                    <div class="size-2 rounded-full bg-yellow-500"></div>
+                                    <div class="size-2 rounded-full bg-green-500"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div
-                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
-                            <div
-                                class="size-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center border border-blue-500/30 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-3xl">map</span>
-                            </div>
-                            <div>
-                                <h4 class="text-white text-lg font-bold mb-1">S / N 感知模式</h4>
-                                <div class="text-xs font-bold text-blue-400 mb-2">WORLD MAP</div>
-                                <p class="text-[#90cbad] text-sm leading-relaxed">
-                                    <span class="text-white font-medium">實感 (Sensing)</span> 注重眼前的具體地形與細節，<span
-                                        class="text-white font-medium">直覺 (Intuition)</span> 則擅長預測未來的版圖與隱藏路徑。
-                                </p>
-                            </div>
-                            <div class="mt-auto pt-4">
-                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
-                                    <div
-                                        class="bg-blue-500 h-full w-1/2 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
-                            <div
-                                class="size-12 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center border border-red-500/30 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-3xl">swords</span>
-                            </div>
-                            <div>
-                                <h4 class="text-white text-lg font-bold mb-1">T / F 決策依據</h4>
-                                <div class="text-xs font-bold text-red-400 mb-2">COMBAT STYLE</div>
-                                <p class="text-[#90cbad] text-sm leading-relaxed">
-                                    <span class="text-white font-medium">思考 (Thinking)</span> 依靠邏輯與數據進行精確打擊，<span
-                                        class="text-white font-medium">情感 (Feeling)</span> 則依賴價值觀與和諧來守護隊友。
-                                </p>
-                            </div>
-                            <div class="mt-auto pt-4">
-                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
-                                    <div
-                                        class="bg-red-500 h-full w-3/4 rounded-full shadow-[0_0_10px_rgba(239,68,68,0.5)]">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="rpg-card flex flex-col gap-4 rounded-2xl border border-surface-border bg-surface-dark p-6 transition-all duration-300 group hover:bg-[#1a3a2b]">
-                            <div
-                                class="size-12 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center border border-yellow-500/30 group-hover:scale-110 transition-transform">
-                                <span class="material-symbols-outlined text-3xl">calendar_month</span>
-                            </div>
-                            <div>
-                                <h4 class="text-white text-lg font-bold mb-1">J / P 生活態度</h4>
-                                <div class="text-xs font-bold text-yellow-400 mb-2">QUEST LOG</div>
-                                <p class="text-[#90cbad] text-sm leading-relaxed">
-                                    <span class="text-white font-medium">判斷 (Judging)</span> 喜歡按部就班完成任務清單，<span
-                                        class="text-white font-medium">感知 (Perceiving)</span> 則偏好隨機觸發的支線劇情與彈性。
-                                </p>
-                            </div>
-                            <div class="mt-auto pt-4">
-                                <div class="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
-                                    <div
-                                        class="bg-yellow-500 h-full w-2/5 rounded-full shadow-[0_0_10px_rgba(234,179,8,0.5)]">
-                                    </div>
-                                </div>
+                            <div class="space-y-2 font-mono text-xs md:text-sm text-primary/80">
+                                <p>&gt; Initializing Cognitive Functions...</p>
+                                <p>&gt; Loading <span class="text-white">Ni (Introverted Intuition)</span>... <span
+                                        class="text-green-400">Done.</span></p>
+                                <p>&gt; Loading <span class="text-white">Fe (Extroverted Feeling)</span>... <span
+                                        class="text-green-400">Done.</span></p>
+                                <p>&gt; Quote: <span class="text-white italic">「向外看的人在做夢；向內看的人才是清醒的。」</span></p>
+                                <p>&gt; Analyzing user compatibility...</p>
+                                <p class="animate-pulse">&gt; Ready to start adventure.</p>
                             </div>
                         </div>
                     </div>
@@ -295,7 +257,7 @@
                                     <span class="material-symbols-outlined text-purple-300">psychology</span>
                                 </div>
                                 <div>
-                                    <h4 class="text-white font-bold text-lg leading-none">智慧議會</h4>
+                                    <h4 class="text-white font-bold text-lg leading-none">至高議會</h4>
                                     <p class="text-purple-400 text-[10px] font-bold tracking-widest uppercase mt-1">The
                                         Analysts</p>
                                 </div>
@@ -422,7 +384,7 @@
                                     <span class="material-symbols-outlined text-primary">spa</span>
                                 </div>
                                 <div>
-                                    <h4 class="text-white font-bold text-lg leading-none">外交使節</h4>
+                                    <h4 class="text-white font-bold text-lg leading-none">縱橫捭闔</h4>
                                     <p class="text-primary text-[10px] font-bold tracking-widest uppercase mt-1">The
                                         Diplomats</p>
                                 </div>
@@ -672,7 +634,7 @@
                                     <span class="material-symbols-outlined text-yellow-300">construction</span>
                                 </div>
                                 <div>
-                                    <h4 class="text-white font-bold text-lg leading-none">探險者公會</h4>
+                                    <h4 class="text-white font-bold text-lg leading-none">探險聯盟</h4>
                                     <p class="text-yellow-400 text-[10px] font-bold tracking-widest uppercase mt-1">The
                                         Explorers</p>
                                 </div>
@@ -789,110 +751,115 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full bg-[#183426] py-16 lg:py-24 relative overflow-hidden">
-                <div class="absolute inset-0 opacity-5"
-                    style="background-image: radial-gradient(#0bda73 1px, transparent 1px); background-size: 20px 20px;">
-                </div>
-                <div
-                    class="w-full max-w-[1000px] px-6 mx-auto relative z-10 flex flex-col md:flex-row gap-12 items-center">
-                    <div class="flex-1 space-y-6">
-                        <div
-                            class="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider">
-                            <span class="material-symbols-outlined text-lg">menu_book</span>
-                            Guild Manual
-                        </div>
-                        <h3 class="text-white text-3xl font-bold">榮格的心理功能理論</h3>
-                        <p class="text-[#e0eadd] text-lg leading-relaxed">
-                            MBTI 的基礎建立在心理學家卡爾·榮格 (Carl Jung) 的認知功能理論之上。
-                        </p>
-                        <div class="space-y-4">
-                            <div class="flex gap-4">
-                                <div
-                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
-                                    1</div>
-                                <p class="text-[#90cbad]">每個人都有一套獨特的「技能組合」，決定了我們如何與世界互動。</p>
-                            </div>
-                            <div class="flex gap-4">
-                                <div
-                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
-                                    2</div>
-                                <p class="text-[#90cbad]">了解你的主導功能 (Dominant Function) 就像了解你的大招，能讓你發揮最大潛力。</p>
-                            </div>
-                            <div class="flex gap-4">
-                                <div
-                                    class="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">
-                                    3</div>
-                                <p class="text-[#90cbad]">這不是將人分類的標籤，而是幫助你成長的地圖。</p>
-                            </div>
-                        </div>
+<!-- Benefits Section (Restyled Attributes) -->
+<section class="w-full bg-[#102216] py-16 border-y border-guild-border/50">
+    <div class="w-full max-w-[1200px] px-4 mx-auto">
+        <div class="flex flex-col gap-2 mb-10 text-center">
+            <h2 class="text-primary text-sm font-bold tracking-widest uppercase">Attributes</h2>
+            <h3 class="text-white text-3xl font-bold">掌握你的心理維度屬性</h3>
+            <p class="text-[#90cbad] max-w-[600px] mx-auto mt-2">如同 RPG 遊戲中的力量與敏捷，理解這四個維度能幫助你更有效地配置靈魂天賦。</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+            <div
+                class="bg-surface p-6 rounded-2xl border border-guild-border hover:border-primary transition-colors flex flex-col gap-4 group">
+                <span
+                    class="material-symbols-outlined text-purple-400 text-4xl group-hover:scale-110 transition-transform">bolt</span>
+                <div>
+                    <h4 class="text-white text-xl font-bold mb-1">E / I 能量來源</h4>
+                    <div class="text-[10px] font-bold text-purple-400 tracking-widest uppercase mb-2">MANA RECOVERY
                     </div>
-                    <div class="flex-1 w-full">
-                        <div
-                            class="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
-                            <div class="flex justify-between items-center mb-4 border-b border-[#31684d] pb-2">
-                                <span class="text-xs text-[#90cbad]">System.log</span>
-                                <div class="flex gap-1">
-                                    <div class="size-2 rounded-full bg-red-500"></div>
-                                    <div class="size-2 rounded-full bg-yellow-500"></div>
-                                    <div class="size-2 rounded-full bg-green-500"></div>
-                                </div>
-                            </div>
-                            <div class="space-y-2 font-mono text-xs md:text-sm text-primary/80">
-                                <p>&gt; Initializing Cognitive Functions...</p>
-                                <p>&gt; Loading <span class="text-white">Ni (Introverted Intuition)</span>... <span
-                                        class="text-green-400">Done.</span></p>
-                                <p>&gt; Loading <span class="text-white">Fe (Extroverted Feeling)</span>... <span
-                                        class="text-green-400">Done.</span></p>
-                                <p>&gt; Analyzing user compatibility...</p>
-                                <p class="animate-pulse">&gt; Ready to start adventure.</p>
-                            </div>
-                        </div>
-                    </div>
+                    <p class="text-[#90cbad] text-sm leading-relaxed">
+                        <span class="text-white font-medium">外向</span> 透過社交獲取魔力，而 <span
+                            class="text-white font-medium">內向</span> 則需要獨處來回復能量。
+                    </p>
                 </div>
             </div>
-            <div class="w-full py-16 px-4 text-center" id="guild">
-                <div class="max-w-[600px] mx-auto flex flex-col items-center gap-6">
-                    <div
-                        class="size-16 bg-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(11,218,115,0.4)] mb-2 animate-breath">
-                        <span class="material-symbols-outlined text-[#10231a] text-4xl">stadia_controller</span>
+            <div
+                class="bg-surface p-6 rounded-2xl border border-guild-border hover:border-primary transition-colors flex flex-col gap-4 group">
+                <span
+                    class="material-symbols-outlined text-blue-400 text-4xl group-hover:scale-110 transition-transform">map</span>
+                <div>
+                    <h4 class="text-white text-xl font-bold mb-1">S / N 感知模式</h4>
+                    <div class="text-[10px] font-bold text-blue-400 tracking-widest uppercase mb-2">WORLD MAP</div>
+                    <p class="text-[#90cbad] text-sm leading-relaxed">
+                        <span class="text-white font-medium">實感</span> 注重具體細節，而 <span
+                            class="text-white font-medium">直覺</span> 擅長預測隱藏路徑。
+                    </p>
+                </div>
+            </div>
+            <div
+                class="bg-surface p-6 rounded-2xl border border-guild-border hover:border-primary transition-colors flex flex-col gap-4 group">
+                <span
+                    class="material-symbols-outlined text-red-400 text-4xl group-hover:scale-110 transition-transform">swords</span>
+                <div>
+                    <h4 class="text-white text-xl font-bold mb-1">T / F 決策依據</h4>
+                    <div class="text-[10px] font-bold text-red-400 tracking-widest uppercase mb-2">COMBAT STYLE</div>
+                    <p class="text-[#90cbad] text-sm leading-relaxed">
+                        <span class="text-white font-medium">思考</span> 依靠邏輯進行打擊，而 <span
+                            class="text-white font-medium">情感</span> 則依賴價值觀守護隊友。
+                    </p>
+                </div>
+            </div>
+            <div
+                class="bg-surface p-6 rounded-2xl border border-guild-border hover:border-primary transition-colors flex flex-col gap-4 group">
+                <span
+                    class="material-symbols-outlined text-yellow-400 text-4xl group-hover:scale-110 transition-transform">calendar_month</span>
+                <div>
+                    <h4 class="text-white text-xl font-bold mb-1">J / P 生活態度</h4>
+                    <div class="text-[10px] font-bold text-yellow-400 tracking-widest uppercase mb-2">QUEST LOG</div>
+                    <p class="text-[#90cbad] text-sm leading-relaxed">
+                        <span class="text-white font-medium">判斷</span> 喜歡完成清單，而 <span
+                            class="text-white font-medium">感知</span> 偏好隨機觸發的冒險與彈性。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+            <section class="py-24 relative bg-background-dark w-full overflow-hidden" id="guild-cta">
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent"></div>
+                <div class="mx-auto max-w-3xl px-4 relative z-10 text-center">
+                    <div class="mb-8 inline-block rounded-full bg-primary/10 p-4 border border-primary/20 animate-bounce cursor-pointer hover:bg-primary/20 hover:border-primary transition-colors"
+                        style="animation-duration: 3s;">
+                        <span class="material-symbols-outlined text-4xl text-primary">stadia_controller</span>
                     </div>
-                    <h2 class="text-white text-3xl font-bold">準備好加入公會了嗎？</h2>
-                    <p class="text-[#90cbad]">只需幾秒鐘，使用 Google 帳號登入，即可領取你的冒險者證書，並開始詳細的人格分析。</p>
-                    <button
-                        class="flex min-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-primary text-[#10231a] text-lg font-bold shadow-[0_0_20px_rgba(11,218,115,0.6)] animate-breath hover:bg-[#34e28a] hover:scale-105 transition-all hover:shadow-[0_0_30px_rgba(11,218,115,0.8)]"
-                        onclick="window.location.href='../questionnaire/questionnaire.html'">
-                        <span class="truncate flex items-center gap-3">
-                            <span class="material-symbols-outlined">login</span>
-                            Google 快速登入
-                        </span>
-                    </button>
-                    <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12">
-                        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-                            <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
-                                onclick="window.location.href='../index/index.html'">
-                                <span
-                                    class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
-                                <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
-                            </div>
-                            <div class="flex flex-wrap justify-center gap-6 md:gap-10">
-                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                                    href="#">隱私政策</a>
-                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                                    href="#">服務條款</a>
-                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                                    href="#">關於我們</a>
-                                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                                    href="#">聯絡公會</a>
-                            </div>
-                        </div>
-                        <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
-                            <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by
-                                Psychological Wisdom.</p>
-                        </div>
+                    <h2 class="text-4xl font-black text-white mb-6">準備好登入你的角色了嗎？</h2>
+                    <p class="text-xl text-gray-300 mb-10 text-[#90cbad]">
+                        只需要 10 分鐘，即可獲得完整的角色屬性分析表與專屬職業徽章。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+                            class="flex items-center justify-center gap-3 rounded-xl bg-primary px-8 py-4 text-lg font-bold text-[#112217] shadow-[0_0_30px_rgba(17,212,82,0.3)] hover:bg-primary-hover transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(17,212,82,0.6)] animate-breathing-glow group"
+                            onclick="window.location.href='../questionnaire/questionnaire.html'">
+                            使用 Google 帳號登入
+                            </button>
+                    </div>
+                    </div>
+                    </section>
+                    </main>
+        <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
+                    onclick="window.location.href='../index/index.html'">
+                    <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+                    <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+                        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                            href="../privacy/privacy.html">隱私政策</a>
+                        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                            href="../services/services.html">服務條款</a>
+                        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                            href="../about/about.html">關於我們</a>
+                        <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                            href="#">聯絡公會</a>
+                    </div>
+                    </div>
+                    <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
+                        <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by
+                            Psychological Wisdom.</p>
+                    </div>
                     </footer>
-                </div>
-            </div>
-        </main>
     </div>
 </body>
 

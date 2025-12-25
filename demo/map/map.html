@@ -128,6 +128,15 @@
     .banner-shape {
       clip-path: polygon(100% 0, 100% 100%, 50% 85%, 0 100%, 0 0);
     }
+
+    .group:hover {
+      z-index: 100 !important;
+    }
+
+    /* Popup z-index fix */
+    .popup-card {
+      z-index: 9999 !important;
+    }
   </style>
 </head>
 
@@ -208,7 +217,7 @@
               <li class="flex items-center gap-3 text-sm text-gray-300">
                 <span
                   class="material-symbols-outlined text-region-enneagram text-lg drop-shadow-[0_0_5px_rgba(167,139,250,0.8)]">temple_hindu</span>
-                <span>九型人格塔</span>
+                <span>Enneagram 冥想塔</span>
               </li>
               <li class="flex items-center gap-3 text-sm text-gray-300">
                 <span
@@ -217,15 +226,16 @@
               </li>
               <li class="flex items-center gap-3 text-sm text-gray-500">
                 <span class="material-symbols-outlined text-gray-500 text-lg">diamond</span>
-                <span>蓋洛普祭壇 <span class="text-gray-600 text-xs ml-1">(未解鎖)</span></span>
+                <span>Gallup 祭壇 <span class="text-gray-600 text-xs ml-1">(未解鎖)</span></span>
               </li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <div class="relative w-full h-[600px] lg:h-[800px] max-w-[1400px] mx-auto mt-4 lg:mt-0 perspective-1000">
-      <div class="absolute top-[15%] left-[10%] md:left-[18%] group z-20">
+    <div
+      class="relative w-full h-[500px] lg:h-[650px] max-w-[1100px] mx-auto mt-[-60px] lg:mt-[-80px] px-8 md:px-16 perspective-1000">
+      <div class="absolute top-[8%] left-[10%] md:left-[15%] group z-20">
         <div class="relative flex flex-col items-center cursor-pointer">
           <div
             class="absolute bottom-4 left-1/2 -translate-x-1/2 w-24 h-80 bg-gradient-to-t from-region-mbti/30 via-region-mbti/5 to-transparent blur-xl pointer-events-none z-0 animate-pulse-slow">
@@ -255,7 +265,7 @@
             </span>
           </div>
           <div
-            class="absolute top-0 left-full ml-6 w-72 bg-[#122023] border border-region-mbti/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0 z-50 pointer-events-none group-hover:pointer-events-auto ring-1 ring-white/10">
+            class="popup-card absolute top-0 left-full ml-6 w-72 bg-[#122023] border border-region-mbti/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0 pointer-events-none group-hover:pointer-events-auto ring-1 ring-white/10">
             <div class="relative h-32 w-full mb-3 rounded-lg overflow-hidden border border-white/10">
               <div class="absolute inset-0 bg-cover bg-center"
                 style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_H_FnQrEU4a1xs5rsL9kablIllbLgpEjhuS6bO9jTAP7ImrnFVqv8NtA1zzhDo4LK3SvUyAur5QGFnqesfreyeBACBaYbYbZuPjHZZpc23PDm-swnZzIhz6G-CN5QwiCbTYg3evbELEUZdwcbZRJb9EIOaDZr_9x5h8I1jUfBJXIYyfM1W_6K-9ozWQD-QYsyTanNfBDTrIB62q7_Ny-u7VaBqW0gGxjvMQAnWAVdl63XgUvVrmmHWwkjvTnXgtmw07vc__99Pn_-");'>
@@ -268,8 +278,8 @@
                 </div>
               </div>
             </div>
-            <h3 class="text-lg font-bold text-white mb-1">16型人格聖殿</h3>
-            <p class="text-xs text-gray-300 mb-3">你已成功探索思維維度。點擊查看你的詳細報告。</p>
+            <h3 class="text-lg font-bold text-white mb-1">英雄職業</h3>
+            <p class="text-xs text-gray-300 mb-3">點擊查看你的詳細報告。</p>
             <button
               class="w-full py-2 bg-region-mbti hover:bg-cyan-300 text-[#112217] rounded-lg text-xs font-bold transition-colors shadow-[0_0_15px_rgba(34,211,238,0.3)]"
               onclick="window.location.href='../analysis/analysis.html'">
@@ -278,7 +288,7 @@
           </div>
         </div>
       </div>
-      <div class="absolute top-[20%] right-[10%] md:right-[22%] group z-20">
+      <div class="absolute top-[10%] right-[10%] md:right-[20%] group z-20">
         <div class="relative flex flex-col items-center cursor-pointer">
           <div
             class="absolute inset-[-20px] rounded-full border border-region-big5/30 animate-[ping_3s_ease-in-out_infinite] z-0">
@@ -293,24 +303,24 @@
             <span class="text-region-big5 font-bold text-sm tracking-widest">Big Five 屬性之泉</span>
           </div>
           <div
-            class="absolute top-0 right-full mr-4 w-72 bg-[#0f251b] border border-region-big5/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-x-[10px] group-hover:translate-x-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+            class="popup-card absolute top-0 right-full mr-4 w-72 bg-[#0f251b] border border-region-big5/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-x-[10px] group-hover:translate-x-0 pointer-events-none group-hover:pointer-events-auto">
             <div class="relative h-32 w-full mb-3 rounded-lg overflow-hidden border border-white/10">
               <div class="absolute inset-0 bg-cover bg-center"
                 style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCTDuzgwlyj-15QISA3f5qvVkYFqRbxtHS3Q2oC8EqnzLL4D7TLg0SRLyXBdsmvG2WpWwcevDYTtvmuatQwgjP5EtgLZCSynwVdxpPGFKHiUj9b7aO4h-yzvzMrOmCzYGhuVgJ4lsb4zYd_0tf2Qs-7jFdBiTuqDy5KHZXFHasvVyBbpguLu3By5W3GX6OclBriiwj5r5xjBfcThaPkZ5hpGOFP75HALhP5O3SBpu5HUG74l4YzFn7JSeRmAkq--NnXNHtvgPj0HZff");'>
               </div>
               <div class="absolute inset-0 bg-gradient-to-t from-[#0f251b] to-transparent"></div>
             </div>
-            <h3 class="text-lg font-bold text-white mb-1">五大屬性之泉</h3>
+            <h3 class="text-lg font-bold text-white mb-1">角色屬性</h3>
             <p class="text-xs text-gray-300 mb-3">在生命之泉中照見真實自我，繪製你的個性雷達。</p>
             <button
               class="w-full py-2 bg-region-big5/20 hover:bg-region-big5 text-region-big5 hover:text-[#112217] border border-region-big5/50 rounded-lg text-xs font-bold transition-colors"
               onclick="window.location.href='../big_five/big_five.html'">
-              前往泉源
+      前往泉源
             </button>
           </div>
         </div>
       </div>
-      <div class="absolute top-[48%] left-[50%] -translate-x-1/2 group z-30">
+      <div class="absolute top-[35%] left-[50%] -translate-x-1/2 group z-30">
         <div class="relative flex flex-col items-center cursor-pointer">
           <div class="absolute inset-[-10px] border border-region-enneagram/20 rounded-full animate-spin-slow z-0">
           </div>
@@ -321,18 +331,18 @@
           </div>
           <div
             class="mt-5 bg-black/60 backdrop-blur px-5 py-2 rounded-full border border-region-enneagram/40 shadow-[0_0_15px_rgba(167,139,250,0.3)]">
-            <span class="text-region-enneagram font-extrabold text-base tracking-[0.2em] uppercase">九型人格塔</span>
+            <span class="text-region-enneagram font-extrabold text-base tracking-[0.2em] uppercase">Enneagram 冥想塔</span>
           </div>
           <div
-            class="absolute top-full mt-6 w-80 bg-[#181126] border border-region-enneagram/50 rounded-xl p-5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[-10px] group-hover:translate-y-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+            class="popup-card absolute bottom-full mb-6 w-80 bg-[#181126] border border-region-enneagram/50 rounded-xl p-5 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[10px] group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
             <div class="relative h-40 w-full mb-4 rounded-lg overflow-hidden border border-white/10">
               <div class="absolute inset-0 bg-cover bg-center"
                 style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCvDrGplJ_AYJAwPYdCWvaC6BCgCR7EYyisfQFNpbwjc6sdNsoekUjfOittUYvwaD7BgwnilDHtrmHXuMuKJydJEiKQunC9XjwuGgkHdBKJwx2NxMsN6KT8F3U3Lrpjp-8bTCRnPrtJio_U54JJDhCIVOw6qm1f-gGIr_46G23KuNUYY9or0DW82evmIJ9ol--_B-Phy50cLvvaU8AFXeDRlMPFPP6q09--J8cEWsXHcuxmFDh6fMdqGQOygoTtRnPtdj8fdnhI5ogC");'>
               </div>
               <div class="absolute inset-0 bg-gradient-to-t from-[#181126] to-transparent"></div>
             </div>
-            <h3 class="text-xl font-bold text-white mb-1">九型冥想塔</h3>
-            <p class="text-sm text-gray-300 mb-4">攀登高塔，深入靈魂深處，覺醒你的心靈原力。</p>
+            <h3 class="text-xl font-bold text-white mb-1">靈魂種族</h3>
+            <p class="text-sm text-gray-300 mb-4">探索靈魂的奧秘，揭示你內心的真實種族面貌。</p>
             <button
               class="w-full py-3 bg-region-enneagram/20 hover:bg-region-enneagram text-region-enneagram hover:text-[#181126] border border-region-enneagram/50 rounded-lg text-sm font-bold transition-colors"
               onclick="window.location.href='../enneagram/enneagram.html'">
@@ -341,7 +351,7 @@
           </div>
         </div>
       </div>
-      <div class="absolute bottom-[18%] left-[15%] md:left-[22%] group z-20">
+      <div class="absolute bottom-[35%] left-[15%] md:left-[20%] group z-20">
         <div class="relative flex flex-col items-center cursor-pointer">
           <div class="absolute inset-[-5px] bg-region-disc/10 rotate-45 z-0 animate-pulse-slow"></div>
           <div
@@ -356,14 +366,14 @@
             <span class="text-region-disc font-bold text-sm tracking-widest">DISC 戰鬥叢林</span>
           </div>
           <div
-            class="absolute bottom-full mb-4 w-72 bg-[#2b1010] border border-region-disc/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[10px] group-hover:translate-y-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+            class="popup-card absolute bottom-full mb-4 w-72 bg-[#2b1010] border border-region-disc/50 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[10px] group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
             <div class="relative h-32 w-full mb-3 rounded-lg overflow-hidden border border-white/10">
               <div class="absolute inset-0 bg-cover bg-center"
                 style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAGGrBLD3DE7c97ZGQ0cPPeL7daiJaXGqy6evNvRv-JUBHgx6qaCMT-se1lcr--hJEnINbp_LOG5BaAR7F0HsqHHkruPuto7ShshwLaPurcSmgAkI2yAfeIytD--wTRTOZ9w_7DUJg3sTVrJYlAVsfEdoGxRzYlR2OyywzX4QuSsATcl23bKuEy3kVwVWCqcvEGq29jTjs8bBNJ9sHcinzTsdOrx-MSQK_rBHjGqyHPRcd1xXRwpG8UGgUFivb5C3oNSVp9CAU97IE4");'>
               </div>
               <div class="absolute inset-0 bg-gradient-to-t from-[#2b1010] to-transparent"></div>
             </div>
-            <h3 class="text-lg font-bold text-white mb-1">行為風格戰場</h3>
+            <h3 class="text-lg font-bold text-white mb-1">對戰風格</h3>
             <p class="text-xs text-gray-300 mb-3">在叢林法則中，D.I.S.C 四大流派，誰主沉浮？</p>
             <button
               class="w-full py-2 bg-region-disc/20 hover:bg-region-disc text-region-disc hover:text-white border border-region-disc/50 rounded-lg text-xs font-bold transition-colors"
@@ -373,7 +383,7 @@
           </div>
         </div>
       </div>
-      <div class="absolute bottom-[22%] right-[15%] md:right-[18%] group z-20">
+      <div class="absolute bottom-[38%] right-[15%] md:right-[18%] group z-20">
         <div class="relative flex flex-col items-center cursor-not-allowed">
           <div class="absolute inset-[-40px] rounded-full bg-amber-900/40 blur-2xl z-0 pointer-events-none"></div>
           <div
@@ -396,17 +406,17 @@
           <div
             class="mt-4 bg-gray-900/80 backdrop-blur px-3 py-1 rounded-full border border-gray-600/50 z-20 shadow-lg">
             <span class="text-region-gallup/70 font-bold text-sm tracking-widest flex items-center gap-1">
-              蓋洛普祭壇
+              Gallup 祭壇
               <span class="text-[10px] bg-gray-800 px-1 rounded border border-gray-700 text-gray-500">未解鎖</span>
             </span>
           </div>
           <div
-            class="absolute bottom-full right-full mb-4 w-64 bg-[#1a3323] border border-gray-600 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[10px] group-hover:translate-y-0 z-50 pointer-events-auto">
+            class="popup-card absolute bottom-full right-full mb-4 w-64 bg-[#1a3323] border border-gray-600 rounded-xl p-4 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-[10px] group-hover:translate-y-0 pointer-events-auto">
             <div class="flex items-center gap-2 mb-2 text-gray-400 border-b border-gray-700 pb-2">
               <span class="material-symbols-outlined text-lg">lock</span>
               <span class="text-xs font-bold uppercase">區域未解鎖</span>
             </div>
-            <h3 class="text-lg font-bold text-gray-300 mb-1">遠古優勢祭壇</h3>
+            <h3 class="text-lg font-bold text-gray-300 mb-1">傳奇技能</h3>
             <p class="text-xs text-gray-500 mb-3">此聖地被魔法屏障封鎖。需先完成「DISC 戰鬥叢林」方可進入。</p>
             <div class="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
               <div class="w-[40%] h-full bg-region-gallup"></div>
@@ -422,15 +432,15 @@
             <feComposite in="SourceGraphic" in2="blur" operator="over"></feComposite>
           </filter>
         </defs>
-        <path d="M 22% 20% Q 50% 10% 82% 25%" fill="none" filter="url(#glowLine)" stroke="#22d3ee"
+        <path d="M 22% 18% Q 50% 10% 82% 22%" fill="none" filter="url(#glowLine)" stroke="#22d3ee"
           stroke-dasharray="5,5" stroke-width="2"></path>
-        <path d="M 18% 22% Q 25% 60% 22% 78%" fill="none" filter="url(#glowLine)" stroke="#22d3ee"
+        <path d="M 18% 20% Q 25% 60% 22% 70%" fill="none" filter="url(#glowLine)" stroke="#22d3ee"
           stroke-dasharray="5,5" stroke-width="2"></path>
-        <path d="M 82% 25% Q 75% 50% 50% 48%" fill="none" filter="url(#glowLine)" stroke="#10b981"
+        <path d="M 82% 22% Q 75% 50% 50% 45%" fill="none" filter="url(#glowLine)" stroke="#10b981"
           stroke-dasharray="5,5" stroke-width="2"></path>
-        <path d="M 50% 48% Q 50% 70% 82% 78%" fill="none" filter="url(#glowLine)" stroke="#a78bfa"
+        <path d="M 50% 45% Q 50% 65% 82% 68%" fill="none" filter="url(#glowLine)" stroke="#a78bfa"
           stroke-dasharray="5,5" stroke-width="2"></path>
-        <path d="M 22% 78% L 50% 48%" fill="none" filter="url(#glowLine)" stroke="#dc2626" stroke-dasharray="5,5"
+        <path d="M 22% 70% L 50% 45%" fill="none" filter="url(#glowLine)" stroke="#dc2626" stroke-dasharray="5,5"
           stroke-width="2"></path>
       </svg>
     </div>
