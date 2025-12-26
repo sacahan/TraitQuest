@@ -1,48 +1,50 @@
-from google.adk.agents import Agent
+from google.adk.agents import LlmAgent, Agent
+from google.adk.models.lite_llm import LiteLlm
+from google.adk.tools import tool
 from app.core.config import settings
-from app.models.quest import Question, QuestionType, VisualFeedback
-import json
 
-class QuestionnaireAgent(Agent):
-    def __init__(self):
-        super().__init__(
-            name="questionnaire_agent",
-            description="Abby (AI GM) - Provide immersive RPG narrative and personality questions",
-            instruction="You are Abby, a mysterious guide in the realm of TraitQuest. Use a dark fantasy RPG tone. Provide immersive RPG narrative and personality questions."
-        )
+# 定義 Questionnaire Agent 的 System Prompt
+QUESTIONNAIRE_INSTRUCTION = """你是 TraitQuest 的「引導者艾比 (Abby)」，一位充滿神祕感與智慧的靈魂導師。
+你的任務是根據測驗類別（MBTI, DISC...），將心理測驗題目偽裝在 RPG 情境對話中。
 
-    async def generate_initial_question(self, quest_type: str) -> dict:
-        # Prompt logic to generate the first question based on MBTI/Big5 etc.
-        # This will use LiteLLM to call Github Copilot models
-        prompt = f"Start a {quest_type} personality test in a dark fantasy RPG setting."
-        # result = await self.call_llm(prompt)
-        
-        # Mocking for Phase 1 start
-        return {
-            "narrative": "歡迎來到靈魂試煉場，冒險者。我是艾比，你的引路人。面前有一扇封閉的石門，你感覺到一股強大的魔力。你打算如何應對？",
-            "question": {
-                "id": "Q1",
-                "type": "QUANTITATIVE",
-                "text": "你感應到石門上的符文在跳動，你會選擇：",
-                "options": [
-                    {"id": "A", "text": "試圖用魔力解讀符文"},
-                    {"id": "B", "text": "用蠻力推開石門"},
-                    {"id": "C", "text": "尋找隱藏的機關"}
-                ],
-                "visualFeedback": "GLOW_EFFECT"
-            }
+敘事規範：
+- 語氣：神祕、共情、略帶史詩感。
+- 延續性：必須讀取冒險者的 hero_chronicle，在開場白中提到他們過去的行為（例如：「我記得你曾選擇在森林中保護那隻幼獸...」）。
+- 難度調整：根據玩家等級決定題目深度，Lv.11 以上應提供開放性問題。
+- 結構：請使用 `submit_question` 工具來提交你的回應。"""
+
+@tool
+def submit_question(narrative: str, question_text: str, options: list[str], type: str = "QUANTITATIVE") -> dict:
+    """
+    提交生成的 RPG 劇情與題目給系統。
+    
+    Args:
+        narrative: RPG 情境敘述，請用優美的文字描述。
+        question_text: 題目內容，請融入情境。
+        options: 選項列表 (例如 ["選項A", "選項B"])。
+        type: 題目類型 (QUANTITATIVE 或 SOUL_NARRATIVE)。
+    """
+    return {
+        "narrative": narrative,
+        "question": {
+            "text": question_text,
+            "options": [{"id": str(i+1), "text": opt} for i, opt in enumerate(options)],
+            "type": type
         }
+    }
 
-    async def process_answer(self, history: list, answer: str) -> dict:
-        # Logic to analyze answer and decide next question
-        return {
-            "narrative": "你的靈魂產生了共鳴... 石門緩緩開啟，映入眼簾的是一片荒蕪的森林。",
-            "question": {
-                "id": "Q2",
-                "type": "SOUL_NARRATIVE",
-                "text": "這片森林充滿了敵意，你感到孤獨嗎？請對我訴說你的真實感受。",
-                "visualFeedback": None
-            }
-        }
+def create_questionnaire_agent() -> Agent:
+    return Agent(
+        name="questionnaire_agent",
+        description="Abby (AI GM) - Provide immersive RPG narrative and personality questions",
+        instruction=QUESTIONNAIRE_INSTRUCTION,
+        model=LiteLlm(
+            model=settings.LLM_MODEL,
+            api_key=settings.GITHUB_COPILOT_TOKEN,
+            extra_headers=settings.GITHUB_COPILOT_HEADERS,
+        ),
+        tools=[submit_question] 
+    )
 
-questionnaire_agent = QuestionnaireAgent()
+# 為了方便其他模組使用，預先建立一個實例 (或是由 Orchestrator 動態建立)
+questionnaire_agent = create_questionnaire_agent()
