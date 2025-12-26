@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #11D452;
+    --color-primary-hover: #0fb847;
+    --color-background-dark: #102216;
+    --color-surface: #1a3323;
+    --color-magic-cyan: #00f0ff;
+    --color-magic-purple: #bd00ff;
+    --color-secondary: #d4af37;
+  
+    --font-display: "Space Grotesk", "Noto Sans TC", sans-serif;
+    --font-body: "Noto Sans TC", sans-serif;
+  
+    @keyframes breathing-glow {
+  
+      0%,
+      100% {
+        box-shadow: 0 0 5px rgba(17, 212, 82, 0.3);
+      }
+  
+      50% {
+        box-shadow: 0 0 20px rgba(17, 212, 82, 0.7);
+      }
+    }
+
+    @keyframes float {
+  
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+  
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+  
+    @keyframes crystal-breathe {
+  
+      0%,
+      100% {
+        box-shadow: 0 0 10px rgba(11, 218, 115, 0.1), inset 0 0 10px rgba(0, 240, 255, 0.05);
+        border-color: rgba(11, 218, 115, 0.2);
+      }
+  
+      50% {
+        box-shadow: 0 0 25px rgba(11, 218, 115, 0.25), inset 0 0 20px rgba(0, 240, 255, 0.15);
+        border-color: rgba(11, 218, 115, 0.5);
+      }
+    }
+  
+    --animate-breathing-glow: breathing-glow 3s ease-in-out infinite;
+    --animate-float: float 6s ease-in-out infinite;
+    --animate-crystal-breathe: crystal-breathe 6s ease-in-out infinite;
+    }
+  
+    @layer base {
+  body {
+    @apply bg-background-dark text-white font-body;
+      margin: 0;
+      min-height: 100vh;
+    background-color: #102216;
+      /* Fallback for missing variable */
+    }
+    }
+    
+    @layer components {
+      .text-glow {
+        text-shadow: 0 0 15px rgba(11, 218, 115, 0.6);
+      }
+    
+      .box-glow {
+        box-shadow: 0 0 40px rgba(11, 218, 115, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+    
+      .bg-obsidian-glass {
+        background: linear-gradient(145deg, rgba(20, 40, 30, 0.9) 0%, rgba(5, 26, 16, 0.95) 100%);
+        @apply backdrop-blur-xl border border-white/10;
+      }
+    
+      .option-button {
+        background: linear-gradient(135deg, rgba(10, 20, 30, 0.4) 0%, rgba(20, 50, 40, 0.3) 100%);
+        @apply backdrop-blur-md border border-white/10 transition-all duration-300 animate-crystal-breathe;
+      }
+    
+      .option-button:hover {
+        @apply -translate-y-1 scale-[1.02] border-magic-cyan/60;
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2);
+      }
+    
+      .bg-runes {
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2311D452' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      }
+    
+      .typewriter-cursor::after {
+        content: '|';
+        @apply animate-pulse ml-1 text-primary;
+      }
+}
