@@ -48,15 +48,33 @@
 
 ### 3.3 多代理系統 (Multi-Agent System)
 
-系統由 Orchestrator 統籌多個 AI Agent 協作：
+TraitQuest 採用由 **Orchestrator (策劃代理)** 統籌的五大代理協作模型，確保從敘事引導到數據驗證的完整性。其運作流程可分為「循環對話階段」與「最終轉換階段」：
 
-- **Summary Agent (史官)**：壓縮長期記憶 (`hero_chronicle`)。
-- **Questionnaire Agent (說書人)**：生成 RPG 劇情包裝的題目。
-- **Analytics Agent (分析官)**：解析回答，提取心理標籤。
-- **Result Analysis Agent (AI Master)**：將標籤映射為遊戲資產 (Race, Class 等)。
-- **Validator Agent (守望者)**：確保輸出的 ID 符合規範。
+#### 循環對話階段 (The Interaction Loop)
 
-> Agent Prompt 可見 [templates](spec/templates.md)。
+此階段旨在透過 RPG 劇情採集玩家心理特徵：
+
+- **Questionnaire Agent (說書人)**：
+    作為引導者「艾比 (Abby)」，讀取玩家的 `hero_chronicle` (長期記憶) 與當前等級，動態生成包裹在 RPG 劇情中的情境題目。
+
+- **Analytics Agent (分析官)**：
+    接收玩家回答後，將非結構化的對話解析為結構化的心理標籤增量（如：`Openness +0.2`），並評估回答品質 (`quality_score`) 以決定經驗值加成。
+
+- **Summary Agent (史官)**：
+    將該輪對話歷程與性格趨勢壓縮為 300 字內的 `hero_chronicle` 摘要，確保 AI GM 在跨 Session 或跨題目時具備「長期記憶」能力。
+    - **成本優化**：每 10 輪對話或測驗結束時才執行一次更新。
+
+#### 最終轉換階段 (The Final Transformation)
+
+當測驗完成後，系統進入嚴格的資料寫入流程：
+
+- **Result Analysis Agent (AI Master)**：
+    執行「轉生儀式」，將測驗累積的所有心理標籤映射至預定義的遊戲資產 ID (如 `RACE_5`, `CLS_INTJ`)。同時生成「命運指引」與「命運羈絆」內容。
+
+- **Validator Agent (守望者)**：
+    系統的最後防線，負責「校對」AI Master 產出的 ID 是否存在於 `game_definitions` 真值清單中。若發現 AI 幻覺 (自創 ID) 或 JSON 語義矛盾，將強制執行重試機制。
+
+> Agent Prompt 詳細定義可見 [templates](spec/templates.md)。
 
 ---
 

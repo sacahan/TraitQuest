@@ -14,7 +14,7 @@
 
 1.  **深度敘事**：AI GM 艾比 (Abby) 的引導必須貫穿自始至終，非生硬的系統提示。
 2.  **視覺衝擊**：嚴格遵守黑暗奇幻 (Dark Fantasy) 風格，拒絕現代扁平化設計。**必須完整保留並移植 `demo` 目錄中的視覺效果與動態細節**。
-3.  **精準映射**：心理學模型 (MBTI/Big5 等) 與遊戲數值 (職業/屬性) 的映射必須精確且一致。
+3.  **精準映射**：心理學模型 (MBTI/Big5 等) 與遊戲數值 (職業/屬性) 的映射必須精確且一致。參考 [assets.md](assets.md)。
 
 ---
 
@@ -39,6 +39,7 @@
   - _模型源_: 連接 **Github Copilot LLM Models**。
 - **資料庫**: **PostgreSQL** (主資料庫, JSONB)
 - **快取**: **Redis** (Session, Ranking)
+- **Python package and project manager**: **[UV](https://docs.astral.sh/uv/)**
 
 ### 2.4 持久化與效能設計 (Persistence & Perf)
 
@@ -52,10 +53,40 @@
 
 - **部署策略**: **Local First** (優先本地開發與部署)
 - **環境變數**: 使用 `.env` 管理配置。
-  - `DB_URL`: 本地 PostgreSQL 連線字串。
-  - `REDIS_URL`: 本地 Redis 連線字串。
-  - `LITELLM_URL`: LiteLLM 服務地址。
+
+#### 環境變數配置
+
+專案根目錄包含兩個環境變數檔案：
+- `.env.example` - 範本檔案（可提交版本控制）
+- `.env` - 實際配置（已加入 .gitignore，包含敏感資訊）
+
+**主要環境變數**：
+
+```bash
+# Database Configuration
+DATABASE_URL="postgresql+asyncpg://traitsuser:password@sacahan-ubunto:5432/traitquest"
+
+# Redis Configuration
+REDIS_HOST=sacahan-ubunto
+REDIS_PORT=6379
+REDIS_DB=5
+REDIS_PASSWORD=your_redis_password
+
+# LiteLLM Configuration
+LITELLM_URL=http://localhost:4000
+GITHUB_COPILOT_TOKEN=your_github_copilot_token
+
+# Application Configuration
+APP_ENV=development
+SECRET_KEY=your_secret_key
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
 - **認證**: **Google OAuth**
+
 
 ---
 
@@ -75,9 +106,9 @@
 - **Backend**:
   - 實作 FastAPI + ADK 基礎架構。
   - Google OAuth 整合。
-  - **資料結構**: 實作 `contract.md` V1.3 定義的基礎 Profile 格式。
-  - **LLM**: 實作單一 Agent (Questionnaire Agent) 進行出題與基礎分析。
-- **Database**: PostgreSQL 基礎表結構。
+  - **資料結構**: 實作 [contract.md](contract.md) V1.3 定義的基礎 Profile 格式。
+  - **LLM**: 實作單一 Agent (Questionnaire Agent) 進行出題與基礎分析，參考 [template.md](template.md)。
+- **Database**: PostgreSQL 基礎表結構，參考 [database.md](database.md)。
 
 ### Phase 2: 全面遊戲化與多 Agent 協作
 
@@ -91,10 +122,10 @@
     - 實作「命運羈絆」相性建議與警戒組件。
   - **視覺反饋實作**：解析 `visualFeedback: "GLOW_EFFECT"` 並觸發對應的 CSS 圖騰發光特效。
 - **Backend**:
-  - 實作 Multi-Agent 系統 (Summary, Analytics, Validator, Result Analysis Agents)。
-  - **映射邏輯**: 完善 Enneagram -> Race, MBTI -> Class, Big Five -> Stats, DISC -> Stance, Gallup -> Talent 之映射。
+  - 實作 Multi-Agent 系統 (Summary, Analytics, Validator, Result Analysis Agents)，參考 [template.md](template.md)。
+  - **映射邏輯**: 完善 Enneagram -> Race, MBTI -> Class, Big Five -> Stats, DISC -> Stance, Gallup -> Talent 之映射，參考 [assets.md](assets.md)。
   - 實作 `/map` 區域解鎖邏輯。
-- **Database**: 完善 `game_definitions` 與長期記憶存儲。
+- **Database**: 完善 `game_definitions` 與長期記憶存儲，參考 [database.md](database.md)。
 
 ### Phase 3: 視覺沈浸與體驗打磨 (Immersion & Polish)
 
@@ -123,9 +154,9 @@
 
 ### 4.1 冒險系統 (Quest System)
 
-- **敘事引擎**: 透過 ADK 串接 LiteLLM 生成回應。
+- **敘事引擎**: 透過 ADK 調用 LiteLLM Library 生成回應，參考 [using-cloud-proprietary-models-via-litellm](https://google.github.io/adk-docs/agents/models/#using-cloud-proprietary-models-via-litellm)。
 - **容錯機制**: ADK 層需處理 LLM 格式錯誤重試。
-- **本地開發**: 開發者需確保本地 LiteLLM Proxy 正常運作。
+- **本地開發**: 開發者需確保 LiteLLM Library 正常運作。
 
 ### 4.2 英雄面板 (Hero Profile)
 
