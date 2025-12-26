@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>TraitQuest - MBTI 專屬結果分析</title>
+    <title>TraitQuest - 命運真諦之頁 (Variant 2)</title>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
@@ -20,159 +20,150 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#11D452",
-                        "primary-hover": "#0fb847",
+                        "primary": "#11d452",
+                        "primary-dark": "#0a8a33",
                         "background-light": "#f6f8f6",
-                        "background-dark": "#102216",
-                        "surface": "#1a3323",
-                        "guild-border": "#23482f",
-                        "card-dark": "#13261a",
-                        "card-lighter": "#1d3826",
+                        "background-dark": "#050d09", "card-dark": "#0e1f15",
+                        "card-lighter": "#162e20",
                         "accent-text": "#92c9a4",
                         "gold": "#ffd700",
-                        "gold-dim": "#b39700",
+                        "locked-bg": "#080f0b",
                     },
                     fontFamily: {
                         "display": ["Space Grotesk", "Noto Sans TC", "sans-serif"],
-                        "body": ["Noto Sans TC", "sans-serif"]
+                        "body": ["Noto Sans TC", "sans-serif"],
                     },
-                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
-                    keyframes: {
-                        "breathing-glow": {
-                            "0%, 100%": { boxShadow: "0 0 5px rgba(17, 212, 82, 0.3)" },
-                            "50%": { boxShadow: "0 0 20px rgba(17, 212, 82, 0.7)" }
-                        },
-                        "breathing-white": {
-                            "0%, 100%": { boxShadow: "0 0 5px rgba(255, 255, 255, 0.2)" },
-                            "50%": { boxShadow: "0 0 20px rgba(255, 255, 255, 0.6)" }
-                        },
-                        "float": {
-                            "0%": { transform: "translateY(0px)" },
-                            "50%": { transform: "translateY(-10px)" },
-                            "100%": { transform: "translateY(0px)" }
-                        }
-                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2.5rem", "full": "9999px" },
                     animation: {
-                        "breathing-glow": "breathing-glow 3s ease-in-out infinite",
-                        "breathing-white": "breathing-white 3s ease-in-out infinite",
-                        "float": "float 6s ease-in-out infinite"
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'unlock-reveal': 'unlockReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+                        'slide-up-fade': 'slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'border-glow': 'borderGlow 3s ease-in-out infinite',
+                        'shake-lock': 'shake 0.5s ease-in-out',
+                        'shimmer': 'shimmer 2.5s infinite linear',
+                        'rune-glow': 'runeGlow 4s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        unlockReveal: {
+                            '0%': { opacity: '0', transform: 'scale(0.92) translateY(30px)', filter: 'blur(12px)' },
+                            '100%': { opacity: '1', transform: 'scale(1) translateY(0)', filter: 'blur(0)' },
+                        },
+                        slideUpFade: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        borderGlow: {
+                            '0%, 100%': { borderColor: 'rgba(17, 212, 82, 0.2)', boxShadow: '0 0 5px rgba(17, 212, 82, 0.1)' },
+                            '50%': { borderColor: 'rgba(17, 212, 82, 0.6)', boxShadow: '0 0 20px rgba(17, 212, 82, 0.3)' },
+                        },
+                        shake: {
+                            '0%, 100%': { transform: 'rotate(0deg)' },
+                            '25%': { transform: 'rotate(-5deg)' },
+                            '75%': { transform: 'rotate(5deg)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        },
+                        runeGlow: {
+                            '0%': { opacity: '0.1', textShadow: '0 0 0px #11d452' },
+                            '100%': { opacity: '0.4', textShadow: '0 0 10px #11d452' },
+                        }
                     }
                 },
             },
         }
     </script>
-    <style>
-        body {
-            font-family: "Noto Sans TC", sans-serif;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        .font-display {
-            font-family: "Space Grotesk", "Noto Sans TC", sans-serif;
-        }
-
+<style>
+        body { font-family: "Noto Sans TC", sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-display { font-family: "Space Grotesk", "Noto Sans TC", sans-serif; }
         @keyframes drawPolygon {
-            0% {
-                stroke-dashoffset: 1000;
-                opacity: 0;
-            }
-
-            100% {
-                stroke-dashoffset: 0;
-                opacity: 1;
-            }
+            0% { stroke-dashoffset: 1000; opacity: 0; }
+            100% { stroke-dashoffset: 0; opacity: 1; }
         }
-
         @keyframes countUp {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-                filter: blur(4px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-                filter: blur(0);
-            }
+            0% { opacity: 0; transform: translateY(10px); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
-
         .animate-radar-polygon {
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
             animation: drawPolygon 2s ease-out forwards;
-        }
-
-        .animate-number {
-            animation: countUp 0.8s ease-out forwards;
-        }
-
-        .delay-100 {
-            animation-delay: 0.1s;
-        }
-
-        .delay-200 {
-            animation-delay: 0.2s;
-        }
-
-        .delay-300 {
-            animation-delay: 0.3s;
-        }
-
-        .delay-400 {
-            animation-delay: 0.4s;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a160f;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #23482f;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #11d452;
-        }
-
+            animation-delay: 0.5s;}
+        .animate-number { animation: countUp 0.8s ease-out forwards; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-700 { animation-delay: 0.7s; }
+        .delay-1000 { animation-delay: 1.0s; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050d09; }
+        ::-webkit-scrollbar-thumb { background: #162e20; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #11d452; }
         .glass-panel {
-            background: rgba(19, 38, 26, 0.7);
-            backdrop-filter: blur(10px);
+            background: rgba(14, 31, 21, 0.6);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(17, 212, 82, 0.1);
         }
-
-        .rpg-border {
-            position: relative;
+        .locked-panel {
+            background: rgba(5, 13, 9, 0.8);
+            backdrop-filter: blur(4px);
+            border: 1px dashed rgba(17, 212, 82, 0.15);
         }
-
+        .rpg-border { position: relative; }
         .rpg-border::before {
             content: '';
             position: absolute;
             inset: 0;
             border-radius: inherit;
             padding: 1px;
-            background: linear-gradient(180deg, rgba(17, 212, 82, 0.5), transparent);
+            background: linear-gradient(180deg, rgba(17,212,82,0.5), transparent);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             pointer-events: none;
         }
+        .bg-grid-pattern {
+            background-image: linear-gradient(rgba(17, 212, 82, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(17, 212, 82, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .text-glow { text-shadow: 0 0 10px rgba(17, 212, 82, 0.5); }
+        .locked-stripes {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0),
+                rgba(0, 0, 0, 0) 10px,
+                rgba(17, 212, 82, 0.03) 10px,
+                rgba(17, 212, 82, 0.03) 20px
+            );
+        }
     </style>
 </head>
-
 <body
-    class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col overflow-x-hidden text-white bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+    class="bg-background-dark min-h-screen flex flex-col overflow-x-hidden text-white bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-50"></div>
+        <div class="absolute top-20 right-20 w-96 h-96 bg-primary/5 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <div class="absolute bottom-20 left-10 w-64 h-64 bg-blue-500/5 rounded-full blur-[80px] animate-pulse-slow"
+            style="animation-delay: 2s;"></div>
+        <div class="absolute top-[15%] left-[5%] font-display text-4xl text-primary/10 select-none animate-rune-glow">ᚨ
+        </div>
+        <div
+            class="absolute top-[25%] right-[8%] font-display text-3xl text-primary/10 select-none animate-rune-glow delay-300">
+            ᚦ</div>
+        <div
+            class="absolute bottom-[30%] left-[10%] font-display text-5xl text-primary/10 select-none animate-rune-glow delay-700">
+            ᚱ</div>
+    </div>
     <header
         class="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
         <div class="w-full px-4 md:px-10 py-3">
@@ -190,404 +181,353 @@
                                 class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <a class="text-sm font-bold hover:text-primary transition-colors relative group"
-                            href="../bulletin_board/bulletin_board.html">
-                            公會大廳
+                            href="../analysis/analysis.html">
+                            英雄面板
                             <span
                                 class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
                         </a>
                     </nav>
-                    <div class="h-6 w-px bg-slate-300 dark:bg-slate-700 hidden md:block"></div>
-                    <div class="flex items-center gap-3">
-                        <div class="relative group cursor-pointer">
-                            <div
-                                class="absolute -inset-0.5 bg-gradient-to-r from-primary to-blue-500 rounded-full opacity-50 group-hover:opacity-100 blur transition duration-500">
-                            </div>
-                            <div class="relative bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-[#102216]"
-                                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5tmZ6-FB3I9xn0nL5kU63Z1fT5qbtQiWl22KqdIEnxm_6vIBr93qM68gaXX0rUGo4iiRrjFUxe3CVe_6blMp2BhFL6uJvWaKgmWRImsldmFgzxO32U_f4gJJERxeXb5a07a0KkvPCkETCTnROhuEGlBUzW4z4zhUsNI3QD8zULI7JVyglRvWbjhgwi8_608R5pDlxGYcTX_zb0kfObYvPnXxbVZ97umi9RKHXrUbcWBrVok2rbMg9qcysiqjBXh6F46qVk0Tjo5ZO");'>
-                            </div>
+                    <div class="size-11 rounded-full bg-cover bg-center border-2 border-[#162e24] shadow-lg relative"
+                        style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuANNrMPUrDFkpv9K1YNrERUWYqg1EXjc5wDASzVQLe6GH41WwiFblJjz_ijk-W03AS9KXyQU7cqVALwZlW4e3NOXJxA2tP41wcfgs8mwfO33ChvI1A0GfnGZxskiSvFo-HGESAc69jyjTa4k30AdEcbLwP-znzsNro91T0WVthP1wKR6A6MG13SHuna2LfjpP4ZHS4wl5T5uiWJzclt-WmaqBVTOTXiulyAYlIc7JmZJYmvRhnGqegX-H5Pq7JuA7UMeWNXEyyd532H');">
+                        <div class="absolute bottom-0 right-0 size-3 bg-primary rounded-full border-2 border-[#051a10]">
                         </div>
-                        <button
-                            class="hidden sm:flex items-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors text-xs font-bold">
-                            <span>登出</span>
-                            <span class="material-symbols-outlined text-sm">logout</span>
-                        </button>
                     </div>
-                </div>
+                    </div>
             </div>
-        </div>
+            </div>
     </header>
-    <main class="flex-1 w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
-            <div class="lg:col-span-4 relative group perspective-1000">
-                <div
-                    class="absolute inset-0 bg-primary/20 rounded-2xl blur-3xl group-hover:bg-primary/30 transition-all duration-700 animate-pulse-slow">
-                </div>
-                <div
-                    class="relative rounded-2xl overflow-hidden border border-primary/30 shadow-[0_0_30px_rgba(17,212,82,0.15)] bg-card-dark">
-                    <div class="absolute top-4 left-4 z-20">
-                        <div
-                            class="flex items-center gap-1 bg-gradient-to-r from-yellow-600 to-yellow-800 text-white px-3 py-1 rounded border border-yellow-400/50 shadow-lg">
-                            <span class="material-symbols-outlined text-yellow-300 text-sm">stars</span>
-                            <span class="font-display font-black italic tracking-widest text-yellow-100">SSR</span>
-                        </div>
-                    </div>
-                    <div class="aspect-[3/4] w-full bg-center bg-no-repeat bg-cover hover:scale-105 transition-transform duration-700 ease-out"
-                        data-alt="Anime style sage character in dark green robes"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBo92jH-AcnzS5jRMJw0FZefZE59cBH5y1h1BaP7bXYJqd5E1Ktr117HDDT-U9jxZh_2B1v4mNW0VGhT0Yj4FrFImr9yy-FcCg1ctAM4PdukPJFec432-Y4iFnUzQG_7s1ug2dKKiFnkbod_IvoD5e8S27-LRAEF3EPMs3wIiPeUAu-vQm17p6TOdP6rK0Whtv1iHKnVdkkz_xBGDDqNBykL2OoZaDTQc-hl6ft3VVSKjOJD7aQtJNjHsmbqdQXxjeNLwF4cT5JTIvG");'>
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-[#0a160f] via-transparent to-transparent opacity-80">
-                        </div>
-                    </div>
-                    <div class="absolute bottom-0 left-0 w-full p-6 z-10">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span
-                                class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/20 text-primary border border-primary/30">INTJ</span>
-                            <span
-                                class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">智者族</span>
-                        </div>
-                        <h1 class="text-3xl font-black text-white font-display tracking-wide drop-shadow-lg">深淵謀略家</h1>
-                        <p class="text-accent-text/80 text-sm font-medium mt-1">Abyss Strategist</p>
-                    </div>
-                </div>
+    <main class="relative z-10 flex-1 w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col gap-8">
+        <div class="glass-panel rounded-2xl p-6 relative overflow-hidden opacity-0 animate-slide-up-fade delay-100"
+            style="animation-fill-mode: forwards;">
+            <div class="absolute top-0 right-0 p-3 opacity-10">
+                <span class="material-symbols-outlined text-[80px]">auto_awesome</span>
+        </div>
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+    <div class="flex items-center gap-4">
+        <div class="bg-primary/20 p-3 rounded-xl border border-primary/30 text-primary">
+            <span class="material-symbols-outlined text-3xl">psychology_alt</span>
+        </div>
+<div>
+    <h1 class="text-2xl font-bold font-display text-white">命運同步率 (Destiny Sync)</h1>
+    <p class="text-gray-400 text-sm mt-1">命運的齒輪已轉動，五大封印已解其三。預言中的救世主正在甦醒。</p>
+</div>
+</div>
+<div class="w-full md:w-1/3 flex flex-col gap-2">
+    <div class="flex justify-between text-xs font-bold uppercase tracking-wider">
+        <span class="text-primary">Awakening</span>
+        <span class="text-white">60%</span>
+</div>
+<div class="w-full bg-[#050d09] h-3 rounded-full overflow-hidden border border-[#23482f]">
+    <div class="h-full bg-gradient-to-r from-primary/50 to-primary w-[60%] rounded-full relative overflow-hidden">
+        <div class="absolute inset-0 bg-white/20 animate-shimmer"
+            style="background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);"></div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <div class="lg:col-span-4 flex flex-col gap-6">
+        <div class="relative group perspective-1000 opacity-0 animate-unlock-reveal"
+            style="animation-fill-mode: forwards;">
+            <div
+                class="absolute inset-0 bg-primary/10 rounded-2xl blur-2xl group-hover:bg-primary/20 transition-all duration-700">
             </div>
-            <div class="lg:col-span-8 flex flex-col gap-6">
-                <div class="glass-panel rounded-2xl p-6 sm:p-8 rpg-border">
-                    <div
-                        class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 border-b border-primary/10 pb-4">
-                        <div>
-                            <div class="text-xs font-bold text-primary tracking-[0.2em] uppercase mb-1">Title (稱號)</div>
-                            <h2 class="text-2xl sm:text-3xl font-bold text-white font-display">永不妥協的領路人</h2>
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30">
+                <div
+                    class="bg-gradient-to-r from-primary to-emerald-400 text-black text-[10px] font-black px-4 py-1 rounded-full shadow-[0_0_15px_rgba(17,212,82,0.6)] border border-white/20 tracking-widest uppercase flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">bolt</span> Hero Awakened
                         </div>
-                        <div class="flex gap-2">
-                            <button
-                                class="bg-primary hover:bg-[#0eb545] text-[#0a160f] text-sm font-bold px-4 py-2 rounded-lg flex items-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(17,212,82,0.4)]">
-                                <span class="material-symbols-outlined text-lg">share</span>
-                                分享名片
-                            </button>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 leading-relaxed text-sm sm:text-base">
-                        您是行走於暗影中的策劃者，擁有極高的智力與冷靜的判斷力。在冒險隊伍中，您通常擔任法師或參謀的角色，擅長找出敵人的弱點並一擊必殺。雖然不善言辭，但您的每一個決策都能改變戰局。
-                    </p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div
-                        class="bg-card-dark rounded-2xl p-6 border border-[#23482f] flex flex-col relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-4 opacity-10">
-                            <span class="material-symbols-outlined text-6xl text-primary">radar</span>
-                        </div>
-                        <h3 class="text-white font-bold font-display text-lg mb-4 flex items-center gap-2">
-                            <span class="w-1.5 h-6 bg-primary rounded-full"></span>
-                            基礎數值 (Stats)
-                        </h3>
-                        <div class="flex-1 flex items-center justify-center">
-                            <div class="relative w-64 h-64">
-                                <svg class="w-full h-full overflow-visible" viewBox="0 0 100 100">
-                                    <g fill="none" stroke="#23482f" stroke-width="0.5">
-                                        <polygon points="50,10 88,38 73,85 27,85 12,38"></polygon>
-                                        <polygon points="50,20 78.5,41 67.25,76.25 32.75,76.25 21.5,41"></polygon>
-                                        <polygon points="50,30 69,44 61.5,67.5 38.5,67.5 31,44"></polygon>
-                                    </g>
-                                    <line stroke="#23482f" stroke-width="0.5" x1="50" x2="50" y1="50" y2="10"></line>
-                                    <line stroke="#23482f" stroke-width="0.5" x1="50" x2="88" y1="50" y2="38"></line>
-                                    <line stroke="#23482f" stroke-width="0.5" x1="50" x2="73" y1="50" y2="85"></line>
-                                    <line stroke="#23482f" stroke-width="0.5" x1="50" x2="27" y1="50" y2="85"></line>
-                                    <line stroke="#23482f" stroke-width="0.5" x1="50" x2="12" y1="50" y2="38"></line>
-                                    <polygon class="animate-radar-polygon" fill="rgba(17, 212, 82, 0.2)"
-                                        points="50,12 61.4,46.4 63.8,71 40.8,78 17.7,39.8" stroke="#11d452"
-                                        stroke-linejoin="round" stroke-width="2">
-                                    </polygon>
-                                    <circle class="animate-number delay-100" cx="50" cy="12" fill="white" r="2">
-                                    </circle>
-                                    <circle class="animate-number delay-200" cx="61.4" cy="46.4" fill="white" r="2">
-                                    </circle>
-                                    <circle class="animate-number delay-300" cx="63.8" cy="71" fill="white" r="2">
-                                    </circle>
-                                    <circle class="animate-number delay-400" cx="40.8" cy="78" fill="white" r="2">
-                                    </circle>
-                                    <circle class="animate-number delay-300" cx="17.7" cy="39.8" fill="white" r="2">
-                                    </circle>
-                                </svg>
-                                <div
-                                    class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 text-[10px] font-bold text-primary bg-[#0a160f] px-1">
-                                    INT</div>
-                                <div
-                                    class="absolute top-[35%] right-0 translate-x-2 text-[10px] font-bold text-gray-400">
-                                    VIT</div>
-                                <div
-                                    class="absolute bottom-[10%] right-0 translate-x-0 text-[10px] font-bold text-gray-400">
-                                    AGI</div>
-                                <div
-                                    class="absolute bottom-[10%] left-0 translate-x-0 text-[10px] font-bold text-gray-400">
-                                    CHA</div>
-                                <div
-                                    class="absolute top-[35%] left-0 -translate-x-3 text-[10px] font-bold text-primary">
-                                    DEX</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-6">
-                        <div
-                            class="bg-gradient-to-br from-[#1d3826] to-[#0a160f] rounded-2xl p-1 border border-[#23482f] shadow-lg group">
-                            <div class="bg-[#13261a] rounded-xl p-5 h-full relative overflow-hidden">
-                                <div
-                                    class="absolute -right-6 -bottom-6 text-primary/5 group-hover:text-primary/10 transition-colors">
-                                    <span class="material-symbols-outlined text-[100px]">auto_awesome</span>
-                                </div>
-                                <h3
-                                    class="text-white font-bold font-display text-sm uppercase tracking-wider text-gray-400 mb-2">
-                                    Combat Stance</h3>
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span
-                                        class="material-symbols-outlined text-primary text-2xl animate-pulse">stars</span>
-                                    <span class="text-2xl font-bold text-white">星辰軌跡</span>
-                                </div>
-                                <p class="text-sm text-gray-400 leading-relaxed border-l-2 border-primary/30 pl-3">
-                                    戰鬥風格如同天體運行般精密，每一步都經過嚴格計算，讓敵人無法預測你的下一步，彷彿置身於星圖迷宮之中。
-                                </p>
-                            </div>
-                        </div>
-                        <div class="bg-card-dark rounded-2xl p-6 border border-[#23482f] flex-1">
-                            <h3 class="text-white font-bold font-display text-lg mb-4 flex items-center gap-2">
-                                <span class="w-1.5 h-6 bg-blue-500 rounded-full"></span>
-                                職業天賦 (Skills)
-                            </h3>
-                            <div class="space-y-4">
-                                <div
-                                    class="flex items-start gap-3 p-2 hover:bg-white/5 rounded-lg transition-colors cursor-default">
-                                    <div class="mt-0.5 bg-blue-500/20 p-1.5 rounded text-blue-400">
-                                        <span class="material-symbols-outlined text-lg">psychology</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-white font-bold text-base">策略預判</h4>
-                                        <p class="text-gray-400 text-xs mt-0.5">能提前 3 回合預知敵方動向，大幅提升迴避率。</p>
-                                    </div>
-                                </div>
-                                <div
-                                    class="flex items-start gap-3 p-2 hover:bg-white/5 rounded-lg transition-colors cursor-default">
-                                    <div class="mt-0.5 bg-red-500/20 p-1.5 rounded text-red-400">
-                                        <span class="material-symbols-outlined text-lg">target</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-white font-bold text-base">弱點分析</h4>
-                                        <p class="text-gray-400 text-xs mt-0.5">無視目標 20% 防禦力，對重甲敵人造成真實傷害。</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+</div>
+<div
+    class="relative rounded-2xl overflow-hidden border border-primary/50 shadow-[0_0_20px_rgba(17,212,82,0.1)] bg-card-dark transition-all duration-300 group-hover:border-primary">
+    <div class="aspect-[3/4] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
+        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBo92jH-AcnzS5jRMJw0FZefZE59cBH5y1h1BaP7bXYJqd5E1Ktr117HDDT-U9jxZh_2B1v4mNW0VGhT0Yj4FrFImr9yy-FcCg1ctAM4PdukPJFec432-Y4iFnUzQG_7s1ug2dKKiFnkbod_IvoD5e8S27-LRAEF3EPMs3wIiPeUAu-vQm17p6TOdP6rK0Whtv1iHKnVdkkz_xBGDDqNBykL2OoZaDTQc-hl6ft3VVSKjOJD7aQtJNjHsmbqdQXxjeNLwF4cT5JTIvG");'>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0e1f15] via-[#0e1f15]/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 w-full p-6 z-10">
+            <div class="flex items-center gap-2 mb-2">
+                <span
+                    class="size-6 rounded bg-primary text-black flex items-center justify-center font-bold text-xs shadow-lg">M</span>
+                <span class="text-primary font-bold text-xs tracking-widest uppercase">天選之道 (Class)</span>
+            </div>
+            <h2 class="text-4xl font-black text-white font-display tracking-tight text-glow">深淵謀略家</h2>
+            <p class="text-accent-text font-bold text-lg mt-1 tracking-wide">INTJ</p>
+            <p class="text-gray-300 text-sm mt-3 leading-relaxed border-l-2 border-primary/50 pl-3">
+                你是行走於暗影與微光交界處的預言者。你的思緒如星辰般浩瀚深邃，洞悉因果律的每一次波動。在這場宏大的博弈中，你是執棋者，亦是破局之人。
+            </p>
+            </div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-card-lighter rounded-2xl p-1 relative group opacity-0 animate-slide-up-fade delay-200"
+        style="animation-fill-mode: forwards;">
+        <div
+            class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        </div>
+        <div
+            class="bg-card-dark rounded-xl h-full p-6 border border-purple-500/30 relative overflow-hidden group-hover:border-purple-500/60 transition-colors">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="bg-purple-500/20 text-purple-300 p-1.5 rounded-lg border border-purple-500/30">
+                        <span class="material-symbols-outlined text-lg">visibility</span>
+                    </span>
+                    <span class="text-xs font-bold text-purple-300 uppercase tracking-widest">靈魂印記 (Enneagram)</span>
+</div>
+<span class="text-[10px] px-2 py-0.5 rounded bg-purple-900/50 text-purple-200 border border-purple-500/20">Lv.
+    MAX</span>
+</div>
+<div class="relative z-10">
+    <h3 class="text-2xl font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">虛空行者</h3>
+    <p class="text-sm text-gray-400 font-mono mb-4">Type 5 - The Investigator</p>
+    <div class="flex items-center gap-2 text-xs text-gray-300 bg-black/30 p-2 rounded border border-white/5">
+        <span class="material-symbols-outlined text-purple-400 text-sm">auto_stories</span>
+        <span>天賦：全知之眼。渴望解構宇宙真理，以絕對理性守護靈魂聖殿。</span>
+    </div>
+</div>
+<div
+    class="absolute -bottom-4 -right-4 text-purple-500/5 rotate-12 group-hover:scale-110 transition-transform duration-500">
+    <span class="material-symbols-outlined text-[100px]">visibility</span>
+</div>
+</div>
+</div>
+<div class="bg-card-lighter rounded-2xl p-1 relative group opacity-0 animate-slide-up-fade delay-300"
+    style="animation-fill-mode: forwards;">
+    <div
+        class="bg-card-dark rounded-xl h-full p-6 border border-blue-500/30 relative overflow-hidden group-hover:border-blue-500/60 transition-colors">
+        <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-2">
+                <span class="bg-blue-500/20 text-blue-300 p-1.5 rounded-lg border border-blue-500/30">
+                    <span class="material-symbols-outlined text-lg">radar</span>
+                </span>
+                <span class="text-xs font-bold text-blue-300 uppercase tracking-widest">本源天賦 (Big 5)</span>
             </div>
         </div>
-        <div class="border-t border-[#23482f] pt-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-white font-display flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary">map</span>
-                    冒險指南 (Adventure Guide)
-                </h3>
+<div class="flex items-center justify-center relative h-32">
+    <svg class="h-full overflow-visible" viewBox="0 0 100 100">
+        <g fill="none" stroke="#1e3a8a" stroke-width="0.5">
+            <polygon points="50,10 88,38 73,85 27,85 12,38"></polygon>
+            <polygon points="50,25 74,42 65,75 35,75 26,42"></polygon>
+        </g>
+        <polygon class="animate-radar-polygon" fill="rgba(59, 130, 246, 0.2)" points="50,15 80,40 68,80 32,80 18,40"
+            stroke="#3b82f6" stroke-linejoin="round" stroke-width="1.5"></polygon>
+        <circle class="animate-number delay-500" cx="50" cy="15" fill="#60a5fa" r="1.5"></circle>
+        <circle class="animate-number delay-500" cx="80" cy="40" fill="#60a5fa" r="1.5"></circle>
+        <circle class="animate-number delay-500" cx="68" cy="80" fill="#60a5fa" r="1.5"></circle>
+    </svg>
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <span class="text-[10px] font-bold text-blue-400 bg-black/50 px-1 rounded backdrop-blur-sm">平衡</span>
+    </div>
+    </div>
+<div class="text-center mt-1">
+    <p class="text-[10px] text-gray-500 uppercase">元素調和完畢</p>
+</div>
+</div>
+</div>
+<div class="group relative rounded-2xl p-[1px] bg-gradient-to-b from-[#23482f] to-transparent opacity-0 animate-slide-up-fade delay-400"
+    style="animation-fill-mode: forwards;">
+    <div
+        class="bg-locked-bg rounded-xl h-full p-6 border border-white/5 relative overflow-hidden locked-stripes group-hover:border-red-500/30 transition-colors">
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
+        <div class="relative z-20 flex flex-col items-center justify-center h-full text-center">
+            <div
+                class="w-12 h-12 rounded-full bg-[#13261a] border border-white/10 flex items-center justify-center mb-3 group-hover:border-red-500/50 group-hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-all duration-300 group-hover:scale-110">
+                <span
+                    class="material-symbols-outlined text-gray-500 group-hover:text-red-500 group-hover:animate-shake-lock">lock</span>
+</div>
+<h3 class="text-gray-400 font-bold text-lg group-hover:text-red-400 transition-colors">戰技流派 (DISC)</h3>
+<p class="text-gray-600 text-xs mt-1 mb-4">戰魂沈睡於此。唯有經歷血與火的洗禮，方能覺醒專屬於你的戰鬥風格。</p>
+<button
+    class="bg-[#13261a] hover:bg-red-900/30 text-gray-400 hover:text-red-400 border border-white/10 hover:border-red-500/50 px-4 py-1.5 rounded text-xs font-bold transition-all flex items-center gap-1">
+    <span class="material-symbols-outlined text-sm">swords</span>
+    踏上戰場
+</button>
+</div>
+<div class="absolute inset-0 opacity-10 blur-sm pointer-events-none flex items-center justify-center">
+    <span class="material-symbols-outlined text-[120px] text-white">shield</span>
+</div>
+</div>
+</div>
+<div class="group relative rounded-2xl p-[1px] bg-gradient-to-b from-[#23482f] to-transparent opacity-0 animate-slide-up-fade delay-500"
+    style="animation-fill-mode: forwards;">
+    <div
+        class="bg-locked-bg rounded-xl h-full p-6 border border-white/5 relative overflow-hidden locked-stripes group-hover:border-yellow-600/30 transition-colors">
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
+        <div class="relative z-20 flex flex-col items-center justify-center h-full text-center">
+            <div
+                class="w-12 h-12 rounded-full bg-[#13261a] border border-white/10 flex items-center justify-center mb-3 group-hover:border-yellow-600/50 group-hover:shadow-[0_0_15px_rgba(202,138,4,0.4)] transition-all duration-300 group-hover:scale-110">
+                <span
+                    class="material-symbols-outlined text-gray-500 group-hover:text-yellow-600 group-hover:animate-shake-lock">lock_clock</span>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<h3 class="text-gray-400 font-bold text-lg group-hover:text-yellow-600 transition-colors">天命之技 (Gallup)</h3>
+<p class="text-gray-600 text-xs mt-1 mb-4">上古卷軸封印著你的終極奧義。需集齊靈魂碎片以解鎖這逆天改命之力。</p>
+<button
+    class="bg-[#13261a] hover:bg-yellow-900/30 text-gray-400 hover:text-yellow-500 border border-white/10 hover:border-yellow-600/50 px-4 py-1.5 rounded text-xs font-bold transition-all flex items-center gap-1">
+    <span class="material-symbols-outlined text-sm">search</span>
+    探尋卷軸
+</button>
+</div>
+<div class="absolute inset-0 opacity-10 blur-sm pointer-events-none flex items-center justify-center">
+    <span class="material-symbols-outlined text-[120px] text-white">menu_book</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4 opacity-0 animate-slide-up-fade delay-700"
+    style="animation-fill-mode: forwards;">
+    <div class="lg:col-span-2 glass-panel rounded-2xl p-6 border-t-4 border-t-primary/50">
+        <h3 class="text-xl font-bold text-white font-display mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">map</span>
+            命運指引 (Destiny Guide)
+        </h3>
+        <div class="flex flex-col gap-3">
+            <div
+                class="bg-card-dark p-4 rounded-xl border border-white/5 hover:border-primary/30 hover:bg-[#12241a] transition-all group cursor-pointer flex items-center gap-4">
                 <div
-                    class="bg-[#1d3826] rounded-xl overflow-hidden shadow-lg border border-[#23482f] hover:border-primary/50 transition-colors">
-                    <div class="bg-[#13261a] p-3 flex justify-between items-center border-b border-[#23482f]">
-                        <span class="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1">
-                            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                            Daily Quest
-                        </span>
-                        <span class="text-xs text-gray-500">Exp +50</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-yellow-500">menu_book</span>
-                            閱讀新書
-                        </h4>
-                        <p class="text-gray-300 text-sm mb-4">
-                            前往圖書館或知識殿堂，花費 30 分鐘閱讀一本從未接觸過的書籍，擴展思維邊界。
-                        </p>
-                        <div class="w-full bg-[#0a160f] h-1.5 rounded-full overflow-hidden">
-                            <div class="bg-primary h-full w-1/3 rounded-full"></div>
-                        </div>
-                        <div class="flex justify-between mt-1">
-                            <span class="text-[10px] text-gray-500">Progress</span>
-                            <span class="text-[10px] text-primary">33%</span>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="bg-[#2a1d1d] rounded-xl overflow-hidden shadow-lg border border-red-900/30 hover:border-red-500/50 transition-colors">
-                    <div class="bg-[#1f1212] p-3 flex justify-between items-center border-b border-red-900/30">
-                        <span class="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center gap-1">
-                            <span class="material-symbols-outlined text-sm">warning</span>
-                            Warning
-                        </span>
-                        <span class="text-xs text-red-500/50">Debuff Active</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-white font-bold text-lg mb-2">社交能量低落</h4>
-                        <p class="text-gray-300 text-sm mb-4">
-                            警告：您的社交 MP 值已低於 20%。若強行參加聚會，將自動觸發「沈默寡言」狀態，且全屬性下降 10%。
-                        </p>
-                        <button
-                            class="w-full py-1.5 rounded bg-red-500/10 text-red-400 text-xs font-bold hover:bg-red-500/20 transition-colors">
-                            使用「獨處藥水」恢復
-                        </button>
-                    </div>
-                </div>
-                <div
-                    class="bg-[#1d2d38] rounded-xl overflow-hidden shadow-lg border border-blue-900/30 hover:border-blue-500/50 transition-colors lg:block hidden">
-                    <div class="bg-[#121b22] p-3 flex justify-between items-center border-b border-blue-900/30">
-                        <span class="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1">
-                            <span class="material-symbols-outlined text-sm">explore</span>
-                            Side Quest
-                        </span>
-                        <span class="text-xs text-blue-500/50">Optional</span>
-                    </div>
-                    <div class="p-5">
-                        <h4 class="text-white font-bold text-lg mb-2">觀察世界</h4>
-                        <p class="text-gray-300 text-sm mb-4">
-                            找一個安靜的角落，觀察周圍的人群流動，嘗試分析其中三個陌生人的職業與性格。
-                        </p>
-                        <div class="flex gap-2">
-                            <span
-                                class="px-2 py-1 bg-blue-500/10 text-blue-300 text-[10px] rounded border border-blue-500/20">INT
-                                +2</span>
-                            <span
-                                class="px-2 py-1 bg-blue-500/10 text-blue-300 text-[10px] rounded border border-blue-500/20">WIS
-                                +1</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="border-t border-[#23482f] pt-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-white font-display flex items-center gap-3">
-                    <span class="material-symbols-outlined text-primary">diversity_3</span>
-                    最佳夥伴 (Best Partners)
-                </h3>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div
-                    class="bg-card-dark rounded-xl border border-[#23482f] p-1 group hover:border-orange-500/50 hover:shadow-[0_0_20px_rgba(251,146,60,0.2)] transition-all duration-500 relative overflow-hidden hover:-translate-y-1">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-tr from-orange-500/10 via-transparent to-transparent animate-breathe-1 pointer-events-none">
-                    </div>
-                    <div
-                        class="bg-[#13261a] rounded-lg p-5 h-full relative z-10 flex flex-col sm:flex-row gap-5 items-start overflow-hidden">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                        </div>
-                        <div class="shrink-0 relative group/icon">
-                            <div
-                                class="w-16 h-16 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(251,146,60,0.3)] transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6">
-                                <span
-                                    class="material-symbols-outlined text-3xl text-white">sentiment_very_satisfied</span>
-                            </div>
-                            <div
-                                class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#0a160f] border border-orange-500/30 text-orange-300 text-[10px] font-black px-2 py-0.5 rounded shadow-sm whitespace-nowrap transition-transform duration-500 group-hover:scale-105">
-                                ENFP
-                            </div>
-                        </div>
-                        <div class="flex-1 relative z-10">
-                            <div class="flex justify-between items-start mb-1">
-                                <div>
-                                    <h4
-                                        class="text-white font-bold text-lg group-hover:text-orange-300 transition-colors duration-300">
-                                        熱血激勵者</h4>
-                                    <p class="text-xs text-orange-400/80 font-medium">光之妖精族 · The Inspirer</p>
+                    class="hidden sm:flex size-10 rounded-full bg-primary/10 items-center justify-center shrink-0 border border-primary/20">
+                    <span class="material-symbols-outlined text-primary">calendar_month</span>
+</div>
+<div class="flex-1">
+    <div class="flex justify-between items-start mb-1">
+        <div
+            class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded border border-primary/20 uppercase">
+            每日預言</div>
+        <span class="text-xs text-gray-500">智慧精華 +50</span>
+    </div>
+<h4 class="text-white font-bold mb-0.5 group-hover:text-primary transition-colors">觀星者報告</h4>
+<p class="text-gray-400 text-xs">今日東方星宿異常閃耀，適合研習古籍，智慧獲取率大幅提升。</p>
+</div>
+</div>
+<div
+    class="bg-card-dark p-4 rounded-xl border border-white/5 hover:border-amber-500/30 hover:bg-[#1f1a0e] transition-all group cursor-pointer flex items-center gap-4">
+    <div
+        class="hidden sm:flex size-10 rounded-full bg-amber-500/10 items-center justify-center shrink-0 border border-amber-500/20">
+        <span class="material-symbols-outlined text-amber-500">flag</span>
+</div>
+<div class="flex-1">
+    <div class="flex justify-between items-start mb-1">
+        <div
+            class="bg-amber-500/10 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-500/20 uppercase">
+            主線任務</div>
+        <span class="text-xs text-gray-500">獎勵: 勇者證明</span>
+</div>
+<h4 class="text-white font-bold mb-0.5 group-hover:text-amber-400 transition-colors">第一章：靈魂覺醒</h4>
+<p class="text-gray-400 text-xs">前往試煉之塔，完成「自我認知」的終極測試，解開第一道命運封印。</p>
+</div>
+</div>
+<div
+    class="bg-card-dark p-4 rounded-xl border border-white/5 hover:border-blue-500/30 hover:bg-[#0e1624] transition-all group cursor-pointer flex items-center gap-4">
+    <div
+        class="hidden sm:flex size-10 rounded-full bg-blue-500/10 items-center justify-center shrink-0 border border-blue-500/20">
+        <span class="material-symbols-outlined text-blue-500">explore</span>
+    </div>
+<div class="flex-1">
+    <div class="flex justify-between items-start mb-1">
+        <div
+            class="bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-500/20 uppercase">
+            支線任務</div>
+        <span class="text-xs text-gray-500">聲望值 +100</span>
+    </div>
+<h4 class="text-white font-bold mb-0.5 group-hover:text-blue-400 transition-colors">吟遊詩人的請求</h4>
+<p class="text-gray-400 text-xs">在熙攘市集中記錄並分享你的冒險見聞，為後世留下傳奇的篇章。</p>
+</div>
+</div>
+<div
+    class="bg-card-dark p-4 rounded-xl border border-white/5 hover:border-purple-500/30 hover:bg-[#161024] transition-all group cursor-pointer flex items-center gap-4">
+    <div
+        class="hidden sm:flex size-10 rounded-full bg-purple-500/10 items-center justify-center shrink-0 border border-purple-500/20">
+        <span class="material-symbols-outlined text-purple-500">psychology</span>
+</div>
+<div class="flex-1">
+    <div class="flex justify-between items-start mb-1">
+<div
+    class="bg-purple-500/10 text-purple-400 text-[10px] font-bold px-2 py-0.5 rounded border border-purple-500/20 uppercase flex items-center gap-1">
+    <span class="material-symbols-outlined text-[10px]">auto_awesome</span> 神諭
                                 </div>
-                                <div class="text-right">
-                                    <div
-                                        class="text-2xl font-black text-primary leading-none group-hover:text-orange-400 transition-colors">
-                                        98<span class="text-sm font-normal">%</span></div>
-                                    <div class="text-[10px] text-gray-500 uppercase">Sync Rate</div>
-                                </div>
-                            </div>
-                            <p
-                                class="text-gray-400 text-sm leading-relaxed mb-3 mt-2 border-t border-white/5 pt-2 group-hover:text-gray-300 transition-colors">
-                                他們的熱情能融化你冰冷的理性高牆。在你過度思考陷入僵局時，他們會強行拉著你衝進未知的冒險。
+</div>
+<h4 class="text-white font-bold mb-0.5 group-hover:text-purple-400 transition-colors">虛空低語</h4>
+<p class="text-gray-400 text-xs">心靈迷霧正在逼近。請務必保持內心澄澈，切勿迷失於虛無的幻象中。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
+    <div class="absolute -right-4 -top-4 w-24 h-24 bg-orange-500/10 rounded-full blur-xl"></div>
+    <h3 class="text-xl font-bold text-white font-display mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-orange-400">diversity_3</span>
+        命運羈絆
+    </h3>
+    <div class="space-y-4">
+        <div
+            class="flex flex-col gap-3 bg-card-dark p-4 rounded-xl border border-white/5 hover:border-orange-500/30 transition-colors group">
+            <div class="flex items-center gap-3">
+                <div
+                    class="size-10 rounded-lg bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform shrink-0">
+                    <span class="material-symbols-outlined text-white text-lg">sentiment_very_satisfied</span>
+</div>
+<div class="flex-1">
+    <div class="flex justify-between items-center">
+        <span class="text-white font-bold text-sm">ENFP 熾熱引導者</span>
+        <span class="text-orange-400 font-bold text-xs">98%</span>
+    </div>
+<p class="text-gray-500 text-[10px]">靈魂共鳴：完美</p>
+</div>
+</div>
+<div class="pt-2 border-t border-white/5">
+    <p class="text-gray-400 text-xs leading-relaxed">
+        如同拂曉之光的精靈。他們無盡的熱情能融化你理性的壁壘，在命運的旅途中，你們將共同編織出充滿奇蹟的宏大篇章。
+    </p>
+</div>
+</div>
+<div
+    class="flex flex-col gap-3 bg-card-dark p-4 rounded-xl border border-white/5 hover:border-cyan-500/30 transition-colors group">
+    <div class="flex items-center gap-3">
+        <div
+            class="size-10 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform shrink-0">
+            <span class="material-symbols-outlined text-white text-lg">science</span>
+</div>
+<div class="flex-1">
+    <div class="flex justify-between items-center">
+        <span class="text-white font-bold text-sm">ENTP 混沌創世者</span>
+        <span class="text-cyan-400 font-bold text-xs">92%</span>
+    </div>
+<p class="text-gray-500 text-[10px]">思維連結：極致</p>
+</div>
+</div>
+<div class="pt-2 border-t border-white/5">
+    <p class="text-gray-400 text-xs leading-relaxed">
+        唯一能與你共同解析宇宙奧秘的賢者。你們的結盟宛如兩位瘋狂鍊金術士的實驗，雖過程充滿顛覆，卻能締造震撼世界的全新紀元。
                             </p>
-                            <div
-                                class="inline-flex items-center gap-1.5 bg-orange-500/10 text-orange-300 px-2 py-1 rounded text-xs border border-orange-500/20 group-hover:bg-orange-500/20 group-hover:border-orange-500/40 transition-all">
-                                <span class="material-symbols-outlined text-sm">auto_awesome</span>
-                                <span>隊伍加成：全員士氣 +20%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="bg-card-dark rounded-xl border border-[#23482f] p-1 group hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all duration-500 relative overflow-hidden hover:-translate-y-1">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-tr from-cyan-500/10 via-transparent to-transparent animate-breathe-2 pointer-events-none">
-                    </div>
-                    <div
-                        class="bg-[#13261a] rounded-lg p-5 h-full relative z-10 flex flex-col sm:flex-row gap-5 items-start overflow-hidden">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                        </div>
-                        <div class="shrink-0 relative group/icon">
-                            <div
-                                class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.3)] transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
-                                <span class="material-symbols-outlined text-3xl text-white">science</span>
-                            </div>
-                            <div
-                                class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#0a160f] border border-cyan-500/30 text-cyan-300 text-[10px] font-black px-2 py-0.5 rounded shadow-sm whitespace-nowrap transition-transform duration-500 group-hover:scale-105">
-                                ENTP
-                            </div>
-                        </div>
-                        <div class="flex-1 relative z-10">
-                            <div class="flex justify-between items-start mb-1">
-                                <div>
-                                    <h4
-                                        class="text-white font-bold text-lg group-hover:text-cyan-300 transition-colors duration-300">
-                                        混沌發明家</h4>
-                                    <p class="text-xs text-cyan-400/80 font-medium">地精工匠族 · The Visionary</p>
-                                </div>
-                                <div class="text-right">
-                                    <div
-                                        class="text-2xl font-black text-primary leading-none group-hover:text-cyan-400 transition-colors">
-                                        92<span class="text-sm font-normal">%</span></div>
-                                    <div class="text-[10px] text-gray-500 uppercase">Sync Rate</div>
-                                </div>
-                            </div>
-                            <p
-                                class="text-gray-400 text-sm leading-relaxed mb-3 mt-2 border-t border-white/5 pt-2 group-hover:text-gray-300 transition-colors">
-                                唯一能在智力辯論上跟上你節奏的瘋子。對話旁人聽不懂，但這正是你們摧毀或拯救世界的開始。
-                            </p>
-                            <div
-                                class="inline-flex items-center gap-1.5 bg-cyan-500/10 text-cyan-300 px-2 py-1 rounded text-xs border border-cyan-500/20 group-hover:bg-cyan-500/20 group-hover:border-cyan-500/40 transition-all">
-                                <span class="material-symbols-outlined text-sm">flash_on</span>
-                                <span>隊伍加成：研發速度 +50%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12 mt-12 relative z-50">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+        <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
+            onclick="window.location.href='../index/index.html'">
+            <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
+            <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
         </div>
-    </main>
-    <footer class="w-full border-t border-[#23482f] bg-[#0b100d] px-4 md:px-10 py-12 mt-12">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-            <div class="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity"
-                onclick="window.location.href='../index/index.html'">
-                <span class="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
-                <span class="text-xl font-display font-black tracking-tight">TraitQuest</span>
-            </div>
-            <div class="flex flex-wrap justify-center gap-6 md:gap-10">
-                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                    href="#">隱私政策</a>
-                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                    href="#">服務條款</a>
-                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                    href="#">關於我們</a>
-                <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
-                    href="#">聯絡公會</a>
-            </div>
+        <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+            <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                href="#">隱私政策</a>
+            <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                href="#">服務條款</a>
+            <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                href="#">關於我們</a>
+            <a class="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline"
+                href="#">聯絡公會</a>
         </div>
-        <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
-            <p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by Psychological
-                Wisdom.</p>
-        </div>
-    </footer>
+    </div>
+    <div class="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
+<p class="text-xs text-gray-500 font-body">© 2024 TraitQuest. All loot reserved. Powered by Psychological Wisdom.</p>
+</div>
+</footer>
 
 </body>
 

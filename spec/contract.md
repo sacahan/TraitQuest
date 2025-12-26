@@ -115,6 +115,7 @@
   "narrative": "艾比對玩家抉擇的劇情回饋...",
   "nextQuestion": {
     "type": "QUANTITATIVE|SOUL_NARRATIVE",
+    "category": "Spirit Resonance Check", // 用於渲染題目上方的分類標題
     "text": "下一題內容...",
     "options": ["...", "..."]
   },
@@ -145,10 +146,19 @@
 ```json
 {
   "profile": {
-    "race_id": "RACE_5", // 智者族 (Enneagram)
-    "class_id": "CLS_INTJ", // 深淵謀略家 (MBTI)
+    "race_id": "RACE_5", // Enneagram 解鎖後
+    "class_id": "CLS_INTJ", // MBTI 解鎖後
     "title": "永不妥協的領路人",
-    "rarity": "SSR"
+    "rarity": "SSR",
+    "awakeningProgress": 65, // 百分比
+    "manaCharge": 80 // 消耗/充能值
+  },
+  "modules": { // 五大系統解鎖狀態與基礎資料
+    "mbti": { "isUnlocked": true, "code": "INTJ", "label": "深淵謀略家" },
+    "big5": { "isUnlocked": true, "radar": [80, 70, 45, 30, 90] },
+    "enneagram": { "isUnlocked": true, "code": "5w6", "label": "智者" },
+    "disc": { "isUnlocked": false, "lockHint": "需前往戰鬥叢林進行試煉" },
+    "gallup": { "isUnlocked": false, "lockHint": "等級需達到 Lv.10" }
   },
   "stats": {
     "radar": [
@@ -167,9 +177,46 @@
     "talent_ids": ["TAL_STR", "TAL_ANA"], // 技能 ID (Gallup)
     "descriptions": ["策略預判", "弱點分析"]
   },
-  "questLog": {
-    "daily": "每日同理心練習建議...",
-    "special_warning": "過度分析可能導致 MP 枯竭..."
+  "destinyBonds": { // 命運羈絆
+    "compatible": [
+      {
+        "name": "熱血激勵者",
+        "class": "ENFP",
+        "syncRate": 98,
+        "description": "熱情能融化你冰冷的理性高牆。",
+        "bonus": "全員士氣 +20%"
+      }
+    ],
+    "conflicting": [
+      {
+        "name": "秩序執行官",
+        "class": "ESTJ",
+        "warning": "過於教條的執行力可能限制你的想像力。",
+        "riskLevel": "HIGH"
+      }
+    ]
+  },
+  "destinyGuide": { // 命運指引結構化資料
+    "daily": {
+      "title": "今日預言：靜謐之時",
+      "description": "星辰顯示今日不宜衝動，適合深思...",
+      "reward": "Exp +50"
+    },
+    "main": {
+      "title": "突破理性邊界",
+      "description": "在下次測驗中嘗試使用直覺進行回答...",
+      "progress": 33
+    },
+    "side": {
+      "title": "靈魂共鳴",
+      "description": "找一個安靜的角落...",
+      "reward": "INT +2, WIS +1"
+    },
+    "oracle": {
+      "title": "神諭：覺醒之兆",
+      "description": "你體內的某種力量正在甦醒...",
+      "status": "IMPORTANT"
+    }
   }
 }
 ```
@@ -211,18 +258,44 @@
 
 ---
 
-## 5. 附錄：Quest ID 對照表
+## 5. 地圖系統模組 (World Map)
 
-| Quest ID    | 測驗名稱      | 映射目標          | 預估題數 |
-| ----------- | ------------- | ----------------- | -------- |
-| `mbti`      | MBTI 聖殿試煉 | 職業 (Class)      | 16-20 題 |
-| `big5`      | 五大屬性之泉  | 屬性數值 (Stats)  | 20-25 題 |
-| `disc`      | DISC 戰鬥叢林 | 戰略姿態 (Stance) | 12-15 題 |
-| `enneagram` | 九型人格塔    | 種族 (Race)       | 18-22 題 |
-| `gallup`    | 蓋洛普祭壇    | 技能樹 (Talent)   | 30-34 題 |
+### 5.1 獲取心靈大陸地圖狀態
+
+**Endpoint**: `GET /map`
+
+**描述**: 獲取所有區域的解鎖與完成狀態。
+
+#### Success Response (200)
+
+```json
+{
+  "regions": [
+    {
+      "id": "mbti",
+      "name": "MBTI 聖殿",
+      "status": "COMPLETED", // LOCKED | OPEN | COMPLETED
+      "progress": 100
+    },
+    {
+      "id": "big5",
+      "name": "Big Five 屬性之泉",
+      "status": "OPEN",
+      "progress": 0
+    },
+    {
+      "id": "gallup",
+      "name": "Gallup 祭壇",
+      "status": "LOCKED",
+      "progress": 0,
+      "unlockCondition": "需先完成 DISC 戰鬥叢林"
+    }
+  ]
+}
+```
 
 ---
 
-**文件版本**: V1.2  
+**文件版本**: V1.3  
 **維護者**: TraitQuest Development Team  
-**最後更新**: 2025-12-23
+**最後更新**: 2025-12-26
