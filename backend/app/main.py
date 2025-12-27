@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import auth, quest
+from app.api import auth, quest, quest_ws
 from app.core.logging_config import configure_logging
 from app.db.session import engine
 from app.core.redis_client import redis_client
@@ -45,6 +45,7 @@ app = FastAPI(title="TraitQuest API", version="1.0.0", lifespan=lifespan)
 
 app.include_router(auth.router, prefix="/v1")
 app.include_router(quest.router, prefix="/v1")
+app.include_router(quest_ws.router, prefix="/v1")
 
 # CORS middleware for frontend communication
 app.add_middleware(

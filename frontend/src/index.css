@@ -12,45 +12,27 @@
     --font-display: "Space Grotesk", "Noto Sans TC", sans-serif;
     --font-body: "Noto Sans TC", sans-serif;
   
-    @keyframes breathing-glow {
-  
-      0%,
-      100% {
-        box-shadow: 0 0 5px rgba(17, 212, 82, 0.3);
+    @keyframes breathing-white {
+      0%, 100% {
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
       }
-  
       50% {
-        box-shadow: 0 0 20px rgba(17, 212, 82, 0.7);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
       }
     }
 
-    @keyframes float {
-  
-      0%,
-      100% {
-        transform: translateY(0px);
+    @keyframes card-pulse {
+      0%, 100% {
+        border-color: rgba(35, 72, 47, 1);
       }
-  
       50% {
-        transform: translateY(-8px);
-      }
-    }
-  
-    @keyframes crystal-breathe {
-  
-      0%,
-      100% {
-        box-shadow: 0 0 10px rgba(11, 218, 115, 0.1), inset 0 0 10px rgba(0, 240, 255, 0.05);
-        border-color: rgba(11, 218, 115, 0.2);
-      }
-  
-      50% {
-        box-shadow: 0 0 25px rgba(11, 218, 115, 0.25), inset 0 0 20px rgba(0, 240, 255, 0.15);
-        border-color: rgba(11, 218, 115, 0.5);
+        border-color: rgba(17, 212, 82, 0.4);
       }
     }
   
     --animate-breathing-glow: breathing-glow 3s ease-in-out infinite;
+    --animate-breathing-white: breathing-white 3s ease-in-out infinite;
+    --animate-card-pulse: card-pulse 4s ease-in-out infinite;
     --animate-float: float 6s ease-in-out infinite;
     --animate-crystal-breathe: crystal-breathe 6s ease-in-out infinite;
     }

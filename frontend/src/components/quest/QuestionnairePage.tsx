@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useQuestStore } from '../../stores/questStore';
 import NarrativeDisplay from './NarrativeDisplay';
 import QuestionCard from './QuestionCard';
@@ -6,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const QuestionnairePage = () => {
   const { 
-    startQuest, 
     submitAnswer, 
     currentQuestion, 
     narrative, 
@@ -14,16 +12,9 @@ const QuestionnairePage = () => {
     isLoading 
   } = useQuestStore();
 
-  useEffect(() => {
-    // For Phase 1 MVP, we auto-start MBTI quest
-    if (!currentQuestion && !isCompleted) {
-      startQuest('mbti');
-    }
-  }, []);
-
   if (isCompleted) {
     return (
-       <div className="text-center p-12 bg-black/40 rounded-lg border border-secondary">
+      <div className="text-center p-12 bg-black/40 rounded-lg border border-secondary text-white">
           <h2 className="text-3xl font-bold text-primary mb-6">靈魂試煉完成</h2>
           <p className="text-lg mb-8">通往英雄殿堂的道路已開啟...</p>
           <button className="bg-primary text-black font-bold py-3 px-8 rounded shadow-lg">
@@ -34,7 +25,7 @@ const QuestionnairePage = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen">
+    <div className="flex-1 flex flex-col pt-8">
       {/* 頂部進度條區域 */}
       <div className="w-full max-w-3xl mx-auto px-6 mt-2 mb-0">
         <div className="flex justify-between text-sm font-bold tracking-wide text-primary/80 mb-2 px-1">
@@ -90,7 +81,7 @@ const QuestionnairePage = () => {
                 >
                   <QuestionCard
                     question={currentQuestion}
-                    onSubmit={submitAnswer}
+                    onSubmit={(answer) => submitAnswer(answer, 0)}
                     disabled={isLoading}
                   />
                 </motion.div>

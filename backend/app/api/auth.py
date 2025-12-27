@@ -14,7 +14,7 @@ class LoginRequest(BaseModel):
 @router.post("/login")
 async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
     # Verify Google Token
-    google_info = verify_google_token(request.token)
+    google_info = await verify_google_token(request.token)
     if not google_info:
         raise HTTPException(status_code=401, detail="Invalid Google token")
 

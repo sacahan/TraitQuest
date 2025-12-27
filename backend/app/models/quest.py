@@ -31,3 +31,8 @@ class QuestResponse(BaseModel):
     narrative: str
     question: Optional[Question] = None
     isCompleted: bool = False
+    expGained: Optional[int] = 0
+
+class QuestWSEvent(BaseModel):
+    event: str
+    data: dict

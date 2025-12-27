@@ -10,7 +10,7 @@ interface User {
 
 interface AuthState {
   user: User | null;
-  token: string | null;
+  accessToken: string | null;
   isAuthenticated: boolean;
   login: (token: string, userData: User) => void;
   logout: () => void;
@@ -18,14 +18,14 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  token: localStorage.getItem('token'),
+  accessToken: localStorage.getItem('token'),
   isAuthenticated: !!localStorage.getItem('token'),
   login: (token, userData) => {
     localStorage.setItem('token', token);
-    set({ token, user: userData, isAuthenticated: true });
+    set({ accessToken: token, user: userData, isAuthenticated: true });
   },
   logout: () => {
     localStorage.removeItem('token');
-    set({ token: null, user: null, isAuthenticated: false });
+    set({ accessToken: null, user: null, isAuthenticated: false });
   },
 }));

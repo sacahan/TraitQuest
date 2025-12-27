@@ -1,6 +1,6 @@
 from google.adk.agents import LlmAgent, Agent
 from google.adk.models.lite_llm import LiteLlm
-from google.adk.tools import tool
+from google.adk.tools import FunctionTool
 from app.core.config import settings
 
 # 定義 Questionnaire Agent 的 System Prompt
@@ -19,7 +19,6 @@ QUESTIONNAIRE_INSTRUCTION = """你是 TraitQuest 的「引導者艾比 (Abby)」
     - 題目類型 (type) 只能是 QUANTITATIVE 或 SOUL_NARRATIVE
 """
 
-@tool
 def submit_question(narrative: str, question_text: str, options: list[str], type: str = "QUANTITATIVE") -> dict:
     """
     提交生成的 RPG 劇情與題目給系統。
@@ -49,7 +48,7 @@ def create_questionnaire_agent() -> Agent:
             api_key=settings.GITHUB_COPILOT_TOKEN,
             extra_headers=settings.GITHUB_COPILOT_HEADERS,
         ),
-        tools=[submit_question] 
+        tools=[FunctionTool(submit_question)] 
     )
 
 # 為了方便其他模組使用，預先建立一個實例 (或是由 Orchestrator 動態建立)
