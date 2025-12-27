@@ -34,12 +34,18 @@
 ### 2.2 後端 & AI (Backend & AI)
 
 - **語言/框架**: **Python / FastAPI**
+- **WebSocket 支援**: **FastAPI WebSocket** + **asyncio**
+  - _用途_: 實現測驗互動的即時雙向通訊
+  - _連線管理_: 使用 ConnectionManager 管理 WebSocket 連線池
+- **非同步任務**: **asyncio.create_task** + **Redis Queue** (可選)
+  - _用途_: Analytics Agent 的後台非同步分析
+  - _保證機制_: 測驗結束時使用 `asyncio.gather` 等待所有任務完成
 - **AI Orchestration**: **Agent Development Kit (ADK)**
   - _用途_: 構建與管理 Summary Agent, Questionnaire Agent 等多代理協作流程。
 - **LLM 網關**: **LiteLLM**
   - _模型源_: 連接 **Github Copilot LLM Models**。
 - **資料庫**: **PostgreSQL** (主資料庫, JSONB)
-- **快取**: **Redis** (Session, Ranking)
+- **快取**: **Redis** (Session, Ranking, Task Queue)
 - **Python package and project manager**: **[UV](https://docs.astral.sh/uv/)**
 
 ### 2.4 持久化與效能設計 (Persistence & Perf)
@@ -48,7 +54,18 @@
   - 英雄在結算後生成的 Race_ID, Class_ID, Stats 等「靜態屬性」必須存入 `traits` 表。
   - 前端重複檢視英雄面板時，API 必須返回資料庫快照，嚴禁觸發 AI 重新生成。
 - **Agent 成本優化**：
-  - `Summary Agent` (史官) 更新頻率限制為每 10 輪對話一次，或其副本測驗結算時觸發。
+  - `Summary Agent` (史官) 更新頻率限制為每 10 輪對話一次,或其副本測驗結算時觸發。
+- **Context 管理與一致性維護**：
+  - **SessionId 索引**：每次 API 請求都透過 `sessionId` 從資料庫撈取歷史紀錄,確保 Orchestrator 能將完整 Context 注入到 Agent Prompt 中。
+  - **Redis 短期快取**：緩存最後 3 輪對話,提升即時互動的反應速度。
+  - **PostgreSQL 長期存儲**：`user_quests.interactions` (JSONB) 增量存儲每一輪的題目、回答與分析標籤。
+  - **語義壓縮**：Summary Agent 將長期對話壓縮為 `hero_chronicle` 摘要,避免 Token 視窗溢出。
+  - **數據聚合**:測驗結束時,Orchestrator 聚合所有 `trait_deltas` 增量,傳遞給 Transformation Agent 進行最終映射。
+- **非同步分析保證**:
+  - **即時回應**:玩家提交答案後,Questionnaire Agent 立即生成下一題並透過 WebSocket 推送
+  - **後台分析**:Analytics Agent 作為非同步任務執行,分析結果寫入 `user_quests.interactions`
+  - **完成等待**:測驗結束時,使用 `asyncio.gather` 等待所有非同步分析任務完成
+  - **超時處理**:單個分析任務超時(30秒)視為失敗,記錄錯誤但不阻塞測驗進行
 
 ### 2.3 基礎設施與環境 (Infra & Env)
 

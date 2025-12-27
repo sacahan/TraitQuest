@@ -63,73 +63,303 @@
 
 ## 2. 冒險任務模組 (Quest & AI GM)
 
-### 2.1 啟動副本試煉 (Fresh Start)
+### 2.1 連線建立 (WebSocket Connection)
 
-**Endpoint**: `POST /quests/{questId}/start`
+**WebSocket URL**: `ws://[host]/v1/quests/ws`
 
-**描述**: 重置臨時 Session 並獲取艾比的第一段敘事。
+**Query Parameters**:
+- `sessionId`: UUID (測驗 Session 識別碼)
+- `token`: JWT Token (從登入 API 取得)
 
-#### Success Response (200)
+**連線流程**:
+
+1. 前端透過 `POST /auth/login` 取得 JWT Token
+2. 前端發起 WebSocket 連線: `ws://api.traitquest.com/v1/quests/ws?sessionId={uuid}&token={jwt}`
+3. 後端驗證 token,建立連線並綁定 sessionId
+4. 連線建立成功後,後端自動推送第一題
+5. 測驗結束或連線逾時(30 分鐘無互動)後自動關閉
+
+**連線狀態碼**:
+
+| 狀態碼 | 說明                     |
+| ------ | ------------------------ |
+| 1000   | 正常關閉(測驗完成)       |
+| 1008   | Token 驗證失敗           |
+| 1011   | 伺服器內部錯誤           |
+| 4001   | Session 不存在或已過期   |
+
+---
+
+### 2.2 Client → Server 事件
+
+#### 事件: `start_quest`
+
+**描述**: 啟動副本試煉,獲取艾比的第一段敘事與第一題
+
+**Payload**:
 
 ```json
 {
-  "sessionId": "uuid",
-  "narrative": "艾比 (Abby) 的副本引導文字...",
-  "firstQuestion": {
-    "id": "q1",
-    "type": "QUANTITATIVE", // QUANTITATIVE (按鈕) 或 SOUL_NARRATIVE (文字輸入)
-    "text": "情境題目內容...",
-    "options": ["選項 A", "選項 B"] // 若為 SOUL_NARRATIVE 則為空陣列
+  "event": "start_quest",
+  "data": {
+    "questId": "mbti|big5|disc|enneagram|gallup"
   }
 }
 ```
 
-#### Question Type 說明
-
-| Type             | 說明                 | Options      |
-| ---------------- | -------------------- | ------------ |
-| `QUANTITATIVE`   | 量化試煉（按鈕選擇） | 包含選項陣列 |
-| `SOUL_NARRATIVE` | 靈魂對話（文字輸入） | 空陣列 `[]`  |
+**Server 回應**: 發送 `first_question` 事件
 
 ---
 
-### 2.2 提交回答並獲取下一題 (混合模式)
+#### 事件: `submit_answer`
 
-**Endpoint**: `POST /quests/interact`
+**描述**: 提交玩家回答
 
-#### Request Body
-
-```json
-{
-  "sessionId": "uuid",
-  "questId": "mbti|big5|disc|enneagram|gallup",
-  "answer": "string" // 傳送選項文字或玩家自定義敘述
-}
-```
-
-#### Success Response (200)
+**Payload**:
 
 ```json
 {
-  "isCompleted": false,
-  "narrative": "艾比對玩家抉擇的劇情回饋...",
-  "nextQuestion": {
-    "type": "QUANTITATIVE|SOUL_NARRATIVE",
-    "category": "Spirit Resonance Check", // 用於渲染題目上方的分類標題
-    "text": "下一題內容...",
-    "options": ["...", "..."]
-  },
-  "expGained": 15,
-  "visualFeedback": "GLOW_EFFECT" // 用於觸發高品質回答的符文發光特效
+  "event": "submit_answer",
+  "data": {
+    "answer": "string", // 選項文字或玩家自定義敘述
+    "questionIndex": 1  // 當前題號 (1-based)
+  }
 }
 ```
 
-#### Visual Feedback 類型
+**Server 回應**: 
+- 立即發送 `next_question` 事件 (非阻塞)
+- 後台執行 Analytics Agent 分析
+- (可選) 發送 `analysis_progress` 事件
+
+---
+
+#### 事件: `request_result`
+
+**描述**: 請求最終分析結果 (測驗完成後)
+
+**Payload**:
+
+```json
+{
+  "event": "request_result",
+  "data": {}
+}
+```
+
+**Server 回應**: 
+- 等待所有非同步分析任務完成
+- 發送 `final_result` 事件
+
+---
+
+### 2.3 Server → Client 事件
+
+#### 事件: `first_question`
+
+**描述**: 副本啟動後的第一題
+
+**Payload**:
+
+```json
+{
+  "event": "first_question",
+  "data": {
+    "narrative": "艾比 (Abby) 的副本引導文字...",
+    "question": {
+      "id": "q1",
+      "type": "QUANTITATIVE", // QUANTITATIVE (按鈕) 或 SOUL_NARRATIVE (文字輸入)
+      "category": "Spirit Resonance Check", // 題目分類標題
+      "text": "情境題目內容...",
+      "options": ["選項 A", "選項 B"] // 若為 SOUL_NARRATIVE 則為空陣列
+    }
+  }
+}
+```
+
+---
+
+#### 事件: `next_question`
+
+**描述**: 玩家提交答案後的下一題 (立即推送,不等待分析完成)
+
+**Payload**:
+
+```json
+{
+  "event": "next_question",
+  "data": {
+    "questionIndex": 2,
+    "narrative": "艾比對玩家抉擇的劇情回饋...",
+    "question": {
+      "type": "QUANTITATIVE|SOUL_NARRATIVE",
+      "category": "Moral Compass Test",
+      "text": "下一題內容...",
+      "options": ["...", "..."]
+    },
+    "expGained": 15,
+    "visualFeedback": "GLOW_EFFECT" // 用於觸發高品質回答的符文發光特效
+  }
+}
+```
+
+**Visual Feedback 類型**:
 
 | Feedback      | 觸發條件   | 視覺效果     |
 | ------------- | ---------- | ------------ |
 | `GLOW_EFFECT` | 高品質回答 | 符文發光特效 |
 | `NORMAL`      | 一般回答   | 無特殊效果   |
+
+---
+
+#### 事件: `analysis_progress` (可選)
+
+**描述**: 後台分析進度通知
+
+**Payload**:
+
+```json
+{
+  "event": "analysis_progress",
+  "data": {
+    "questionIndex": 1,
+    "status": "analyzing|completed|failed",
+    "progress": 0.8 // 0.0 ~ 1.0
+  }
+}
+```
+
+---
+
+#### 事件: `quest_complete`
+
+**描述**: 測驗完成通知
+
+**Payload**:
+
+```json
+{
+  "event": "quest_complete",
+  "data": {
+    "message": "測驗完成,正在生成你的英雄面板...",
+    "totalExp": 150,
+    "questionsCompleted": 10
+  }
+}
+```
+
+---
+
+#### 事件: `final_result`
+
+**描述**: 最終分析結果 (等待所有非同步任務完成後推送)
+
+**Payload**: 與 `GET /quests/{sessionId}/result` 相同的 JSON 結構 (見第 3 節)
+
+```json
+{
+  "event": "final_result",
+  "data": {
+    "profile": { ... },
+    "modules": { ... },
+    "stats": { ... },
+    "combat": { ... },
+    "skills": { ... },
+    "destinyBonds": { ... },
+    "destinyGuide": { ... }
+  }
+}
+```
+
+---
+
+#### 事件: `error`
+
+**描述**: 錯誤通知
+
+**Payload**:
+
+```json
+{
+  "event": "error",
+  "data": {
+    "code": "ANALYSIS_TIMEOUT|VALIDATION_FAILED|AGENT_ERROR|...",
+    "message": "錯誤描述",
+    "details": "詳細資訊 (可選)",
+    "recoverable": true // 是否可重試
+  }
+}
+```
+
+**錯誤碼說明**:
+
+| 錯誤碼               | 說明                         | 前端處理建議       |
+| -------------------- | ---------------------------- | ------------------ |
+| `ANALYSIS_TIMEOUT`   | 單次分析超時 (30秒)          | 顯示警告,繼續測驗  |
+| `VALIDATION_FAILED`  | AI 生成結果驗證失敗          | 自動重試           |
+| `AGENT_ERROR`        | Agent 執行錯誤               | 顯示錯誤訊息       |
+| `SESSION_EXPIRED`    | Session 已過期               | 引導重新開始測驗   |
+| `LEVEL_INSUFFICIENT` | 等級不足無法進入該據點       | 顯示等級需求提示   |
+
+---
+
+### 2.4 非同步分析機制
+
+**核心優化**: 玩家提交答案後,系統採用非阻塞式處理流程:
+
+1. **立即回應**: Orchestrator 調用 Questionnaire Agent 生成下一題,透過 `next_question` 事件立即推送給前端
+2. **後台分析**: 同時啟動 Analytics Agent 非同步任務,分析玩家回答並寫入資料庫
+3. **進度通知** (可選): 分析完成後發送 `analysis_progress` 事件
+4. **最終聚合**: 測驗結束時,Orchestrator 等待所有非同步任務完成,聚合數據後執行 Transformation Agent
+
+**時序圖**:
+
+```
+玩家提交答案 (submit_answer)
+    ↓
+Orchestrator 接收
+    ↓
+    ├─→ [同步] Questionnaire Agent 生成下一題 → 立即推送 next_question
+    └─→ [非同步] Analytics Agent 分析 → 寫入 DB → (可選) 推送 analysis_progress
+    
+測驗完成 (quest_complete)
+    ↓
+等待所有非同步任務完成 (asyncio.gather)
+    ↓
+聚合數據 → Transformation Agent → Validator Agent
+    ↓
+推送 final_result
+```
+
+**效能提升**:
+- 傳統 REST 同步模式: 每題等待 1-3 秒分析,10 題累積 10-30 秒延遲
+- WebSocket 非同步模式: 分析在背景執行,玩家感受零延遲
+
+---
+
+### 2.5 斷線重連機制
+
+**重連策略**:
+
+1. 前端檢測到 WebSocket 斷線
+2. 使用相同 `sessionId` 重新建立連線
+3. 後端從資料庫恢復狀態:
+   - 讀取 `user_quests.interactions` 取得已完成的題數
+   - 推送當前應該顯示的題目
+4. 繼續測驗流程
+
+**狀態恢復範例**:
+
+```json
+{
+  "event": "state_restored",
+  "data": {
+    "currentQuestionIndex": 5,
+    "completedQuestions": 4,
+    "question": { ... } // 當前題目
+  }
+}
+```
 
 ---
 
