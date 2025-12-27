@@ -25,6 +25,7 @@
 
 - **框架**: **Vite + React**
   - _重點_: 將 `demo/` 中的 HTML/CSS 完美轉換為 React Components，務必保留原有的 Tailwind 樣式、打字機特效、呼吸燈光效等細節。
+  - **圖片處理規範**: 在移植 `demo/` 目錄內容時，若原始 HTML 中引用了外部雲端圖片網址（如 `lh3.googleusercontent.com`），**一律必須先下載至本地**（歸檔於 `frontend/public/assets/images/`）後，再以本地路徑方式引用，禁止直接連結雲端資源。
 - **狀態管理**: **Zustand**
   - _用途_: 管理全局 User Session、測驗進度、動畫觸發狀態。
 - **樣式**: **Tailwind CSS** + **Framer Motion**

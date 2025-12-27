@@ -61,7 +61,7 @@ const QuestionnairePage = () => {
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
                 style={{
-                  backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuALB3zMDLh0ZWJoBkhmPIXtt5FlCE0IJfPQWPFiTwnBygEK5ZbnMDcraqOgpzCQx898DaMVZvnfEo4BsFbAjhq3-bBjfa2dpSJIE4fjv5kCQBjsVFo7eDTOLybHxFedkiSlrwCsyZH9Gn5GBh3UjR7KJ6a_HkdF4X4glgpPEbhx0jtkiS8v_7K-Wd6zQ5J2NVxainpwlgyEONtkYS1Z4jAy4-KieGW0eZrVP6y9efxpO3C2BBxJ8Rk4zYElecBqJJ-IppfaaVku2Zgh')",
+                  backgroundImage: "url('/assets/images/quest_bg.webp')",
                   filter: "hue-rotate(240deg) brightness(0.7) saturate(0.5) contrast(1.3)"
                 }}
               ></div>

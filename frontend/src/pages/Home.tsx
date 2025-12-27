@@ -9,7 +9,8 @@ const QUESTS = [
     title: 'MBTI 分析',
     type: '英雄職業',
     description: '探索 E/I、S/N、T/F、J/P 四大維度，尋找你的本命職業與思維模式。你是運籌帷幄的建築師，還是熱情洋溢的競選者？',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_H_FnQrEU4a1xs5rsL9kablIllbLgpEjhuS6bO9jTAP7ImrnFVqv8NtA1zzhDo4LK3SvUyAur5QGFnqesfreyeBACBaYbYbZuPjHZZpc23PDm-swnZzIhz6G-CN5QwiCbTYg3evbELEUZdwcbZRJb9EIOaDZr_9x5h8I1jUfBJXIYyfM1W_6K-9ozWQD-QYsyTanNfBDTrIB62q7_Ny-u7VaBqW0gGxjvMQAnWAVdl63XgUvVrmmHWwkjvTnXgtmw07vc__99Pn_-',
+    imageUrl: '/assets/images/mbti_cover.webp',
+    color: 'green',
     icon: 'psychology',
     route: '/questionnaire'
   },
@@ -17,8 +18,9 @@ const QUESTS = [
     id: 'big_five',
     title: 'Big Five 分析',
     type: '性格特質',
-    description: '穿越 OCEAN 五大洋流。分析你的開放性、責任心、外向性、親和力與神經質，繪製最精準的個性雷達圖。',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCTDuzgwlyj-15QISA3f5qvVkYFqRbxtHS3Q2oC8EqnzLL4D7TLg0SRLyXBdsmvG2WpWwcevDYTtvmuatQwgjP5EtgLZCSynwVdxpPGFKHiUj9b7aO4h-yzvzMrOmCzYGhuVgJ4lsb4zYd_0tf2Qs-7jFdBiTuqDy5KHZXFHasvVyBbpguLu3By5W3GX6OclBriiwj5r5xjBfcThaPkZ5hpGOFP75HALhP5O3SBpu5HUG74l4YzFn7JSeRmAkq--NnXNHtvgPj0HZff',
+    description: '穿越 OCEAN 五大洋流。分析你的開放性、責任心、外向性、親和力與神經質。',
+    imageUrl: '/assets/images/big5_cover.webp',
+    color: 'blue',
     icon: 'water_drop',
     route: '/questionnaire'
   },
@@ -26,8 +28,9 @@ const QUESTS = [
     id: 'disc',
     title: 'DISC 分析',
     type: '對戰策略',
-    description: '支配(D)、影響(I)、穩健(S)、分析(C)。在職場與人際的戰場上，你是衝鋒陷陣的將軍，還是運籌帷幄的軍師？',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAGGrBLD3DE7c97ZGQ0cPPeL7daiJaXGqy6evNvRv-JUBHgx6qaCMT-se1lcr--hJEnINbp_LOG5BaAR7F0HsqHHkruPuto7ShshwLaPurcSmgAkI2yAfeIytD--wTRTOZ9w_7DUJg3sTVrJYlAVsfEdoGxRzYlR2OyywzX4QuSsATcl23bKuEy3kVwVWCqcvEGq29jTjs8bBNJ9sHcinzTsdOrx-MSQK_rBHjGqyHPRcd1xXRwpG8UGgUFivb5C3oNSVp9CAU97IE4',
+    description: '支配(D)、影響(I)、穩健(S)、分析(C)。在職場與人際的戰場上，你是將軍還是軍師？',
+    imageUrl: '/assets/images/disc_cover.webp',
+    color: 'red',
     icon: 'swords',
     route: '/questionnaire'
   },
@@ -35,8 +38,9 @@ const QUESTS = [
     id: 'enneagram',
     title: 'Enneagram 分析',
     type: '靈魂種族',
-    description: '深入靈魂深處，直面核心恐懼與慾望。從完美主義者到和平締造者，覺醒你的心靈原力，找到成長的蛻變之路。',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCvDrGplJ_AYJAwPYdCWvaC6BCgCR7EYyisfQFNpbwjc6sdNsoekUjfOittUYvwaD7BgwnilDHtrmHXuMuKJydJEiKQunC9XjwuGgkHdBKJwx2NxMsN6KT8F3U3Lrpjp-8bTCRnPrtJio_U54JJDhCIVOw6qm1f-gGIr_46G23KuNUYY9or0DW82evmIJ9ol--_B-Phy50cLvvaU8AFXeDRlMPFPP6q09--J8cEWsXHcuxmFDh6fMdqGQOygoTtRnPtdj8fdnhI5ogC',
+    description: '深入靈魂深處，直面核心恐懼與慾望。從完美主義者到和平締造者。',
+    imageUrl: '/assets/images/enneagram_cover.webp',
+    color: 'purple',
     icon: 'stars',
     route: '/questionnaire'
   },
@@ -44,8 +48,9 @@ const QUESTS = [
     id: 'gallup',
     title: 'Gallup 識別',
     type: '專屬技能',
-    description: '與其彌補缺點，不如強化天賦！挖掘你最強大的五項天賦優勢，打造專屬於你的無敵技能樹。',
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAYvrLaw1ItcvLuNKFm5pEnXIAzwcBxaspLHb2D5rP90Pih7MMR_Wk5hw6A1-f9eLq_LRmGIhrqzujHdBo3nkXNJ_LjeXyAxYvn4WTIdto9bMjPtRkvj8KeqIhK-cPj6xw3jIYdzcM2jN1ql4juJl0ARxdd_-po5XFU5yFj9eVMWpFjTkQ6swrmHossK5gVv-bB8wsNQykcM2zYVHnlTzr98K8szl7fYTxfrpYGSekRWLNcqfvmua0yR2EGRsUv81uwXKqs-6GMSgBG',
+    description: '與其彌補缺點，不如強化天賦！挖掘你最強大的五項天賦優勢。',
+    imageUrl: '/assets/images/gallup_cover.webp',
+    color: 'yellow',
     icon: 'trophy',
     route: '/questionnaire'
   }
@@ -63,7 +68,7 @@ const Home = () => {
             <div
               className="flex min-h-[560px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden group shadow-2xl shadow-primary/10 transition-all duration-500 hover:shadow-primary/30"
               style={{
-                backgroundImage: 'linear-gradient(rgba(16, 34, 22, 0.7) 0%, rgba(16, 34, 22, 0.85) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAskoVlrSvlm0UJiofdOGCILkqEkm9CRTcX1KJ3MQH4x5z75QN9otgjF8acHumAHFXIT0bdlGUSjZjhN4O77SPeme7q6laVzYpKCxFTyFOJErQ5zSnVCwEHaR9INHh1HxMm1NvXw86Xgm1GylVWi1p784WMspiIUPAJaCmtAOlMIvjXYQkvbg2Mdkmw9025LB_S5kaKK6_3DN04eqsKMV1GhH1pdogXtpL8idBzZcsN8TM8GDcq6WhQ5DVgILYSjEKoRT0s5Qqqjx5U")'
+                backgroundImage: 'linear-gradient(rgba(16, 34, 22, 0.7) 0%, rgba(16, 34, 22, 0.85) 100%), url("/assets/images/hero_bg.webp")'
               }}
             >
               <div className="absolute top-4 left-4 text-white/20 transition-transform duration-700 group-hover:rotate-45">

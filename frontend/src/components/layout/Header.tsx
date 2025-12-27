@@ -27,7 +27,7 @@ export const Header = () => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
               <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/analysis">
-                英雄面板
+                英雄功勳
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </nav>
