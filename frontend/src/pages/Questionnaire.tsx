@@ -18,7 +18,8 @@ const Questionnaire = () => {
     return () => {
       resetQuest();
     };
-  }, [accessToken, initQuest, resetQuest, sessionId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken]); // 只在 accessToken 變化時評估，且內部有 !sessionId 鎖定
 
   return (
     <div className="flex flex-col min-h-screen">

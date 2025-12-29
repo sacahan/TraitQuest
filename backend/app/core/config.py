@@ -15,7 +15,7 @@ class Settings(BaseSettings):
 
     # LiteLLM / LLM
     LITELLM_URL: str = "http://localhost:4000"
-    LLM_MODEL: str = "github/gpt-4o"
+    LLM_MODEL: str = "github_copilot/gpt-4o"
     GITHUB_COPILOT_TOKEN: str = "your_token"
     GITHUB_COPILOT_HEADERS: dict = {
         "editor-version": "vscode/1.85.1",

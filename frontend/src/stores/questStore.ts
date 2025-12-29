@@ -15,32 +15,71 @@ interface QuestState {
   questId: string | null;
   currentQuestion: Question | null;
   narrative: string;
+  guideMessage: string;
   isCompleted: boolean;
   isLoading: boolean;
+  questionIndex: number;
+  totalSteps: number;
   expGained: number;
 
   // Actions
   initQuest: (questId: string, token: string) => Promise<void>;
   submitAnswer: (answer: string, questionIndex: number) => void;
+  continueQuest: () => void;
   resetQuest: () => void;
 }
 
-export const useQuestStore = create<QuestState>((set) => {
+export const useQuestStore = create<QuestState>((set, get) => {
   // 設置事件監聽器
   questWsClient.on('first_question', (data) => {
-    set({
-      currentQuestion: data.question,
-      narrative: data.narrative,
+    const newState: any = {
+      narrative: data.narrative || '',
+      questionIndex: data.questionIndex ?? 0,
+      totalSteps: data.totalSteps ?? 10,
       isLoading: false
-    });
+    };
+
+    if (data.guideMessage) {
+      newState.guideMessage = data.guideMessage;
+    }
+
+    if (data.question) {
+      newState.currentQuestion = {
+        ...data.question,
+        id: data.question.id || `q_first_${Date.now()}`
+      };
+    } else {
+      // 開場白情境：沒有問題，等待 narrative 完成後自動觸發 continue
+      newState.currentQuestion = null;
+      // 設置延遲自動觸發 continueQuest
+      setTimeout(() => {
+        const state = get();
+        if (!state.currentQuestion && !state.isCompleted) {
+          state.continueQuest();
+        }
+      }, 3000); // 等待 3 秒讓打字效果完成
+    }
+
+    set(newState);
   });
 
   questWsClient.on('next_question', (data) => {
-    set({
-      currentQuestion: data.question,
-      narrative: data.narrative,
+    const newState: any = {
+      currentQuestion: data.question ? {
+        ...data.question,
+        id: data.question.id || `q_${data.questionIndex || Date.now()}`
+      } : null,
+      narrative: data.narrative || '',
+      questionIndex: data.questionIndex ?? (get().questionIndex + 1),
+      totalSteps: data.totalSteps ?? get().totalSteps,
       isLoading: false
-    });
+    };
+
+    if (data.guideMessage) {
+      newState.guideMessage = data.guideMessage;
+    }
+
+    set(newState);
   });
 
   questWsClient.on('quest_complete', (data) => {
@@ -61,8 +100,11 @@ export const useQuestStore = create<QuestState>((set) => {
     questId: null,
     currentQuestion: null,
     narrative: '',
+    guideMessage: '',
     isCompleted: false,
     isLoading: false,
+    questionIndex: 0,
+    totalSteps: 10,
     expGained: 0,
 
     initQuest: async (questId, token) => {
@@ -80,7 +122,13 @@ export const useQuestStore = create<QuestState>((set) => {
 
     submitAnswer: (answer, questionIndex) => {
       set({ isLoading: true });
-      questWsClient.send('submit_answer', { answer, questionIndex });
+      const index = questionIndex ?? get().questionIndex;
+      questWsClient.send('submit_answer', { answer, questionIndex: index });
+    },
+
+    continueQuest: () => {
+      set({ isLoading: true });
+      questWsClient.send('continue_quest', {});
     },
 
     resetQuest: () => {
@@ -90,8 +138,11 @@ export const useQuestStore = create<QuestState>((set) => {
         questId: null,
         currentQuestion: null,
         narrative: '',
+        guideMessage: '',
         isCompleted: false,
-        isLoading: false
+        isLoading: false,
+        questionIndex: 0,
+        totalSteps: 10
       });
     }
   };

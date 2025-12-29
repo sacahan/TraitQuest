@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuthStore } from './stores/authStore'
 import Home from './pages/Home'
 import Questionnaire from './pages/Questionnaire'
+import QuestIntro from './pages/QuestIntro'
 
 function App() {
   const { isAuthenticated } = useAuthStore()
@@ -22,6 +23,10 @@ function App() {
             <Route
               path="/questionnaire"
               element={isAuthenticated ? <Questionnaire /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/quest/:questId"
+              element={isAuthenticated ? <QuestIntro /> : <Navigate to="/" />}
             />
             {/* 未來可增加 /map, /analysis 等路由 */}
           </Routes>

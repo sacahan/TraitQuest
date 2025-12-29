@@ -13,6 +13,7 @@ class QuestInfo(BaseModel):
     description: str
     icon: str
     difficulty: str
+    total_steps: int
 
 class QuestResult(BaseModel):
     sessionId: str
@@ -30,14 +31,16 @@ async def list_quests():
             "title": "靈魂顯影儀 (MBTI)",
             "description": "探索你性格的深層構造...",
             "icon": "sparkles",
-            "difficulty": "Easy"
+            "difficulty": "Easy",
+            "total_steps": 10
         },
         {
             "id": "big_five",
             "title": "五維之鏡 (Big Five)",
             "description": "最科學的人格分析工具...",
             "icon": "shield",
-            "difficulty": "Medium"
+            "difficulty": "Medium",
+            "total_steps": 15
         }
     ]
 

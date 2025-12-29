@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../stores/authStore';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
 import { HomeQuestCard } from '../components/quest/HomeQuestCard';
@@ -6,57 +8,60 @@ import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
 const QUESTS = [
   {
     id: 'mbti',
-    title: 'MBTI 分析',
-    type: '英雄職業',
-    description: '探索 E/I、S/N、T/F、J/P 四大維度，尋找你的本命職業與思維模式。你是運籌帷幄的建築師，還是熱情洋溢的競選者？',
+    title: '英雄原型（MBTI）',
+    type: '維度學派',
+    description: '源自榮格心理學的十六種心智原型。透過四大維度，判定你最自然的思考方式與行動風格。',
     imageUrl: '/assets/images/mbti_cover.webp',
     color: 'green',
     icon: 'psychology',
-    route: '/questionnaire'
+    route: '/quest/mbti'
   },
   {
     id: 'big_five',
-    title: 'Big Five 分析',
-    type: '性格特質',
-    description: '穿越 OCEAN 五大洋流。分析你的開放性、責任心、外向性、親和力與神經質。',
+    title: '五大心域（Big Five）',
+    type: '屬性學派',
+    description: '現代心理學中最具實證基礎的心性模型。以五條連續屬性，描繪你長期穩定的行為輪廓。',
     imageUrl: '/assets/images/big5_cover.webp',
     color: 'blue',
     icon: 'water_drop',
-    route: '/questionnaire'
+    route: '/quest/big_five'
   },
   {
     id: 'disc',
-    title: 'DISC 分析',
-    type: '對戰策略',
-    description: '支配(D)、影響(I)、穩健(S)、分析(C)。在職場與人際的戰場上，你是將軍還是軍師？',
+    title: '四象行動（DISC）',
+    type: '行為學派',
+    description: '解析你在壓力與衝突中的即時反應。四象行動核心，決定你在人際戰場上的站位。',
     imageUrl: '/assets/images/disc_cover.webp',
     color: 'red',
     icon: 'swords',
-    route: '/questionnaire'
+    route: '/quest/disc'
   },
   {
     id: 'enneagram',
-    title: 'Enneagram 分析',
-    type: '靈魂種族',
-    description: '深入靈魂深處，直面核心恐懼與慾望。從完美主義者到和平締造者。',
+    title: '九大執念（Enneagram）',
+    type: '原型學派',
+    description: '九種靈魂本源，萌芽於恐懼與渴望。揭示驅動你行為的核心執念與成長盲點。',
     imageUrl: '/assets/images/enneagram_cover.webp',
     color: 'purple',
     icon: 'stars',
-    route: '/questionnaire'
+    route: '/quest/enneagram'
   },
   {
     id: 'gallup',
-    title: 'Gallup 識別',
-    type: '專屬技能',
-    description: '與其彌補缺點，不如強化天賦！挖掘你最強大的五項天賦優勢。',
+    title: '三十四技能（CliftonStrengths®）',
+    type: '天賦學派',
+    description: 'Gallup 發展的天賦模型。辨識你最具力量的天賦主軸，專注強化，而非補齊短板。',
     imageUrl: '/assets/images/gallup_cover.webp',
     color: 'yellow',
     icon: 'trophy',
-    route: '/questionnaire'
+    route: '/quest/gallup'
   }
 ];
 
 const Home = () => {
+  const { isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
+
   return (
     <div className="bg-background-dark min-h-screen font-body flex flex-col">
       <Header />
@@ -90,11 +95,20 @@ const Home = () => {
                   從 MBTI 的職業聖殿到九型人格的靈魂神殿。選擇你的試煉，解鎖隱藏在內心深處的英雄屬性與專屬技能！
                 </h2>
               </div>
-              
-              <CustomGoogleAuthButton className="group flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-white text-[#112217] hover:bg-gray-100 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-white hover:scale-105 active:scale-95 active:ring-4 active:ring-white/50">
-                <span className="material-symbols-outlined text-xl transition-transform group-hover:rotate-12">login</span>
-                <span className="truncate font-body">使用 Google 帳號開始</span>
-              </CustomGoogleAuthButton>
+              {isAuthenticated ? (
+                <button
+                  onClick={() => navigate('/map')}
+                  className="group flex min-w-[180px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-primary text-[#112217] hover:scale-105 active:scale-95 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-glow"
+                >
+                  <span className="material-symbols-outlined text-xl transition-transform group-hover:rotate-12">map</span>
+                  <span className="truncate font-body">進入世界地圖</span>
+                </button>
+              ) : (
+                <CustomGoogleAuthButton className="group flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-white text-[#112217] hover:bg-gray-100 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-white hover:scale-105 active:scale-95 active:ring-4 active:ring-white/50">
+                  <span className="material-symbols-outlined text-xl transition-transform group-hover:rotate-12">login</span>
+                  <span className="truncate font-body">使用 Google 帳號開始</span>
+                </CustomGoogleAuthButton>
+              )}
               
               <div className="flex gap-4 mt-4 text-sm text-gray-400 font-body">
                 <span className="flex items-center gap-1 group/item">
@@ -137,10 +151,20 @@ const Home = () => {
             <div className="relative z-10 flex flex-col items-center gap-6">
               <h2 className="text-white text-3xl font-black font-display drop-shadow-md">準備好開始你的傳奇了嗎？</h2>
               <p className="text-gray-300 max-w-lg font-body">利用自我認知來成長，克服障礙，擊敗生活中的『怪物』</p>
-              <CustomGoogleAuthButton className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold shadow-[0_0_20px_rgba(17,212,82,0.4)] hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] animate-breathing-glow group/btn font-body">
-                <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">play_arrow</span>
-                <span>立即登入</span>
-              </CustomGoogleAuthButton>
+              {isAuthenticated ? (
+                <button
+                  onClick={() => navigate('/map')}
+                  className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold shadow-[0_0_20px_rgba(17,212,82,0.4)] hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] animate-breathing-glow group/btn font-body"
+                >
+                  <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">map</span>
+                  <span>開啟冒險地圖</span>
+                </button>
+              ) : (
+                  <CustomGoogleAuthButton className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold shadow-[0_0_20px_rgba(17,212,82,0.4)] hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] animate-breathing-glow group/btn font-body">
+                    <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">play_arrow</span>
+                    <span>立即登入</span>
+                  </CustomGoogleAuthButton>
+              )}
             </div>
           </div>
         </section>

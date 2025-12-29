@@ -389,7 +389,7 @@ CREATE INDEX idx_user_class ON traits ((final_report->>'class_id'));
 | **Enneagram** | 種族 (Race)       | 九型人格中心 → 種族。影響 MP 回復效率        |
 | **MBTI**      | 核心職業 (Class)  | 16 型人格 → 職業原型。定義角色外觀與決策邏輯 |
 | **Big Five**  | 屬性數值 (Stats)  | O→ 智力, C→ 防禦, E→ 速度, A→ 魅力, N→ 洞察  |
-| **DISC**      | 戰略姿態 (Stance) | 行為風格 → 戰鬥動作描述（攻、援、守、算）    |
+| **DISC**      | 對戰方式 (Stance) | 行為風格 → 戰鬥動作描述（攻、援、守、算）    |
 | **Gallup**    | 技能樹 (Talent)   | 34 種天賦 → 2-3 個主/被動技能 ID             |
 
 ### 2. 升級與成長

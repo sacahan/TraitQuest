@@ -44,7 +44,7 @@ export const HomeQuestCard = ({ title, type, description, imageUrl, icon, route 
         onClick={() => navigate(route)}
         className="w-full mt-auto py-3 px-4 rounded-xl bg-[#23482f] hover:bg-primary hover:text-[#112217] text-white font-bold transition-all duration-300 flex items-center justify-center gap-2 group/btn active:scale-95 active:brightness-110 hover:shadow-[0_0_15px_rgba(17,212,82,0.5)] font-body"
       >
-        <span>進入塔樓</span>
+        <span>開啟副本</span>
         <span className="material-symbols-outlined text-sm transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
       </button>
     </div>

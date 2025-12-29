@@ -129,6 +129,16 @@
 | `TAL_LEA` | 學習     | Learner      |
 | `TAL_STR` | 戰略     | Strategic    |
 
+## 五、屬性數值 (Stats)
+
+| 屬性 ID  | 屬性定義                   | 屬性映射 | 英文原名     | 說明                 |
+| -------- | -------------------------- | -------- | ------------ | -------------------- |
+| `STA_IN` | 開放性 (Openness)          | 智力     | Intelligence | 魔法與知識的泉源。   |
+| `STA_DE` | 盡責性 (Conscientiousness) | 防禦     | Defense      | 堅不可摧的自律之盾。 |
+| `STA_SP` | 外向性 (Extraversion)      | 速度     | Speed        | 迅捷的社交反應力。   |
+| `STA_CH` | 親和性 (Agreeableness)     | 魅力     | Charisma     | 治癒人心的光環。     |
+| `STA_IN` | 神經質 (Neuroticism)       | 洞察     | Insight      | 預知危險的第六感。   |
+
 ---
 
 **文件版本**: V1.0  

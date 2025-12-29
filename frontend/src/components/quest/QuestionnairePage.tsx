@@ -7,9 +7,12 @@ const QuestionnairePage = () => {
   const { 
     submitAnswer, 
     currentQuestion, 
-    narrative, 
+    narrative,
+    guideMessage,
     isCompleted, 
-    isLoading 
+    isLoading,
+    questionIndex,
+    totalSteps
   } = useQuestStore();
 
   if (isCompleted) {
@@ -30,12 +33,12 @@ const QuestionnairePage = () => {
       <div className="w-full max-w-3xl mx-auto px-6 mt-2 mb-0">
         <div className="flex justify-between text-sm font-bold tracking-wide text-primary/80 mb-2 px-1">
           <span className="uppercase text-xs tracking-widest text-white/50">Soul Resonance</span>
-          <span>{currentQuestion ? '25%' : '0%'}</span>
+          <span>{currentQuestion ? `${Math.min(100, Math.round((questionIndex / totalSteps) * 100))}%` : '0%'}</span>
         </div>
         <div className="h-6 w-full bg-[#08120d] rounded-full p-1 border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] relative overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-green-900 via-primary to-[#4fffb0] rounded-full transition-all duration-1000 relative overflow-hidden shadow-[0_0_15px_#0bda73]"
-            style={{ width: currentQuestion ? '25%' : '0%' }}
+            style={{ width: currentQuestion ? `${Math.min(100, Math.round((questionIndex / totalSteps) * 100))}%` : '0%' }}
           >
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMiIvPjwvc3ZnPg==')] opacity-30"></div>
           </div>
@@ -51,8 +54,8 @@ const QuestionnairePage = () => {
           <div className="hidden lg:flex lg:col-span-3 flex-col items-center justify-center relative animate-float z-20">
             <div className="relative bg-[#11251c] border border-primary/30 p-5 rounded-2xl rounded-bl-sm mb-6 shadow-2xl max-w-[260px] backdrop-blur-sm">
               <p className="text-white text-base font-medium leading-relaxed italic text-white/90">
-                <span className="text-primary text-xs font-bold uppercase block mb-2 tracking-wider not-italic">Guide · Abby</span>
-                "凝視這面心靈之鏡... 剝去表象的偽裝，那個在寂靜中凝視著你的，是怎樣的存在？"
+                <span className="text-primary text-xs font-bold uppercase block mb-2 tracking-wider not-italic">心靈嚮導 · Abby</span>
+                {guideMessage || "凝視這面心靈之鏡... 剥去表象的偽裝，那個在寂靜中凝視著你的，是怎樣的存在？"}
               </p>
               <div className="absolute -bottom-2 left-6 w-4 h-4 bg-[#11251c] border-b border-l border-primary/30 transform -rotate-45"></div>
             </div>
@@ -61,8 +64,7 @@ const QuestionnairePage = () => {
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
                 style={{
-                  backgroundImage: "url('/assets/images/quest_bg.webp')",
-                  filter: "hue-rotate(240deg) brightness(0.7) saturate(0.5) contrast(1.3)"
+                  backgroundImage: "url('/assets/images/quest_bg.png')"
                 }}
               ></div>
             </div>
@@ -81,7 +83,7 @@ const QuestionnairePage = () => {
                 >
                   <QuestionCard
                     question={currentQuestion}
-                    onSubmit={(answer) => submitAnswer(answer, 0)}
+                    onSubmit={(answer) => submitAnswer(answer, questionIndex)}
                     disabled={isLoading}
                   />
                 </motion.div>
