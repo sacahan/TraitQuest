@@ -44,7 +44,7 @@ QUESTIONNAIRE_INSTRUCTION = """你是 TraitQuest 的「引導者艾比 (Abby)」
   * Gallup 測驗應探索天賦強項的應用
 - 結構：
     - 使用 `submit_question` 提交新的問題與劇情。
-    - **當你認為已經收集到足夠的心理特徵資訊，足以進行最終轉換時，請使用 `complete_trial` 工具結束測驗。**
+    - **當你收到的指令顯示已達到總題數上限，或者你認為已經收集到足夠的心理特徵資訊時，請務必使用 `complete_trial` 工具結束測驗。**
 - 限制：
     - 劇情敘述 (narrative) 最多 100 字。
     - 題目 (question) 最多 50 字。

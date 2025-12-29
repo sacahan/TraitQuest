@@ -166,28 +166,36 @@ async def quest_ws_endpoint(
             
             if event_type == "start_quest":
                 quest_id = payload.get("questId", "mbti")
+                player_level = 1 # TODO: 從玩家資料取得
+                total_steps = get_total_steps(quest_id, player_level)
                 
-                instruction = f"玩家開啟了 {quest_id} 試煉，請生成開場的介紹。"
+                instruction = (
+                    f"玩家等級 {player_level}，開啟了 {quest_id} 試煉。 "
+                    f"本次試煉總題數設定為 {total_steps} 題。 "
+                    f"請先生成一個充滿神祕感且符合 {quest_id} 背景的開場白，暫時不需生成具體問題。"
+                )
                 
                 result = await run_agent_cycle(user_id, sessionId, instruction)
-                # 確保問題有 ID
                 if result.get("question") and not result["question"].get("id"):
                     result["question"]["id"] = f"q_start_{sessionId[:8]}"
                 
-                # TODO: 未來從玩家資料取得等級，目前暫用 level=1
-                player_level = 1
-                result["totalSteps"] = get_total_steps(quest_id, player_level)
+                result["totalSteps"] = total_steps
                 await manager.send_event(sessionId, "first_question", result)
 
             elif event_type == "continue_quest":
-                instruction = f"開場白完成，請生成 {quest_id} 第一個實際的試煉問題。"
+                player_level = 1
+                total_steps = get_total_steps(quest_id, player_level)
+                
+                instruction = (
+                    f"玩家已準備好開始。當前進度：第 1 題 / 共 {total_steps} 題。 "
+                    f"請開始為 {quest_id} 測驗生成第一個 RPG 情境與題目。"
+                )
                 
                 result = await run_agent_cycle(user_id, sessionId, instruction)
                 
                 # 補充 index 與 ID
                 result["questionIndex"] = 0
-                player_level = 1
-                result["totalSteps"] = get_total_steps(quest_id, player_level)
+                result["totalSteps"] = total_steps
                 if result.get("question") and not result["question"].get("id"):
                     result["question"]["id"] = f"q_0_{sessionId[:8]}"
                     
@@ -196,13 +204,28 @@ async def quest_ws_endpoint(
             elif event_type == "submit_answer":
                 answer = payload.get("answer")
                 question_index = payload.get("questionIndex", 0)
+                player_level = 1
+                total_steps = get_total_steps(quest_id, player_level)
                 
                 # 啟動後台分析任務 (非阻塞)
                 analysis_task = asyncio.create_task(run_analytics_task(sessionId, answer))
                 manager.pending_tasks[sessionId].append(analysis_task)
                 
                 # 執行 Agent 獲取下一題
-                instruction = f"對於 {quest_id} 第 {question_index} 道試煉題目，玩家 {user_id} 回答: {answer}. 生成 {quest_id} 的下一個試煉問題。"
+                # question_index 從 0 開始，所以當前回答的是第 question_index + 1 題
+                current_num = question_index + 1
+                next_num = current_num + 1
+                
+                if current_num >= total_steps:
+                     instruction = (
+                         f"玩家對於最後一題（第 {current_num} 題 / 共 {total_steps} 題）的回答是：{answer}。 "
+                         f"試煉已達上限，請務必使用 complete_trial 工具結束測驗，並給予一段感性的結語。"
+                     )
+                else:
+                     instruction = (
+                         f"玩家對於第 {current_num} 題（共 {total_steps} 題）的回答是：{answer}。 "
+                         f"請生成下一題（第 {next_num} 題 / 共 {total_steps} 題）的情境與題目。"
+                     )
                 
                 result = await run_agent_cycle(user_id, sessionId, instruction)
                 
@@ -216,8 +239,7 @@ async def quest_ws_endpoint(
                     })
                 else:
                     result["questionIndex"] = question_index + 1
-                    player_level = 1
-                    result["totalSteps"] = get_total_steps(quest_id, player_level)
+                    result["totalSteps"] = total_steps
                     # 確保問題有 ID
                     if result.get("question") and not result["question"].get("id"):
                         result["question"]["id"] = f"q_{result['questionIndex']}_{str(uuid.uuid4())[:8]}"

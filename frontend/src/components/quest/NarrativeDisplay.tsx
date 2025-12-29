@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 
 interface NarrativeDisplayProps {
   text: string;
+  onComplete?: () => void;  // 打字機效果完成時的回調
 }
 
-const NarrativeDisplay = ({ text }: NarrativeDisplayProps) => {
+const NarrativeDisplay = ({ text, onComplete }: NarrativeDisplayProps) => {
   const [displayedText, setDisplayedText] = useState('');
   const [index, setIndex] = useState(0);
 
@@ -21,8 +22,11 @@ const NarrativeDisplay = ({ text }: NarrativeDisplayProps) => {
         setIndex((prev) => prev + 1);
       }, 30); // Typing speed
       return () => clearTimeout(timeout);
+    } else if (index > 0 && index === text.length && onComplete) {
+      // 當打字機效果完成時調用回調
+      onComplete();
     }
-  }, [index, text]);
+  }, [index, text, onComplete]);
 
   return (
     <div className="bg-black/60 p-6 rounded-lg border-l-4 border-primary shadow-lg mb-6 min-h-[120px]">
