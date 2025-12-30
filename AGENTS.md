@@ -48,7 +48,7 @@
 
 ### 3.3 多代理系統 (Multi-Agent System)
 
-TraitQuest 採用由 **Orchestrator (策劃代理)** 統籌的五大代理協作模型，確保從敘事引導到數據驗證的完整性。其運作流程可分為「循環對話階段」與「最終轉換階段」：
+TraitQuest 採用四大代理協作模型，由 **WebSocket Handler (`quest_ws.py`)** 統籌執行，確保從敘事引導到數據驗證的完整性。其運作流程可分為「循環對話階段」與「最終轉換階段」：
 
 #### 循環對話階段 (The Interaction Loop)
 

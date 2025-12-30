@@ -22,7 +22,7 @@ class UserQuest(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), index=True)
     quest_type = Column(String)  # mbti, big5, disc, enneagram, gallup
     interactions = Column(JSONB, default=list)  # List of dialogue objects
-    summary = Column(Text)  # Hero chronicle summary
+    hero_chronicle = Column(Text)  # Hero chronicle summary
     completed_at = Column(DateTime(timezone=True))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

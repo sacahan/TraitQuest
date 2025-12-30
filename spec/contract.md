@@ -307,17 +307,17 @@
 
 **核心優化**: 玩家提交答案後,系統採用非阻塞式處理流程:
 
-1. **立即回應**: Orchestrator 調用 Questionnaire Agent 生成下一題,透過 `next_question` 事件立即推送給前端
+1. **立即回應**：WebSocket Handler 調用 Questionnaire Agent 生成下一題，透過 `next_question` 事件立即推送給前端
 2. **後台分析**: 同時啟動 Analytics Agent 非同步任務,分析玩家回答並寫入資料庫
 3. **進度通知** (可選): 分析完成後發送 `analysis_progress` 事件
-4. **最終聚合**: 測驗結束時,Orchestrator 等待所有非同步任務完成,聚合數據後執行 Transformation Agent
+4. **最終聚合**：測驗結束時，WebSocket Handler 等待所有非同步任務完成，聚合數據後執行 Transformation Agent
 
 **時序圖**:
 
 ```
 玩家提交答案 (submit_answer)
     ↓
-Orchestrator 接收
+WebSocket Handler 接收
     ↓
     ├─→ [同步] Questionnaire Agent 生成下一題 → 立即推送 next_question
     └─→ [非同步] Analytics Agent 分析 → 寫入 DB → (可選) 推送 analysis_progress

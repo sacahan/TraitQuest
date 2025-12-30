@@ -34,7 +34,7 @@
 - **執行頻率限制**：為優化成本，系統每 10 輪對話或測驗結束結算時，才觸發一次史官更新任務。
 
 重要：你生成的 hero_chronicle 是系統維持「長期記憶」的關鍵。
-這份摘要會被 Orchestrator 注入到 Questionnaire Agent 的 Prompt 中，
+這份摘要會被系統注入到 Questionnaire Agent 的 Prompt 中，
 讓說書人即使在第 10 題也能知道玩家在第 1 題的關鍵抉擇，從而維持敘事的連貫性與角色的「靈魂一致性」。
 ```
 
@@ -73,7 +73,7 @@
 - 難度調整：根據玩家等級決定題目深度，Lv.11 以上應提供開放性問題。
 - 結構：必須產出 JSON 格式，包含劇情敘述 (narrative)、題目 (question) 及選項 (options)。
 
-重要：你接收到的 hero_chronicle 是 Orchestrator 從資料庫撈取並注入到你的 Prompt 中的，
+重要：你接收到的 hero_chronicle 是系統從資料庫撈取並注入到你的 Prompt 中的，
 這確保了即使 REST API 是無狀態的，你仍能維持跨請求的敘事連貫性。
 ```
 
@@ -146,7 +146,7 @@ Analytics Agent 已經完成了分析工作，你只需要將累積的標籤映�
 你必須將 Analytics Agent 在測驗中累積的所有心理標籤增量加總後，映射到我們資料庫中的「預定義資產 ID」。
 
 硬性約束：
-- 禁止自創 ID。你只能從 Orchestrator 提供的【合法資產清單】中選擇最契合的 ID。
+- 禁止自創 ID。你只能從系統提供的【合法資產清單】中選擇最契合的 ID。
 - 即使數據模糊，也必須選擇一個最接近的 ID，不可留空。
 - 英雄稱號與描述必須與選擇的 class_id 與 race_id 完全一致。
 - **命運指引生成**：必須根據映射結果，產生 daily (今日預言)、main (主線任務)、side (支線任務)、oracle (神諭) 四類建議。語氣需符合艾比 (Abby) 的神祕風格。
@@ -200,13 +200,13 @@ Analytics Agent 已經完成了分析工作，你只需要將累積的標籤映�
 
 ---
 
-## 🔄 Orchestrator 的 Context 注入機制
+## 🔄 WebSocket Handler 的 Context 注入機制
 
-**Orchestrator (策劃代理)** 是系統維持一致性的核心樞紐。它負責在每一次 WebSocket 事件時執行以下流程:
+**WebSocket Handler (`quest_ws.py`)** 是系統維持一致性的核心樞紐。它負責在每一次 WebSocket 事件時執行以下流程：
 
 ### Context 注入流程 (WebSocket 版本)
 
-1. **接收事件**: 當 `submit_answer` 事件進入時,Orchestrator 從 WebSocket 連線中提取 `sessionId`。
+1. **接收事件**：當 `submit_answer` 事件進入時，Handler 從 WebSocket 連線中提取 `sessionId`。
 
 2. **撈取歷史紀錄**:
    - 從 **Redis** 快取中讀取最後 3 輪對話(若存在)。
@@ -263,7 +263,7 @@ Analytics Agent 已經完成了分析工作，你只需要將累積的標籤映�
 
 ### 非同步任務追蹤
 
-Orchestrator 維護一個任務追蹤字典:
+WebSocket Handler 維護一個任務追蹤字典:
 
 ```python
 pending_analysis_tasks = {
@@ -280,7 +280,7 @@ pending_analysis_tasks = {
 ```
 一致性 = (sessionId 索引的 DB 歷史紀錄) 
        + (Summary Agent 壓縮的語義摘要) 
-       + (Orchestrator 每一輪的 Context 注入)
+       + (WebSocket Handler 每一輪的 Context 注入)
        + (非同步任務的完成保證)  ← 新增
 ```
 

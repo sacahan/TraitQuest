@@ -60,7 +60,7 @@
 
 ## 三、系統架構與多代理設計 (Multi-Agent Architecture)
 
-TraitQuest 採用由 **Orchestrator (策劃代理)** 統籌的五大代理協作模型，確保從敘事引導到數據驗證的完整性。其運作流程可分為「循環對話階段」與「最終轉換階段」：
+TraitQuest 採用四大代理協作模型，由 **WebSocket Handler (`quest_ws.py`)** 負責統籌執行與數據流轉，確保從敘事引導到數據驗證的完整性。其運作流程可分為「循環對話階段」與「最終轉換階段」：
 
 ### 1. 循環對話階段 (The Interaction Loop)
 
@@ -101,7 +101,7 @@ TraitQuest 採用由 **Orchestrator (策劃代理)** 統籌的五大代理協作
 
 - **PostgreSQL (JSONB)**:在 `user_quests` 表的 `interactions` 欄位中,增量存儲每一輪的題目、玩家回答與分析標籤。
 
-- **Orchestrator 的角色**:當新的 API 請求進入時,策劃者會先從資料庫撈取該 `sessionId` 的歷史紀錄,將其重新注入 (Inject) 到下一個 Agent 的 Prompt 中。
+- **WebSocket Handler 的角色**：當新的 WebSocket 事件進入時，Handler 會先從資料庫撈取該 `sessionId` 的歷史紀錄，將其重新注入到下一個 Agent 的 Prompt 中。。
 
 #### 3.2 語義化 Context 壓縮:Summary Agent (史官)
 
@@ -136,7 +136,7 @@ TraitQuest 採用由 **Orchestrator (策劃代理)** 統籌的五大代理協作
 ```
 一致性 = (sessionId 索引的 DB 歷史紀錄) 
        + (Summary Agent 壓縮的語義摘要) 
-       + (Orchestrator 每一輪的 Context 注入)
+       + (WebSocket Handler 每一輪的 Context 注入)
 ```
 
 這種做法將「AI 的短期記憶 (Prompt)」轉化為「系統的長期記憶 (DB)」,使得即使 REST API 本身是無狀態的,玩家感受到的卻是一個具備完整記憶、能根據過往選擇給予回饋的連續遊戲體驗。
@@ -364,9 +364,9 @@ CREATE INDEX idx_user_class ON traits ((final_report->>'class_id'));
 
 當玩家提交答案後,系統執行以下流程:
 
-1. **立即回應**: Orchestrator 調用 Questionnaire Agent 生成下一題,透過 WebSocket 立即推送給前端
+1. **立即回應**：WebSocket Handler 調用 Questionnaire Agent 生成下一題，透過 WebSocket 立即推送給前端
 2. **後台分析**: 同時啟動 Analytics Agent 非同步任務,分析玩家回答並寫入資料庫
-3. **最終聚合**: 測驗結束時,Orchestrator 等待所有非同步任務完成,聚合數據後執行 Transformation Agent
+3. **最終聚合**：測驗結束時，WebSocket Handler 等待所有非同步任務完成，聚合數據後執行 Transformation Agent
 
 **效能提升**: 傳統 REST 同步模式每題等待 1-3 秒分析,10 題累積 10-30 秒延遲;WebSocket 非同步模式分析在背景執行,玩家感受零延遲。
 

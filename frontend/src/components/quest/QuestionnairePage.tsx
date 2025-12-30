@@ -3,6 +3,7 @@ import { useQuestStore } from '../../stores/questStore';
 import NarrativeDisplay from './NarrativeDisplay';
 import QuestionCard from './QuestionCard';
 import MagicHourglass from '../ui/MagicHourglass';
+import GlowEffect from '../effects/GlowEffect';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const QuestionnairePage = () => {
@@ -32,18 +33,30 @@ const QuestionnairePage = () => {
 
   if (isCompleted) {
     return (
-      <div className="text-center p-12 bg-black/40 rounded-lg border border-secondary text-white">
-          <h2 className="text-3xl font-bold text-primary mb-6">靈魂試煉完成</h2>
-          <p className="text-lg mb-8">通往英雄殿堂的道路已開啟...</p>
-          <button className="bg-primary text-black font-bold py-3 px-8 rounded shadow-lg">
-             查看我的英雄面板
-          </button>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-12 relative">
+        <motion.h2
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-5xl font-display font-bold text-white mb-6 uppercase tracking-tighter"
+        >
+          靈魂試煉完成
+        </motion.h2>
+        <p className="text-white/60 text-lg mb-12 italic font-serif">通往英雄殿堂的道路已開啟，轉生儀式即將開始...</p>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => window.location.href = '/analysis'}
+          className="bg-primary text-black font-black uppercase tracking-widest py-4 px-12 rounded-0 shadow-[0_0_30px_rgba(17,212,82,0.3)] hover:bg-white transition-all duration-500"
+        >
+          啟動轉生儀式
+        </motion.button>
        </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col pt-8">
+    <div className="flex-1 flex flex-col pt-8 relative">
+      <GlowEffect trigger={questionIndex} />
       {/* 頂部進度條區域 */}
       <div className="w-full max-w-3xl mx-auto px-6 mt-2 mb-0">
         <div className="flex justify-between text-sm font-bold tracking-wide text-primary/80 mb-2 px-1">

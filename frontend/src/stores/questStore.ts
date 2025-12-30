@@ -17,6 +17,7 @@ interface QuestState {
   narrative: string;
   guideMessage: string;
   isCompleted: boolean;
+  finalResult: any | null;
   isLoading: boolean;
   questionIndex: number;
   totalSteps: number;
@@ -26,6 +27,7 @@ interface QuestState {
   initQuest: (questId: string, token: string) => Promise<void>;
   submitAnswer: (answer: string, questionIndex: number) => void;
   continueQuest: () => void;
+  requestResult: () => void;
   resetQuest: () => void;
 }
 
@@ -49,17 +51,14 @@ export const useQuestStore = create<QuestState>((set, get) => {
         id: data.question.id || `q_first_${Date.now()}`
       };
     } else {
-      // 開場白情境：沒有問題，等待 narrative 完成後自動觸發 continue
       newState.currentQuestion = null;
-      // 設置延遲自動觸發 continueQuest
       setTimeout(() => {
         const state = get();
         if (!state.currentQuestion && !state.isCompleted) {
           state.continueQuest();
         }
-      }, 3000); // 等待 3 秒讓打字效果完成
+      }, 3000);
     }
-
     set(newState);
   });
 
@@ -78,7 +77,6 @@ export const useQuestStore = create<QuestState>((set, get) => {
     if (data.guideMessage) {
       newState.guideMessage = data.guideMessage;
     }
-
     set(newState);
   });
 
@@ -88,6 +86,11 @@ export const useQuestStore = create<QuestState>((set, get) => {
       narrative: data.message,
       isLoading: false
     });
+  });
+
+  questWsClient.on('final_result', (data) => {
+    console.log("🔮 Received final result:", data);
+    set({ finalResult: data, isLoading: false });
   });
 
   questWsClient.on('error', (data) => {
@@ -102,6 +105,7 @@ export const useQuestStore = create<QuestState>((set, get) => {
     narrative: '',
     guideMessage: '',
     isCompleted: false,
+    finalResult: null,
     isLoading: false,
     questionIndex: 0,
     totalSteps: 10,
@@ -110,7 +114,6 @@ export const useQuestStore = create<QuestState>((set, get) => {
     initQuest: async (questId, token) => {
       const sessionId = uuidv4();
       set({ sessionId, questId, isLoading: true });
-
       try {
         await questWsClient.connect(sessionId, token);
         questWsClient.send('start_quest', { questId });
@@ -131,6 +134,11 @@ export const useQuestStore = create<QuestState>((set, get) => {
       questWsClient.send('continue_quest', {});
     },
 
+    requestResult: () => {
+      set({ isLoading: true });
+      questWsClient.send('request_result', {});
+    },
+
     resetQuest: () => {
       questWsClient.disconnect();
       set({
@@ -140,6 +148,7 @@ export const useQuestStore = create<QuestState>((set, get) => {
         narrative: '',
         guideMessage: '',
         isCompleted: false,
+        finalResult: null,
         isLoading: false,
         questionIndex: 0,
         totalSteps: 10
@@ -147,3 +156,4 @@ export const useQuestStore = create<QuestState>((set, get) => {
     }
   };
 });
+

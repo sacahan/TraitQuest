@@ -57,11 +57,11 @@
 - **Agent 成本優化**：
   - `Summary Agent` (史官) 更新頻率限制為每 10 輪對話一次,或其副本測驗結算時觸發。
 - **Context 管理與一致性維護**：
-  - **SessionId 索引**：每次 API 請求都透過 `sessionId` 從資料庫撈取歷史紀錄,確保 Orchestrator 能將完整 Context 注入到 Agent Prompt 中。
+  - **SessionId 索引**：每次 WebSocket 事件都透過 `sessionId` 從資料庫撈取歷史紀錄，確保 Handler 能將完整 Context 注入到 Agent Prompt 中。
   - **Redis 短期快取**：緩存最後 3 輪對話,提升即時互動的反應速度。
   - **PostgreSQL 長期存儲**：`user_quests.interactions` (JSONB) 增量存儲每一輪的題目、回答與分析標籤。
   - **語義壓縮**：Summary Agent 將長期對話壓縮為 `hero_chronicle` 摘要,避免 Token 視窗溢出。
-  - **數據聚合**:測驗結束時,Orchestrator 聚合所有 `trait_deltas` 增量,傳遞給 Transformation Agent 進行最終映射。
+  - **數據聚合**：測驗結束時，WebSocket Handler 聚合所有 `trait_deltas` 增量，傳遞給 Transformation Agent 進行最終映射。
 - **非同步分析保證**:
   - **即時回應**:玩家提交答案後,Questionnaire Agent 立即生成下一題並透過 WebSocket 推送
   - **後台分析**:Analytics Agent 作為非同步任務執行,分析結果寫入 `user_quests.interactions`
