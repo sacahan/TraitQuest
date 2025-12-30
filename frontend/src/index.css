@@ -35,7 +35,27 @@
     --animate-card-pulse: card-pulse 4s ease-in-out infinite;
     --animate-float: float 6s ease-in-out infinite;
     --animate-crystal-breathe: crystal-breathe 6s ease-in-out infinite;
+  
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.2); }
     }
+
+    @keyframes spin-reverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    @keyframes fog-flow {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-10px) translateX(5px); }
+    }
+
+    --animate-twinkle: twinkle 5s ease-in-out infinite alternate;
+    --animate-spin-reverse: spin-reverse 12s linear infinite;
+    --animate-fog-flow: fog-flow 6s ease-in-out infinite alternate;
+    --animate-spin-slow: spin 12s linear infinite;
+  }
   
     @layer base {
   body {

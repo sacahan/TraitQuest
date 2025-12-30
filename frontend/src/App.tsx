@@ -3,6 +3,7 @@ import { useAuthStore } from './stores/authStore'
 import Home from './pages/Home'
 import Questionnaire from './pages/Questionnaire'
 import QuestIntro from './pages/QuestIntro'
+import MapPage from './pages/MapPage'
 
 function App() {
   const { isAuthenticated } = useAuthStore()
@@ -28,7 +29,11 @@ function App() {
               path="/quest/:questId"
               element={isAuthenticated ? <QuestIntro /> : <Navigate to="/" />}
             />
-            {/* 未來可增加 /map, /analysis 等路由 */}
+            <Route
+              path="/map"
+              element={isAuthenticated ? <MapPage /> : <Navigate to="/" />}
+            />
+            {/* 未來可增加 /analysis 等路由 */}
           </Routes>
         </div>
       </div>

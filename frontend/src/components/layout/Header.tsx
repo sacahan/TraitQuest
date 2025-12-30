@@ -16,7 +16,7 @@ export const Header = () => {
             onClick={() => navigate('/')}
           >
             <span className="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
-            <h2 className="text-xl font-display font-black leading-tight tracking-tight">TraitQuest</h2>
+            <h2 className="text-xl font-display font-black text-white uppercase leading-tight tracking-tight">TraitQuest</h2>
           </div>
 
           <div className="flex items-center gap-4 md:gap-8 ml-auto">
