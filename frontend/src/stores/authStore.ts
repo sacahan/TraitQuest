@@ -6,6 +6,8 @@ interface User {
   avatarUrl: string;
   level: number;
   exp: number;
+  heroClassId?: string;
+  heroAvatarUrl?: string;
 }
 
 interface AuthState {

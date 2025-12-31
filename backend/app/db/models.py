@@ -10,9 +10,10 @@ class User(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     google_id = Column(String, unique=True, nullable=False, index=True)
     display_name = Column(String)
-    avatar_url = Column(String)
     level = Column(Integer, default=1)
     exp = Column(Integer, default=0)
+    hero_class_id = Column(String, nullable=True)
+    hero_avatar_url = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class UserQuest(Base):

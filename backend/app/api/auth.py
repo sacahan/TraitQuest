@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
 from app.db.session import get_db
-from app.db.models import User, Trait, UserQuest
+from app.db.models import User, Trait, UserQuest, GameDefinition
 from app.core.security import verify_google_token, create_access_token, decode_access_token
 from pydantic import BaseModel
 from typing import Optional, List
@@ -37,7 +37,7 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
         user = User(
             google_id=google_id,
             display_name=name,
-            avatar_url=picture
+            hero_avatar_url="/assets/images/classes/civilian.png"
         )
         db.add(user)
         await db.commit()
@@ -49,7 +49,7 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
     return {
         "userId": str(user.id),
         "displayName": user.display_name,
-        "avatarUrl": user.avatar_url,
+        "avatarUrl": user.hero_avatar_url or "/assets/images/classes/civilian.png",
         "level": user.level,
         "exp": user.exp,
         "isNewUser": is_new_user,
@@ -113,7 +113,9 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
     return {
         "userId": str(user.id),
         "displayName": user.display_name,
-        "avatarUrl": user.avatar_url,
+        "avatarUrl": user.hero_avatar_url or "/assets/images/classes/civilian.png",
+        "heroAvatarUrl": user.hero_avatar_url,
+        "heroClassId": user.hero_class_id,
         "level": user.level,
         "exp": user.exp,
         "syncPercent": sync_percent,

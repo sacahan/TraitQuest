@@ -583,9 +583,26 @@ async def quest_ws_endpoint(
                 async with AsyncSessionLocal() as db_session:
                     user_uuid = uuid.UUID(user_id)
                     
-                    # 更新用戶等級
+                    # 若這次測驗亦有產出職業，則更新至 User Profile
+                    hero_class_data = final_output.get("class", {})
+                    hero_class_id = hero_class_data.get("id")
+                    hero_avatar_url = None
+                    
+                    update_values = {
+                        "level": new_lvl,
+                        "exp": new_exp
+                    }
+
+                    if hero_class_id:
+                        # Construct avatar URL: CLS_INTJ -> cls_intj.png
+                        filename = hero_class_id.lower() + ".png"
+                        hero_avatar_url = f"/assets/images/classes/{filename}"
+                        update_values["hero_class_id"] = hero_class_id
+                        update_values["hero_avatar_url"] = hero_avatar_url
+
+                    # 更新用戶等級與職業資訊
                     await db_session.execute(
-                        update(User).where(User.id == user_uuid).values(level=new_lvl, exp=new_exp)
+                        update(User).where(User.id == user_uuid).values(**update_values)
                     )
                     
                     # 存入 Trait (英雄面板 - 永久心理測寫)

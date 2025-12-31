@@ -86,11 +86,7 @@ const AnalysisPage = () => {
                     {/* Left: Hero Portrait */}
                     <div className="lg:col-span-5 space-y-6">
                         <HeroPanel
-                            avatarUrl={
-                                identity.class?.id
-                                    ? `/assets/images/classes/${identity.class.id}.png`
-                                    : user?.avatarUrl
-                            }
+                            avatarUrl={profileData.heroAvatarUrl}
                             className={identity.class?.name}
                             classId={identity.class?.id}
                             classDescription={identity.class?.description}
