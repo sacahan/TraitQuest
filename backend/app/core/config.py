@@ -26,7 +26,7 @@ class Settings(BaseSettings):
 
     # Application
     APP_ENV: str = "development"
-    SECRET_KEY: str = "your_secret_key"
+    SECRET_KEY: str = ""
 
     # Google OAuth
     GOOGLE_CLIENT_ID: str = ""

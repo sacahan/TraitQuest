@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
 @theme {
   --color-primary: #11D452;
     --color-primary-hover: #0fb847;
@@ -13,21 +14,82 @@
     --font-body: "Noto Sans TC", sans-serif;
   
     @keyframes breathing-white {
-      0%, 100% {
-        box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+      0%,
+        100% {
+          box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+      
+        50% {
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
       }
-      50% {
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-      }
+@keyframes card-pulse {
+
+  0%,
+  100% {
+    border-color: rgba(35, 72, 47, 1);
+  }
+
+  50% {
+    border-color: rgba(17, 212, 82, 0.4);
+  }
+}
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
     }
 
-    @keyframes card-pulse {
-      0%, 100% {
-        border-color: rgba(35, 72, 47, 1);
-      }
-      50% {
-        border-color: rgba(17, 212, 82, 0.4);
-      }
+        @keyframes unlockReveal {
+          0% {
+            opacity: 0;
+            transform: scale(0.92) translateY(30px);
+            filter: blur(12px);
+          }
+    
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
+          }
+        }
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes runeGlow {
+  0% {
+    opacity: 0.1;
+    text-shadow: 0 0 0px #11d452;
+  }
+
+  100% {
+    opacity: 0.4;
+    text-shadow: 0 0 10px #11d452;
+  }
     }
   
     --animate-breathing-glow: breathing-glow 3s ease-in-out infinite;
@@ -35,6 +97,10 @@
     --animate-card-pulse: card-pulse 4s ease-in-out infinite;
     --animate-float: float 6s ease-in-out infinite;
     --animate-crystal-breathe: crystal-breathe 6s ease-in-out infinite;
+        --animate-unlock-reveal: unlockReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        --animate-slide-up-fade: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        --animate-shimmer: shimmer 2.5s infinite linear;
+        --animate-rune-glow: runeGlow 4s ease-in-out infinite alternate;
   
     @keyframes twinkle {
       0%, 100% { opacity: 0.2; transform: scale(1); }
@@ -55,6 +121,7 @@
     --animate-spin-reverse: spin-reverse 12s linear infinite;
     --animate-fog-flow: fog-flow 6s ease-in-out infinite alternate;
     --animate-spin-slow: spin 12s linear infinite;
+        --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
   
     @layer base {
@@ -119,15 +186,101 @@
   }
 }
 
-.soul-echo-trigger {
+    @keyframes shine {
+      0% {
+          left: -100%;
+        }
+      
+        20% {
+          left: 100%;
+        }
+      
+        100% {
+          left: 100%;
+        }
+      }
+      
+      @keyframes drawPolygon {
+        0% {
+          stroke-dashoffset: 1000;
+          opacity: 0;
+        }
+      
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 1;
+        }
+      }
+      
+      .animate-radar-polygon {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: drawPolygon 2s ease-out forwards;
+        animation-delay: 0.5s;
+      }
+        .glass-panel {
+          background: rgba(14, 31, 21, 0.6);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(17, 212, 82, 0.1);
+        }
+        .bg-grid-pattern {
+          background-image: linear-gradient(rgba(17, 212, 82, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(17, 212, 82, 0.03) 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
+.rpg-border {
+  position: relative;
+}
+
+.rpg-border::before {
+  content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  background: transparent;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(17, 212, 82, 0.5), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   pointer-events: none;
-  z-index: 100;
-  animation: soul-echo 1.5s ease-out forwards;
+    }
+
+        .soul-echo-trigger {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 10px;
+          height: 10px;
+          background: transparent;
+          pointer-events: none;
+          z-index: 100;
+          animation: soul-echo 1.5s ease-out forwards;
+        }
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+.delay-700 {
+  animation-delay: 0.7s;
+}
+
+.delay-1000 {
+  animation-delay: 1.0s;
 }
 }

@@ -16,7 +16,7 @@ export const Footer = () => {
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">
-        <p className="text-xs text-gray-500 font-body">
+        <p className="text-sm text-gray-500 font-body">
           © {new Date().getFullYear()} TraitQuest. All loot reserved. Powered by Psychological Wisdom.
         </p>
       </div>

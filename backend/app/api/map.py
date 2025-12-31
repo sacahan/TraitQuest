@@ -21,29 +21,29 @@ REGIONS_CONFIG = [
         "id": "big_five",
         "name": "Big Five 能量場",
         "description": "基礎屬性的磨練之場",
-        "unlock_level": 1,
-        "prerequisite": None
+        "unlock_level": 2,
+        "prerequisite": "mbti"
     },
     {
         "id": "enneagram",
         "name": "Enneagram 冥想塔",
         "description": "靈魂種族的探索之塔",
         "unlock_level": 3,
-        "prerequisite": "mbti"
+        "prerequisite": "big_five"
     },
     {
         "id": "disc",
         "name": "DISC 戰鬥叢林",
         "description": "戰略姿態的實踐之地",
-        "unlock_level": 5,
-        "prerequisite": "big_five"
+        "unlock_level": 4,
+        "prerequisite": "enneagram"
     },
     {
         "id": "gallup",
         "name": "Gallup 祭壇",
         "description": "傳奇技能的傳承祭壇",
-        "unlock_level": 8,
-        "prerequisite": "ALL" # 特別邏輯
+        "unlock_level": 5,
+        "prerequisite": "disc"
     }
 ]
 
@@ -78,28 +78,32 @@ async def get_map_regions(token: str = Query(...)):
                 status = "CONQUERED"
                 hint = "試煉已完成"
             else:
-                # 檢查解鎖條件
+                # 檢查先決條件 (Prerequisite) - 這是硬性門檻
+                pre_ok = True
+                if config["prerequisite"]:
+                    if config["prerequisite"] == "ALL":
+                        # (雖然現在配置中沒有用 ALL，但保留邏輯)
+                        others = [r["id"] for r in REGIONS_CONFIG if r["id"] != region_id]
+                        pre_ok = all(q in completed_quests for q in others)
+                    else:
+                        pre_ok = config["prerequisite"] in completed_quests
+                
+                # 檢查等級條件 (Level)
                 lvl_ok = player_level >= config["unlock_level"]
                 
-                pre_ok = True
-                if config["prerequisite"] == "ALL":
-                    # 除了 gallup 以外都必須完成
-                    others = [r["id"] for r in REGIONS_CONFIG if r["id"] != "gallup"]
-                    pre_ok = all(q in completed_quests for q in others)
-                elif config["prerequisite"]:
-                    pre_ok = config["prerequisite"] in completed_quests
-                
-                if lvl_ok or pre_ok:
+                # 判定狀態：必須滿足 先決條件 AND 等級條件
+                if pre_ok and lvl_ok:
                     status = "AVAILABLE"
                     hint = None
                 else:
                     status = "LOCKED"
-                    if not lvl_ok and config["prerequisite"]:
-                        hint = f"達到 Lv.{config['unlock_level']} 或完成 {config['prerequisite']} 試煉解鎖"
-                    elif not lvl_ok:
-                        hint = f"達到 Lv.{config['unlock_level']} 解鎖"
+                    if not pre_ok:
+                         # 優先提示先決條件
+                         prereq_name = next((r["name"] for r in REGIONS_CONFIG if r["id"] == config["prerequisite"]), config["prerequisite"])
+                         hint = f"需先完成【{prereq_name}】試煉"
                     else:
-                        hint = f"完成 {config['prerequisite']} 試煉解鎖"
+                         # 其次提示等級
+                         hint = f"需達到等級 Lv.{config['unlock_level']}"
             
             regions_status.append({
                 "id": region_id,

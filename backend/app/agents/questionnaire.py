@@ -1,5 +1,6 @@
 import logging
-from google.adk.agents import LlmAgent, Agent
+from google.adk.agents import LlmAgent
+from app.core.agent import TraitQuestAgent as Agent
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.tool_context import ToolContext
 from google.adk.tools import FunctionTool

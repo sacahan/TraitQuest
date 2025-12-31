@@ -85,7 +85,7 @@ async def run_agent_async(
         except json.JSONDecodeError:
             result = {}
     
-    logger.info(f"🚀 App: {app_name}, Agent: {agent.Name}, Result: {result}")
+    logger.debug(f"🚀 App: {app_name}, Agent: {agent.name}, Result: {result}")
 
     return result
 
@@ -96,6 +96,14 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
     此函式被設計為 Fire-and-forget 的背景任務，避免阻塞主對話流程。
     它會啟動一個獨立的 Analytics Agent 用於分析玩家回答的心理特徵，
     並將結果存入 Session State 的 `accumulated_analytics` 列表中，供最終結算使用。
+
+    args:
+        user_id: 玩家 ID
+        session_id: WebSocket Session ID
+        question_text: 題目文字
+        answer: 答案
+        test_category: 測驗範疇
+        options: 選項列表
     """
     try:
         logger.info(f"🧠 [Background] Starting AI analysis for session {session_id}")
@@ -177,7 +185,7 @@ async def get_hero_chronicle(user_id: str) -> str:
         # 查詢該玩家最近一次已完成的測驗記錄
         stmt = (
             select(UserQuest.hero_chronicle)
-            .where(UserQuest.user_id == user_id)
+            .where(UserQuest.user_id == uuid.UUID(user_id))
             .where(UserQuest.hero_chronicle.isnot(None))
             .order_by(UserQuest.created_at.desc())
             .limit(1)
@@ -189,7 +197,7 @@ async def get_hero_chronicle(user_id: str) -> str:
 router = APIRouter(prefix="/quests", tags=["quests"])
 
 # 主 Session 命名空間（用於 Questionnaire Agent 及共享狀態）
-QUESTIONNAIRE_APP_NAME = "questionnaire"
+QUESTIONNAIRE_NAME = "questionnaire"
 
 class ConnectionManager:
     """管理 WebSocket 連線"""
@@ -222,7 +230,7 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-async def run_agent_cycle(user_id: str, session_id: str, instruction: str) -> dict:
+async def run_questionnaire_agent(user_id: str, session_id: str, instruction: str) -> dict:
     """
     [核心邏輯] 執行 Questionnaire Agent 對話循環
     
@@ -240,13 +248,13 @@ async def run_agent_cycle(user_id: str, session_id: str, instruction: str) -> di
     Returns:
         dict: 包含 narrative (敘事), question (題目), guideMessage (引導) 的標準化字典
     """
-    logger.debug(f"🔄 [run_agent_cycle] Starting cycle for session {session_id}")
+    logger.debug(f"🔄 [run_questionnaire_agent] Starting cycle for session {session_id}")
     logger.info(f"🔄 User message: {instruction}")
     
     # 使用通用執行器直接呼叫 Questionnaire Agent
     questionnaire_output = await run_agent_async(
         agent=questionnaire_agent,
-        app_name=QUESTIONNAIRE_APP_NAME,
+        app_name=QUESTIONNAIRE_NAME,
         user_id=user_id,
         session_id=session_id,
         instruction=instruction,
@@ -296,7 +304,7 @@ async def quest_ws_endpoint(
         # 初始化 Session (如果是新連線)
         # 確保在開始對話前，Session Service 中已有此 Session 記錄
         try:
-            await session_service.create_session(app_name=QUESTIONNAIRE_APP_NAME, user_id=user_id, session_id=sessionId)
+            await session_service.create_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
         except Exception as e:
             logger.debug(f"Session already exists or error creating: {e}")
 
@@ -311,14 +319,14 @@ async def quest_ws_endpoint(
             # 3. 讀取玩家當前狀態 (Level, Exp)
             # 這會影響題目數量與難度
             async with AsyncSessionLocal() as db_session:
-                user_stmt = select(User).where(User.id == user_id)
+                user_stmt = select(User).where(User.id == uuid.UUID(user_id))
                 user_result = await db_session.execute(user_stmt)
                 user = user_result.scalar_one_or_none()
                 player_level = user.level if user else 1
                 player_exp = user.exp if user else 0
 
             # 4. 從 Session 恢復當前任務狀態 (Context Restoration)
-            session = await session_service.get_session(app_name=QUESTIONNAIRE_APP_NAME, user_id=user_id, session_id=sessionId)
+            session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
             quest_id = session.state.get("current_quest_id", "mbti")
 
             logger.info(f"📥 Received event: {event_type} for session {sessionId} (Lv.{player_level}, Quest: {quest_id})")
@@ -348,17 +356,17 @@ async def quest_ws_endpoint(
                 hero_chronicle = await get_hero_chronicle(user_id)
                 chronicle_context = ""
                 if hero_chronicle:
-                    chronicle_context = f"\n\n[冒險者歷史摘要]：{hero_chronicle}\n"
+                    chronicle_context = f"\n\n[玩家歷史摘要]：{hero_chronicle}\n"
                 
                 # 指令：生成具有代入感的開場白 (Intro Narrative)
                 instruction = (
-                    f"玩家等級 {player_level}，開啟了 {quest_id} 試煉。 "
+                    f"玩家 {user_id} (等級 {player_level})，開啟了 {quest_id} 試煉。 "
                     f"本次試煉總題數設定為 {total_steps} 題。"
                     f"{chronicle_context}"
-                    f"請生成一個充滿神祕感且符合 {quest_id} 背景的開場白，暫時不需生成具體問題。"
+                    f"請生成一個符合 {quest_id} 試煉情境的開場白，暫時不需生成具體問題。"
                 )
                 
-                result = await run_agent_cycle(user_id, sessionId, instruction)
+                result = await run_questionnaire_agent(user_id, sessionId, instruction)
                 # 確保第一題前的開場白有臨時 ID (如果是為了 UI 渲染需要)
                 if result.get("question") and not result["question"].get("id"):
                     result["question"]["id"] = f"q_start_{sessionId[:8]}"
@@ -374,15 +382,15 @@ async def quest_ws_endpoint(
                 hero_chronicle = await get_hero_chronicle(user_id)
                 chronicle_context = ""
                 if hero_chronicle:
-                    chronicle_context = f"\n[冒險者歷史摘要]：{hero_chronicle}\n\n"
+                    chronicle_context = f"\n[玩家歷史摘要]：{hero_chronicle}\n\n"
                 
                 instruction = (
                     f"{chronicle_context}"
-                    f"玩家已準備好開始。當前進度：第 1 題 / 共 {total_steps} 題。 "
+                    f"玩家 {user_id} 已準備好開始。當前進度：第 1 題 / 共 {total_steps} 題。 "
                     f"請開始為 {quest_id} 測驗生成第一道題的情境與問題/選項。"
                 )
                 
-                result = await run_agent_cycle(user_id, sessionId, instruction)
+                result = await run_questionnaire_agent(user_id, sessionId, instruction)
                 
                 # 補充前端需要的索引資料
                 result["questionIndex"] = 0
@@ -398,7 +406,7 @@ async def quest_ws_endpoint(
                 question_index = payload.get("questionIndex", 0)
                 
                 # 獲取當前題目上下文 (為了給 Analytics Agent 分析使用)
-                session = await session_service.get_session(app_name=QUESTIONNAIRE_APP_NAME, user_id=user_id, session_id=sessionId)
+                session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
                 current_question_text = ""
                 q_output = session.state.get("questionnaire_output", {})
                 current_options = []
@@ -456,10 +464,10 @@ async def quest_ws_endpoint(
                      )
                 
                 # 執行 Agent 生成下一題或結語
-                result = await run_agent_cycle(user_id, sessionId, instruction)
+                result = await run_questionnaire_agent(user_id, sessionId, instruction)
                 
                 # 檢查 Agent 是否標記了測驗結束 (透過 complete_trial 工具)
-                updated_session = await session_service.get_session(app_name=QUESTIONNAIRE_APP_NAME, user_id=user_id, session_id=sessionId)
+                updated_session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
                 
                 if updated_session.state.get("quest_completed"):
                      # 發送完成訊號，前端將顯示等待轉場動畫
@@ -496,7 +504,7 @@ async def quest_ws_endpoint(
                     await asyncio.gather(*tasks)
                 
                 # 2. 聚合 (Reduce) 所有分析結果
-                session = await session_service.get_session(app_name=QUESTIONNAIRE_APP_NAME, user_id=user_id, session_id=sessionId)
+                session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
                 analytics_list = session.state.get("accumulated_analytics", [])
                 
                 total_quality = 0
@@ -573,27 +581,42 @@ async def quest_ws_endpoint(
                 
                 # 7. 持久化存入資料庫
                 async with AsyncSessionLocal() as db_session:
+                    user_uuid = uuid.UUID(user_id)
+                    
                     # 更新用戶等級
                     await db_session.execute(
-                        update(User).where(User.id == user_id).values(level=new_lvl, exp=new_exp)
+                        update(User).where(User.id == user_uuid).values(level=new_lvl, exp=new_exp)
                     )
                     
                     # 存入 Trait (英雄面板 - 永久心理測寫)
-                    trait_stmt = select(Trait).where(Trait.user_id == user_id)
+                    trait_stmt = select(Trait).where(Trait.user_id == user_uuid)
                     trait_res = await db_session.execute(trait_stmt)
                     trait = trait_res.scalar_one_or_none()
                     if trait:
                         trait.final_report = final_output
                     else:
-                        db_session.add(Trait(user_id=uuid.UUID(user_id), final_report=final_output))
+                        db_session.add(Trait(user_id=user_uuid, final_report=final_output))
                     
                     # 存入 UserQuest 紀錄 (包含史詩摘要)
-                    quest_stmt = select(UserQuest).where(UserQuest.user_id == user_id, UserQuest.quest_type == quest_id).order_by(UserQuest.created_at.desc())
+                    quest_stmt = select(UserQuest).where(UserQuest.user_id == user_uuid, UserQuest.quest_type == quest_id).order_by(UserQuest.created_at.desc())
                     quest_res = await db_session.execute(quest_stmt)
                     quest = quest_res.scalar_one_or_none()
+                    
                     if quest:
                         quest.hero_chronicle = hero_chronicle
                         quest.completed_at = func.now()
+                        logger.info(f"✅ Updated UserQuest for {user_id} with chronicle")
+                    else:
+                        logger.error(f"❌ UserQuest not found for {user_id} when trying to update chronicle")
+                        # Fallback: create new if missing (should not happen if start_quest worked)
+                        new_quest_entry = UserQuest(
+                            user_id=user_uuid,
+                            quest_type=quest_id,
+                            interactions=session.state.get("interactions", []),
+                            hero_chronicle=hero_chronicle,
+                            completed_at=func.now()
+                        )
+                        db_session.add(new_quest_entry)
                     
                     await db_session.commit()
 

@@ -36,17 +36,17 @@ export const Header = () => {
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
                 <div className="hidden sm:flex flex-col items-end">
-                  <span className="text-[10px] font-bold text-primary tracking-widest uppercase">冒險者</span>
-                  <span className="text-xs font-medium text-white">{user?.displayName}</span>
+                  <span className="text-sm font-bold text-primary tracking-widest uppercase">冒險者</span>
+                  <span className="text-sm font-medium text-white">{user?.displayName}</span>
                 </div>
-                <div 
-                  className="size-8 rounded-full bg-cover bg-center border border-primary/30" 
+                <div
+                  className="size-8 rounded-full bg-cover bg-center border border-primary/30"
                   style={{ backgroundImage: `url(${user?.avatarUrl})` }}
                   title={user?.displayName}
                 ></div>
                 <button
                   onClick={logout}
-                  className="text-[10px] font-bold text-gray-400 border border-guild-border px-3 py-1 rounded-full hover:bg-white/5 transition-all text-white"
+                  className="text-sm font-bold text-gray-400 border border-guild-border px-3 py-1 rounded-full hover:bg-white/5 transition-all text-white"
                 >
                   登出
                 </button>

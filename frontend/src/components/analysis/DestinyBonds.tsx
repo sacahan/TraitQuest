@@ -54,6 +54,15 @@ interface DestinyBondsProps {
 }
 
 const DestinyBonds: React.FC<DestinyBondsProps> = ({ bonds }) => {
+  // 如果沒有羈絆數據，顯示空狀態
+  if (!bonds || !bonds.compatible || !bonds.conflicting) {
+    return (
+      <div className="bg-card-dark rounded-xl p-6 border border-white/5 text-center">
+        <p className="text-gray-500 text-sm">羈絆尚未建立...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <BondItem 

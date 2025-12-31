@@ -5,6 +5,15 @@ import QuestionCard from './QuestionCard';
 import MagicHourglass from '../ui/MagicHourglass';
 import GlowEffect from '../effects/GlowEffect';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Zap, MoveRight } from 'lucide-react';
+
+const REGIONS_MAPPING: Record<string, string> = {
+  mbti: "MBTI 聖殿",
+  big_five: "Big Five 能量場",
+  enneagram: "Enneagram 冥想塔",
+  disc: "DISC 戰鬥叢林",
+  gallup: "Gallup 祭壇",
+};
 
 const QuestionnairePage = () => {
   const { 
@@ -15,8 +24,13 @@ const QuestionnairePage = () => {
     isCompleted, 
     isLoading,
     questionIndex,
-    totalSteps
+    totalSteps,
+    continueQuest,
+    sessionId,
+    questId
   } = useQuestStore();
+
+  const regionName = questId ? REGIONS_MAPPING[questId as keyof typeof REGIONS_MAPPING] : "英雄殿堂";
 
   // 控制 QuestionCard 是否可以顯示（等待 NarrativeDisplay 完成）
   const [narrativeComplete, setNarrativeComplete] = useState(false);
@@ -33,23 +47,73 @@ const QuestionnairePage = () => {
 
   if (isCompleted) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-12 relative">
-        <motion.h2
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-5xl font-display font-bold text-white mb-6 uppercase tracking-tighter"
-        >
-          靈魂試煉完成
-        </motion.h2>
-        <p className="text-white/60 text-lg mb-12 italic font-serif">通往英雄殿堂的道路已開啟，轉生儀式即將開始...</p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => window.location.href = '/analysis'}
-          className="bg-primary text-black font-black uppercase tracking-widest py-4 px-12 rounded-0 shadow-[0_0_30px_rgba(17,212,82,0.3)] hover:bg-white transition-all duration-500"
-        >
-          啟動轉生儀式
-        </motion.button>
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-6 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] bg-[radial-gradient(circle,rgba(17,212,82,0.15)_0%,rgba(16,34,22,0)_70%)] opacity-60"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-primary/20 rounded-full animate-spin-slow opacity-30 flex items-center justify-center">
+            <div className="absolute w-[90%] h-[90%] border border-dashed border-primary/20 rounded-full animate-spin-reverse"></div>
+            <span className="absolute top-2 text-primary/30 text-xs transform -translate-x-1/2 font-mono">Ω</span>
+            <span className="absolute bottom-2 text-primary/30 text-xs transform -translate-x-1/2 font-mono">Σ</span>
+          </div>
+          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/40 rounded-full animate-float" style={{ animationDelay: '0s' }}></div>
+          <div className="absolute top-3/4 left-1/3 w-3 h-3 bg-primary/20 rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center animate-float">
+          {/* Icon Blob */}
+          <div className="mb-8 relative group">
+            <div className="absolute inset-0 bg-primary rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+            <div className="relative bg-gradient-to-br from-green-900 via-[#0a1510] to-black border-2 border-primary/50 w-24 h-24 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(17,212,82,0.3)]">
+              <Sparkles className="w-12 h-12 text-primary drop-shadow-[0_0_10px_rgba(17,212,82,0.5)]" />
+            </div>
+            <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 text-primary/20 pointer-events-none" fill="currentColor" viewBox="0 0 100 100">
+              <path d="M10,50 Q30,20 50,40 Q70,20 90,50" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2"></path>
+              <path d="M10,50 Q30,80 50,60 Q70,80 90,50" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2"></path>
+            </svg>
+          </div>
+
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }} 
+            className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-6 tracking-tight drop-shadow-lg font-display uppercase"
+          >
+            靈魂試煉完成
+          </motion.h1>
+
+          {/* Separator */}
+          <div className="flex items-center gap-4 mb-8 opacity-70">
+            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary"></div>
+            <div className="text-primary transform rotate-45 border border-primary w-3 h-3 bg-black"></div>
+            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-primary"></div>
+          </div>
+
+          {/* Description */}
+          <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed mb-12 font-light tracking-wide font-sans">
+            通往<span className="text-primary font-bold mx-1">{regionName}</span>的道路已開啟，<br className="md:hidden" />
+            轉生儀式即將開始...
+          </p>
+
+          {/* Button */}
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-green-600 rounded-lg blur opacity-40 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => window.location.href = '/analysis'}
+              className="relative px-12 py-5 bg-gradient-to-r from-green-900 via-[#11251c] to-green-900 border border-primary/30 text-white text-xl font-bold rounded-lg shadow-lg hover:shadow-[0_0_30px_rgba(17,212,82,0.4)] transform transition-all duration-300 flex items-center gap-3 overflow-hidden cursor-pointer"
+            >
+              {/* Shine Effect */}
+              <div className="absolute top-0 -left-full w-[200%] h-[100%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-20deg] animate-[shine_3s_infinite]"></div>
+
+              <Zap className="w-6 h-6 animate-pulse text-primary" />
+              <span>啟動轉生儀式</span>
+              <MoveRight className="w-6 h-6 group-hover:translate-x-1 transition-transform bg-transparent" />
+            </motion.button>
+          </div>
+        </div>
        </div>
     );
   }
@@ -130,6 +194,35 @@ const QuestionnairePage = () => {
               </AnimatePresence>
             </div>
 
+            {/* 開始試練按鈕 - 開場白結束後顯示 */}
+            <AnimatePresence>
+              {narrativeComplete && !currentQuestion && !isCompleted && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="flex justify-center px-4 mb-8"
+                >
+                  <motion.button
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(17, 212, 82, 0.4)" }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      // 點擊後發送 continue_quest
+                      continueQuest();
+                    }}
+                    className="group relative px-8 py-3 bg-[#11251c] border border-primary text-primary font-bold uppercase tracking-[0.2em] overflow-hidden rounded-sm hover:text-black hover:bg-primary transition-colors duration-300"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <span>開始試煉</span>
+                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </span>
+                  </motion.button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* 問題卡片 - 等待敘事完成後顯示 */}
             <div className="px-4">
               <AnimatePresence mode="wait">
@@ -161,7 +254,7 @@ const QuestionnairePage = () => {
       </main>
 
       <AnimatePresence>
-        {isLoading && (
+        {(isLoading || !sessionId) && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

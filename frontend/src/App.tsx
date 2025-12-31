@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from './stores/authStore'
+import AnalysisPage from './pages/AnalysisPage'
 import Home from './pages/Home'
 import Questionnaire from './pages/Questionnaire'
 import QuestIntro from './pages/QuestIntro'
@@ -33,7 +34,10 @@ function App() {
               path="/map"
               element={isAuthenticated ? <MapPage /> : <Navigate to="/" />}
             />
-            {/* 未來可增加 /analysis 等路由 */}
+            <Route
+              path="/analysis"
+              element={isAuthenticated ? <AnalysisPage /> : <Navigate to="/" />}
+            />
           </Routes>
         </div>
       </div>

@@ -1,10 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 from app.db.session import get_db
-from app.db.models import User
-from app.core.security import verify_google_token, create_access_token
+from app.db.models import User, Trait, UserQuest
+from app.core.security import verify_google_token, create_access_token, decode_access_token
 from pydantic import BaseModel
+from typing import Optional, List
+
+import uuid
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -19,7 +24,6 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid Google token")
 
     google_id = google_info["sub"]
-    email = google_info.get("email")
     name = google_info.get("name")
     picture = google_info.get("picture")
 
@@ -50,4 +54,81 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
         "exp": user.exp,
         "isNewUser": is_new_user,
         "accessToken": access_token
+    }
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+@router.get("/me")
+async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
+    payload = decode_access_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    user_id_str = payload.get("sub")
+    user_id = uuid.UUID(user_id_str)
+    
+    # 獲取基礎用戶資料
+    user_result = await db.execute(select(User).where(User.id == user_id))
+    user = user_result.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    # 獲取特質報告
+    trait_result = await db.execute(select(Trait).where(Trait.user_id == user_id))
+    trait = trait_result.scalar_one_or_none()
+    
+    # 獲取已完成任務數量以計算同步率
+    completed_quests_result = await db.execute(
+        select(func.count(UserQuest.id))
+        .where(UserQuest.user_id == user_id, UserQuest.completed_at.isnot(None))
+    )
+    completed_count = completed_quests_result.scalar() or 0
+    sync_percent = min(int((completed_count / 5) * 100), 100)
+    
+    # 獲取種族與職業詳細資訊
+    race_info = None
+    class_info = None
+    
+    if trait and trait.final_report:
+        race_id = trait.final_report.get("race_id")
+        class_id = trait.final_report.get("class_id")
+        
+        if race_id:
+            race_res = await db.execute(select(GameDefinition).where(GameDefinition.id == race_id))
+            race_info = race_res.scalar_one_or_none()
+        if class_id:
+            class_res = await db.execute(select(GameDefinition).where(GameDefinition.id == class_id))
+            class_info = class_res.scalar_one_or_none()
+
+    # 獲取最近的英雄史詩
+    quest_result = await db.execute(
+        select(UserQuest)
+        .where(UserQuest.user_id == user_id, UserQuest.hero_chronicle.isnot(None))
+        .order_by(UserQuest.completed_at.desc())
+        .limit(1)
+    )
+    latest_quest = quest_result.scalar_one_or_none()
+    
+    return {
+        "userId": str(user.id),
+        "displayName": user.display_name,
+        "avatarUrl": user.avatar_url,
+        "level": user.level,
+        "exp": user.exp,
+        "syncPercent": sync_percent,
+        "heroIdentity": {
+            "race": {
+                "id": race_info.id if race_info else None,
+                "name": race_info.name if race_info else "尚未覺醒",
+                "description": race_info.metadata_info.get("description") if race_info else ""
+            },
+            "class": {
+                "id": class_info.id if class_info else None,
+                "name": class_info.name if class_info else "平民",
+                "description": class_info.metadata_info.get("traits") if class_info else ""
+            }
+        },
+        "traits": trait.final_report if trait else {},
+        "latestChronicle": latest_quest.hero_chronicle if latest_quest else None
     }

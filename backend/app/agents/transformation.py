@@ -1,6 +1,6 @@
 import logging
 import json
-from google.adk.agents import Agent
+from app.core.agent import TraitQuestAgent as Agent
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.tool_context import ToolContext
 from app.core.config import settings

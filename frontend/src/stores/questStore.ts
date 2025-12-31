@@ -52,12 +52,14 @@ export const useQuestStore = create<QuestState>((set, get) => {
       };
     } else {
       newState.currentQuestion = null;
-      setTimeout(() => {
-        const state = get();
-        if (!state.currentQuestion && !state.isCompleted) {
-          state.continueQuest();
-        }
-      }, 3000);
+      newState.currentQuestion = null;
+      // Removed auto-continue to allow user to manually start trial via UI button
+      // setTimeout(() => {
+      //   const state = get();
+      //   if (!state.currentQuestion && !state.isCompleted) {
+      //     state.continueQuest();
+      //   }
+      // }, 3000);
     }
     set(newState);
   });
