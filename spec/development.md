@@ -134,7 +134,7 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 **目標**: 完整開放五大測驗與地圖系統，實作深度分析報告。
 
 - **Frontend**:
-  - 實作 `demo/map` 互動式世界地圖，需對接 `/map` API 渲染解鎖狀態。
+  - 實作 `demo/map` 互動式心靈大陸地圖，需對接 `/map` API 渲染解鎖狀態。
   - **完善 Hero Panel 所有區塊**：
     - 實作解鎖/鎖定狀態卡片渲染。
     - 實作「命運指引」四類建議組件。

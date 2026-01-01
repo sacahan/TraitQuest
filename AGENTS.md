@@ -126,7 +126,7 @@ TraitQuest/
 │   ├── gallup/                          # Gallup 介紹
 │   ├── questionnaire/                   # 測驗互動頁面
 │   ├── analysis/                        # 個人化結果分析
-│   ├── map/                             # 心靈大陸世界地圖
+│   ├── map/                             # 心靈大陸地圖
 │   └── bulletin_board/                  # 公會佈告欄
 ├── src/                                 # 源代碼 (待開發)
 └── AGENTS.md                            # 本文件 (專案總覽)

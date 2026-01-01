@@ -67,7 +67,7 @@ export function Header({ isLoggedIn, userName, onLogin }: HeaderProps) {
           
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link to="/map">世界地圖</Link>
+            <Link to="/map">心靈大陸</Link>
             <Link to="/analysis">英雄面板</Link>
           </nav>
           

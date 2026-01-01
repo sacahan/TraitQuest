@@ -14,7 +14,7 @@ const QUESTS = [
     imageUrl: '/assets/images/mbti_cover.webp',
     color: 'green',
     icon: 'psychology',
-    route: '/quest/mbti'
+    route: '/intro/mbti'
   },
   {
     id: 'big_five',
@@ -24,7 +24,7 @@ const QUESTS = [
     imageUrl: '/assets/images/big5_cover.webp',
     color: 'blue',
     icon: 'water_drop',
-    route: '/quest/big_five'
+    route: '/intro/big-five'
   },
   {
     id: 'disc',
@@ -34,7 +34,7 @@ const QUESTS = [
     imageUrl: '/assets/images/disc_cover.webp',
     color: 'red',
     icon: 'swords',
-    route: '/quest/disc'
+    route: '/intro/disc'
   },
   {
     id: 'enneagram',
@@ -44,7 +44,7 @@ const QUESTS = [
     imageUrl: '/assets/images/enneagram_cover.webp',
     color: 'purple',
     icon: 'stars',
-    route: '/quest/enneagram'
+    route: '/intro/enneagram'
   },
   {
     id: 'gallup',
@@ -54,7 +54,7 @@ const QUESTS = [
     imageUrl: '/assets/images/gallup_cover.webp',
     color: 'yellow',
     icon: 'trophy',
-    route: '/quest/gallup'
+    route: '/intro/gallup'
   }
 ];
 
@@ -101,7 +101,7 @@ const Home = () => {
                   className="group flex min-w-[180px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-primary text-[#112217] hover:scale-105 active:scale-95 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-glow"
                 >
                   <span className="material-symbols-outlined text-xl transition-transform group-hover:rotate-12">map</span>
-                  <span className="truncate font-body">進入世界地圖</span>
+                  <span className="truncate font-body">進入心靈大陸</span>
                 </button>
               ) : (
                 <CustomGoogleAuthButton className="group flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-white text-[#112217] hover:bg-gray-100 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-white hover:scale-105 active:scale-95 active:ring-4 active:ring-white/50">

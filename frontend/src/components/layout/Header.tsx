@@ -16,18 +16,18 @@ export const Header = () => {
             onClick={() => navigate('/')}
           >
             <span className="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
-            <h2 className="text-xl font-display font-black text-white uppercase leading-tight tracking-tight">TraitQuest</h2>
+            <h2 className="text-xl font-display font-black text-white leading-tight tracking-tight">TraitQuest</h2>
           </div>
 
           <div className="flex items-center gap-4 md:gap-8 ml-auto">
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6 text-white">
               <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/map">
-                世界地圖
+                心靈大陸
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
               <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/analysis">
-                英雄功勳
+                英雄面板
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </nav>

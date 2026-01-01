@@ -1,16 +1,37 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useAuthStore } from './stores/authStore'
 import AnalysisPage from './pages/AnalysisPage'
 import Home from './pages/Home'
 import Questionnaire from './pages/Questionnaire'
 import QuestIntro from './pages/QuestIntro'
 import MapPage from './pages/MapPage'
+import MbtiIntro from './pages/intro/MbtiIntro'
+import BigFiveIntro from './pages/intro/BigFiveIntro'
+import DiscIntro from './pages/intro/DiscIntro'
+import EnneagramIntro from './pages/intro/EnneagramIntro'
+import GallupIntro from './pages/intro/GallupIntro'
+
+/**
+ * 全域自動捲動至頂部組件
+ * 當路由路徑發生變化時，自動將視窗滾動條重置回頂部。
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   const { isAuthenticated } = useAuthStore()
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="bg-background-dark min-h-screen relative overflow-hidden flex flex-col">
         {/* 背景發光層 (Nebula Layers) */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -38,6 +59,13 @@ function App() {
               path="/analysis"
               element={isAuthenticated ? <AnalysisPage /> : <Navigate to="/" />}
             />
+
+            {/* Intro Pages */}
+            <Route path="/intro/mbti" element={<MbtiIntro />} />
+            <Route path="/intro/big-five" element={<BigFiveIntro />} />
+            <Route path="/intro/disc" element={<DiscIntro />} />
+            <Route path="/intro/enneagram" element={<EnneagramIntro />} />
+            <Route path="/intro/gallup" element={<GallupIntro />} />
           </Routes>
         </div>
       </div>

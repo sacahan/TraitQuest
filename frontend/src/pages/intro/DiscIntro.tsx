@@ -1,0 +1,196 @@
+import React from 'react'
+import IntroLayout from '../../components/layout/IntroLayout'
+
+const DiscIntro: React.FC = () => {
+  return (
+    <IntroLayout title="DISC 介紹">
+      {/* Hero Section */}
+      <div className="w-full max-w-[1200px] px-4 py-10 md:px-6 lg:py-20">
+        <div className="flex flex-col-reverse lg:flex-row gap-10 items-center">
+          <div className="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
+              <span className="material-symbols-outlined text-sm">bolt</span>
+               comportamento 分析
+            </div>
+            <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
+              掌握你的<span className="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">戰鬥架勢 (Stance)</span>
+            </h1>
+            <p className="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
+              DISC 模式定義了你在壓力下的行為反應。在 TraitQuest 中，這決定了你在戰鬥中的陣型位置與反應速度。
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
+              <button
+                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group"
+                onClick={() => window.location.href = '/questionnaire'}
+              >
+                <span className="truncate group-hover:scale-105 transition-transform">檢測你的架勢</span>
+              </button>
+              <a
+                href="#lore"
+                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-surface-dark border border-surface-border text-white text-base font-bold hover:bg-[#1e4030] hover:border-primary/50 transition-colors w-full sm:w-auto"
+              >
+                <span className="truncate">查看技能說明</span>
+              </a>
+            </div>
+          </div>
+          <div className="flex-1 w-full max-w-[600px] aspect-square md:aspect-video lg:aspect-square relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#183426] group hover:border-primary/50 transition-colors duration-500">
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+              style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAn-pQ_f9pXp-rL0o5p1k_Q_6k6_q9W_9I_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P")' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-[#102219] via-transparent to-transparent opacity-80"></div>
+            </div>
+            <div className="absolute bottom-4 left-4 right-4 bg-[#102219]/90 border border-[#31684d] p-4 rounded-xl backdrop-blur-sm">
+              <div className="flex gap-3 items-center">
+                <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center border border-primary text-primary animate-pulse">
+                  <span className="material-symbols-outlined">bolt</span>
+                </div>
+                <div>
+                  <p className="text-xs text-[#90cbad]">架勢監控</p>
+                  <p className="text-sm font-bold text-white">正在分析你的行為模式...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Lore Section */}
+      <div id="lore" className="w-full bg-[#112217] py-20 px-4 md:px-10 border-y border-[#23482f]">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
+          <div className="flex-1 space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a3323] border border-[#23482f] text-primary font-bold text-sm">
+              <span className="material-symbols-outlined text-lg">history_edu</span>
+              Battle History
+            </div>
+            <h3 className="text-white text-3xl font-bold">DISC：行為的四重奏</h3>
+            <p className="text-[#e0eadd] text-lg leading-relaxed">
+              DISC 模式由心理學家威廉·馬斯頓 (William Marston) 所建立，旨在描述人類在不同環境下的行為反應。
+            </p>
+            <div className="space-y-4">
+              {[
+                "反應風格：面對挑戰、人際、節奏與規範時的自然傾向。",
+                "戰略適應：了解自己的架勢，能在不同戰場切換最有效的戰術。",
+                "能量管理：在適合自己風格的崗位上，魔力消耗最少。"
+              ].map((text, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="shrink-0 size-8 rounded-full bg-[#31684d] flex items-center justify-center text-primary font-bold">{i + 1}</div>
+                  <p className="text-[#90cbad]">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex-1 w-full max-w-[500px]">
+             <div className="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-1 h-full bg-primary/50"></div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="size-12 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-primary text-2xl">radar</span>
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold">Stance Radar</h4>
+                    <p className="text-[#90cbad] text-xs">即時行為捕捉中...</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-3 rounded-lg bg-[#1a3323] border border-red-500/20">
+                    <div className="text-red-400 text-[10px] font-bold uppercase mb-1">D - 掌控</div>
+                    <div className="h-1 w-full bg-red-900/30 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-500 w-[70%]" style={{ animation: 'grow 2s ease-out' }}></div>
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-[#1a3323] border border-yellow-500/20">
+                    <div className="text-yellow-400 text-[10px] font-bold uppercase mb-1">I - 影響</div>
+                    <div className="h-1 w-full bg-yellow-900/30 rounded-full overflow-hidden">
+                      <div className="h-full bg-yellow-500 w-[85%]" style={{ animation: 'grow 2s ease-out 0.2s' }}></div>
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-[#1a3323] border border-green-500/20">
+                    <div className="text-green-400 text-[10px] font-bold uppercase mb-1">S - 穩定</div>
+                    <div className="h-1 w-full bg-green-900/30 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-500 w-[45%]" style={{ animation: 'grow 2s ease-out 0.4s' }}></div>
+                    </div>
+                  </div>
+                  <div className="p-3 rounded-lg bg-[#1a3323] border border-blue-500/20">
+                    <div className="text-blue-400 text-[10px] font-bold uppercase mb-1">C - 遵從</div>
+                    <div className="h-1 w-full bg-blue-900/30 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-500 w-[60%]" style={{ animation: 'grow 2s ease-out 0.6s' }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid Section */}
+      <section className="py-20 px-4 md:px-10 bg-[#0d1a12] relative overflow-hidden w-full">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black text-white">四大原色架勢</h2>
+            <p className="text-[#90cbad] mt-4 max-w-2xl mx-auto leading-relaxed text-lg">
+              每種架勢都有其獨特的作戰優勢與潛在弱點。在 TraitQuest 的世界中，協同不同架勢的朋友能產生強大的戰場羈絆。
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {renderStanceCard('D - Dominance', '掌控型：狂戰士架勢', '果斷、自信、以目標為導向。在遊戲中是衝鋒陷陣的重型 DPS，擅長在短時間內解決難題。', 'red', 'swords')}
+            {renderStanceCard('I - Influence', '影響型：幻術師架勢', '熱情、說服力、樂觀。你是戰場上的靈魂人物，擅長透過影響他人來掌控全局節奏。', 'yellow', 'magic_button')}
+            {renderStanceCard('S - Steadiness', '穩定型：守護者架勢', '耐心、誠實、合群。你是最可靠的後盾，能在持久戰中提供最穩定的支持與耐力。', 'green', 'shield_with_heart')}
+            {renderStanceCard('C - Conscientiousness', '遵從型：機靈鬼架勢', '準確、邏輯、分析。擅長分析戰況細節，對你來說，每一個精確的數據都是獲勝的關鍵。', 'blue', 'biotech')}
+          </div>
+        </div>
+      </section>
+
+      {/* Integration Section */}
+      <section className="w-full bg-[#102216] py-16 border-y border-guild-border/50">
+        <div className="w-full max-w-[1200px] px-4 mx-auto text-center">
+            <h3 className="text-white text-3xl font-bold mb-6">為什麼需要 DISC？</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                {renderFeatureItem('衝衝突排除', '了解對方的戰鬥節奏，減少組隊時的人員摩合。')}
+                {renderFeatureItem('有效溝通', '學習用對方聽得懂的頻道發送指令，提升戰鬥效率。')}
+                {renderFeatureItem('職務匹配', '將最適合的人放在最適合的位置，不論是坦、補還是打。')}
+                {renderFeatureItem('自我成長', '察覺自己的行為盲點，解鎖進階的人格形態。')}
+            </div>
+        </div>
+      </section>
+    </IntroLayout>
+  )
+}
+
+function renderStanceCard(type: string, title: string, desc: string, color: string, icon: string) {
+    const colorMap: any = {
+        red: 'border-red-500/30 hover:border-red-500 shadow-red-500/5 hover:shadow-red-500/20 bg-red-950/20 text-red-400',
+        yellow: 'border-yellow-500/30 hover:border-yellow-500 shadow-yellow-500/5 hover:shadow-yellow-500/20 bg-yellow-950/20 text-yellow-400',
+        green: 'border-primary/30 hover:border-primary shadow-primary/5 hover:shadow-primary/20 bg-green-950/20 text-primary',
+        blue: 'border-blue-500/30 hover:border-blue-500 shadow-blue-500/5 hover:shadow-blue-500/20 bg-blue-950/20 text-blue-400',
+    }
+
+    return (
+        <div className={`p-8 rounded-3xl border-2 transition-all duration-500 group ${colorMap[color]}`}>
+            <div className="flex items-start gap-6">
+                <div className="size-16 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-4xl">{icon}</span>
+                </div>
+                <div>
+                <div className="text-xs font-bold tracking-[0.2em] uppercase mb-1 opacity-70">{type}</div>
+                <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
+                <p className="text-gray-400 group-hover:text-gray-200 transition-colors leading-relaxed">
+                    {desc}
+                </p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function renderFeatureItem(title: string, desc: string) {
+    return (
+        <div className="p-6 rounded-xl bg-surface border border-guild-border hover:border-primary transition-colors">
+            <h4 className="text-white font-bold mb-2">{title}</h4>
+            <p className="text-[#90cbad] text-sm">{desc}</p>
+        </div>
+    )
+}
+
+export default DiscIntro

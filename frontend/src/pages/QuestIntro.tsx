@@ -5,15 +5,33 @@ import { Footer } from '../components/layout/Footer';
 const QUEST_DETAILS: Record<string, any> = {
   mbti: {
     title: 'MBTI 英雄職業分析',
-    description: '探索 E/I、S/N、T/F、J/P 四大維度，尋找你的本命職業與思維模式。你是運籌帷幄的建築師，還是熱情洋溢的競選者？',
-    requirements: ['等級 1', '靈魂共鳴值 0%'],
-    rewards: ['解鎖職業屬性', '獲取初階冒險執照']
+    description: '探索 E/I、S/N、T/F、J/P 四大維度，尋找你的本命職業與思維模式。十六種傳奇職業，等待與你的靈魂共鳴。',
+    requirements: ['需達到等級 Lv.1'],
+    rewards: ['解鎖核心職業 (Class)', '獲得職業專屬稱號']
   },
   big_five: {
-    title: 'Big Five 性格特質分析',
-    description: '穿越 OCEAN 五大洋流。分析你的開放性、責任心、外向性、親和力與神經質。',
-    requirements: ['等級 1', '心靈能量 50%'],
-    rewards: ['獲取五維地圖', '解鎖潛能天賦']
+    title: 'Big Five 五大屬性分析',
+    description: '穿越 OCEAN 五大洋流。測量開放性 (O)、盡責性 (C)、外向性 (E)、親和性 (A)、神經質 (N)，轉化為你的五維基礎屬性。',
+    requirements: ['需達到等級 Lv.2', '完成 MBTI 聖殿'],
+    rewards: ['解鎖角色屬性 (Stats)', '獲得五維雷達圖']
+  },
+  disc: {
+    title: 'DISC 戰鬥架勢分析',
+    description: '解析你在壓力與衝突中的即時反應。掌控 (D)、影響 (I)、穩定 (S)、遵從 (C)，四象行動核心決定你的戰鬥姿態。',
+    requirements: ['需達到等級 Lv.4', '完成 Enneagram 冥想塔'],
+    rewards: ['解鎖對戰方式 (Stance)', '獲得戰術指引']
+  },
+  enneagram: {
+    title: 'Enneagram 靈魂種族探索',
+    description: '九種靈魂本源，萌芽於恐懼與渴望。找到你所屬的古老種族，揭示驅動你行為的核心執念與成長盲點。',
+    requirements: ['需達到等級 Lv.3', '完成 Big Five 能量場'],
+    rewards: ['覺醒靈魂種族 (Race)', '解鎖種族天賦']
+  },
+  gallup: {
+    title: 'Gallup 傳奇技能解鎖',
+    description: 'CliftonStrengths® 34 項天賦模型。辨識你最具力量的天賦主軸，轉化為 2-3 個專屬主動與被動技能。',
+    requirements: ['需達到等級 Lv.5', '完成 DISC 戰鬥叢林'],
+    rewards: ['解鎖傳奇技能 (Talent)', '獲得天賦發展藍圖']
   }
 };
 
@@ -78,14 +96,14 @@ const QuestIntro = () => {
                 onClick={() => navigate('/questionnaire')}
                 className="flex-1 h-14 rounded-full bg-primary text-[#112217] text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(17,212,82,0.3)] flex items-center justify-center gap-2 group/btn"
               >
-                <span>開始魂力挑戰</span>
+                <span>進入副本</span>
                 <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">bolt</span>
               </button>
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/map')}
                 className="px-8 h-14 rounded-full border border-white/10 text-white font-bold hover:bg-white/5 transition-all"
               >
-                返回城鎮
+                返回地圖
               </button>
             </div>
           </div>

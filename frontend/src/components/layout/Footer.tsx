@@ -6,13 +6,22 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex items-center gap-3 text-white cursor-pointer hover:opacity-80 transition-opacity">
           <span className="material-symbols-outlined text-primary text-3xl animate-pulse">swords</span>
-          <span className="text-xl font-display font-black tracking-tight uppercase">TraitQuest</span>
+          <span className="text-xl font-display font-black tracking-tight">TraitQuest</span>
         </div>
-        <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-          <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/privacy">隱私政策</Link>
-          <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/services">服務條款</Link>
-          <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/about">關於我們</Link>
-          <a className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">聯絡公會</a>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+            <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/privacy">隱私政策</Link>
+            <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/services">服務條款</Link>
+            <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/about">關於我們</Link>
+            <a className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">聯絡公會</a>
+          </div>
+          {/* <div className="flex flex-wrap justify-center gap-4 md:gap-8 border-t border-white/5 pt-4">
+            <Link to="/intro/mbti" className="text-xs text-gray-500 hover:text-primary transition-colors">MBTI</Link>
+            <Link to="/intro/big-five" className="text-xs text-gray-500 hover:text-primary transition-colors">Big Five</Link>
+            <Link to="/intro/disc" className="text-xs text-gray-500 hover:text-primary transition-colors">DISC</Link>
+            <Link to="/intro/enneagram" className="text-xs text-gray-500 hover:text-primary transition-colors">Enneagram</Link>
+            <Link to="/intro/gallup" className="text-xs text-gray-500 hover:text-primary transition-colors">Gallup</Link>
+          </div> */}
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">

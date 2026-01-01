@@ -7,7 +7,7 @@ const MapEffects: React.FC = () => {
       <div 
         className="absolute inset-0 opacity-40 bg-cover bg-center"
         style={{
-          backgroundImage: 'url("/assets/images/map/map_bg_magic.png")',
+          backgroundImage: 'url("/assets/images/hero_bg.webp")',
           filter: 'brightness(0.5) contrast(1.2) saturate(1.2)'
         }}
       ></div>
