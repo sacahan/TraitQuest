@@ -1,10 +1,33 @@
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
 import CustomGoogleAuthButton from '../auth/CustomGoogleAuthButton';
 
+// 五大分析介紹頁面配置（與 Home.tsx QUESTS 保持一致）
+const introPages = [
+  { path: '/intro/mbti', name: 'MBTI', icon: 'psychology', description: '核心職業' },
+  { path: '/intro/big-five', name: 'Big Five', icon: 'water_drop', description: '基礎屬性' },
+  { path: '/intro/enneagram', name: '九型人格', icon: 'stars', description: '靈魂種族' },
+  { path: '/intro/disc', name: 'DISC', icon: 'swords', description: '戰鬥風格' },
+  { path: '/intro/gallup', name: 'Gallup', icon: 'trophy', description: '傳奇技能' },
+];
+
 export const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // 點擊外部關閉下拉選單
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
@@ -22,6 +45,50 @@ export const Header = () => {
           <div className="flex items-center gap-4 md:gap-8 ml-auto">
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6 text-white">
+              {/* 探索指南下拉選單 */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  className="text-sm font-bold hover:text-primary transition-colors relative group flex items-center gap-1"
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                  五大試煉
+                  <span
+                    className={`material-symbols-outlined text-sm transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                  >
+                    expand_more
+                  </span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                </button>
+
+                {/* 下拉選單 */}
+                <div
+                  className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 py-2 rounded-lg 
+                    bg-[#0d1a12]/95 backdrop-blur-lg border border-primary/30 shadow-lg shadow-primary/10
+                    transition-all duration-300 origin-top
+                    ${isDropdownOpen
+                      ? 'opacity-100 scale-100 pointer-events-auto'
+                      : 'opacity-0 scale-95 pointer-events-none'
+                    }`}
+                >
+                  {introPages.map((page) => (
+                    <Link
+                      key={page.path}
+                      to={page.path}
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-primary/10 transition-colors group"
+                    >
+                      <span className="material-symbols-outlined text-primary text-lg">{page.icon}</span>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-white group-hover:text-primary transition-colors">
+                          {page.name}
+                        </span>
+                        <span className="text-xs text-gray-400">{page.description}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/map">
                 心靈大陸
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>

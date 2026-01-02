@@ -36,8 +36,11 @@ export const useMapStore = create<MapState>((set) => ({
   isLoading: false,
   error: null,
   fetchRegions: async () => {
+    const { regions, isLoading } = useMapStore.getState()
     const token = useAuthStore.getState().accessToken
-    if (!token) return
+
+    // 如果正在載入中，或已經有數據（除非需要強制刷新），則跳過
+    if (!token || isLoading || regions.length > 0) return
 
     set({ isLoading: true, error: null })
     try {

@@ -9,34 +9,34 @@ const GallupIntro: React.FC = () => {
         <div className="flex flex-col-reverse lg:flex-row gap-10 items-center">
           <div className="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
-              <span className="material-symbols-outlined text-sm">stars</span>
-              蓋洛普天賦優勢
+              <span className="material-symbols-outlined text-sm">trophy</span>
+              Gallup天賦優勢
             </div>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
-              覺醒你的<span className="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">傳奇技能 (Talent)</span>
+              覺醒你的<span className="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">傳奇技能</span>
             </h1>
             <p className="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
               Gallup 克利夫頓優勢定義了你與生俱來的卓越天賦。在 TraitQuest 中，這些天賦將轉化為你的專屬主動與被動技能。
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
               <button
-                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group"
+                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group animate-breathing-glow"
                 onClick={() => window.location.href = '/questionnaire'}
               >
-                <span className="truncate group-hover:scale-105 transition-transform">覺醒天賦技能</span>
+                <span className="truncate group-hover:scale-105 transition-transform">進入副本</span>
               </button>
               <a
                 href="#lore"
                 className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-surface-dark border border-surface-border text-white text-base font-bold hover:bg-[#1e4030] hover:border-primary/50 transition-colors w-full sm:w-auto"
               >
-                <span className="truncate">查看技能圖譜</span>
+                <span className="truncate">了解更多</span>
               </a>
             </div>
           </div>
           <div className="flex-1 w-full max-w-[600px] aspect-square md:aspect-video lg:aspect-square relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#183426] group hover:border-primary/50 transition-colors duration-500">
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-              style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBeI175iPyP_t8S_Q_9W_9I_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P_6P")' }}
+              style={{ backgroundImage: 'url("/assets/images/gallup_cover.webp")' }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#102219] via-transparent to-transparent opacity-80"></div>
             </div>
@@ -56,12 +56,12 @@ const GallupIntro: React.FC = () => {
       </div>
 
       {/* Lore Section */}
-      <div id="lore" className="w-full bg-[#112217] py-20 px-4 md:px-10 border-y border-[#23482f]">
+      <div id="lore" className="w-full bg-[#112217] py-20 px-4 md:px-10 border-y-1 border-[#23482f]">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
           <div className="flex-1 space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a3323] border border-[#23482f] text-primary font-bold text-sm">
-              <span className="material-symbols-outlined text-lg">workspace_premium</span>
-              Legacy Skills
+              <span className="material-symbols-outlined text-lg">menu_book</span>
+              Guild Manual
             </div>
             <h3 className="text-white text-3xl font-bold">蓋洛普：專注於卓越</h3>
             <p className="text-[#e0eadd] text-lg leading-relaxed">
@@ -97,7 +97,7 @@ const GallupIntro: React.FC = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-black text-white">四大優勢領域</h2>
             <p className="text-[#90cbad] mt-4 max-w-2xl mx-auto leading-relaxed">
-              34 項天賦被歸類為四大領域。每個人都有其獨特的「前五大天賦」組合，這就是你的傳奇技能樹。
+              34 項天賦被歸類為四大領域。每個人都有其獨特的天賦組合，這就是你的傳奇技能樹。
             </p>
           </div>
           
@@ -111,10 +111,10 @@ const GallupIntro: React.FC = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="w-full bg-[#102216] py-20">
-          <div className="max-w-4xl mx-auto px-6 text-center bg-[#1a3323] p-10 rounded-3xl border-2 border-primary shadow-[0_0_30px_rgba(17,212,82,0.2)]">
+      <section className="w-full bg-[#102216] py-20 border-t-1 border-[#23482f]">
+        <div className="max-w-4xl mx-auto px-6 text-center bg-[#1a3323] p-10 rounded-3xl border-2 border-primary shadow-[0_0_30px_rgba(17,212,82,0.2)]">
               <h3 className="text-white text-4xl font-black mb-4">你的最強技能是什麽？</h3>
-              <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你位於頂峰的 5 項傳奇技能。</p>
+          <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你位於頂峰的傳奇技能。</p>
               <button
                 className="flex cursor-pointer items-center justify-center rounded-full h-14 px-12 bg-primary text-[#10231a] text-lg font-black shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_40px_rgba(11,218,115,0.8)] transition-all mx-auto"
                 onClick={() => window.location.href = '/questionnaire'}
@@ -145,26 +145,72 @@ function renderTalentTypeCard(title: string, sub: string, desc: string, color: s
 }
 
 function renderTalentRow(title: string, desc: string, color: string, talents: string[]) {
-    const colorMap: any = {
-        blue: 'border-blue-500/30 bg-blue-950/10 text-blue-400',
-        red: 'border-red-500/30 bg-red-950/10 text-red-400',
-        primary: 'border-primary/30 bg-green-950/10 text-primary',
-        yellow: 'border-yellow-500/30 bg-yellow-950/10 text-yellow-400'
+  // 定義各領域的主題色與特效
+  const themes: any = {
+    blue: {
+      bg: 'bg-blue-950/20 hover:bg-blue-950/30',
+      accent: 'bg-blue-500',
+      glow: 'shadow-[0_0_30px_rgba(59,130,246,0.1)]',
+      title: 'text-blue-100',
+      tag: 'group/tag hover:bg-blue-500 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.6)] hover:border-blue-400'
+    },
+    red: {
+      bg: 'bg-red-950/20 hover:bg-red-950/30',
+      accent: 'bg-red-500',
+      glow: 'shadow-[0_0_30px_rgba(239,68,68,0.1)]',
+      title: 'text-red-100',
+      tag: 'group/tag hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.6)] hover:border-red-400'
+    },
+    primary: { // Green
+      bg: 'bg-emerald-950/20 hover:bg-emerald-950/30',
+      accent: 'bg-[#0bda73]',
+      glow: 'shadow-[0_0_30px_rgba(11,218,115,0.1)]',
+      title: 'text-emerald-100',
+      tag: 'group/tag hover:bg-[#0bda73] hover:text-[#0d1a12] hover:shadow-[0_0_15px_rgba(11,218,115,0.6)] hover:border-[#0bda73]'
+    },
+    yellow: {
+      bg: 'bg-yellow-950/20 hover:bg-yellow-950/30',
+      accent: 'bg-yellow-500',
+      glow: 'shadow-[0_0_30px_rgba(234,179,8,0.1)]',
+      title: 'text-yellow-100',
+      tag: 'group/tag hover:bg-yellow-500 hover:text-black hover:shadow-[0_0_15px_rgba(234,179,8,0.6)] hover:border-yellow-400'
+    }
     }
 
+  const theme = themes[color] || themes.primary
+
     return (
-        <div className={`p-8 rounded-2xl border-2 ${colorMap[color]} group`}>
-            <div className="flex flex-col md:flex-row gap-8">
-                <div className="w-full md:w-1/3">
-                    <h3 className="text-2xl font-black text-white mb-3">{title}</h3>
-                    <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+      <div className={`relative overflow-hidden rounded-2xl border border-white/5 ${theme.bg} transition-all duration-500 group`}>
+        {/* 左側能量條 (Accent Bar) */}
+        <div className={`absolute top-0 bottom-0 left-0 w-1.5 ${theme.accent} opacity-60 group-hover:opacity-100 group-hover:shadow-[0_0_15px_currentColor] transition-all duration-500`}></div>
+
+        {/* 背景氛圍光 (Ambient Glow) */}
+        <div className={`absolute -right-20 -top-20 w-80 h-80 rounded-full ${theme.accent} blur-[120px] opacity-[0.05] group-hover:opacity-[0.15] transition-opacity duration-700 pointer-events-none`}></div>
+
+        <div className="relative z-10 p-8 pl-10 flex flex-col md:flex-row gap-8 items-start">
+          {/* 標題與描述 */}
+          <div className="w-full md:w-1/3 space-y-3">
+            <h3 className={`text-2xl font-black ${theme.title} tracking-tight group-hover:translate-x-1 transition-transform duration-300 drop-shadow-md`}>
+              {title}
+            </h3>
+            <p className="text-[#90cbad] text-sm leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
+              {desc}
+            </p>
                 </div>
+
+          {/* 技能矩陣 */}
                 <div className="w-full md:w-2/3">
-                    <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2.5">
                         {talents.map(t => (
-                            <span key={t} className={`px-4 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs font-bold hover:border-current transition-colors cursor-default`}>
+                          <span key={t} className={`
+                            px-4 py-2 rounded-md bg-[#000000]/40 border border-white/10 
+                            text-white/80 text-sm font-bold tracking-wide backdrop-blur-sm
+                            transition-all duration-300 cursor-default select-none
+                            hover:-translate-y-1 hover:scale-105 active:scale-95
+                            ${theme.tag}
+                          `}>
                                 {t}
-                            </span>
+                          </span>
                         ))}
                     </div>
                 </div>

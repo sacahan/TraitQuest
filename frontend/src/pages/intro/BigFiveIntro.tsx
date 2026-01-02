@@ -10,7 +10,7 @@ const BigFiveIntro: React.FC = () => {
           <div className="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
               <span className="material-symbols-outlined text-sm">water_drop</span>
-              大五人格分析
+              Big Five 人格分析
             </div>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
               你的性格，決定你的
@@ -21,10 +21,10 @@ const BigFiveIntro: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
               <button
-                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group"
+                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group animate-breathing-glow"
                 onClick={() => window.location.href = '/questionnaire'}
               >
-                <span className="truncate group-hover:scale-105 transition-transform">開始你的冒險</span>
+                <span className="truncate group-hover:scale-105 transition-transform">進入副本</span>
               </button>
               <a
                 href="#lore"
@@ -37,7 +37,7 @@ const BigFiveIntro: React.FC = () => {
           <div className="flex-1 w-full max-w-[600px] aspect-square md:aspect-video lg:aspect-square relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#183426] group hover:border-primary/50 transition-colors duration-500">
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-              style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBwcOf3E23H9kHWV_eM8EkKjLpcYMghC_fCwo17e9j0d0uTFofvJSHOVWDbIMaedxS3LwM2ZHziQyqNd-VyRDgRFKNltZOID2o8jeGao1tqhvr7OrF3Z6OeQQ9z6RfOX8U4I3MxB9mB6gkPz66wAyvk3vDJBZsabYC_O1IZcjAK9g0y3cb2ypcxSoctRFQBB2wlXf1mL-oHXQ-rsfdfg2pxiB5uGfXjoNupQozlbMqHVHRCYtAA_aZ181PXYmyENS1EkuAaNxGPpl0O")' }}
+              style={{ backgroundImage: 'url("/assets/images/big5_cover.webp")' }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#102219] via-transparent to-transparent opacity-80"></div>
             </div>
@@ -57,7 +57,7 @@ const BigFiveIntro: React.FC = () => {
       </div>
 
       {/* Lore Section */}
-      <div id="lore" className="w-full bg-[#112217] py-20 px-4 md:px-10 border-y border-[#23482f]">
+      <div id="lore" className="w-full bg-[#112217] py-20 px-4 md:px-10 border-y-1 border-[#23482f]">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-center">
           <div className="flex-1 space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a3323] border border-[#23482f] text-primary font-bold text-sm">
@@ -122,7 +122,7 @@ const BigFiveIntro: React.FC = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="w-full bg-[#0d1c14] py-16 border-y border-[#1e4030]">
+      <section className="w-full bg-[#0d1c14] py-16 border-y-1 border-[#23482f]">
         <div className="w-full max-w-[1200px] px-4 md:px-6 mx-auto">
           <div className="flex flex-col gap-2 mb-10 text-center">
             <h2 className="text-primary text-sm font-bold tracking-widest uppercase">Benefits</h2>
@@ -133,6 +133,20 @@ const BigFiveIntro: React.FC = () => {
             {renderBenefitCard('groups', '團隊職能定位', '找出你在公會中最適合的角色，不論是開拓者還是守護者。')}
             {renderBenefitCard('trending_up', '屬性優化指南', '獲得具體的「技能點建議」，提升你的社交與執行效率。')}
           </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="w-full bg-[#102216] py-20">
+        <div className="max-w-4xl mx-auto px-6 text-center bg-[#1a3323] p-10 rounded-3xl border-2 border-primary shadow-[0_0_30px_rgba(17,212,82,0.2)]">
+          <h3 className="text-white text-4xl font-black mb-4">你的屬性是什麼？</h3>
+          <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你的五大核心屬性配置。</p>
+          <button
+            className="flex cursor-pointer items-center justify-center rounded-full h-14 px-12 bg-primary text-[#10231a] text-lg font-black shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_40px_rgba(11,218,115,0.8)] transition-all mx-auto"
+            onClick={() => window.location.href = '/questionnaire'}
+          >
+            解鎖屬性面板
+          </button>
         </div>
       </section>
     </IntroLayout>
@@ -158,9 +172,8 @@ function renderTraitRow(trait: string, traitEn: string, stat: string, statAbbr: 
               <span className="material-symbols-outlined text-2xl">{icon}</span>
             </div>
             <div>
-              <div className={`text-xs font-bold uppercase tracking-wider mb-0.5 ${colorMap[color].split(' ')[3]}`}>Trait {index}</div>
+              <div className={`text-xs font-bold tracking-wider mb-0.5 ${colorMap[color].split(' ')[3]}`}>{traitEn}</div>
               <h3 className={`text-xl font-bold text-white transition-colors ${colorMap[color].split(' ')[4]}`}>{trait}</h3>
-              <div className="text-xs text-gray-500">{traitEn}</div>
             </div>
           </div>
         </div>
@@ -168,7 +181,9 @@ function renderTraitRow(trait: string, traitEn: string, stat: string, statAbbr: 
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-3">
               <span className={`text-3xl font-black font-display transition-all ${colorMap[color].split(' ')[3]}`}>{stat}</span>
-              <span className={`px-2 py-0.5 rounded text-xs font-bold bg-opacity-20 border ${colorMap[color].split(' ')[3]} bg-current`}>{statAbbr}</span>
+              <span className={`px-2 py-0.5 rounded text-xs font-bold bg-opacity-20 border ${colorMap[color].split(' ')[3]} bg-current`}>
+                <p className="text-white">{statAbbr}</p>
+              </span>
             </div>
           </div>
           <p className="text-gray-300 text-sm leading-relaxed">

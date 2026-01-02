@@ -19,10 +19,10 @@ const MbtiIntro: React.FC = () => {
             </h2>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
               <button
-                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group"
+                className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group animate-breathing-glow"
                 onClick={() => window.location.href = '/questionnaire'}
               >
-                <span className="truncate group-hover:scale-105 transition-transform">開始你的冒險</span>
+                <span className="truncate group-hover:scale-105 transition-transform">進入副本</span>
               </button>
               <a
                 href="#lore"
@@ -35,7 +35,7 @@ const MbtiIntro: React.FC = () => {
           <div className="flex-1 w-full max-w-[600px] aspect-square md:aspect-video lg:aspect-square relative rounded-2xl overflow-hidden shadow-2xl border-4 border-[#183426] group hover:border-primary/50 transition-colors duration-500">
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-              style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDxaGvTpns0oJvAFnehM1lqoUSMkZQB_Ts3Xxn9NVIBm1IujbX6XCHLPgNvPLGDo5ZY09u2L4cDR2C9Fzq45j785iyhJ6Tm9wX58IzJJl7l_fYrZ27v2IqcGIFM_FjkdhdvT6e2zx_NUjslEtukdKBKoBNRa2xvE3l4c48hfKi292BhgomrJsOCjKBAFlP7FFGO4NYbZ5XznCqbOOLv7rTVW6X1X0QB5uK0Lq8YNMLqm_AhtRQnk75SmFp9p7JZAZPuaH5F2s5Ukb8_")' }}
+              style={{ backgroundImage: 'url("/assets/images/mbti_cover.webp")' }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#102219] via-transparent to-transparent opacity-80"></div>
             </div>
@@ -55,11 +55,11 @@ const MbtiIntro: React.FC = () => {
       </div>
 
       {/* Lore Section */}
-      <div id="lore" className="w-full bg-[#183426] py-16 lg:py-24 relative overflow-hidden">
+      <div id="lore" className="w-full bg-[#183426] border-y-1 border-[#23482f] py-16 lg:py-24 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#0bda73 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-        <div className="w-full max-w-[1000px] px-6 mx-auto relative z-10 flex flex-col md:flex-row gap-12 items-center">
+        <div className="w-full max-w-[1200px] px-6 mx-auto relative z-10 flex flex-col md:flex-row gap-12 items-center">
           <div className="flex-1 space-y-6">
-            <div className="inline-flex items-center gap-2 text-primary text-sm font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1a3323] border border-[#23482f] text-primary font-bold text-sm">
               <span className="material-symbols-outlined text-lg">menu_book</span>
               Guild Manual
             </div>
@@ -112,7 +112,7 @@ const MbtiIntro: React.FC = () => {
             四大陣營，十六種傳奇職業。在 TraitQuest 的世界中，你的性格代碼決定了你的戰鬥風格與天賦技能。
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* 至高議會 */}
           <div className="flex flex-col gap-5">
@@ -197,7 +197,7 @@ const MbtiIntro: React.FC = () => {
       </div>
 
       {/* Attributes Section */}
-      <section className="w-full bg-[#102216] py-16 border-y border-guild-border/50">
+      <section className="w-full bg-[#102216] py-16 border-y-1 border-[#23482f]">
         <div className="w-full max-w-[1200px] px-4 mx-auto">
           <div className="flex flex-col gap-2 mb-10 text-center">
             <h2 className="text-primary text-sm font-bold tracking-widest uppercase">Attributes</h2>
@@ -210,6 +210,20 @@ const MbtiIntro: React.FC = () => {
             {renderAttrCard('T / F 決策依據', 'COMBAT STYLE', '思考', '情感', '依靠邏輯進行打擊，而', '則依賴價值觀守護隊友。', 'swords', 'text-red-400')}
             {renderAttrCard('J / P 行動風格', 'QUEST LOG', '判斷', '感知', '傾向有組織的計畫，而', '則更喜歡靈活應變。', 'event_note', 'text-yellow-400')}
           </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="w-full py-20">
+        <div className="max-w-4xl mx-auto px-6 text-center bg-[#1a3323] p-10 rounded-3xl border-2 border-primary shadow-[0_0_30px_rgba(17,212,82,0.2)]">
+          <h3 className="text-white text-4xl font-black mb-4">你的英雄職業是什麼？</h3>
+          <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你的 16 型人格職業定位。</p>
+          <button
+            className="flex cursor-pointer items-center justify-center rounded-full h-14 px-12 bg-primary text-[#10231a] text-lg font-black shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_40px_rgba(11,218,115,0.8)] transition-all mx-auto"
+            onClick={() => window.location.href = '/questionnaire'}
+          >
+            解鎖職業天賦
+          </button>
         </div>
       </section>
     </IntroLayout>

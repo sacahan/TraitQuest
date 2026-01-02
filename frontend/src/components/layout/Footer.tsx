@@ -15,13 +15,6 @@ export const Footer = () => {
             <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/about">關於我們</Link>
             <a className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">聯絡公會</a>
           </div>
-          {/* <div className="flex flex-wrap justify-center gap-4 md:gap-8 border-t border-white/5 pt-4">
-            <Link to="/intro/mbti" className="text-xs text-gray-500 hover:text-primary transition-colors">MBTI</Link>
-            <Link to="/intro/big-five" className="text-xs text-gray-500 hover:text-primary transition-colors">Big Five</Link>
-            <Link to="/intro/disc" className="text-xs text-gray-500 hover:text-primary transition-colors">DISC</Link>
-            <Link to="/intro/enneagram" className="text-xs text-gray-500 hover:text-primary transition-colors">Enneagram</Link>
-            <Link to="/intro/gallup" className="text-xs text-gray-500 hover:text-primary transition-colors">Gallup</Link>
-          </div> */}
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-10 pt-8 border-t border-white/5 text-center md:text-left">

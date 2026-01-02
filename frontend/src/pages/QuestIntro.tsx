@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Footer } from '../components/layout/Footer';
+import { useMapStore } from '../stores/mapStore';
 
 const QUEST_DETAILS: Record<string, any> = {
   mbti: {
@@ -39,6 +41,22 @@ const QuestIntro = () => {
   const { questId } = useParams();
   const navigate = useNavigate();
   const quest = QUEST_DETAILS[questId || 'mbti'] || QUEST_DETAILS.mbti;
+  const { regions, fetchRegions } = useMapStore();
+
+  useEffect(() => {
+    fetchRegions();
+  }, [fetchRegions]);
+
+  // 獲取當前區域狀態
+  const currentRegion = regions.find(r => r.id === (questId || 'mbti'));
+  const isLocked = currentRegion?.status === 'LOCKED';
+  const isConquered = currentRegion?.status === 'CONQUERED';
+
+  const handleEnterQuest = () => {
+    if (!isLocked) {
+      navigate(`/questionnaire?type=${questId || 'mbti'}`);
+    }
+  };
 
   return (
     <div className="bg-background-dark min-h-screen font-body flex flex-col">
@@ -60,6 +78,14 @@ const QuestIntro = () => {
               {quest.description}
             </p>
             
+            {/* 鎖定狀態提示 */}
+            {isLocked && currentRegion?.unlock_hint && (
+              <div className="bg-red-950/20 border border-red-500/30 rounded-xl p-4 flex items-center gap-3">
+                <span className="material-symbols-outlined text-red-400">lock</span>
+                <p className="text-red-300 text-sm font-bold">{currentRegion.unlock_hint}</p>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
               <div className="bg-[#112217]/50 rounded-2xl p-4 border border-white/5">
                 <h3 className="text-primary text-sm font-bold mb-3 flex items-center gap-2">
@@ -93,11 +119,15 @@ const QuestIntro = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 mt-4">
               <button
-                onClick={() => navigate('/questionnaire')}
-                className="flex-1 h-14 rounded-full bg-primary text-[#112217] text-lg font-bold hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(17,212,82,0.3)] flex items-center justify-center gap-2 group/btn"
+                onClick={handleEnterQuest}
+                disabled={isLocked}
+                className={`flex-1 h-14 rounded-full text-lg font-bold flex items-center justify-center gap-2 group/btn transition-all ${isLocked
+                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50'
+                    : 'bg-primary text-[#112217] hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(17,212,82,0.3)]'
+                  }`}
               >
-                <span>進入副本</span>
-                <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">bolt</span>
+                <span>{isLocked ? '區域鎖定中' : isConquered ? '重新挑戰' : '進入副本'}</span>
+                {!isLocked && <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">bolt</span>}
               </button>
               <button
                 onClick={() => navigate('/map')}
