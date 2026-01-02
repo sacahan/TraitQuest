@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     # Application
     APP_ENV: str = "development"
     SECRET_KEY: str = ""
+    LOG_FILE_PATH: Optional[str] = "logs/app.log"
 
     # Google OAuth
     GOOGLE_CLIENT_ID: str = ""

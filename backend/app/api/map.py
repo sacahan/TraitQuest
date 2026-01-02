@@ -113,3 +113,67 @@ async def get_map_regions(token: str = Query(...)):
             })
             
         return {"regions": regions_status}
+
+@router.get("/check-access")
+async def check_access(region_id: str = Query(...), token: str = Query(...)):
+    """檢查玩家是否可進入指定區域。"""
+    payload = decode_access_token(token)
+    if not payload:
+        return {"error": "Unauthorized"}
+    
+    user_id = payload.get("sub")
+    
+    # 找尋對應的區域配置
+    config = next((r for r in REGIONS_CONFIG if r["id"] == region_id), None)
+    if not config:
+        return {"error": "Region not found", "can_enter": False}
+
+    async with AsyncSessionLocal() as db_session:
+        # 1. 獲取玩家等級
+        user_stmt = select(User).where(User.id == user_id)
+        user_res = await db_session.execute(user_stmt)
+        user = user_res.scalar_one_or_none()
+        player_level = user.level if user else 1
+        
+        # 2. 獲取已完成的測驗
+        quest_stmt = select(UserQuest.quest_type).where(UserQuest.user_id == user_id, UserQuest.completed_at.isnot(None))
+        quest_res = await db_session.execute(quest_stmt)
+        completed_quests = set(row[0] for row in quest_res)
+        
+        # 3. 判定邏輯 (與 regions 列表邏輯保持一致)
+        # 已完成
+        if region_id in completed_quests:
+            return {
+                "can_enter": True,
+                "status": "CONQUERED",
+                "message": "試煉已完成"
+            }
+        
+        # 檢查先決條件
+        pre_ok = True
+        if config["prerequisite"]:
+            # 這裡只處理單一依賴，若需支援 ALL 邏輯需擴充
+            pre_ok = config["prerequisite"] in completed_quests
+            
+        # 檢查等級條件
+        lvl_ok = player_level >= config["unlock_level"]
+        
+        if pre_ok and lvl_ok:
+             return {
+                "can_enter": True,
+                "status": "AVAILABLE",
+                "message": "允許進入"
+            }
+        else:
+            hint = ""
+            if not pre_ok:
+                 prereq_name = next((r["name"] for r in REGIONS_CONFIG if r["id"] == config["prerequisite"]), config["prerequisite"])
+                 hint = f"需先完成【{prereq_name}】試煉"
+            else:
+                 hint = f"需達到等級 Lv.{config['unlock_level']}"
+            
+            return {
+                "can_enter": False,
+                "status": "LOCKED",
+                "message": hint
+            }

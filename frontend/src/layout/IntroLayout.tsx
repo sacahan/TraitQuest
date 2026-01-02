@@ -7,7 +7,7 @@ interface IntroLayoutProps {
   title: string
 }
 
-const IntroLayout: React.FC<IntroLayoutProps> = ({ children, title }) => {
+const IntroLayout: React.FC<IntroLayoutProps> = ({ children, title: _title }) => {
   return (
     <div className="relative flex h-auto min-h-screen w-full flex-col bg-background-dark text-[#e0eadd] overflow-x-hidden font-sans">
       {/* 背景發光層 (Nebula Layers) */}

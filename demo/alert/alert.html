@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TraitQuest - RPG Modal Variant 3</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans+TC:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#11d462",
+                        "primary-dark": "#0ea64d",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#102218",
+                        "surface-dark": "#1a2e22",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans TC", "sans-serif"],
+                        "body": ["Spline Sans", "Noto Sans TC", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                    boxShadow: {
+                        'rpg': '0 8px 0px 0px rgba(0, 0, 0, 0.4)',
+                        'rpg-hover': '0 4px 0px 0px rgba(0, 0, 0, 0.4)',
+                        'glow': '0 0 20px rgba(17, 212, 98, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Spline Sans', 'Noto Sans TC', sans-serif;
+        }
+        /* Custom scrollbar for RPG feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #102218; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #28392f; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #11d462; 
+        }
+        
+        .rpg-modal-bg {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(17, 212, 98, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(17, 212, 98, 0.05) 0%, transparent 20%),
+                linear-gradient(to bottom, #1a2e22, #102218);
+        }
+
+        .border-rpg {
+            border: 4px solid #28392f;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col font-display text-slate-900 dark:text-white overflow-hidden relative">
+<!-- Background decorative elements mimicking a game screen -->
+<div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+<!-- Abstract game map background -->
+<div class="absolute inset-0 opacity-20 bg-center bg-cover bg-no-repeat grayscale mix-blend-overlay" data-alt="Faint fantasy world map background texture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDPk8tld-DWS-IF3Bh7iejLNOZOImhLvUqDkxsVLXI5OFN2HWuYh0ah1nWe0R8TXDckrm_dmmNif8WxQRVZ2UkPXKWVx7RIVp8KkRrcB2VsfDb9wRdnCBnR-LNxWHZsKAZ9MJXiJXDpXXeGaz6t6-ykRfyT16DV6gk53AZqJjuFl3EmkX7yUc4UVv_2PxKpWIJjZ36F92Psi8ODJ6_CetPVLe343vvSJfeCMROEm858UP8r81SEc5rN7GCnvQNJ4tE6C9FOyR0sEeU7");'></div>
+<!-- Floating particles -->
+<div class="absolute top-1/4 left-1/4 size-4 bg-primary/20 rounded-full blur-sm animate-pulse"></div>
+<div class="absolute bottom-1/3 right-1/4 size-6 bg-primary/10 rounded-full blur-md animate-pulse" style="animation-delay: 1s;"></div>
+</div>
+<!-- Main Content Wrapper (blurred to simulate modal focus) -->
+<div aria-hidden="true" class="relative z-10 flex flex-col h-full grow blur-sm transition-all duration-300 opacity-50 pointer-events-none select-none">
+<!-- Fake Header -->
+<header class="flex items-center justify-between border-b border-[#28392f] px-10 py-4 bg-[#111814]/80 backdrop-blur-md">
+<div class="flex items-center gap-4 text-white">
+<span class="material-symbols-outlined text-primary text-3xl">swords</span>
+<h2 class="text-xl font-bold tracking-tight">TraitQuest</h2>
+</div>
+</header>
+<!-- Fake Content -->
+<main class="flex-1 flex flex-col items-center justify-center p-10">
+<div class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="aspect-[3/4] rounded-xl bg-[#28392f] animate-pulse"></div>
+<div class="aspect-[3/4] rounded-xl bg-[#28392f] animate-pulse delay-75"></div>
+<div class="aspect-[3/4] rounded-xl bg-[#28392f] animate-pulse delay-150"></div>
+</div>
+</main>
+</div>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+<!-- Modal Container: RPG HUD Style -->
+<div class="relative w-full max-w-md group animate-in fade-in zoom-in duration-300">
+<!-- Decorative "Magic" Glow behind modal -->
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/0 via-primary/40 to-primary/0 rounded-xl blur-lg opacity-75 group-hover:opacity-100 transition duration-500"></div>
+<!-- Main Card -->
+<div class="relative flex flex-col items-center rpg-modal-bg border-4 border-[#354f3e] rounded-xl shadow-2xl overflow-visible">
+<!-- Floating Header Banner (RPG Ribbon style) -->
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-primary border-4 border-[#0a4d26] text-[#0a4d26] px-8 py-1.5 rounded-full shadow-rpg z-20 flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[20px] font-bold">notifications_active</span>
+<span class="text-sm font-black tracking-wider uppercase font-display">系統通知</span>
+</div>
+<!-- Close Button (RPG Wax Seal style) -->
+<button class="absolute -top-3 -right-3 size-10 bg-[#e74c3c] hover:bg-[#c0392b] text-white rounded-full border-4 border-[#7e1e15] flex items-center justify-center shadow-md transition-transform hover:scale-110 hover:rotate-90 z-20 cursor-pointer">
+<span class="material-symbols-outlined text-xl font-bold">close</span>
+</button>
+<!-- Mascot / Avatar Section -->
+<div class="w-full flex justify-center pt-10 pb-2 relative">
+<!-- Background circle for avatar -->
+<div class="absolute top-10 left-1/2 -translate-x-1/2 size-24 rounded-full bg-gradient-to-b from-[#28392f] to-transparent opacity-50"></div>
+<!-- Avatar Image -->
+<div class="relative size-24 rounded-full border-4 border-primary bg-[#102218] overflow-hidden shadow-glow z-10 flex items-center justify-center">
+<div class="w-full h-full bg-cover bg-center" data-alt="Cartoon slime monster avatar smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCRqJpUejQZer859tcHN3jvhiUEFaBa8WaZVYFvjzVzmlcsyl2Vd-b31oyInO1csCubD5dUEzleCpCbS9ogpfBMRGWgjJi-djNJdyBM5NpSeW2rXKrUXAuEcpExosRp_9DJvnCZ2UtVnYgcRIHKLzOG691UXo0Nbm1_2gZQwjIJn6wNbYNK8McmvccFF-2ImclZGLidNPXmvbUAMrU2HWrK-9k1Vd3hInGq_ID0LZcuHXrZ19zX5GQWJch50KUQW6t57e95baRqP9nx");'></div>
+</div>
+<!-- Level Badge -->
+<div class="absolute top-[88px] z-20 bg-[#28392f] text-primary text-[10px] font-bold px-2 py-0.5 rounded-md border border-primary/30">
+                        LV. 1
+                    </div>
+</div>
+<!-- Content Body -->
+<div class="px-8 pb-8 pt-2 text-center w-full">
+<h3 class="text-white text-2xl font-bold mb-2 drop-shadow-md">新任務解鎖！</h3>
+<div class="bg-[#0a1610]/50 rounded-lg p-4 border border-[#28392f] mb-6">
+<p class="text-gray-300 text-sm leading-relaxed">
+                            勇者你好！您的 <span class="text-primary font-bold">Google 帳號</span> 已成功連結。前方還有未知的挑戰，準備好開始您的冒險了嗎？
+                        </p>
+</div>
+<!-- Stats / Loot Preview (Optional RPG Element) -->
+<div class="flex justify-center gap-3 mb-8">
+<div class="flex items-center gap-1.5 bg-[#28392f] rounded-full px-3 py-1 border border-[#354f3e]">
+<span class="material-symbols-outlined text-yellow-400 text-sm">bolt</span>
+<span class="text-xs text-white font-mono">+100 EXP</span>
+</div>
+<div class="flex items-center gap-1.5 bg-[#28392f] rounded-full px-3 py-1 border border-[#354f3e]">
+<span class="material-symbols-outlined text-blue-400 text-sm">diamond</span>
+<span class="text-xs text-white font-mono">新手禮包</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-3 w-full">
+<button class="group/btn relative w-full bg-primary hover:bg-primary-dark text-[#052e16] font-bold text-base py-3 rounded-xl shadow-rpg hover:shadow-rpg-hover hover:translate-y-[4px] transition-all duration-100 flex items-center justify-center gap-2 overflow-hidden">
+<!-- Shine effect -->
+<div class="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] group-hover/btn:animate-[shimmer_1s_infinite]"></div>
+<span class="material-symbols-outlined text-xl">stadia_controller</span>
+<span>開始冒險</span>
+</button>
+<button class="w-full bg-transparent hover:bg-[#28392f] text-gray-400 hover:text-white font-medium text-sm py-2.5 rounded-xl border-2 border-transparent hover:border-[#354f3e] transition-colors">
+                            稍後再說
+                        </button>
+</div>
+</div>
+<!-- Decorative corner elements (HUD accents) -->
+<div class="absolute bottom-2 left-2 size-2 border-b-2 border-l-2 border-primary/30 rounded-bl-sm"></div>
+<div class="absolute bottom-2 right-2 size-2 border-b-2 border-r-2 border-primary/30 rounded-br-sm"></div>
+<div class="absolute top-8 left-2 size-2 border-l-2 border-primary/10"></div>
+<div class="absolute top-8 right-2 size-2 border-r-2 border-primary/10"></div>
+</div>
+<!-- Shadow below the floating card -->
+<div class="mx-auto w-[90%] h-4 bg-black/40 blur-lg rounded-full mt-4"></div>
+</div>
+</div>
+<!-- Tailwind Config for Shimmer Animation -->
+<style>
+        @keyframes shimmer {
+            100% {
+                left: 200%;
+            }
+        }
+    </style>
+</body></html>

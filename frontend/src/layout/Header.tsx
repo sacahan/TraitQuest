@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../../stores/authStore';
-import CustomGoogleAuthButton from '../auth/CustomGoogleAuthButton';
+import { useAuthStore } from '../stores/authStore';
+import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
 
 // 五大分析介紹頁面配置（與 Home.tsx QUESTS 保持一致）
 const introPages = [
@@ -45,6 +45,11 @@ export const Header = () => {
           <div className="flex items-center gap-4 md:gap-8 ml-auto">
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6 text-white">
+              <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/map">
+                心靈大陸
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+
               {/* 探索指南下拉選單 */}
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -89,10 +94,6 @@ export const Header = () => {
                 </div>
               </div>
 
-              <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/map">
-                心靈大陸
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
               <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/analysis">
                 英雄面板
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>

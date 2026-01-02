@@ -18,6 +18,7 @@ interface MapState {
   isLoading: boolean
   error: string | null
   fetchRegions: () => Promise<void>
+  checkRegionAccess: (regionId: string) => Promise<{ can_enter: boolean; message: string; status: string }>
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/v1'
@@ -58,4 +59,17 @@ export const useMapStore = create<MapState>((set) => ({
       set({ error: error.message || 'Failed to fetch map regions', isLoading: false })
     }
   },
+  checkRegionAccess: async (regionId: string) => {
+    const token = useAuthStore.getState().accessToken
+    if (!token) return { can_enter: false, message: 'Unauthorized', status: 'LOCKED' }
+
+    try {
+      const response = await axios.get(`${API_BASE_URL}/map/check-access`, {
+        params: { token, region_id: regionId }
+      })
+      return response.data
+    } catch (error: any) {
+      return { can_enter: false, message: error.message || 'Failed to check access', status: 'LOCKED' }
+    }
+  }
 }))

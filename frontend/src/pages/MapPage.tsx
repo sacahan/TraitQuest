@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-import { Header } from '../components/layout/Header'
-import { Footer } from '../components/layout/Footer'
+import { Header } from '../layout/Header'
+import { Footer } from '../layout/Footer'
 import MapEffects from '../components/map/MapEffects'
 import RegionMarker from '../components/map/RegionMarker'
 import { useMapStore } from '../stores/mapStore'

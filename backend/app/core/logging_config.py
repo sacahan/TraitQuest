@@ -62,6 +62,24 @@ class ColorFormatter(logging.Formatter):
         return line
 
 
+class NoiseFilter(logging.Filter):
+    """Filter out noisy logs from specific modules or endpoints."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        # Filter out specific filename sources (Uvicorn internals)
+        if record.filename in ("h11_impl.py", "websockets_impl.py"):
+            return False
+
+        # Filter out specific endpoints from access logs
+        msg = record.getMessage()
+        ignored_endpoints = [
+            "GET /v1/map/regions",
+            "GET /v1/map/check-access",
+        ]
+        
+        return not any(endpoint in msg for endpoint in ignored_endpoints)
+
+
 def _parse_level(level: str, default: int) -> int:
     """解析日誌級別字串"""
     if not level:
@@ -121,6 +139,11 @@ def configure_logging(
     config = {
         "version": 1,
         "disable_existing_loggers": False,
+        "filters": {
+            "endpoint_filter": {
+                "()": "app.core.logging_config.NoiseFilter",
+            },
+        },
         "formatters": {
             "console": {
                 "()": "app.core.logging_config.ColorFormatter",
@@ -147,17 +170,20 @@ def configure_logging(
             "uvicorn.error": {
                 "level": console_log_level,
                 "handlers": ["console"],
+                "filters": ["endpoint_filter"],
                 "propagate": False,
             },
             "uvicorn.access": {
                 "level": console_log_level,
                 "handlers": ["console"],
+                "filters": ["endpoint_filter"],
                 "propagate": False,
             },
             # TraitQuest 應用程式日誌
             "app": {
                 "level": console_log_level,
                 "handlers": root_handlers,
+                "filters": ["endpoint_filter"],
                 "propagate": False,
             },
             # LiteLLM 相關日誌

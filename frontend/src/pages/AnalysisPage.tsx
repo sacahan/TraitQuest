@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../stores/authStore';
 import apiClient from '../services/apiClient';
-import { Header } from '../components/layout/Header';
-import { Footer } from '../components/layout/Footer';
+import { Header } from '../layout/Header';
+import { Footer } from '../layout/Footer';
 
 // 引入模組化組件
 import HeroPanel from '../components/analysis/HeroPanel';
@@ -13,7 +13,7 @@ import DestinyBonds from '../components/analysis/DestinyBonds';
 import LockedCard from '../components/analysis/LockedCard';
 
 const AnalysisPage = () => {
-    const { user } = useAuthStore();
+    const { } = useAuthStore();
     const [profileData, setProfileData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 

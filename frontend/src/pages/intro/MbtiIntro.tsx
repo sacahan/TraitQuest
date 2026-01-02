@@ -1,5 +1,5 @@
 import React from 'react'
-import IntroLayout from '../../components/layout/IntroLayout'
+import IntroLayout from '../../layout/IntroLayout'
 
 const MbtiIntro: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const MbtiIntro: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
               <button
                 className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group animate-breathing-glow"
-                onClick={() => window.location.href = '/questionnaire'}
+                onClick={() => window.location.href = '/questionnaire?type=mbti'}
               >
                 <span className="truncate group-hover:scale-105 transition-transform">進入副本</span>
               </button>

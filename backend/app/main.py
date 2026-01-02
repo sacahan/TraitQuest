@@ -1,6 +1,7 @@
 import logging
+import time
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
@@ -8,9 +9,10 @@ from app.api import auth, quest, quest_ws, map
 from app.core.logging_config import configure_logging
 from app.db.session import engine
 from app.core.redis_client import redis_client
+from app.core.config import settings
 
 # Initialize logging
-configure_logging()
+configure_logging(log_file=settings.LOG_FILE_PATH)
 logger = logging.getLogger("app")
 
 @asynccontextmanager
@@ -56,6 +58,23 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Filter out map polling logs to avoid spamming
+    if request.url.path == "/v1/map/regions":
+        return await call_next(request)
+
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = (time.time() - start_time) * 1000  # milliseconds
+    
+    logger.info(
+        f"➡️  {request.method} {request.url.path} "
+        f"- {response.status_code} ({process_time:.2f}ms)"
+    )
+    
+    return response
 
 @app.get("/")
 async def root():

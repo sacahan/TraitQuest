@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../components/layout/Header';
-import { Footer } from '../components/layout/Footer';
+import { Header } from '../layout/Header';
+import { Footer } from '../layout/Footer';
 import { useMapStore } from '../stores/mapStore';
 
 const QUEST_DETAILS: Record<string, any> = {

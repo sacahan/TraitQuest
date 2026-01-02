@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { Header } from '../components/layout/Header';
-import { Footer } from '../components/layout/Footer';
+import { Header } from '../layout/Header';
+import { Footer } from '../layout/Footer';
 import { HomeQuestCard } from '../components/quest/HomeQuestCard';
 import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
 
