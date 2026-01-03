@@ -141,7 +141,7 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
     - 實作「命運羈絆」相性建議與警戒組件。
   - **視覺反饋實作**：解析 `visualFeedback: "GLOW_EFFECT"` 並觸發對應的 CSS 圖騰發光特效。
 - **Backend**:
-  - 實作 Multi-Agent 系統 (Summary, Analytics, Transformation, Validator Agents)，參考 [template.md](template.md)。
+  - 實作 Multi-Agent 系統 (Summary, Analytics, Transformation Agents)，參考 [template.md](template.md)。
   - **映射邏輯**: 完善 Enneagram -> Race, MBTI -> Class, Big Five -> Stats, DISC -> Stance, Gallup -> Talent 之映射，參考 [assets.md](assets.md)。
   - 實作 `/map` 區域解鎖邏輯。
 - **Database**: 完善 `game_definitions` 與長期記憶存儲，參考 [database.md](database.md)。

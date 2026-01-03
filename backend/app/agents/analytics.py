@@ -54,7 +54,7 @@ def submit_analysis(
     # 將分析結果存入 tool_context
     tool_context.state["analytics_output"] = result
     
-    logger.info(f"📊 Analytics Result: {result}")
+    logger.debug(f">>> Analytics Result: {result}")
     return result
 
 def create_analytics_agent() -> Agent:

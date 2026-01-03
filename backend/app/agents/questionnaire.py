@@ -71,7 +71,7 @@ def submit_question(
     Args:
         narrative: RPG 情境敘述，請用優美的文字描述。
         question_text: 題目內容，請融入情境。
-        options: 選項列表，可以是不同答案(例如 ["選項A", "選項B"])，也可以是由輕到重的程度區別(例如 ["不符合", "一般", "符合", "非常符合", "極度符合"])。
+        options: 選項列表，可以是不同答案(例如 ["選項A", "選項B"])，也可以是由輕到重的程度區別(例如 ["不符合", "一般", "符合", "非常符合", "極度符合"])，最多5個選項。
         tool_context: 工具上下文，用於存儲狀態。
         type: 題目類型 (QUANTITATIVE 或 SOUL_NARRATIVE)。
         guide_message: 可選的嚮導話語，Abby 給予玩家的簡短鼓勵或提示，最多 15 字。
@@ -91,10 +91,8 @@ def submit_question(
 
     # 將 questionnaire_output 存入 tool_context
     tool_context.state["questionnaire_output"] = output
-
-    logger.info(f"<<< Questionnaire Agent: {output}")
-    logger.debug(f"✅ 資料已寫入 session state['questionnaire_output']: {output}")
-
+    logger.debug(f"<<< Questionnaire Agent: {output}")
+    
     return output
 
 def complete_trial(

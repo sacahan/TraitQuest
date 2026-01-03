@@ -71,7 +71,7 @@ trigger: always_on
 
 - 所有 API 必須具備錯誤處理機制
 - 當 AI 產出非法數據時：
-  - 觸發 Validator 攔截
+  - 觸發後端驗證邏輯攔截
   - 自動重試
 
 ---

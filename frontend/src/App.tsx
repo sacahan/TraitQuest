@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useAuthStore } from './stores/authStore'
+import DashboardPage from './pages/DashboardPage'
 import AnalysisPage from './pages/AnalysisPage'
 import Home from './pages/Home'
 import Questionnaire from './pages/Questionnaire'
-import QuestIntro from './pages/QuestIntro'
 import MapPage from './pages/MapPage'
 import MbtiIntro from './pages/intro/MbtiIntro'
 import BigFiveIntro from './pages/intro/BigFiveIntro'
@@ -30,7 +30,12 @@ function App() {
   const { isAuthenticated } = useAuthStore()
 
   return (
-    <Router>
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <ScrollToTop />
       <div className="bg-background-dark min-h-screen relative overflow-hidden flex flex-col">
         {/* 背景發光層 (Nebula Layers) */}
@@ -48,12 +53,12 @@ function App() {
               element={isAuthenticated ? <Questionnaire /> : <Navigate to="/" />}
             />
             <Route
-              path="/quest/:questId"
-              element={isAuthenticated ? <QuestIntro /> : <Navigate to="/" />}
-            />
-            <Route
               path="/map"
               element={isAuthenticated ? <MapPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/dashboard"
+              element={isAuthenticated ? <DashboardPage /> : <Navigate to="/" />}
             />
             <Route
               path="/analysis"

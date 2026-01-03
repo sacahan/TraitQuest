@@ -220,7 +220,7 @@ const MbtiIntro: React.FC = () => {
           <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你的 16 型人格職業定位。</p>
           <button
             className="flex cursor-pointer items-center justify-center rounded-full h-14 px-12 bg-primary text-[#10231a] text-lg font-black shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_40px_rgba(11,218,115,0.8)] transition-all mx-auto"
-            onClick={() => window.location.href = '/questionnaire'}
+            onClick={() => window.location.href = '/questionnaire?type=mbti'}
           >
             解鎖職業天賦
           </button>

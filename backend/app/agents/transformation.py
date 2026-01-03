@@ -74,7 +74,7 @@ def submit_transformation(
     
     tool_context.state["transformation_output"] = result
     
-    logger.info(f"✨ Transformation Result Generated for {class_id}")
+    logger.debug(f"✨ Transformation Result Generated for {class_id}")
     return result
 
 def create_transformation_agent() -> Agent:

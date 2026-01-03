@@ -16,7 +16,6 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
   const markerRef = React.useRef<HTMLDivElement>(null)
   const isLocked = region.status === 'LOCKED'
   const isConquered = region.status === 'CONQUERED'
-
   const IconComponent = ICON_MAP[region.icon || 'Sparkles'] || Sparkles
 
   const handleClick = () => {
@@ -24,7 +23,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
     if (isConquered) {
       window.location.href = `/analysis?region=${region.id}`
     } else {
-      window.location.href = `/quest/intro?type=${region.id}`
+      window.location.href = `/questionnaire?type=${region.id}`
     }
   }
 
@@ -83,7 +82,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
           style={{ borderColor: !isLocked ? `${region.color}44` : 'rgba(255,255,255,0.05)' }}
         >
           <span
-            className="font-display font-bold text-[12px] tracking-[0.2em] uppercase flex items-center gap-2"
+            className="font-display font-bold text-[14px] tracking-[0.2em] uppercase flex items-center gap-2"
             style={{ color: isLocked ? '#52525b' : '#fff' }}
           >
             {region.name}

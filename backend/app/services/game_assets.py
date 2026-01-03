@@ -19,7 +19,7 @@ class GameAssetsService:
                 "talent": ["TAL_ACH", ...]
             }
         """
-        async with async_session_factory() as session:
+        async with AsyncSessionLocal() as session:
             stmt = select(GameDefinition.id, GameDefinition.category)
             result = await session.execute(stmt)
             

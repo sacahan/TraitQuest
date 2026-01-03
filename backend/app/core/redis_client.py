@@ -29,4 +29,19 @@ class RedisClient:
         if not self._redis: await self.connect()
         await self._redis.set(f"session:{session_id}", data, ex=ex)
 
+    async def get_display_name(self, user_id: str) -> Optional[str]:
+        """從 Redis 快取取得使用者的 display_name"""
+        if not self._redis: await self.connect()
+        return await self._redis.get(f"user:display_name:{user_id}")
+
+    async def set_display_name(self, user_id: str, display_name: str, ex: int = 1800):
+        """將使用者的 display_name 存入 Redis 快取（預設 TTL: 30 分鐘）"""
+        if not self._redis: await self.connect()
+        await self._redis.set(f"user:display_name:{user_id}", display_name, ex=ex)
+
+    async def invalidate_display_name(self, user_id: str):
+        """清除指定使用者的 display_name 快取"""
+        if not self._redis: await self.connect()
+        await self._redis.delete(f"user:display_name:{user_id}")
+
 redis_client = RedisClient()

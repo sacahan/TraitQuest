@@ -26,7 +26,6 @@ interface QuestState {
   // Actions
   initQuest: (questId: string, token: string) => Promise<void>;
   submitAnswer: (answer: string, questionIndex: number) => void;
-  continueQuest: () => void;
   requestResult: () => void;
   resetQuest: () => void;
 }
@@ -131,10 +130,6 @@ export const useQuestStore = create<QuestState>((set, get) => {
       questWsClient.send('submit_answer', { answer, questionIndex: index });
     },
 
-    continueQuest: () => {
-      set({ isLoading: true });
-      questWsClient.send('continue_quest', {});
-    },
 
     requestResult: () => {
       set({ isLoading: true });

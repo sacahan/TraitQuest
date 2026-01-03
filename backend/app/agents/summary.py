@@ -30,10 +30,11 @@ def submit_summary(
     if len(hero_chronicle) > 500: # 緩衝一下
         hero_chronicle = hero_chronicle[:497] + "..."
     
-    tool_context.state["summary_output"] = hero_chronicle
+    result = {"hero_chronicle": hero_chronicle}
+    tool_context.state["summary_output"] = result
     
     logger.info(f"📜 New Hero Chronicle Summary Generated")
-    return {"hero_chronicle": hero_chronicle}
+    return result
 
 def create_summary_agent() -> Agent:
     return Agent(

@@ -127,7 +127,7 @@ export function HeroSection() {
       
       {/* CTA 按鈕 */}
       <button 
-        onClick={() => navigate('/questionnaire')}
+        onClick={() => navigate('/questionnaire?type={type}')}
         className="group flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-white text-[#112217] hover:bg-gray-100 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-white hover:scale-105 active:scale-95"
       >
         <span className="material-symbols-outlined text-xl transition-transform group-hover:rotate-12">login</span>

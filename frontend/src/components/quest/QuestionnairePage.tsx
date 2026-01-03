@@ -25,9 +25,10 @@ const QuestionnairePage = () => {
     isLoading,
     questionIndex,
     totalSteps,
-    continueQuest,
     sessionId,
-    questId
+    questId,
+    finalResult,
+    requestResult
   } = useQuestStore();
 
   const regionName = questId ? REGIONS_MAPPING[questId as keyof typeof REGIONS_MAPPING] : "英雄殿堂";
@@ -44,6 +45,13 @@ const QuestionnairePage = () => {
       setNarrativeComplete(true);
     }
   }, [narrative]);
+
+  // 當收到最終結果時，跳轉到分析頁面
+  useEffect(() => {
+    if (finalResult) {
+      window.location.href = '/analysis';
+    }
+  }, [finalResult]);
 
   if (isCompleted) {
     return (
@@ -92,8 +100,7 @@ const QuestionnairePage = () => {
 
           {/* Description */}
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed mb-12 font-light tracking-wide font-sans">
-            通往<span className="text-primary font-bold mx-1">{regionName}</span>的道路已開啟，<br className="md:hidden" />
-            轉生儀式即將開始...
+            {narrative || `通往${regionName}的道路已開啟，轉生儀式即將開始...`}
           </p>
 
           {/* Button */}
@@ -102,15 +109,20 @@ const QuestionnairePage = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => window.location.href = '/analysis'}
-              className="relative px-12 py-5 bg-gradient-to-r from-green-900 via-[#11251c] to-green-900 border border-primary/30 text-white text-xl font-bold rounded-lg shadow-lg hover:shadow-[0_0_30px_rgba(17,212,82,0.4)] transform transition-all duration-300 flex items-center gap-3 overflow-hidden cursor-pointer"
+              onClick={() => requestResult()}
+              disabled={isLoading}
+              className="relative px-12 py-5 bg-gradient-to-r from-green-900 via-[#11251c] to-green-900 border border-primary/30 text-white text-xl font-bold rounded-lg shadow-lg hover:shadow-[0_0_30px_rgba(17,212,82,0.4)] transform transition-all duration-300 flex items-center gap-3 overflow-hidden cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {/* Shine Effect */}
               <div className="absolute top-0 -left-full w-[200%] h-[100%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-20deg] animate-[shine_3s_infinite]"></div>
 
-              <Zap className="w-6 h-6 animate-pulse text-primary" />
-              <span>啟動轉生儀式</span>
-              <MoveRight className="w-6 h-6 group-hover:translate-x-1 transition-transform bg-transparent" />
+              {isLoading ? (
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              ) : (
+                  <Zap className="w-6 h-6 animate-pulse text-primary" />
+              )}
+              <span>{isLoading ? '儀式進行中...' : '啟動轉生儀式'}</span>
+              {!isLoading && <MoveRight className="w-6 h-6 group-hover:translate-x-1 transition-transform bg-transparent" />}
             </motion.button>
           </div>
         </div>
@@ -194,34 +206,6 @@ const QuestionnairePage = () => {
               </AnimatePresence>
             </div>
 
-            {/* 開始試練按鈕 - 開場白結束後顯示 */}
-            <AnimatePresence>
-              {narrativeComplete && !currentQuestion && !isCompleted && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="flex justify-center px-4 mb-8"
-                >
-                  <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(17, 212, 82, 0.4)" }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      // 點擊後發送 continue_quest
-                      continueQuest();
-                    }}
-                    className="group relative px-8 py-3 bg-[#11251c] border border-primary text-primary font-bold uppercase tracking-[0.2em] overflow-hidden rounded-sm hover:text-black hover:bg-primary transition-colors duration-300"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <span>開始試煉</span>
-                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </span>
-                  </motion.button>
-                </motion.div>
-              )}
-            </AnimatePresence>
 
             {/* 問題卡片 - 等待敘事完成後顯示 */}
             <div className="px-4">

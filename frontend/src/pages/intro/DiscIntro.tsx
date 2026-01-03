@@ -94,25 +94,25 @@ const DiscIntro: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 rounded-lg bg-[#1a3323] border border-red-500/20">
-                    <div className="text-red-400 text-[10px] font-bold uppercase mb-1">D - 掌控</div>
+                  <div className="text-red-400 text-[14px] font-bold uppercase mb-1">D - 掌控</div>
                     <div className="h-1 w-full bg-red-900/30 rounded-full overflow-hidden">
                       <div className="h-full bg-red-500 w-[70%]" style={{ animation: 'grow 2s ease-out' }}></div>
                     </div>
                   </div>
                   <div className="p-3 rounded-lg bg-[#1a3323] border border-yellow-500/20">
-                    <div className="text-yellow-400 text-[10px] font-bold uppercase mb-1">I - 影響</div>
+                  <div className="text-yellow-400 text-[14px] font-bold uppercase mb-1">I - 影響</div>
                     <div className="h-1 w-full bg-yellow-900/30 rounded-full overflow-hidden">
                       <div className="h-full bg-yellow-500 w-[85%]" style={{ animation: 'grow 2s ease-out 0.2s' }}></div>
                     </div>
                   </div>
                   <div className="p-3 rounded-lg bg-[#1a3323] border border-green-500/20">
-                    <div className="text-green-400 text-[10px] font-bold uppercase mb-1">S - 穩定</div>
+                  <div className="text-green-400 text-[14px] font-bold uppercase mb-1">S - 穩定</div>
                     <div className="h-1 w-full bg-green-900/30 rounded-full overflow-hidden">
                       <div className="h-full bg-green-500 w-[45%]" style={{ animation: 'grow 2s ease-out 0.4s' }}></div>
                     </div>
                   </div>
                   <div className="p-3 rounded-lg bg-[#1a3323] border border-blue-500/20">
-                    <div className="text-blue-400 text-[10px] font-bold uppercase mb-1">C - 遵從</div>
+                  <div className="text-blue-400 text-[14px] font-bold uppercase mb-1">C - 遵從</div>
                     <div className="h-1 w-full bg-blue-900/30 rounded-full overflow-hidden">
                       <div className="h-full bg-blue-500 w-[60%]" style={{ animation: 'grow 2s ease-out 0.6s' }}></div>
                     </div>
@@ -162,7 +162,7 @@ const DiscIntro: React.FC = () => {
           <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你在壓力下的最佳戰鬥姿態。</p>
           <button
             className="flex cursor-pointer items-center justify-center rounded-full h-14 px-12 bg-primary text-[#10231a] text-lg font-black shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_40px_rgba(11,218,115,0.8)] transition-all mx-auto"
-            onClick={() => window.location.href = '/questionnaire'}
+            onClick={() => window.location.href = '/questionnaire?type=disc'}
           >
             解鎖戰鬥架勢
           </button>
