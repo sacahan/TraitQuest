@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../stores/authStore';
 import apiClient from '../services/apiClient';
@@ -6,14 +7,15 @@ import { Header } from '../layout/Header';
 import { Footer } from '../layout/Footer';
 
 // 引入模組化組件
-import HeroPanel from '../components/analysis/HeroPanel';
-import RadarChart from '../components/analysis/RadarChart';
-import DestinyGuide from '../components/analysis/DestinyGuide';
-import DestinyBonds from '../components/analysis/DestinyBonds';
-import LockedCard from '../components/analysis/LockedCard';
+import HeroPanel from '../components/dashboard/HeroPanel';
+import RadarChart from '../components/dashboard/RadarChart';
+import DestinyGuide from '../components/dashboard/DestinyGuide';
+import DestinyBonds from '../components/dashboard/DestinyBonds';
+import LockedCard from '../components/dashboard/LockedCard';
 
 const DashboardPage = () => {
     const { } = useAuthStore();
+    const navigate = useNavigate();
     const [profileData, setProfileData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
@@ -58,6 +60,15 @@ const DashboardPage = () => {
                             className="px-6 py-2 bg-primary text-black font-bold rounded hover:bg-primary/80 transition-colors"
                         >
                             重新載入
+                        </button>
+                        <button
+                            onClick={() => {
+                                useAuthStore.getState().logout();
+                                window.location.href = '/';
+                            }}
+                            className="block w-full px-6 py-2 text-primary hover:text-white transition-colors text-sm underline"
+                        >
+                            登出並重試
                         </button>
                     </div>
                 </div>
@@ -144,14 +155,25 @@ const DashboardPage = () => {
                                     <div className="text-center mt-4 space-y-2">
                                         <p className="text-sm text-gray-500 uppercase tracking-widest font-black">元素共鳴完畢</p>
                                         <div className="grid grid-cols-5 gap-2">
-                                            {['智力(O)', '防禦(C)', '速度(E)', '魅力(A)', '洞察(N)'].map((label, idx) => (
-                                                <div key={label} className="flex flex-col items-center">
-                                                    <span className="text-blue-400 font-bold text-sm">{label.split('(')[0]}</span>
-                                                    <span className="text-sm text-gray-500">
-                                                        {Object.values(traits.stats || {})[idx] as number || 50}
-                                                    </span>
-                                                </div>
-                                            ))}
+                                                {[
+                                                    { key: 'openness', label: '智力' },
+                                                    { key: 'conscientiousness', label: '防禦' },
+                                                    { key: 'extraversion', label: '速度' },
+                                                    { key: 'agreeableness', label: '魅力' },
+                                                    { key: 'neuroticism', label: '洞察' }
+                                                ].map((item) => {
+                                                    const statObj = traits.stats?.[item.key] || { score: 50 };
+                                                    const score = typeof statObj === 'object' ? statObj.score : (statObj || 50);
+
+                                                    return (
+                                                        <div key={item.key} className="flex flex-col items-center">
+                                                            <span className="text-blue-400 font-bold text-sm">{item.label}</span>
+                                                            <span className="text-sm text-gray-500">
+                                                                {score}
+                                                            </span>
+                                                        </div>
+                                                    );
+                                                })}
                                         </div>
                                     </div>
                                 </div>
@@ -298,32 +320,29 @@ const DashboardPage = () => {
                         {/* Destiny Guide Section */}
                         <div className="space-y-4">
                             <div className="flex justify-between items-center px-1">
-                                <h3 className="text-lg font-bold text-white/60 tracking-widest uppercase">命運概論 (Destiny Guide)</h3>
+                                <h3 className="text-lg font-bold text-white/60 tracking-widest uppercase">靈魂指引</h3>
                             </div>
-                            <DestinyGuide guide={profileData?.destiny_guide || {}} />
+                            <DestinyGuide guide={traits.destiny_guide || {}} />
                         </div>
                     </div>
 
                     {/* Bonds */}
                     <div className="lg:col-span-4 space-y-4">
                         <div className="flex justify-between items-center px-1">
-                            <h3 className="text-lg font-bold text-white/60 tracking-widest uppercase">命運羈絆 (Destiny Bonds)</h3>
+                            <h3 className="text-lg font-bold text-white/60 tracking-widest uppercase">命運羈絆</h3>
                         </div>
-                        <DestinyBonds bonds={profileData?.destiny_bonds || {}} />
+                        <DestinyBonds bonds={traits.destiny_bonds || {}} />
                     </div>
                 </div>
 
                 {/* Action Footer */}
                 <div className="mt-20 flex justify-center pb-12">
                     <button
-                        onClick={() => window.location.href = '/map'}
-                        className="group relative px-12 py-4 bg-[#11d452] text-black font-black uppercase tracking-[0.3em] overflow-hidden hover:bg-white transition-all duration-500 hover:shadow-[0_0_30px_rgba(17,212,82,0.5)] active:scale-95"
+                        onClick={() => navigate('/map')}
+                        className="group flex min-w-[200px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold shadow-[0_0_20px_rgba(17,212,82,0.4)] hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] animate-breathing-glow z-10"
                     >
-                        <span className="relative z-10 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-xl">map</span>
-                            重返主地圖
-                        </span>
-                        <div className="absolute inset-0 w-1/4 h-full bg-white/20 -skew-x-[30deg] -translate-x-full group-hover:translate-x-[400%] transition-transform duration-700"></div>
+                        <span className="material-symbols-outlined text-2xl transition-transform group-hover:rotate-12">map</span>
+                        <span className="truncate font-body uppercase tracking-wider">重返地圖</span>
                     </button>
                 </div>
             </main>

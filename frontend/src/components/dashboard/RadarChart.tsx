@@ -2,20 +2,21 @@ import { motion } from 'framer-motion';
 
 interface RadarChartProps {
     stats: {
-        STA_IN?: number;
-        STA_DE?: number;
-        STA_SP?: number;
-        STA_CH?: number;
-        STA_NI?: number;
-        [key: string]: number | undefined;
+        [key: string]: { label: string, score: number } | number | undefined;
     };
 }
 
 const RadarChart = ({ stats }: RadarChartProps) => {
     // 將 Big Five 映射到座標
     // 順序：STA_IN (智力), STA_DE (防禦), STA_SP (速度), STA_CH (魅力), STA_NI (洞察)
-    const keys = ['STA_IN', 'STA_DE', 'STA_SP', 'STA_CH', 'STA_NI'];
-    const values = keys.map(k => (stats && stats[k] ? stats[k] : 50));
+    const keys = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
+    const values = keys.map(k => {
+        const statObj = stats && stats[k];
+        if (typeof statObj === 'object' && statObj !== null) {
+            return (statObj as any).score || 50;
+        }
+        return (statObj as number) || 50;
+    });
 
     // 計算五角形頂點 (中心 50, 50, 半徑 40)
     const points = values.map((v, i) => {

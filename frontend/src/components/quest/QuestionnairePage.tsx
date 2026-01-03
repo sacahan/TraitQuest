@@ -49,7 +49,7 @@ const QuestionnairePage = () => {
   // 當收到最終結果時，跳轉到分析頁面
   useEffect(() => {
     if (finalResult) {
-      window.location.href = '/analysis';
+      window.location.href = '/dashboard';
     }
   }, [finalResult]);
 

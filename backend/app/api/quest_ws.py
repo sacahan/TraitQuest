@@ -307,6 +307,7 @@ async def quest_ws_endpoint(
                 history_text = "\n".join([f"Q: {i.get('question', {}).get('text', '')}\nA: {i.get('answer', '')}" for i in session.state.get("interactions", [])])
                 s_instruction = f"對話歷程：\n{history_text}"
                 
+                logger.info(f">>> Instruction: {s_instruction}")
                 summary_result = await run_agent_async(
                     agent=summary_agent,
                     app_name="summary",
