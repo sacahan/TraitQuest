@@ -13,7 +13,6 @@ export const Footer = () => {
             <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/privacy">隱私政策</Link>
             <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/services">服務條款</Link>
             <Link className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" to="/about">關於我們</Link>
-            <a className="text-sm font-medium text-gray-400 hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">聯絡公會</a>
           </div>
         </div>
       </div>

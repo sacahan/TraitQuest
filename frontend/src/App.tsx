@@ -11,6 +11,9 @@ import BigFiveIntro from './pages/intro/BigFiveIntro'
 import DiscIntro from './pages/intro/DiscIntro'
 import EnneagramIntro from './pages/intro/EnneagramIntro'
 import GallupIntro from './pages/intro/GallupIntro'
+import AboutPage from './pages/AboutPage'
+import PrivacyPage from './pages/PrivacyPage'
+import TermsPage from './pages/TermsPage'
 
 /**
  * 全域自動捲動至頂部組件
@@ -71,6 +74,11 @@ function App() {
             <Route path="/intro/disc" element={<DiscIntro />} />
             <Route path="/intro/enneagram" element={<EnneagramIntro />} />
             <Route path="/intro/gallup" element={<GallupIntro />} />
+
+            {/* Static Pages */}
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/services" element={<TermsPage />} />
           </Routes>
         </div>
       </div>
