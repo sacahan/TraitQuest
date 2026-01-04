@@ -108,13 +108,13 @@ const AnalysisPage = () => {
                 try {
                     const response = await apiClient.get('/auth/me');
                     const profile = response.data;
-                    const finalReport = profile.traits?.final_report;
+                    const heroProfile = profile.heroProfile || {};
 
-                    if (finalReport) {
+                    if (heroProfile && Object.keys(heroProfile).length > 0) {
                         // 構造 AnalysisPage 需要的結構
                         // 注意：這裡假設歷史資料中的 levelInfo 使用當前等級
                         const result = {
-                            ...finalReport,
+                            ...heroProfile,
                             levelInfo: {
                                 level: profile.level,
                                 exp: profile.exp,

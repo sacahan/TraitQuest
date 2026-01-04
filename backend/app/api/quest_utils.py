@@ -17,7 +17,7 @@ from app.agents.summary import summary_agent
 from app.services.level_system import level_service
 from app.services.game_assets import game_assets_service
 from app.db.session import AsyncSessionLocal
-from app.db.models import User, UserQuest, Trait, GameDefinition
+from app.db.models import User, UserQuest, GameDefinition
 from google.adk.runners import Runner
 from google.genai import types
 

@@ -1,7 +1,11 @@
 """
-TraitQuest - Final Report 資料結構定義
+TraitQuest - 資料結構定義
 
-此模組定義了 `traits.final_report` 的完整資料結構，使用 Pydantic models 進行驗證。
+此模組定義了測驗報告與英雄檔案的資料結構，使用 Pydantic models 進行驗證。
+
+資料模型：
+- QuestReport: 單次測驗報告（存於 user_quests.quest_report）
+- HeroProfile: 完整英雄檔案（存於 users.hero_profile）
 
 符合開發憲章第三條：遊戲化映射系統（The Grand Mapping）
 - Enneagram → Race (種族)
@@ -195,14 +199,65 @@ class DestinyBonds(BaseModel):
 
 
 # =============================================================================
-# Final Report - 完整資料結構
+# Level Info - 升級資訊
 # =============================================================================
 
-class FinalReport(BaseModel):
+class LevelInfo(BaseModel):
+    """升級資訊"""
+    level: int = Field(..., description="當前等級")
+    exp: int = Field(..., description="當前經驗值")
+    isLeveledUp: bool = Field(False, description="是否升級")
+    earnedExp: int = Field(0, description="獲得的經驗值")
+    milestone: Optional[str] = Field(None, description="里程碑訊息")
+
+
+# =============================================================================
+# Quest Report - 單次測驗報告
+# =============================================================================
+
+class QuestReport(BaseModel):
     """
-    Final Report - 英雄轉生報告
+    單次測驗報告 - 用於 /analysis 頁面
     
-    此結構定義了 `traits.final_report` JSONB 欄位的完整 schema。
+    根據 quest_type 只包含對應的分析結果：
+    - enneagram → race_id, race
+    - mbti → class_id, class_
+    - big_five → stats
+    - disc → stance_id, stance
+    - gallup → talent_ids, talents
+    """
+    quest_type: str = Field(..., description="測驗類型：mbti, big_five, disc, enneagram, gallup")
+    
+    # === 測驗結果（根據 quest_type 擇一填充）===
+    race_id: Optional[str] = Field(None, description="靈魂種族 ID (Enneagram)")
+    race: Optional[AssetReference] = Field(None, description="種族完整資料")
+    
+    class_id: Optional[str] = Field(None, description="英雄職業 ID (MBTI)")
+    class_: Optional[AssetReference] = Field(None, alias="class", description="職業完整資料")
+    
+    stats: Optional[Stats] = Field(None, description="五大屬性 (Big Five)")
+    
+    stance_id: Optional[str] = Field(None, description="戰鬥姿態 ID (DISC)")
+    stance: Optional[AssetReference] = Field(None, description="姿態完整資料")
+    
+    talent_ids: Optional[List[str]] = Field(None, description="天賦技能 ID 列表 (Gallup)")
+    talents: Optional[List[AssetReference]] = Field(None, description="天賦完整資料列表")
+    
+    # === 通用內容 ===
+    destiny_guide: DestinyGuide = Field(..., description="命運指引")
+    destiny_bonds: Optional[DestinyBonds] = Field(None, description="命運羈絆")
+    level_info: LevelInfo = Field(..., description="升級資訊")
+
+
+# =============================================================================
+# Hero Profile - 完整英雄檔案
+# =============================================================================
+
+class HeroProfile(BaseModel):
+    """
+    完整英雄檔案 - 用於 /dashboard 頁面
+    
+    此結構定義了 `users.hero_profile` JSONB 欄位的完整 schema。
     包含玩家完成所有五大測驗後的完整特質數據。
     
     符合開發憲章的「五大類型映射」：
@@ -306,30 +361,46 @@ class FinalReport(BaseModel):
 # 輔助工具函數
 # =============================================================================
 
-def validate_final_report(data: dict) -> FinalReport:
+def validate_hero_profile(data: dict) -> HeroProfile:
     """
-    驗證並解析 final_report 資料
+    驗證並解析 hero_profile 資料
     
     Args:
         data: 待驗證的字典資料
         
     Returns:
-        FinalReport: 驗證通過的 Pydantic model
+        HeroProfile: 驗證通過的 Pydantic model
         
     Raises:
         ValidationError: 若資料格式不符合 schema
     """
-    return FinalReport(**data)
+    return HeroProfile(**data)
 
 
-def merge_final_reports(existing: dict, new_data: dict) -> dict:
+def validate_quest_report(data: dict) -> QuestReport:
     """
-    合併現有的 final_report 與新的測驗結果
+    驗證並解析 quest_report 資料
+    
+    Args:
+        data: 待驗證的字典資料
+        
+    Returns:
+        QuestReport: 驗證通過的 Pydantic model
+        
+    Raises:
+        ValidationError: 若資料格式不符合 schema
+    """
+    return QuestReport(**data)
+
+
+def merge_hero_profile(existing: dict, new_data: dict) -> dict:
+    """
+    合併現有的 hero_profile 與新的測驗結果
     
     用於增量更新英雄面板（符合憲章第六條）
     
     Args:
-        existing: 現有的 final_report 資料
+        existing: 現有的 hero_profile 資料
         new_data: 新的測驗結果
         
     Returns:

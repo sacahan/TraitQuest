@@ -14,6 +14,7 @@ class User(Base):
     exp = Column(Integer, default=0)
     hero_class_id = Column(String, nullable=True)
     hero_avatar_url = Column(String, nullable=True)
+    hero_profile = Column(JSONB, default=dict)  # 完整五大類型檔案
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class UserQuest(Base):
@@ -23,17 +24,10 @@ class UserQuest(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), index=True)
     quest_type = Column(String)  # mbti, big5, disc, enneagram, gallup
     interactions = Column(JSONB, default=list)  # List of dialogue objects
+    quest_report = Column(JSONB, default=dict)  # 單次測驗報告
     hero_chronicle = Column(Text)  # Hero chronicle summary
     completed_at = Column(DateTime(timezone=True))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-
-class Trait(Base):
-    __tablename__ = "traits"
-    
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), unique=True)
-    final_report = Column(JSONB, default=dict)  # Snapshot of hero panel
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 class GameDefinition(Base):
     __tablename__ = "game_definitions"

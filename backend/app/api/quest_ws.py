@@ -12,7 +12,7 @@ from app.agents.summary import summary_agent
 from app.services.level_system import level_service
 from app.services.game_assets import game_assets_service
 from app.db.session import AsyncSessionLocal
-from app.db.models import User, UserQuest, Trait
+from app.db.models import User, UserQuest
 from sqlalchemy import select, update, func
 
 from app.api.quest_utils import (
@@ -275,8 +275,17 @@ async def quest_ws_endpoint(
                 
                 # 3. 執行 Transformation Agent (核心映射邏輯)
                 logger.info("🧙‍♂️ 3. Running Transformation Agent...")
+                
+                # 設置 quest_type 供 callback 驗證使用
+                session = await session_service.get_session(
+                    app_name="transformation",
+                    user_id=user_id,
+                    session_id=sessionId
+                )
+                session.state["quest_type"] = quest_id
+                
                 truth_list = await game_assets_service.get_truth_list_dump()
-                t_instruction = f"累積心理數據：{json.dumps(accumulated_deltas, ensure_ascii=False)}\n合法資產清單：\n{truth_list}"
+                t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(accumulated_deltas, ensure_ascii=False)}\n合法資產清單：\n{truth_list}"
                 
                 logger.info(f">>> Instruction: {t_instruction}")
                 transformation_raw = await run_agent_async(
@@ -336,7 +345,7 @@ async def quest_ws_endpoint(
                 async with AsyncSessionLocal() as db_session:
                     user_uuid = uuid.UUID(user_id)
                     
-                    # 更新 User Profile (等級、經驗值、新職業)
+                    # a) 更新 User Profile (等級、經驗值、新職業、完整英雄檔案)
                     hero_class_id = final_output.get("class_id")
                     
                     update_values = {
@@ -344,31 +353,47 @@ async def quest_ws_endpoint(
                         "exp": new_exp
                     }
 
+                    # 更新頭像與職業 ID（如果是 MBTI 測驗）
                     if hero_class_id:
-                        # Construct avatar URL: CLS_INTJ -> cls_intj.png
                         filename = hero_class_id.lower() + ".png"
                         update_values["hero_class_id"] = hero_class_id
                         update_values["hero_avatar_url"] = f"/assets/images/classes/{filename}"
+                    
+                    # 更新完整英雄檔案（合併策略）
+                    user_stmt = select(User).where(User.id == user_uuid)
+                    user_result = await db_session.execute(user_stmt)
+                    user = user_result.scalar_one_or_none()
+                    
+                    if user:
+                        from app.models.schemas import merge_hero_profile
+                        existing_profile = user.hero_profile or {}
+                        merged_profile = merge_hero_profile(existing_profile, final_output)
+                        update_values["hero_profile"] = merged_profile
 
                     await db_session.execute(
                         update(User).where(User.id == user_uuid).values(**update_values)
                     )
                     
-                    # 存入 Trait (永久英雄面板)
-                    trait_stmt = select(Trait).where(Trait.user_id == user_uuid)
-                    trait_res = await db_session.execute(trait_stmt)
-                    trait = trait_res.scalar_one_or_none()
-                    if trait:
-                        trait.final_report = final_output
-                    else:
-                        db_session.add(Trait(user_id=user_uuid, final_report=final_output))
-                    
-                    # 存入 UserQuest 紀錄
-                    quest_stmt = select(UserQuest).where(UserQuest.user_id == user_uuid, UserQuest.quest_type == quest_id).order_by(UserQuest.created_at.desc()).limit(1)
+                    # b) 存入 UserQuest 紀錄（quest_report 與 hero_chronicle）
+                    quest_stmt = select(UserQuest).where(
+                        UserQuest.user_id == user_uuid,
+                        UserQuest.quest_type == quest_id
+                    ).order_by(UserQuest.created_at.desc()).limit(1)
                     quest_res = await db_session.execute(quest_stmt)
                     quest = quest_res.scalar_one_or_none()
                     
                     if quest:
+                        # 構造 QuestReport
+                        quest_report = final_output.copy()
+                        quest_report["quest_type"] = quest_id
+                        quest_report["level_info"] = {
+                            "level": new_lvl,
+                            "exp": new_exp,
+                            "isLeveledUp": is_up,
+                            "earnedExp": earned_exp
+                        }
+                        
+                        quest.quest_report = quest_report
                         quest.hero_chronicle = hero_chronicle
                         quest.completed_at = func.now()
                     

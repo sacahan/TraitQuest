@@ -2,7 +2,7 @@ import logging
 import uuid
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
-from app.db.models import User, UserQuest, Trait
+from app.db.models import User, UserQuest
 from app.db.session import AsyncSessionLocal
 from app.core.security import decode_access_token
 

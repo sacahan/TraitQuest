@@ -77,7 +77,7 @@ const DashboardPage = () => {
         );
     }
 
-    const traits = profileData.traits || {};
+    const traits = profileData.heroProfile || {};
     const identity = profileData.heroIdentity || {};
     const syncPercent = profileData.syncPercent || 0;
 

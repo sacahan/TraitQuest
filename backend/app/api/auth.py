@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
 from app.db.session import get_db
-from app.db.models import User, Trait, UserQuest, GameDefinition
+from app.db.models import User, UserQuest, GameDefinition
 from app.core.security import verify_google_token, create_access_token, decode_access_token
 from pydantic import BaseModel
 from typing import Optional, List
@@ -73,11 +73,10 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
     
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-        
-    # 獲取特質報告
-    trait_result = await db.execute(select(Trait).where(Trait.user_id == user_id))
-    trait = trait_result.scalar_one_or_none()
     
+    # 從 User.hero_profile 讀取完整英雄檔案
+    hero_profile = user.hero_profile or {}
+        
     # 獲取已完成任務數量以計算同步率
     completed_quests_result = await db.execute(
         select(func.count(UserQuest.id))
@@ -90,9 +89,9 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
     race_info = None
     class_info = None
     
-    if trait and trait.final_report:
-        race_id = trait.final_report.get("race_id")
-        class_id = trait.final_report.get("class_id")
+    if hero_profile:
+        race_id = hero_profile.get("race_id")
+        class_id = hero_profile.get("class_id")
         
         if race_id:
             race_res = await db.execute(select(GameDefinition).where(GameDefinition.id == race_id))
@@ -131,6 +130,6 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
                 "description": class_info.metadata_info.get("traits") if class_info else ""
             }
         },
-        "traits": trait.final_report if trait else {},
+        "heroProfile": hero_profile,
         "latestChronicle": latest_quest.hero_chronicle if latest_quest else None
     }
