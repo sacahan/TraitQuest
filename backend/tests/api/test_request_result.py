@@ -1,5 +1,5 @@
 """
-quest_ws.py - request_result 邏輯與正規化工具測試
+transformation_agent - 轉生代理測試
 """
 import pytest
 import uuid
@@ -30,150 +30,109 @@ mock_adk.runners.Runner = MagicMock
 mock_adk.models.lite_llm.LiteLlm = MagicMock
 mock_adk.tools.tool_context.ToolContext = MagicMock
 
-# 延遲導入 app 物件
-from app.api.quest_utils import normalize_transformation_output, validate_normalization_result  # Updated import
 
 @pytest.mark.asyncio
-async def test_normalize_transformation_output():
-    """測試正規化函數：應將 ID 映射為完整物件並處理 Stats"""
+async def test_validate_transformation_output_db_verification():
+    """測試 after_tool_callback 的 DB 驗證功能"""
+    from app.agents.transformation import validate_transformation_output
     
-    raw_output = {
-        "race_id": "RACE_5",
+    # Mock tool_context
+    mock_context = MagicMock()
+    mock_context.state = {"quest_type": "mbti"}
+    
+    # 測試資料
+    tool_response = {
         "class_id": "CLS_INTJ",
-        "stance_id": "STN_C",
-        "talent_ids": ["TAL_STRATEGIC", "TAL_ANALYTICAL"],
-        "stats": {
-            "STA_O": 85,
-            "STA_C": 75,
-            "STA_E": 40,
-            "STA_A": 50,
-            "STA_N": 70
-        },
-        "destiny_guide": {"daily": "預言...", "main": "任務...", "side": "支線...", "oracle": "神諭..."},
+        "class": {"id": "CLS_INTJ", "name": "戰略法師", "description": "獨立、戰略"},
+        "destiny_guide": {"daily": "預言...", "main": "任務..."},
         "destiny_bonds": {"compatible": [], "conflicting": []}
     }
     
-    # Mock 資料庫返回的資產定義
-    mock_race = MagicMock()
-    mock_race.id = "RACE_5"
-    mock_race.name = "觀察者"
-    mock_race.metadata_info = {"description": "Race Desc"}
-
-    mock_class = MagicMock()
-    mock_class.id = "CLS_INTJ"
-    mock_class.name = "建築師"
-    mock_class.metadata_info = {"description": "Class Desc"}
-
-    mock_stance = MagicMock()
-    mock_stance.id = "STN_C"
-    mock_stance.name = "謹慎戰術家"
-    mock_stance.metadata_info = {"description": "Stance Desc"}
-
-    mock_talent1 = MagicMock()
-    mock_talent1.id = "TAL_STRATEGIC"
-    mock_talent1.name = "戰略思維"
-    mock_talent1.metadata_info = {"description": "T1 Desc"}
-
-    mock_talent2 = MagicMock()
-    mock_talent2.id = "TAL_ANALYTICAL"
-    mock_talent2.name = "分析洞察"
-    mock_talent2.metadata_info = {"description": "T2 Desc"}
-    
-    mock_result = MagicMock()
-    mock_result.scalars.return_value = [mock_race, mock_class, mock_stance, mock_talent1, mock_talent2]
-    
+    # Mock DB 查詢結果
     mock_db_session = AsyncMock()
+    mock_result = MagicMock()
+    mock_result.__iter__ = lambda self: iter([("CLS_INTJ",)])
     mock_db_session.execute.return_value = mock_result
     
-    with patch("app.api.quest_utils.AsyncSessionLocal") as mock_session_local:
+    with patch("app.agents.transformation.AsyncSessionLocal") as mock_session_local:
         mock_session_local.return_value.__aenter__.return_value = mock_db_session
         
-        normalized = await normalize_transformation_output(raw_output)
+        # 執行驗證
+        result = await validate_transformation_output(mock_context, tool_response)
         
-        # 驗證 ID 仍保留
-        assert normalized["race_id"] == "RACE_5"
-        assert normalized["class_id"] == "CLS_INTJ"
-        
-        # 驗證物件映射
-        assert normalized["race"]["name"] == "觀察者"
-        assert normalized["class"]["name"] == "建築師"
-        assert normalized["stance"]["name"] == "謹慎戰術家"
-        assert len(normalized["talents"]) == 2
-        assert normalized["talents"][0]["name"] == "戰略思維"
-        
-        # 驗證 Stats 轉換 (ID -> 有意義的 Label)
-        assert normalized["stats"]["openness"]["score"] == 85
-        assert normalized["stats"]["openness"]["label"] == "智力(O)"
-        assert normalized["stats"]["neuroticism"]["score"] == 70
-        assert normalized["stats"]["neuroticism"]["label"] == "洞察(N)"
-        
-        # 驗證 Destiny 内容保留
-        assert normalized["destiny_guide"]["daily"] == "預言..."
+        # 驗證結果應為 None（使用原始結果）
+        assert result is None
+
 
 @pytest.mark.asyncio
-async def test_normalize_output_missing_fields():
-    """測試缺失欄位的邊界情況"""
+async def test_validate_transformation_output_missing_fields():
+    """測試缺少必要欄位時的警告行為"""
+    from app.agents.transformation import validate_transformation_output
     
-    # 僅有部分 ID 的輸出
-    raw_output = {
+    mock_context = MagicMock()
+    mock_context.state = {"quest_type": "mbti"}
+    
+    # 缺少 destiny_bonds
+    tool_response = {
         "class_id": "CLS_INTJ",
-        "stats": {}
+        "class": {"id": "CLS_INTJ", "name": "戰略法師"},
+        "destiny_guide": {"daily": "預言..."}
+        # 缺少 destiny_bonds
     }
-    
-    mock_class = MagicMock()
-    mock_class.id = "CLS_INTJ"
-    mock_class.name = "建築師"
-    mock_class.metadata_info = {}
-
-    mock_result = MagicMock()
-    mock_result.scalars.return_value = [mock_class]
     
     mock_db_session = AsyncMock()
+    mock_result = MagicMock()
+    mock_result.__iter__ = lambda self: iter([("CLS_INTJ",)])
     mock_db_session.execute.return_value = mock_result
     
-    with patch("app.api.quest_utils.AsyncSessionLocal") as mock_session_local:
+    with patch("app.agents.transformation.AsyncSessionLocal") as mock_session_local:
         mock_session_local.return_value.__aenter__.return_value = mock_db_session
         
-        normalized = await normalize_transformation_output(raw_output)
+        # 執行驗證 - 應記錄警告但不中斷
+        result = await validate_transformation_output(mock_context, tool_response)
         
-        assert normalized["class_id"] == "CLS_INTJ"
-        assert normalized["class"]["name"] == "建築師"
-        assert "race" not in normalized
-        assert normalized["stats"]["openness"]["score"] == 50 # 預設值
+        # 即使有缺失欄位，也應返回 None（繼續流程）
+        assert result is None
 
-def test_validate_normalization_result():
-    """測試資料驗證邏輯"""
+
+def test_submit_transformation_with_full_objects():
+    """測試 submit_transformation 可接受完整物件參數"""
+    from app.agents.transformation import submit_transformation
     
-    # 用例 1: 完美資料
-    valid_data = {
-        "race_id": "R1", "race": {"id": "R1", "name": "Race"},
-        "class_id": "C1", "class": {"id": "C1", "name": "Class"},
-        "stance_id": "S1", "stance": {"id": "S1", "name": "Stance"},
-        "talent_ids": ["T1"], "talents": [{"id": "T1", "name": "Talent"}]
-    }
-    result = validate_normalization_result(valid_data)
-    assert result["status"] == "SUCCESS"
-    assert len(result["errors"]) == 0
+    mock_context = MagicMock()
+    mock_context.state = {}
     
-    # 用例 2: 缺少 Race
-    missing_race = {
-        "race_id": "R_INVALID", 
-        # missing "race" key
-        "class_id": "C1", "class": {"id": "C1", "name": "Class"},
-        "stance_id": "S1", "stance": {"id": "S1", "name": "Stance"}
-    }
-    result = validate_normalization_result(missing_race)
-    assert result["status"] == "FAIL"
-    assert "race" in result["errors"][0].lower()
+    result = submit_transformation(
+        class_id="CLS_INTJ",
+        hero_class={"id": "CLS_INTJ", "name": "戰略法師", "description": "獨立、戰略"},
+        destiny_guide={"daily": "預言...", "main": "任務...", "side": "支線...", "oracle": "神諭..."},
+        destiny_bonds={"compatible": [], "conflicting": []},
+        tool_context=mock_context
+    )
     
-    # 用例 3: 缺少天賦
-    missing_talent = {
-        "race_id": "R1", "race": {"id": "R1", "name": "Race"},
-        "class_id": "C1", "class": {"id": "C1", "name": "Class"},
-        "stance_id": "S1", "stance": {"id": "S1", "name": "Stance"},
-        "talent_ids": ["T1", "T2"],
-        "talents": [{"id": "T1", "name": "Talent"}] # Only T1 found
-    }
-    result = validate_normalization_result(missing_talent)
-    assert result["status"] == "FAIL"
-    assert "Talent" in result["errors"][-1]
+    # 驗證結果結構
+    assert result["class_id"] == "CLS_INTJ"
+    assert result["class"]["name"] == "戰略法師"
+    assert "destiny_guide" in result
+    assert "destiny_bonds" in result
+    
+    # 驗證 state 已更新
+    assert mock_context.state["transformation_output"] == result
+
+
+def test_submit_transformation_race():
+    """測試 Enneagram 測驗的種族輸出"""
+    from app.agents.transformation import submit_transformation
+    
+    mock_context = MagicMock()
+    mock_context.state = {}
+    
+    result = submit_transformation(
+        race_id="RACE_5",
+        race={"id": "RACE_5", "name": "智者族", "description": "渴求知識與觀察的靈魂"},
+        destiny_guide={"daily": "探索新知", "main": "深入學習", "side": "閱讀一本書", "oracle": "知識即力量"},
+        tool_context=mock_context
+    )
+    
+    assert result["race_id"] == "RACE_5"
+    assert result["race"]["name"] == "智者族"

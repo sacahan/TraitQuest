@@ -56,7 +56,7 @@ export const Header = () => {
                   className="text-sm font-bold hover:text-primary transition-colors relative group flex items-center gap-1"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                  五大試煉
+                  副本試煉
                   <span
                     className={`material-symbols-outlined text-sm transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
                   >
@@ -95,7 +95,7 @@ export const Header = () => {
               </div>
 
               <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/dashboard">
-                冒險卷軸
+                英雄史詩
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </nav>

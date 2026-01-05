@@ -21,9 +21,8 @@ from app.api.quest_utils import (
     run_analytics_task,
     get_total_steps,
     get_hero_chronicle,
-    normalize_transformation_output,
-    validate_normalization_result,
     run_questionnaire_agent,
+    get_or_create_session,
     manager,
     QUESTIONNAIRE_NAME
 )
@@ -62,10 +61,7 @@ async def quest_ws_endpoint(
     try:
         # 初始化 Session (如果是新連線)
         # 確保在開始對話前，Session Service 中已有此 Session 記錄
-        try:
-            await session_service.create_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
-        except Exception as e:
-            logger.debug(f"Session already exists or error creating: {e}")
+        await get_or_create_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
 
         # 進入訊息處理迴圈 (Event Loop)
         while True:
@@ -85,8 +81,8 @@ async def quest_ws_endpoint(
                 player_exp = user.exp if user else 0
 
             # 4. 從 Session 恢復當前任務狀態 (Context Restoration)
-            session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
-            quest_id = session.state.get("current_quest_id", "mbti")
+            questionnaire_session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
+            quest_id = questionnaire_session.state.get("current_quest_id", "mbti")
 
             logger.info(f"📥 [{event_type}]: Lv.{player_level}, Quest: {quest_id} ({sessionId})")
             
@@ -96,10 +92,13 @@ async def quest_ws_endpoint(
                 total_steps = get_total_steps(quest_id, player_level)
                 
                 # 初始化 Session State
-                session.state["current_quest_id"] = quest_id
-                session.state["total_steps"] = total_steps
-                session.state["accumulated_analytics"] = [] # 清空分析緩衝區
-                session.state["interactions"] = [] # 重置對話歷程
+                questionnaire_session.state["current_quest_id"] = quest_id
+                questionnaire_session.state["total_steps"] = total_steps
+                questionnaire_session.state["accumulated_analytics"] = [] # 清空分析緩衝區
+                questionnaire_session.state["interactions"] = [] # 重置對話歷程
+                
+                # [Fix] Explicitly save session state initialization
+                await session_service.update_session(questionnaire_session)
                 
                 # 在資料庫建立 UserQuest 紀錄 (標記測驗開始)
                 async with AsyncSessionLocal() as db_session:
@@ -127,7 +126,7 @@ async def quest_ws_endpoint(
 
                 logger.info(f">>> Instruction: {instruction}")
                 result = await run_questionnaire_agent(user_id, sessionId, instruction)
-                logger.info(f"<<<Result: {result}")
+                logger.info(f"<<< Result: {result}")
 
                 # 確保第一題有 ID
                 if result.get("question") and not result["question"].get("id"):
@@ -143,9 +142,9 @@ async def quest_ws_endpoint(
                 question_index = payload.get("questionIndex", 0)
                 
                 # 獲取當前題目上下文 (為了給 Analytics Agent 分析使用)
-                session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
+                # [Optimization] Use existing session object
                 current_question_text = ""
-                q_output = session.state.get("questionnaire_output", {})
+                q_output = questionnaire_session.state.get("questionnaire_output", {})
                 current_options = []
                 if isinstance(q_output, dict):
                     question_data = q_output.get("question", {})
@@ -153,14 +152,17 @@ async def quest_ws_endpoint(
                     current_options = question_data.get("options", [])
 
                 # 紀錄互動內容到 Session
-                if "interactions" not in session.state:
-                    session.state["interactions"] = []
-                session.state["interactions"].append({
+                if "interactions" not in questionnaire_session.state:
+                    questionnaire_session.state["interactions"] = []
+                questionnaire_session.state["interactions"].append({
                     "question": q_output.get("question", {}),
                     "answer": answer
                 })
+                
+                # [Fix] Explicitly save session state (interactions)
+                await session_service.update_session(questionnaire_session)
 
-                # 即時同步 interactions 到資料庫（方案 B：避免 WebSocket 中斷遺失資料）
+                # 即時同步 interactions 到資料庫
                 async with AsyncSessionLocal() as db_session:
                     quest_stmt = select(UserQuest).where(
                         UserQuest.user_id == uuid.UUID(user_id),
@@ -171,9 +173,9 @@ async def quest_ws_endpoint(
                     quest = quest_res.scalar_one_or_none()
                     
                     if quest:
-                        quest.interactions = session.state["interactions"]
+                        quest.interactions = questionnaire_session.state["interactions"]
                         await db_session.commit()
-                        logger.debug(f"💾 Synced {len(session.state['interactions'])} interactions to DB")
+                        logger.debug(f"💾 Synced {len(questionnaire_session.state['interactions'])} interactions to DB")
 
 
                 # [平行處理] 啟動後台分析任務 (Non-blocking)
@@ -184,11 +186,11 @@ async def quest_ws_endpoint(
                 manager.pending_tasks[sessionId].append(analysis_task)
                 
                 # 計算題號
-                current_num = question_index
+                current_num = question_index + 1
                 next_num = current_num + 1
                 
                 # 判斷是否為最後一題 (使用 session 中的 total_steps，如果沒有則重新計算)
-                total_steps = session.state.get("total_steps") or get_total_steps(quest_id, player_level)
+                total_steps = questionnaire_session.state.get("total_steps") or get_total_steps(quest_id, player_level)
                 
                 if current_num >= total_steps:
                      instruction = (
@@ -197,7 +199,7 @@ async def quest_ws_endpoint(
                      )
                 else:
                      # 讀取当前 Session 中的對話歷程，作為上下文
-                     interactions = session.state.get("interactions", [])
+                     interactions = questionnaire_session.state.get("interactions", [])
                      recent_context = ""
                      if len(interactions) >= 2:
                          # 取最近 2 題作為上下文
@@ -260,8 +262,8 @@ async def quest_ws_endpoint(
                 
                 # 2. 聚合 (Reduce) 所有分析結果
                 logger.info(f"⏳ 2. Aggregating all analysis results")
-                session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
-                analytics_list = session.state.get("accumulated_analytics", [])
+                questionnaire_session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
+                analytics_list = questionnaire_session.state.get("accumulated_analytics", [])
                 
                 total_quality = 0
                 accumulated_deltas = {}
@@ -277,12 +279,12 @@ async def quest_ws_endpoint(
                 logger.info("🧙‍♂️ 3. Running Transformation Agent...")
                 
                 # 設置 quest_type 供 callback 驗證使用
-                session = await session_service.get_session(
+                transformation_session = await get_or_create_session(
                     app_name="transformation",
                     user_id=user_id,
                     session_id=sessionId
                 )
-                session.state["quest_type"] = quest_id
+                transformation_session.state["quest_type"] = quest_id
                 
                 truth_list = await game_assets_service.get_truth_list_dump()
                 t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(accumulated_deltas, ensure_ascii=False)}\n合法資產清單：\n{truth_list}"
@@ -298,25 +300,21 @@ async def quest_ws_endpoint(
                 )
                 logger.info(f"<<< Result (Raw): {transformation_raw}")
                 
-                # [核心修復] 正規化輸出：將 ID 映射為完整物件並處理 Stats 格式
-                final_output = await normalize_transformation_output(transformation_raw)
-                logger.info(f"<<< Result (Normalized): {final_output}")
-                
-                # 4. 驗證結果 (使用程式邏輯)
-                logger.info("🛡️ 4. Validating Result (Deterministic Logic)...")
-                val_result = validate_normalization_result(final_output)
-                
-                if val_result.get("status") == "FAIL":
-                     logger.warning(f"⚠️ Validation failed: {val_result.get('errors')}. Proceeding with best effort.")
-                else:
-                    logger.info("✅ Validation Passed.")
+                # AI 已透過 after_tool_callback 進行 DB 驗證，直接使用結果
+                quest_report = transformation_raw
+                logger.info(f"<<< Quest Report: {quest_report}")
 
-                # 5. 執行 Summary Agent (生成史詩摘要)
-                logger.info("📝 5. Running Summary Agent...")
-                history_text = "\n".join([f"Q: {i.get('question', {}).get('text', '')}\nA: {i.get('answer', '')}" for i in session.state.get("interactions", [])])
-                s_instruction = f"對話歷程：\n{history_text}"
+                # 4. 執行 Summary Agent (生成史詩摘要)
+                logger.info("📝 4. Running Summary Agent...")
+                # 使用 accumulated_analytics 作為資料來源，已分析結果更精確
+                analytics_list = questionnaire_session.state.get("accumulated_analytics", [])
+                history_text = "\n".join([
+                    f"分析 #{idx+1}:\n  問題: {item.get('question_text', 'N/A')}\n  回答: {item.get('answer', 'N/A')}\n  特徵增量: {item.get('trait_deltas', {})}"
+                    for idx, item in enumerate(analytics_list)
+                ])
+                s_instruction = f"玩家對話分析摘要：\n{history_text}"
                 
-                logger.info(f">>> Instruction: {s_instruction}")
+                logger.info(f">>> Summary Instruction (using accumulated_analytics): {s_instruction[:200]}...")
                 summary_result = await run_agent_async(
                     agent=summary_agent,
                     app_name="summary",
@@ -335,18 +333,18 @@ async def quest_ws_endpoint(
                 if not hero_chronicle:
                     hero_chronicle = f"冒險者 {display_name} 在 {quest_id} 試煉中留下了足跡。"
 
-                # 6. 計算經驗值與升級 (Level Service)
-                logger.info("6. Calculating experience and level up...")
+                # 5. 計算經驗值與升級 (Level Service)
+                logger.info("5. Calculating experience and level up...")
                 earned_exp = level_service.calculate_exp(avg_quality * (len(analytics_list) / 2)) 
                 new_lvl, new_exp, is_up = level_service.check_level_up(player_level, player_exp + earned_exp)
                 
-                # 7. 持久化存入資料庫
-                logger.info("7. Persisting to database...")
+                # 6. 持久化存入資料庫
+                logger.info("6. Persisting to database...")
                 async with AsyncSessionLocal() as db_session:
                     user_uuid = uuid.UUID(user_id)
                     
                     # a) 更新 User Profile (等級、經驗值、新職業、完整英雄檔案)
-                    hero_class_id = final_output.get("class_id")
+                    hero_class_id = quest_report.get("class_id")
                     
                     update_values = {
                         "level": new_lvl,
@@ -367,7 +365,7 @@ async def quest_ws_endpoint(
                     if user:
                         from app.models.schemas import merge_hero_profile
                         existing_profile = user.hero_profile or {}
-                        merged_profile = merge_hero_profile(existing_profile, final_output)
+                        merged_profile = merge_hero_profile(existing_profile, quest_report)
                         update_values["hero_profile"] = merged_profile
 
                     await db_session.execute(
@@ -384,24 +382,24 @@ async def quest_ws_endpoint(
                     
                     if quest:
                         # 構造 QuestReport
-                        quest_report = final_output.copy()
-                        quest_report["quest_type"] = quest_id
-                        quest_report["level_info"] = {
+                        db_report = quest_report.copy()
+                        db_report["quest_type"] = quest_id
+                        db_report["level_info"] = {
                             "level": new_lvl,
                             "exp": new_exp,
                             "isLeveledUp": is_up,
                             "earnedExp": earned_exp
                         }
                         
-                        quest.quest_report = quest_report
+                        quest.quest_report = db_report
                         quest.hero_chronicle = hero_chronicle
                         quest.completed_at = func.now()
                     
                     await db_session.commit()
 
-                # 8. 回傳最終結果給前端
-                logger.info("8. Returning final result to frontend...")
-                final_output["levelInfo"] = {
+                # 7. 回傳最終結果給前端
+                logger.info("7. Returning final result to frontend...")
+                quest_report["levelInfo"] = {
                     "level": new_lvl,
                     "exp": new_exp,
                     "isLeveledUp": is_up,
@@ -411,9 +409,9 @@ async def quest_ws_endpoint(
                 if is_up:
                     milestone = level_service.get_level_milestone(new_lvl)
                     if milestone:
-                        final_output["levelInfo"]["milestone"] = milestone
+                        quest_report["levelInfo"]["milestone"] = milestone
                 
-                await manager.send_event(sessionId, "final_result", final_output)
+                await manager.send_event(sessionId, "final_result", quest_report)
 
     except WebSocketDisconnect:
         manager.disconnect(sessionId)

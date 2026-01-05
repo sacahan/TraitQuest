@@ -19,6 +19,7 @@ from app.services.game_assets import game_assets_service
 from app.db.session import AsyncSessionLocal
 from app.db.models import User, UserQuest, GameDefinition
 from google.adk.runners import Runner
+from google.adk.sessions.session import Session
 from google.genai import types
 
 logger = logging.getLogger("app")
@@ -107,6 +108,33 @@ async def get_user_display_name(user_id: str) -> str:
 
 
 # =============================================================================
+# Session 管理工具 (Session Helpers)
+# =============================================================================
+
+async def get_or_create_session(app_name: str, user_id: str, session_id: str) -> Session:
+    """
+    確保獲取有效的 Session。
+    
+    流程：
+    1. 嘗試 get_session。
+    2. 若失敗（不存在），則執行 create_session。
+    
+    符合開發憲章第七條：Agent Output Key 隔離原則，確保各 Agent 命名空間獨立。
+    """
+    try:
+        session = await session_service.get_session(app_name=app_name, user_id=user_id, session_id=session_id)
+        if session:
+            return session
+    except Exception:
+        # get_session 可能在 Session 不存在時拋出異常
+        pass
+    
+    # 建立新 Session
+    logger.info(f"🆕 Creating new session for app: {app_name}, session_id: {session_id}")
+    return await session_service.create_session(app_name=app_name, user_id=user_id, session_id=session_id)
+
+
+# =============================================================================
 # 通用 Agent 執行器 (Unified Agent Runner)
 # =============================================================================
 
@@ -134,15 +162,12 @@ async def run_agent_async(
     Returns:
         dict: Agent 執行後存入 session.state[output_key] 的結果
     """
-    # 1. 確保 Session 存在（若已存在則忽略錯誤）
-    try:
-        await session_service.create_session(
-            app_name=app_name, 
-            user_id=user_id, 
-            session_id=session_id
-        )
-    except Exception:
-        pass  # Session 已存在，無需處理
+    # 1. 確保 Session 存在
+    session = await get_or_create_session(
+        app_name=app_name, 
+        user_id=user_id, 
+        session_id=session_id
+    )
     
     # 2. 建立 Runner 並準備訊息
     runner = Runner(agent=agent, app_name=app_name, session_service=session_service)
@@ -154,11 +179,9 @@ async def run_agent_async(
             break
     
     # 4. 從 Session State 讀取結果
-    session = await session_service.get_session(
-        app_name=app_name, 
-        user_id=user_id, 
-        session_id=session_id
-    )
+    # [Fix] 重新獲取 Session 以取得最新狀態，因為 Runner 執行過程中
+    # tool_context.state 的變更可能未反映在原 session 物件引用上
+    session = await session_service.get_session(app_name=app_name, user_id=user_id, session_id=session_id)
     result = session.state.get(output_key, {})
     
     # 5. 安全解析（防止 Agent 回傳字串而非物件）
@@ -180,13 +203,13 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
     它會啟動一個獨立的 Analytics Agent 用於分析玩家回答的心理特徵，
     並將結果存入 Session State 的 `accumulated_analytics` 列表中，供最終結算使用。
 
-    args:
+    Args:
         user_id: 玩家 ID
         session_id: WebSocket Session ID
         question_text: 題目文字
         answer: 答案
         test_category: 測驗範疇
-        options: 選項列表
+        options: 選項列表（可選）
     """
     try:
         logger.debug(f"🧠 [Background] Starting AI analysis for session {session_id}")
@@ -212,14 +235,20 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
         if result:
             # 將單次分析結果存回主 Session 以供後續聚合 (Aggregation)
             # 這是 "Map-Reduce" 模式中的 Map 階段結果收集
+            # [Fix] 重新獲取最新 session 以避免 Race Condition
+            # 因為多個 analytics task 可能同時執行，使用傳入的舊 session 引用會導致資料覆蓋
             main_session = await session_service.get_session(
-                app_name="questionnaire", 
+                app_name=QUESTIONNAIRE_NAME, 
                 user_id=user_id, 
                 session_id=session_id
             )
+            
             if "accumulated_analytics" not in main_session.state:
                 main_session.state["accumulated_analytics"] = []
             main_session.state["accumulated_analytics"].append(result)
+            
+            # 顯式保存 session state
+            await session_service.update_session(main_session)
             
             logger.debug(f"✅ [Background] Analysis complete for {session_id}: {result.get('quality_score', 'N/A')}")
             
@@ -233,7 +262,7 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
 
 # 基礎題數配置
 BASE_STEPS = {
-    "mbti": 10,
+    "mbti": 3,
     "big_five": 15,
     "disc": 10,
     "enneagram": 10,
@@ -284,117 +313,9 @@ async def get_hero_chronicle(user_id: str) -> str:
         chronicle = result.scalar_one_or_none()
         return chronicle if chronicle else ""
 
-async def normalize_transformation_output(raw_output: dict) -> dict:
-    """
-    正規化 Transformation Agent 的輸出。
-    
-    將 Agent 回傳的扁平 ID 結構 (class_id, race_id...) 轉換為 
-    符合 FinalReport schema 的嵌套物件結構 (class: {id, name, desc}...)。
-    同時從資料庫查詢資產的正式名稱。
-    """
-    # 1. 提取所有需要查詢名稱的 ID
-    race_id = raw_output.get("race_id")
-    class_id = raw_output.get("class_id")
-    stance_id = raw_output.get("stance_id")
-    talent_ids = raw_output.get("talent_ids", [])
-    
-    all_ids = []
-    if race_id: all_ids.append(race_id)
-    if class_id: all_ids.append(class_id)
-    if stance_id: all_ids.append(stance_id)
-    if talent_ids: all_ids.extend(talent_ids)
-    
-    # 2. 批量從資料庫獲取資產定義
-    asset_map = {}
-    if all_ids:
-        async with AsyncSessionLocal() as db_session:
-            stmt = select(GameDefinition).where(GameDefinition.id.in_(all_ids))
-            result = await db_session.execute(stmt)
-            for row in result.scalars():
-                asset_map[row.id] = {
-                    "id": row.id,
-                    "name": row.name,
-                    "description": row.metadata_info.get("description", row.name)
-                }
-    
-    # 3. 構造最終結構
-    normalized = {
-        "race_id": race_id,
-        "class_id": class_id,
-        "stance_id": stance_id,
-        "talent_ids": talent_ids,
-        "destiny_guide": raw_output.get("destiny_guide"),
-        "destiny_bonds": raw_output.get("destiny_bonds")
-    }
-    
-    # 填充物件欄位
-    if race_id and race_id in asset_map:
-        normalized["race"] = asset_map[race_id]
-        
-    if class_id and class_id in asset_map:
-        normalized["class"] = asset_map[class_id]
-        
-    if stance_id and stance_id in asset_map:
-        normalized["stance"] = asset_map[stance_id]
-        
-    if talent_ids:
-        normalized["talents"] = [asset_map[tid] for tid in talent_ids if tid in asset_map]
-        
-    # 處理 Stats (轉換為 Stats schema 結構)
-    raw_stats = raw_output.get("stats", {})
-    normalized["stats"] = {
-        "openness": {"label": "智力(O)", "score": raw_stats.get("STA_O", 50)},
-        "conscientiousness": {"label": "防禦(C)", "score": raw_stats.get("STA_C", 50)},
-        "extraversion": {"label": "速度(E)", "score": raw_stats.get("STA_E", 50)},
-        "agreeableness": {"label": "魅力(A)", "score": raw_stats.get("STA_A", 50)},
-        "neuroticism": {"label": "洞察(N)", "score": raw_stats.get("STA_N", 50)}
-    }
-    
-    return normalized
 
-def validate_normalization_result(normalized_data: dict) -> dict:
-    """
-    使用程式邏輯驗證正規化後的結果。
-    
-    取代原本的 validator_agent，改用明確的邏輯檢查：
-    1. 檢查是否包含必要的 key (race, class, stance, talents)
-    2. 檢查這些 key 對應的物件是否存在 (這等同於檢查 ID 是否存在於 DB)
-    
-    Returns:
-        dict: {"status": "SUCCESS" | "FAIL", "errors": [error_msg...]}
-    """
-    errors = []
-    
-    # 定義必要欄位與其對應的 ID 欄位 (用於錯誤訊息)
-    required_fields = {
-        "race": "race_id",
-        "class": "class_id",
-        "stance": "stance_id"
-    }
-    
-    for field, id_field in required_fields.items():
-        if field not in normalized_data:
-            # Normalized data 中沒有這個 key，表示 ID 無法對應到 DB 中的資產
-            raw_id = normalized_data.get(id_field, "UNKNOWN")
-            errors.append(f"Invalid {field} ID: {raw_id} not found in database or missing.")
-            
-    # 檢查 Talents
-    # 雖然不是強制每個都要有，但如果有 talent_ids 卻沒有對應的 talents 物件，也算是部分異常
-    # 這裡採用較寬鬆的標準：只要有 talent_ids 就應該要有對應的 talents
-    talent_ids = normalized_data.get("talent_ids", [])
-    talents = normalized_data.get("talents", [])
-    
-    if len(talent_ids) > 0 and len(talents) != len(talent_ids):
-        # 找出哪些 ID 沒被映射到
-        found_ids = {t["id"] for t in talents}
-        missing_talents = [tid for tid in talent_ids if tid not in found_ids]
-        if missing_talents:
-             errors.append(f"Invalid Talent IDs: {missing_talents} not found in database.")
-    
-    if errors:
-        return {"status": "FAIL", "errors": errors}
-    else:
-        return {"status": "SUCCESS", "errors": []}
+
+
 
 async def run_questionnaire_agent(user_id: str, session_id: str, instruction: str) -> dict:
     """

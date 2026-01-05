@@ -127,6 +127,8 @@ def create_questionnaire_agent() -> Agent:
             extra_headers=settings.GITHUB_COPILOT_HEADERS,
         ),
         tools=[submit_question, complete_trial]
+        # 注意：不設定 output_key，避免 Agent 的文字回應覆蓋 Tool 寫入的 dict
+        # Tool 會透過 tool_context.state["questionnaire_output"] 自行管理輸出
     )
 
 # 為了方便其他模組使用，預先建立一個實例 (或是由 Orchestrator 動態建立)

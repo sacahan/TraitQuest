@@ -137,12 +137,12 @@ const QuestionnairePage = () => {
       <div className="w-full max-w-3xl mx-auto px-6 mt-2 mb-0">
         <div className="flex justify-between text-sm font-bold tracking-wide text-primary/80 mb-2 px-1">
           <span className="uppercase text-xs tracking-widest text-white/50">Soul Resonance</span>
-          <span>{currentQuestion ? `${Math.min(100, Math.round((questionIndex / totalSteps) * 100))}%` : '0%'}</span>
+          <span>{currentQuestion ? `${Math.min(100, Math.round(((questionIndex + 1) / totalSteps) * 100))}%` : '0%'}</span>
         </div>
         <div className="h-6 w-full bg-[#08120d] rounded-full p-1 border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] relative overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-green-900 via-primary to-[#4fffb0] rounded-full transition-all duration-1000 relative overflow-hidden shadow-[0_0_15px_#0bda73]"
-            style={{ width: currentQuestion ? `${Math.min(100, Math.round((questionIndex / totalSteps) * 100))}%` : '0%' }}
+            style={{ width: currentQuestion ? `${Math.min(100, Math.round(((questionIndex + 1) / totalSteps) * 100))}%` : '0%' }}
           >
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMiIvPjwvc3ZnPg==')] opacity-30"></div>
           </div>

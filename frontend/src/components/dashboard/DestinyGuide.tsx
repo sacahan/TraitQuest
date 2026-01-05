@@ -27,7 +27,7 @@ const DestinyGuide: React.FC<DestinyGuideProps> = ({ guide }) => {
         </div>
         <div className="flex-1">
           <div className="flex justify-between items-start mb-1">
-            <div className="bg-primary/10 text-primary text-[16px] font-bold px-2 py-0.5 rounded border border-primary/20 uppercase">每日啟示</div>
+            <div className="bg-primary/10 text-primary text-[16px] font-bold px-2 py-0.5 rounded border border-primary/20 uppercase">今日支線</div>
           </div>
           <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{dailyContent}</p>
         </div>
