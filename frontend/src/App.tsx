@@ -14,6 +14,7 @@ import GallupIntro from './pages/intro/GallupIntro'
 import AboutPage from './pages/AboutPage'
 import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
+import LaunchPage from './pages/LaunchPage'
 
 /**
  * 全域自動捲動至頂部組件
@@ -58,6 +59,10 @@ function App() {
             <Route
               path="/map"
               element={isAuthenticated ? <MapPage /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/launch"
+              element={isAuthenticated ? <LaunchPage /> : <Navigate to="/" />}
             />
             <Route
               path="/dashboard"

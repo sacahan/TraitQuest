@@ -21,7 +21,7 @@ const EnneagramIntro: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-4">
               <button
                 className="flex cursor-pointer items-center justify-center rounded-full h-12 px-8 bg-primary text-[#10231a] text-base font-bold shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_30px_rgba(11,218,115,0.8)] transition-all w-full sm:w-auto group animate-breathing-glow"
-                onClick={() => window.location.href = '/questionnaire?type=enneagram'}
+                onClick={() => window.location.href = '/launch?type=enneagram'}
               >
                 <span className="truncate group-hover:scale-105 transition-transform">進入副本</span>
               </button>
@@ -136,7 +136,7 @@ const EnneagramIntro: React.FC = () => {
           <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你內心深處的核心動機與恐懼。</p>
               <button
             className="flex cursor-pointer items-center justify-center rounded-full h-14 px-12 bg-primary text-[#10231a] text-lg font-black shadow-[0_0_20px_rgba(11,218,115,0.5)] hover:shadow-[0_0_40px_rgba(11,218,115,0.8)] transition-all mx-auto"
-            onClick={() => window.location.href = '/questionnaire?type=enneagram'}
+            onClick={() => window.location.href = '/launch?type=enneagram'}
               >
             解鎖種族血脈
               </button>

@@ -260,9 +260,9 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
 # Quest Logic Helpers
 # =============================================================================
 
-# 基礎題數配置
+# 基礎題數配置（用於參考，實際計算由 level_service 處理）
 BASE_STEPS = {
-    "mbti": 3,
+    "mbti": 10,
     "big_five": 15,
     "disc": 10,
     "enneagram": 10,
@@ -273,18 +273,12 @@ def get_total_steps(quest_id: str, level: int = 1) -> int:
     """
     根據測驗類型與玩家等級動態計算總題數。
     
-    規則：
-    - Lv.1-10: 基礎題數 (快速體驗)
-    - Lv.11-20: 1.5 倍題數 (深入探索)
-    - Lv.21+: 2 倍題數 (完整解析)
+    規則（由 level_service.get_question_count 統一管理）：
+    - Lv.1-14: 10 題
+    - Lv.15-19: 15 題
+    - Lv.20+: 20 題
     """
-    base = BASE_STEPS.get(quest_id, 10)
-    if level <= 10:
-        return base
-    elif level <= 20:
-        return int(base * 1.5)
-    else:
-        return base * 2
+    return level_service.get_question_count(level)
 
 
 async def get_hero_chronicle(user_id: str) -> str:

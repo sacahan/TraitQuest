@@ -179,7 +179,7 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 ### 4.2 英雄面板 (Hero Profile)
 
-- **動態雷達圖**: 使用 React 圖表庫重新實作 `demo/analysis` 中的圖表。
+- **動態雷達圖**: 使用 React 圖表庫重新實作 `demo/dashboard` 中的圖表。
 - **組件復用**: 將卡片、按鈕、對話框封裝為通用 React 組件。
 
 ### 4.3 後台與監控

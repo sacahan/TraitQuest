@@ -15,10 +15,10 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」。你的
 
 根據 quest_type 決定輸出內容：
 - **mbti** → 只輸出：class_id, class, destiny_guide, destiny_bonds
-- **enneagram** → 只輸出：race_id, race, destiny_guide 
-- **big_five** → 只輸出：stats, destiny_guide 
-- **disc** → 只輸出：stance_id, stance, destiny_guide 
-- **gallup** → 只輸出：talent_ids, talents, destiny_guide
+- **enneagram** → 只輸出：race_id, race, destiny_guide, destiny_bonds
+- **big_five** → 只輸出：stats, destiny_guide, destiny_bonds
+- **disc** → 只輸出：stance_id, stance, destiny_guide, destiny_bonds
+- **gallup** → 只輸出：talent_ids, talents, destiny_guide, destiny_bonds
 
 ---
 
@@ -81,7 +81,7 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」。你的
 
 ### 5. Gallup 天賦優勢 → 傳奇技能 (Talent)
 
-從累積標籤中選出 2-3 個最契合的技能：
+從累積標籤中選出 5 個最契合的技能：
 
 **執行力 (Executing)**：TAL_ACH (成就)、TAL_ARR (排定)、TAL_BEL (信仰)、TAL_CON (公平)、TAL_DEL (謹慎)、TAL_DIS (紀律)、TAL_FOC (專注)、TAL_RES (責任)、TAL_RSV (修復)
 
@@ -132,13 +132,13 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」。你的
 - **daily** (今日預言)：給予今天的行動啟示
 - **main** (主線任務)：下一階段的人格成長目標
 - **side** (支線任務)：有趣的行為實驗建議
-- **oracle** (神諭)：一段符合玩家特質的哲學短語
+- **oracle** (神諭啟示)：一段符合玩家人格特質的哲學短語
 
 ---
 
 ## 命運羈絆 (Destiny Bonds)
 
-僅 mbti 測驗需要輸出。以 MBTI 為基準查詢相性：
+以 MBTI 為基準查詢相性：
 
 ### 相性矩陣參考
 - NT型 (INTJ, INTP, ENTJ, ENTP) 擅長與 NF型 合作，與 SJ型 易衝突
@@ -250,10 +250,10 @@ async def validate_transformation_output(tool_context: ToolContext, tool_respons
     # 1. 定義每種測驗必須包含的欄位
     required_fields = {
         "mbti": ["class_id", "class", "destiny_guide", "destiny_bonds"],
-        "enneagram": ["race_id", "race", "destiny_guide"],
-        "big_five": ["stats", "destiny_guide"],
-        "disc": ["stance_id", "stance", "destiny_guide"],
-        "gallup": ["talent_ids", "talents", "destiny_guide"]
+        "enneagram": ["race_id", "race", "destiny_guide", "destiny_bonds"],
+        "big_five": ["stats", "destiny_guide", "destiny_bonds"],
+        "disc": ["stance_id", "stance", "destiny_guide", "destiny_bonds"],
+        "gallup": ["talent_ids", "talents", "destiny_guide", "destiny_bonds"]
     }
     
     expected = required_fields.get(quest_type, [])
@@ -265,10 +265,10 @@ async def validate_transformation_output(tool_context: ToolContext, tool_respons
     # 2. 收集需要驗證的 ID
     ids_to_validate = []
     
-    if tool_response.get("race_id"):
-        ids_to_validate.append(tool_response["race_id"])
     if tool_response.get("class_id"):
         ids_to_validate.append(tool_response["class_id"])
+    if tool_response.get("race_id"):
+        ids_to_validate.append(tool_response["race_id"])
     if tool_response.get("stance_id"):
         ids_to_validate.append(tool_response["stance_id"])
     if tool_response.get("talent_ids"):

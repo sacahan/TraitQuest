@@ -3,23 +3,17 @@ import { motion } from 'framer-motion';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuestStore } from '../stores/questStore';
 import apiClient from '../services/apiClient';
-import { Sparkles, TrendingUp, Zap, ChevronRight, Award, Shield, Target, Users, Compass } from 'lucide-react';
+import {
+    TrendingUp, ChevronRight, Award,
+    Shield, Target, Users, Compass, Trophy
+} from 'lucide-react';
 import { Header } from '../layout/Header';
+import { Footer } from '../layout/Footer';
 
 /**
  * AnalysisPage - 測驗完成後的分析結果頁面
  * 
  * 此頁面用於顯示玩家完成「單次測驗」後的分析結果。
- * 根據測驗類型（questId）只顯示對應的結果：
- * - MBTI → 職業（Class）
- * - Big Five → 基礎屬性（Stats）
- * - DISC → 戰鬥姿態（Stance）
- * - Enneagram → 種族（Race）
- * - Gallup → 天賦技能（Talent）
- * 
- * 所有測驗都會顯示升級資訊（Level, Exp）
- * 
- * 完整的五大類型展示由 DashboardPage 負責。
  */
 
 // 測驗類型對應的配置
@@ -27,7 +21,7 @@ const QUEST_CONFIG: Record<string, {
     title: string;
     icon: any;
     color: string;
-    getContent: (finalResult: any) => { title: string; name: string; description: string } | null;
+    getContent: (finalResult: any) => { title: string; name: string; description: string; domain?: string } | null;
 }> = {
     mbti: {
         title: '職業覺醒',
@@ -111,8 +105,6 @@ const AnalysisPage = () => {
                     const heroProfile = profile.heroProfile || {};
 
                     if (heroProfile && Object.keys(heroProfile).length > 0) {
-                        // 構造 AnalysisPage 需要的結構
-                        // 注意：這裡假設歷史資料中的 levelInfo 使用當前等級
                         const result = {
                             ...heroProfile,
                             levelInfo: {
@@ -124,7 +116,6 @@ const AnalysisPage = () => {
                         };
                         setLocalResult(result);
                     } else {
-                        // 如果連歷史資料都沒有
                         navigate('/map');
                     }
                 } catch (error) {
@@ -159,155 +150,180 @@ const AnalysisPage = () => {
     const config = QUEST_CONFIG[activeQuestId];
     const content = config?.getContent(displayResult);
     const { levelInfo, stats } = displayResult;
-    const Icon = config?.icon || Sparkles;
+    // 解析 Top 5 (這裡假設從 displayResult 中可以拿到或是構造)
+    // 如果是 Gallup, 可能有多個 talent
+    const topTalents = displayResult.topTalents || (displayResult.talent ? [displayResult.talent] : []);
 
     return (
-        <>
+        <div className="min-h-screen bg-background-dark text-white font-display">
             <Header />
-            <div className="min-h-screen bg-background-dark pt-20 pb-12 px-4 relative overflow-hidden">
-                {/* 背景效果 */}
-                <div className="absolute inset-0 pointer-events-none z-0">
-                    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(17,212,82,0.08)_0%,rgba(16,34,22,0)_70%)] opacity-60"></div>
-                </div>
 
-                <div className="relative z-10 max-w-4xl mx-auto">
-                    {/* 標題區 */}
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center mb-12"
-                    >
-                        <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 px-4 py-2 rounded-full mb-4">
-                            <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-primary text-sm font-bold uppercase tracking-wider">Analysis Complete</span>
+            <main className="flex-1 flex flex-col items-center w-full max-w-[1200px] mx-auto px-4 py-24 md:px-8">
+                <div className="w-full flex flex-col md:flex-row gap-8 md:gap-12 mb-16">
+
+                    {/* 左側 Abby 嚮導欄 (Sticky) */}
+                    <aside className="md:w-1/3 flex flex-col items-center md:items-start md:sticky md:top-28 h-fit self-start order-1 md:order-1">
+                        <div className="relative group cursor-pointer">
+                            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-emerald-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-500"></div>
+                            <div className="relative size-32 md:size-48 rounded-full border-4 border-[#293829] bg-[#1a2e1a] overflow-hidden flex items-center justify-center">
+                                <div
+                                    className="w-full h-full bg-cover bg-center"
+                                    style={{ backgroundImage: 'url("/assets/images/quest_bg.png")' }}
+                                />
+                            </div>
+                            <div className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-[#1a2e1a] rounded-full p-1.5 border border-[#293829]">
+                                <div className="size-3 md:size-4 bg-primary rounded-full animate-pulse"></div>
+                            </div>
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-4">
-                            {config?.title || '靈魂解析'}完成
-                        </h1>
-                        <p className="text-gray-400 text-lg">你的英雄特質已被揭示</p>
-                    </motion.div>
 
-                    {/* Level Info */}
-                    {levelInfo && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="bg-[#11251c] border border-primary/30 rounded-lg p-6 mb-8"
-                        >
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-green-600 flex items-center justify-center">
-                                        <TrendingUp className="w-8 h-8 text-black" />
-                                    </div>
-                                    <div>
-                                        <p className="text-primary text-sm font-bold uppercase tracking-wider">Level {levelInfo.level}</p>
-                                        <p className="text-white text-2xl font-bold">{levelInfo.earnedExp} EXP 獲得</p>
-                                    </div>
-                                </div>
-                                {levelInfo.isLeveledUp && (
-                                    <div className="bg-primary/20 border border-primary/50 px-4 py-2 rounded-lg">
-                                        <p className="text-primary font-bold">LEVEL UP!</p>
-                                    </div>
+                        <div className="mt-6 text-center md:text-left w-full">
+                            <h3 className="text-xl font-bold text-white mb-1">嚮導 Abby</h3>
+                            <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
+                                <p className="text-primary/80 text-sm font-medium">Lv. 99 心靈導師</p>
+                                {levelInfo && (
+                                    <span className="px-2 py-0.5 rounded bg-primary/20 border border-primary/30 text-[10px] text-primary font-bold">
+                                        YOUR LEVEL: {levelInfo.level}
+                                    </span>
                                 )}
                             </div>
-                            {levelInfo.milestone && (
-                                <div className="mt-4 p-3 bg-black/30 rounded border-l-4 border-primary">
-                                    <p className="text-gray-300 text-sm">{levelInfo.milestone}</p>
-                                </div>
+
+                            {/* Abby 對話框 */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="mt-4 p-4 rounded-xl bg-[#1a2e1a] border border-[#293829] relative w-full max-w-[280px] mx-auto md:mx-0"
+                            >
+                                <div className="absolute -top-2 left-1/2 md:left-8 -translate-x-1/2 md:translate-x-0 w-4 h-4 bg-[#1a2e1a] border-t border-l border-[#293829] rotate-45"></div>
+                                <p className="text-gray-300 text-sm leading-relaxed italic">
+                                    "我看見你身上閃耀著獨特的光芒！這些符文代表著你與生俱來的最強武器。"
+                                </p>
+                            </motion.div>
+
+                            {/* Level Up Info 放在左側 */}
+                            {levelInfo && levelInfo.earnedExp > 0 && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="mt-6 p-4 rounded-xl bg-primary/5 border border-primary/20 w-full"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <TrendingUp className="w-5 h-5 text-primary" />
+                                        <span className="text-white text-sm font-bold">獲得 {levelInfo.earnedExp} EXP</span>
+                                    </div>
+                                    {levelInfo.isLeveledUp && (
+                                        <div className="mt-2 text-primary text-xs font-black animate-bounce">LEVEL UP!</div>
+                                    )}
+                                </motion.div>
                             )}
-                        </motion.div>
-                    )}
+                        </div>
+                    </aside>
 
-                    {/* 主要結果卡片 */}
-                    {content && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="bg-[#11251c] border border-primary/30 rounded-lg p-8 mb-8"
-                        >
-                            {/* Icon Header */}
-                            <div className="flex items-center justify-center mb-6">
-                                <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${config.color} flex items-center justify-center`}>
-                                    <Icon className="w-10 h-10 text-white" />
+                    {/* 右側 結果展示區 */}
+                    <div className="flex-1 flex flex-col gap-6 order-2 md:order-2">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent to-[#293829]"></div>
+                            <h2 className="text-2xl font-bold text-white whitespace-nowrap">
+                                <span className="text-primary">{config?.title || '靈魂'}</span> 解析結果
+                            </h2>
+                            <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent to-[#293829]"></div>
+                        </div>
+
+                        {/* 主要結果卡片 */}
+                        {content && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="relative bg-[#1a2e1a] border border-[#293829] rounded-xl p-6 md:p-8 hover:border-primary/50 transition-all duration-300 group"
+                            >
+                                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                    <Trophy className="w-32 h-32 text-white" />
                                 </div>
-                            </div>
 
-                            {/* Content */}
-                            <div className="text-center mb-6">
-                                <div className="flex items-center justify-center gap-3 mb-4">
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                                    <h2 className="text-primary text-sm font-bold uppercase tracking-wider">{content.title}</h2>
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                                <div className="flex flex-col sm:flex-row gap-6 relative z-10">
+                                    <div className="shrink-0">
+                                        <div className="size-20 rounded-full bg-[#112111] border-2 border-primary flex items-center justify-center shadow-[0_0_15px_rgba(54,226,54,0.3)]">
+                                            {config.icon && <config.icon className="w-10 h-10 text-primary" />}
+                                        </div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <h3 className="text-xl font-bold text-white">{content.name}</h3>
+                                            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20">
+                                                {content.title}
+                                            </span>
+                                        </div>
+                                        <p className="text-[#9eb79e] text-sm font-medium mb-4">
+                                            {content.domain || '核心特質已揭曉'}
+                                        </p>
+                                        <div className="bg-[#112111]/50 rounded-lg p-4 border border-[#293829]">
+                                            <p className="text-gray-300 text-sm leading-relaxed">
+                                                {content.description}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h3 className="text-white text-3xl font-black mb-4">{content.name}</h3>
-                                <p className="text-gray-300 text-base leading-relaxed max-w-2xl mx-auto">{content.description}</p>
-                            </div>
+                            </motion.div>
+                        )}
 
-                            {/* Stats Grid (僅 Big Five 測驗顯示) */}
-                            {questId === 'big_five' && stats && (
-                                <div className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-4">
-                                    {Object.entries(stats).map(([key, value]: [string, any]) => (
-                                        <div key={key} className="bg-black/30 rounded-lg p-4 border border-white/5">
-                                            <p className="text-gray-400 text-xs uppercase mb-2">{value.label}</p>
-                                            <div className="flex items-baseline gap-2">
-                                                <span className="text-white text-2xl font-bold">{value.score}</span>
-                                                <span className="text-gray-500 text-sm">/100</span>
+                        {/* 如果有 Stats (Big Five) */}
+                        {stats && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {Object.entries(stats).map(([key, value]: [string, any]) => (
+                                    <motion.div
+                                        key={key}
+                                        whileHover={{ y: -4 }}
+                                        className="bg-[#1a2e1a] border border-[#293829] rounded-xl p-6 transition-all duration-300 hover:border-primary/30"
+                                    >
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className="size-12 rounded-full bg-[#112111] border border-primary flex items-center justify-center">
+                                                <Target className="w-6 h-6 text-primary" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-white font-bold">{value.label}</h4>
+                                                <span className="text-xs text-primary/80">基礎屬性</span>
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
-                            )}
-                        </motion.div>
-                    )}
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-white text-3xl font-bold">{value.score}</span>
+                                            <span className="text-gray-500 text-sm">/ 100</span>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        )}
 
-                    {/* 提示訊息 */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="bg-black/20 border border-primary/20 rounded-lg p-4 mb-8 text-center"
-                    >
-                        <p className="text-gray-400 text-sm">
-                            <Zap className="w-4 h-4 inline-block mr-2 text-primary" />
-                            完整的英雄檔案（包含所有五大類型）可在
-                            <span className="text-primary font-bold mx-1">完整檔案</span>
-                            頁面查看
-                        </p>
-                    </motion.div>
-
-                    {/* CTA Buttons */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="flex flex-col sm:flex-row gap-4 justify-center"
-                    >
-                        <button
-                            onClick={() => {
-                                resetQuest();
-                                navigate('/dashboard');
-                            }}
-                            className="group relative px-8 py-4 bg-primary/10 hover:bg-primary/20 border border-primary/50 hover:border-primary text-primary font-bold uppercase tracking-wider rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                        >
-                            查看完整檔案
-                            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
-
-                        <button
-                            onClick={() => {
-                                resetQuest();
-                                navigate('/map');
-                            }}
-                            className="group relative px-8 py-4 bg-[#11251c] hover:bg-primary/20 border border-primary/30 hover:border-primary text-white hover:text-primary font-bold uppercase tracking-wider rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                        >
-                            返回地圖
-                            <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
-                    </motion.div>
+                        {/* 按鈕區 */}
+                        <div className="w-full flex flex-col items-center gap-6 mt-8">
+                            <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
+                                <button
+                                    onClick={() => {
+                                        resetQuest();
+                                        navigate('/dashboard');
+                                    }}
+                                    className="flex-1 group relative overflow-hidden rounded-full bg-primary px-8 py-4 text-[#10231a] font-extrabold shadow-[0_0_20px_rgba(54,226,54,0.4)] transition-all hover:shadow-[0_0_30px_rgba(54,226,54,0.6)] hover:scale-105 active:scale-95"
+                                >
+                                    <span className="relative z-10 flex items-center justify-center gap-2">
+                                        前往公會大廳
+                                        <ChevronRight className="w-5 h-5" />
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        resetQuest();
+                                        navigate('/map');
+                                    }}
+                                    className="flex-1 rounded-full border border-primary/30 bg-[#1a2e1a] px-8 py-4 text-white font-bold hover:bg-primary/10 transition-all hover:border-primary active:scale-95"
+                                >
+                                    返回地圖
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </>
+            </main>
+
+            <Footer />
+        </div>
     );
 };
 
