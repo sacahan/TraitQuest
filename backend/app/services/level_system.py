@@ -31,16 +31,35 @@ class LevelSystemService:
     def get_question_count(level: int) -> int:
         """
         根據玩家等級取得測驗題目數量。
-        Lv.1~14: 10 題
-        Lv.15~19: 15 題
-        Lv.20+: 20 題
+        Lv.1~15: 10 題
+        Lv.16+: 15 題
         """
-        if level >= 20:
-            return 20
-        elif level >= 15:
+        if level >= 16:
             return 15
         else:
             return 10
+
+    @staticmethod
+    def get_quest_mode(level: int) -> dict:
+        """
+        根據玩家等級取得試煉模式。
+        Lv.1~10: QUANTITATIVE (量化試煉 - 僅選擇題)
+        Lv.11+: SOUL_NARRATIVE (靈魂對話 - 解鎖開放式輸入)
+        """
+        if level >= 11:
+            return {
+                "mode": "SOUL_NARRATIVE",
+                "name": "靈魂對話",
+                "description": "解鎖開放式文字輸入，AI 語義解析",
+                "allowFreeText": True
+            }
+        else:
+            return {
+                "mode": "QUANTITATIVE",
+                "name": "量化試煉", 
+                "description": "五段式選擇題",
+                "allowFreeText": False
+            }
 
     @staticmethod
     def check_level_up(current_level: int, current_exp: int) -> tuple[int, int, bool]:
@@ -71,8 +90,7 @@ class LevelSystemService:
         """
         milestones = {
             11: {"unlock": "靈魂對話模式", "message": "你的靈魂已足夠強大，現在你可以用自己的語言與艾比交談了。"},
-            15: {"unlock": "深邃試煉", "message": "你已準備好迎接更長的冒險，試煉題數增加至 15 題。"},
-            20: {"unlock": "重塑命運", "message": "命運可以改寫！你現在可以重新挑戰任何試煉。"}
+            16: {"unlock": "深邃試煉", "message": "你已準備好迎接更長的冒險，試煉題數增加至 15 題。"},
         }
         return milestones.get(level)
 

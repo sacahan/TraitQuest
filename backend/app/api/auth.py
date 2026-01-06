@@ -100,7 +100,6 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
             class_res = await db.execute(select(GameDefinition).where(GameDefinition.id == class_id))
             class_info = class_res.scalar_one_or_none()
 
-    # 獲取最近的英雄史詩
     quest_result = await db.execute(
         select(UserQuest)
         .where(UserQuest.user_id == user_id, UserQuest.hero_chronicle.isnot(None))
@@ -108,6 +107,8 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
         .limit(1)
     )
     latest_quest = quest_result.scalar_one_or_none()
+    
+    from app.services.level_system import level_service
     
     return {
         "userId": str(user.id),
@@ -117,6 +118,8 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
         "heroClassId": user.hero_class_id,
         "level": user.level,
         "exp": user.exp,
+        "questMode": level_service.get_quest_mode(user.level),
+        "questionCount": level_service.get_question_count(user.level),
         "syncPercent": sync_percent,
         "heroIdentity": {
             "race": {

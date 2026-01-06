@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { questWsClient } from '../services/questWebSocket';
+import { useAuthStore } from './authStore';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Question {
@@ -92,6 +93,29 @@ export const useQuestStore = create<QuestState>((set, get) => {
   questWsClient.on('final_result', (data) => {
     console.log("🔮 Received final result:", data);
     set({ finalResult: data, isLoading: false });
+
+    // Sync level and other info to authStore
+    if (data.level_info) {
+      // We need to dynamically import or direct store access? 
+      // Since we are inside create, we can just import the store hook, but we need the store instance.
+      // Actually, we can import useAuthStore at the top provided circular deps are handled or use getState().
+      // Since we can't use hooks inside callbacks easily, we use useAuthStore.getState()
+
+      const { level_info, class_id, hero_avatar_url } = data;
+      const updates: any = {
+        level: level_info.level,
+        exp: level_info.exp
+      };
+
+      // Also update class/avatar if present (e.g. from MBTI result)
+      if (class_id) updates.heroClassId = class_id;
+      // The backend `QuestReport` might not return `hero_avatar_url` directly inside `final_result` root, 
+      // checking schemas.py... QuestReport has `level_info`, `class_id` etc.
+      // But `authStore` User has `heroAvatarUrl`.
+      // Let's rely on what's available. 
+
+      useAuthStore.getState().updateUser(updates);
+    }
   });
 
   questWsClient.on('error', (data) => {

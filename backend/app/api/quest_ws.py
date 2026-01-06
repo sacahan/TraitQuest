@@ -116,10 +116,14 @@ async def quest_ws_endpoint(
                 if hero_chronicle:
                     chronicle_context = f"\n\n[玩家歷史摘要]：{hero_chronicle}\n"
                 
+                # 取得試煉模式資訊
+                quest_mode = level_service.get_quest_mode(player_level)
+
                 # 指令：生成具有代入感的開場白與第一題
                 instruction = (
                     f"玩家 {display_name} (等級 {player_level})，開啟了 {quest_id} 試煉。 "
                     f"本次試煉總題數設定為 {total_steps} 題。"
+                    f"玩家模式：{quest_mode['name']}（{quest_mode['description']}）。"
                     f"{chronicle_context}"
                     f"請生成一個符合 {quest_id} 試煉情境的開場白，並直接提供第一道題目與選項。"
                 )
@@ -194,7 +198,7 @@ async def quest_ws_endpoint(
                 
                 if current_num >= total_steps:
                      instruction = (
-                         f"玩家 {display_name} 對於最後一題（第 {current_num} 題 / 共 {total_steps} 題）的回答是：{answer}。 "
+                         f"玩家 {display_name} (等級 {player_level}) 對於最後一題（第 {current_num} 題 / 共 {total_steps} 題）的回答是：{answer}。 "
                          f"試煉已達上限，請務必使用 complete_trial 工具結束測驗，並給予一段感性的結語。"
                      )
                 else:
@@ -215,7 +219,7 @@ async def quest_ws_endpoint(
                      
                      instruction = (
                          f"{recent_context}"
-                         f"玩家 {display_name} 對於第 {current_num} 題（共 {total_steps} 題）的回答是：{answer}。 "
+                         f"玩家 {display_name} (等級 {player_level}) 對於第 {current_num} 題（共 {total_steps} 題）的回答是：{answer}。 "
                          f"請生成下一題（第 {next_num} 題 / 共 {total_steps} 題）的情境與題目。"
                      )
                 
@@ -286,8 +290,7 @@ async def quest_ws_endpoint(
                 )
                 transformation_session.state["quest_type"] = quest_id
                 
-                truth_list = await game_assets_service.get_truth_list_dump()
-                t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(accumulated_deltas, ensure_ascii=False)}\n合法資產清單：\n{truth_list}"
+                t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(accumulated_deltas, ensure_ascii=False)}"
                 
                 logger.info(f">>> Instruction: {t_instruction}")
                 transformation_raw = await run_agent_async(
@@ -307,7 +310,6 @@ async def quest_ws_endpoint(
                 # 4. 執行 Summary Agent (生成史詩摘要)
                 logger.info("📝 4. Running Summary Agent...")
                 # 使用 accumulated_analytics 作為資料來源，已分析結果更精確
-                analytics_list = questionnaire_session.state.get("accumulated_analytics", [])
                 history_text = "\n".join([
                     f"分析 #{idx+1}:\n  問題: {item.get('question_text', 'N/A')}\n  回答: {item.get('answer', 'N/A')}\n  特徵增量: {item.get('trait_deltas', {})}"
                     for idx, item in enumerate(analytics_list)

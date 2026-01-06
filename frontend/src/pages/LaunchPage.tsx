@@ -1,37 +1,35 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '../layout/Header';
 import { Footer } from '../layout/Footer';
+import { useAuthStore } from '../stores/authStore';
+import { useMapStore } from '../stores/mapStore';
+import { AlertModal } from '../components/ui/AlertModal';
 
 const QUEST_CONFIG: Record<string, {
     title: string;
     icon: string;
-    amount: string;
 }> = {
     mbti: {
         title: 'MBTI 測驗',
         icon: 'Award',
-        amount: '10',
     },
     big_five: {
         title: '大五人格測驗',
         icon: 'Target',
-        amount: '10',
     },
     disc: {
         title: 'DISC 倫理測驗',
         icon: 'Shield',
-        amount: '10',
     },
     enneagram: {
         title: '九型人格測驗',
         icon: 'Users',
-        amount: '10',
     },
-    gallup: {
+    'gallup': {
         title: '馬斯洛需求測驗',
         icon: 'Compass',
-        amount: '10',
     },
 };
 
@@ -39,17 +37,100 @@ const LaunchPage: React.FC = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
+    const { user, fetchUser } = useAuthStore();
+    const { regions, fetchRegions } = useMapStore();
+
+    // Default values if user not loaded yet
+    const questMode = user?.questMode || { mode: 'QUANTITATIVE', name: '量化試煉', description: '五段式選擇題' };
+    const questionCount = user?.questionCount || 10;
+    const isUnlocked = (user?.level || 0) >= 11;
+
+    // Local state for alert
+    const [alertConfig, setAlertConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        confirmText: string;
+    }>({
+        isOpen: false,
+        title: '',
+        message: '',
+        confirmText: '返回地圖'
+    });
+
+    useEffect(() => {
+        // Fetch latest user data to ensure level/questMode is up to date
+        fetchUser();
+        // Ensure regions are loaded to check status
+        fetchRegions();
+    }, [fetchUser, fetchRegions]);
+
+    useEffect(() => {
+        const type = searchParams.get('type');
+
+        if (!type) {
+            setAlertConfig({
+                isOpen: true,
+                title: "迷失方向",
+                message: "似乎遺失了試煉的指引信物（Type），無法開啟連結。請返回地圖重新選擇試煉區域。",
+                confirmText: "返回地圖"
+            });
+            return;
+        }
+
+        // Wait for regions to load
+        if (regions.length === 0) return;
+
+        const region = regions.find(r => r.id === type);
+        if (!region) {
+            // Invalid region type
+            setAlertConfig({
+                isOpen: true,
+                title: "未知區域",
+                message: "此區域不存在於星圖之中。",
+                confirmText: "返回地圖"
+            });
+            return;
+        }
+
+        if (region.status === 'LOCKED') {
+            setAlertConfig({
+                isOpen: true,
+                title: "區域未解鎖",
+                message: region.unlock_hint || "此區域尚未對您開放，請先完成前置試煉。",
+                confirmText: "返回地圖"
+            });
+        }
+    }, [searchParams, regions]);
+
     const handleStart = () => {
         const type = searchParams.get('type');
         if (type) {
+            // Double check (though useEffect should cover it)
+            const region = regions.find(r => r.id === type);
+            if (region && region.status === 'LOCKED') {
+                return; // Alert should be showing already
+            }
             navigate(`/questionnaire?type=${type}`);
-        } else {
-            navigate('/questionnaire');
         }
+    };
+
+    const handleErrorClose = () => {
+        setAlertConfig(prev => ({ ...prev, isOpen: false }));
+        navigate('/map');
     };
 
     return (
         <div className="min-h-screen flex flex-col bg-background-dark text-white relative overflow-hidden">
+            <AlertModal
+                isOpen={alertConfig.isOpen}
+                onClose={handleErrorClose}
+                title={alertConfig.title}
+                message={alertConfig.message}
+                confirmText={alertConfig.confirmText}
+                onConfirm={handleErrorClose}
+            />
+
             {/* 魔法背景特效層 */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 {/* 粒子特效 (使用 Framer Motion 模擬) */}
@@ -195,11 +276,11 @@ const LaunchPage: React.FC = () => {
                             {/* 試煉方式 */}
                             <div className="flex items-center gap-3 p-3 rounded-lg bg-[#064e3b]/30 border border-primary/10">
                                 <div className="w-10 h-10 rounded-full bg-[#fbbf24]/10 flex items-center justify-center text-[#fbbf24]">
-                                    <span className="material-symbols-outlined text-xl">swords</span>
+                                    <span className="material-symbols-outlined text-xl">self_improvement</span>
                                 </div>
                                 <div>
-                                    <div className="text-[10px] text-white/50 uppercase tracking-wider">試煉類型</div>
-                                    <div className="text-white font-bold">{QUEST_CONFIG[searchParams.get('type') || 'mbti']?.title || '心靈試煉'}</div>
+                                    <div className="text-[12px] text-white/50 uppercase tracking-wider">試煉類型</div>
+                                    <div className="text-white font-bold text-md">{QUEST_CONFIG[searchParams.get('type') || 'mbti']?.title || '心靈試煉'}</div>
                                 </div>
                             </div>
                             {/* 試煉數量 */}
@@ -208,8 +289,8 @@ const LaunchPage: React.FC = () => {
                                     <span className="material-symbols-outlined text-xl">quiz</span>
                                 </div>
                                 <div>
-                                    <div className="text-[10px] text-white/50 uppercase tracking-wider">試煉數量</div>
-                                    <div className="text-white font-bold">{QUEST_CONFIG[searchParams.get('type') || 'mbti']?.amount || '10'} 道題</div>
+                                    <div className="text-[12px] text-white/50 uppercase tracking-wider">試煉數量</div>
+                                    <div className="text-white font-bold text-md">{questionCount} 道題</div>
                                 </div>
                             </div>
                             {/* 試煉形式 (根據等級顯示) */}
@@ -218,20 +299,29 @@ const LaunchPage: React.FC = () => {
                                     <span className="material-symbols-outlined text-xl">psychology</span>
                                 </div>
                                 <div>
-                                    <div className="text-[10px] text-white/50 uppercase tracking-wider">試煉形式</div>
-                                    <div className="text-white font-bold">量化試煉</div>
-                                    <div className="text-[10px] text-purple-400/70">選擇題型</div>
+                                    <div className="text-[12px] text-white/50 uppercase tracking-wider">試煉形式</div>
+                                    <div className="text-white font-bold text-md">{questMode.name}</div>
+                                    <div className="text-[12px] text-purple-400/70">{questMode.mode === 'QUANTITATIVE' ? '選擇題型' : '開放式輸入'}</div>
                                 </div>
                             </div>
                             {/* 解鎖提示 */}
-                            <div className="flex items-center gap-3 p-3 rounded-lg bg-[#064e3b]/30 border border-cyan-500/20">
-                                <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400">
-                                    <span className="material-symbols-outlined text-xl">lock_open</span>
+                            <div className={`flex items-center gap-3 p-3 rounded-lg bg-[#064e3b]/30 border ${isUnlocked ? 'border-cyan-500/20' : 'border-white/10'}`}>
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isUnlocked ? 'bg-cyan-500/10 text-cyan-400' : 'bg-white/5 text-white/40'}`}>
+                                    <span className="material-symbols-outlined text-xl">{isUnlocked ? 'lock_open' : 'lock'}</span>
                                 </div>
                                 <div>
-                                    <div className="text-[10px] text-white/50 uppercase tracking-wider">進階模式</div>
-                                    <div className="text-white font-bold text-sm">Lv.11 解鎖</div>
-                                    <div className="text-[10px] text-cyan-400/70">靈魂對話・開放式輸入</div>
+                                    <div className="text-[12px] text-white/50 uppercase tracking-wider">靈性對話</div>
+                                    {isUnlocked ? (
+                                        <>
+                                            <div className="text-white font-bold text-md">等級解鎖</div>
+                                            <div className="text-[12px] text-cyan-400/70">深度靈魂對話</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                                <div className="text-white/60 font-bold text-md">等級未達</div>
+                                                <div className="text-[12px] text-white/30">等級達 11 級，即可解鎖</div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>

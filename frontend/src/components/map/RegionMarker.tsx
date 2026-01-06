@@ -23,7 +23,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
     if (isConquered) {
       window.location.href = `/analysis?region=${region.id}`
     } else {
-      window.location.href = `/questionnaire?type=${region.id}`
+      window.location.href = `/launch?type=${region.id}`
     }
   }
 

@@ -28,8 +28,25 @@ def test_check_level_up_multi_level():
     assert exp == 50
     assert is_up
 
+def test_get_question_count():
+    assert level_service.get_question_count(1) == 10
+    assert level_service.get_question_count(10) == 10
+    assert level_service.get_question_count(15) == 10
+    assert level_service.get_question_count(16) == 15
+    assert level_service.get_question_count(20) == 15
+
 def test_get_level_milestone():
-    assert level_service.get_level_milestone(5)["unlock"] == "第二測驗區域"
+    assert level_service.get_level_milestone(10) is None
     assert level_service.get_level_milestone(11)["unlock"] == "靈魂對話模式"
-    assert level_service.get_level_milestone(20)["unlock"] == "進階測驗題數"
-    assert level_service.get_level_milestone(2) is None
+    assert level_service.get_level_milestone(16)["unlock"] == "深邃試煉"
+    assert level_service.get_level_milestone(20) is None
+
+def test_get_quest_mode():
+    mode_lv1 = level_service.get_quest_mode(1)
+    assert mode_lv1["mode"] == "QUANTITATIVE"
+    assert not mode_lv1["allowFreeText"]
+    
+    mode_lv11 = level_service.get_quest_mode(11)
+    assert mode_lv11["mode"] == "SOUL_NARRATIVE"
+    assert mode_lv11["allowFreeText"]
+
