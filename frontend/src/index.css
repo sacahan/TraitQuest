@@ -33,6 +33,33 @@
         box-shadow: 0 0 35px rgba(17, 212, 82, 0.8);
       }
     }
+@keyframes breathing {
+
+  0%,
+  100% {
+    opacity: 0.05;
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  50% {
+    opacity: 0.12;
+    transform: translate(-50%, 0) scale(1.1);
+  }
+}
+
+@keyframes breathing-slow {
+
+  0%,
+  100% {
+    opacity: 0.03;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.08;
+    transform: scale(1.15);
+  }
+}
 @keyframes card-pulse {
 
   0%,
@@ -104,6 +131,8 @@
   
     --animate-breathing-glow: breathing-glow 3s ease-in-out infinite;
     --animate-breathing-white: breathing-white 3s ease-in-out infinite;
+        --animate-breathing: breathing 6s ease-in-out infinite;
+        --animate-breathing-slow: breathing-slow 8s ease-in-out infinite;
     --animate-card-pulse: card-pulse 4s ease-in-out infinite;
     --animate-float: float 6s ease-in-out infinite;
     --animate-crystal-breathe: crystal-breathe 6s ease-in-out infinite;

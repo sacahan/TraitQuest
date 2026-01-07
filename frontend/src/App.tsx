@@ -4,7 +4,7 @@ import { useAuthStore } from './stores/authStore'
 import DashboardPage from './pages/DashboardPage'
 import AnalysisPage from './pages/AnalysisPage'
 import Home from './pages/Home'
-import Questionnaire from './pages/Questionnaire'
+import QuestionnairePage from './pages/QuestionnairePage'
 import MapPage from './pages/MapPage'
 import MbtiIntro from './pages/intro/MbtiIntro'
 import BigFiveIntro from './pages/intro/BigFiveIntro'
@@ -54,7 +54,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route
               path="/questionnaire"
-              element={isAuthenticated ? <Questionnaire /> : <Navigate to="/" />}
+              element={isAuthenticated ? <QuestionnairePage /> : <Navigate to="/" />}
             />
             <Route
               path="/map"

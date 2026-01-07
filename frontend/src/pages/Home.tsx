@@ -8,8 +8,8 @@ import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
 const QUESTS = [
   {
     id: 'mbti',
-    title: '英雄原型（MBTI）',
-    type: '維度學派',
+    title: '英雄職業',
+    type: 'MBTI ',
     description: '源自榮格心理學的十六種心智原型。透過四大維度，判定你最自然的思考方式與行動風格。',
     imageUrl: '/assets/images/mbti_cover.webp',
     color: 'green',
@@ -18,8 +18,8 @@ const QUESTS = [
   },
   {
     id: 'bigfive',
-    title: '五大心域（Big Five）',
-    type: '屬性學派',
+    title: '角色屬性',
+    type: 'Big Five',
     description: '現代心理學中最具實證基礎的心性模型。以五條連續屬性，描繪你長期穩定的行為輪廓。',
     imageUrl: '/assets/images/big5_cover.webp',
     color: 'blue',
@@ -28,8 +28,8 @@ const QUESTS = [
   },
   {
     id: 'disc',
-    title: '四象行動（DISC）',
-    type: '行為學派',
+    title: '戰鬥流派',
+    type: 'DISC',
     description: '解析你在壓力與衝突中的即時反應。四象行動核心，決定你在人際戰場上的站位。',
     imageUrl: '/assets/images/disc_cover.webp',
     color: 'red',
@@ -38,8 +38,8 @@ const QUESTS = [
   },
   {
     id: 'enneagram',
-    title: '九大執念（Enneagram）',
-    type: '原型學派',
+    title: '靈魂種族',
+    type: 'Enneagram',
     description: '九種靈魂本源，萌芽於恐懼與渴望。揭示驅動你行為的核心執念與成長盲點。',
     imageUrl: '/assets/images/enneagram_cover.webp',
     color: 'purple',
@@ -48,8 +48,8 @@ const QUESTS = [
   },
   {
     id: 'gallup',
-    title: '三十四技能（CliftonStrengths®）',
-    type: '天賦學派',
+    title: '天賦技能',
+    type: 'CliftonStrengths®',
     description: 'Gallup 發展的天賦模型。辨識你最具力量的天賦主軸，專注強化，而非補齊短板。',
     imageUrl: '/assets/images/gallup_cover.webp',
     color: 'yellow',
@@ -92,7 +92,7 @@ const Home = () => {
                   開啟你的心靈冒險
                 </h1>
                 <h2 className="text-gray-200 text-base font-medium leading-relaxed md:text-lg max-w-2xl mx-auto drop-shadow-md font-body">
-                  從 MBTI 的職業聖殿到九型人格的靈魂神殿。選擇你的試煉，解鎖隱藏在內心深處的英雄屬性與專屬技能！
+                  從 MBTI 的核心職業到九型人格的靈魂神殿。選擇你的試煉，解鎖隱藏在內心深處的英雄屬性與專屬天賦！
                 </h2>
               </div>
               {isAuthenticated ? (
@@ -117,7 +117,7 @@ const Home = () => {
                 </span>
                 <span className="flex items-center gap-1 group/item">
                   <span className="material-symbols-outlined text-primary text-sm transition-all group-hover/item:scale-125 group-hover/item:text-white">check_circle</span>
-                  專業分析報告
+                  沉浸式冒險 RPG 體驗
                 </span>
               </div>
             </div>

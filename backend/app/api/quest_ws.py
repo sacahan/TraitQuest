@@ -154,14 +154,18 @@ async def quest_ws_endpoint(
                     question_data = q_output.get("question", {})
                     current_question_text = question_data.get("text", "")
                     current_options = question_data.get("options", [])
+                    current_type = question_data.get("type", "QUANTITATIVE")
 
                 # 紀錄互動內容到 Session
                 if "interactions" not in questionnaire_session.state:
                     questionnaire_session.state["interactions"] = []
-                questionnaire_session.state["interactions"].append({
-                    "question": q_output.get("question", {}),
-                    "answer": answer
-                })
+                questionnaire_session.state["interactions"].append(
+                    {
+                        "question": q_output.get("question", {}),
+                        "answer": answer,
+                        "type": current_type,
+                    }
+                )
                 
                 # [Fix] Explicitly save session state (interactions)
                 await session_service.update_session(questionnaire_session)
@@ -185,7 +189,15 @@ async def quest_ws_endpoint(
                 # [平行處理] 啟動後台分析任務 (Non-blocking)
                 # 這允許分析與下一題生成同時進行，提升響應速度
                 analysis_task = asyncio.create_task(
-                    run_analytics_task(user_id, sessionId, current_question_text, answer, quest_id, options=current_options)
+                    run_analytics_task(
+                        user_id,
+                        sessionId,
+                        current_question_text,
+                        answer,
+                        quest_id,
+                        options=current_options,
+                        question_type=current_type,
+                    )
                 )
                 manager.pending_tasks[sessionId].append(analysis_task)
                 
@@ -265,17 +277,17 @@ async def quest_ws_endpoint(
                     await asyncio.gather(*tasks)
                 
                 # 2. 聚合 (Reduce) 所有分析結果
-                logger.info(f"⏳ 2. Aggregating all analysis results")
+                logger.info("⏳ 2. Aggregating all analysis results")
                 questionnaire_session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
                 analytics_list = questionnaire_session.state.get("accumulated_analytics", [])
                 
                 total_quality = 0
-                accumulated_deltas = {}
-                for item in analytics_list:
-                    total_quality += item.get("quality_score", 1.0)
-                    deltas = item.get("trait_deltas", {})
-                    for tag, val in deltas.items():
-                        accumulated_deltas[tag] = accumulated_deltas.get(tag, 0) + val
+                # accumulated_deltas = {}
+                # for item in analytics_list:
+                #     total_quality += item.get("quality_score", 1.0)
+                #     deltas = item.get("trait_deltas", {})
+                #     for tag, val in deltas.items():
+                #         accumulated_deltas[tag] = accumulated_deltas.get(tag, 0) + val
                 
                 avg_quality = total_quality / len(analytics_list) if analytics_list else 1.0
                 
@@ -290,8 +302,8 @@ async def quest_ws_endpoint(
                 )
                 transformation_session.state["quest_type"] = quest_id
                 await session_service.update_session(transformation_session)
-                
-                t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(accumulated_deltas, ensure_ascii=False)}"
+
+                t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(analytics_list, ensure_ascii=False)}"
                 
                 logger.info(f">>> Instruction: {t_instruction}")
                 transformation_raw = await run_agent_async(
@@ -308,10 +320,12 @@ async def quest_ws_endpoint(
                 # 4. 執行 Summary Agent (生成史詩摘要)
                 logger.info("📝 4. Running Summary Agent...")
                 # 使用 accumulated_analytics 作為資料來源，已分析結果更精確
-                history_text = "\n".join([
-                    f"分析 #{idx+1}:\n  問題: {item.get('question_text', 'N/A')}\n  回答: {item.get('answer', 'N/A')}\n  特徵增量: {item.get('trait_deltas', {})}"
-                    for idx, item in enumerate(analytics_list)
-                ])
+                history_text = "\n".join(
+                    [
+                        f"第 {idx + 1} 題:\n  分析結果: {item.get('analysis_reason', 'N/A')}\n 特徵增量: {item.get('trait_deltas', {})}"
+                        for idx, item in enumerate(analytics_list)
+                    ]
+                )
                 s_instruction = f"玩家對話分析摘要：\n{history_text}"
                 
                 logger.info(f">>> Summary Instruction (using accumulated_analytics): {s_instruction[:200]}...")

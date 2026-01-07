@@ -10,10 +10,10 @@ const GallupIntro: React.FC = () => {
           <div className="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
               <span className="material-symbols-outlined text-sm">trophy</span>
-              Gallup天賦優勢
+              Gallup 祭壇
             </div>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
-              覺醒你的<span className="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">傳奇技能</span>
+              覺醒你的<span className="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">天賦技能</span>
             </h1>
             <p className="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
               Gallup 克利夫頓優勢定義了你與生俱來的卓越天賦。在 TraitQuest 中，這些天賦將轉化為你的專屬主動與被動技能。

@@ -10,10 +10,10 @@ const DiscIntro: React.FC = () => {
           <div className="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
               <span className="material-symbols-outlined text-sm">swords</span>
-              DISC 分析
+              DISC 戰鬥叢林
             </div>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
-              修煉你的<span className="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">戰鬥方式</span>
+              修煉你的<span className="text-primary drop-shadow-[0_0_10px_rgba(11,218,115,0.5)]">戰鬥流派</span>
             </h1>
             <p className="text-[#90cbad] text-base md:text-lg max-w-[600px] leading-relaxed">
               DISC 模式定義了你在壓力下的行為反應。在 TraitQuest 中，這決定了你在戰鬥中的陣型位置與反應速度。

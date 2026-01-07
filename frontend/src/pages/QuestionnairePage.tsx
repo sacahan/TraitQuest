@@ -5,10 +5,10 @@ import { Footer } from '../layout/Footer';
 import { useQuestStore } from '../stores/questStore';
 import { useAuthStore } from '../stores/authStore';
 import { useMapStore } from '../stores/mapStore';
-import QuestionnairePage from '../components/quest/QuestionnairePage';
+import Questionnaire from '../components/quest/Questionnaire';
 import { AlertModal } from '../components/ui/AlertModal';
 
-const Questionnaire = () => {
+const QuestionnairePage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const questType = searchParams.get('type') || 'unknown';
@@ -105,11 +105,11 @@ const Questionnaire = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <QuestionnairePage />
+        <Questionnaire />
       </main>
       <Footer />
     </div>
   );
 };
 
-export default Questionnaire;
+export default QuestionnairePage;

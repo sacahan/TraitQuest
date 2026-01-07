@@ -4,10 +4,11 @@ import { Users, ShieldAlert } from 'lucide-react';
 interface BondItemProps {
   type: 'compatible' | 'conflicting';
   name: string;
+  id: string;
   description: string;
 }
 
-const BondItem: React.FC<BondItemProps> = ({ type, name, description }) => {
+const BondItem: React.FC<BondItemProps> = ({ type, name, id, description }) => {
   const isCompatible = type === 'compatible';
 
   return (
@@ -19,15 +20,18 @@ const BondItem: React.FC<BondItemProps> = ({ type, name, description }) => {
           ) : (
             <ShieldAlert size={16} className="text-red-500" />
           )}
-          <span className={`text-[18px] font-bold ${isCompatible ? 'text-primary' : 'text-red-400'}`}>
-            {isCompatible ? '天命盟友' : '宿命之敵'}：{name.replace('CLS_', '')}
-          </span>
+          <p className={`text-[18px] font-bold ${isCompatible ? 'text-primary' : 'text-red-400'}`}>
+            {isCompatible ? '天命盟友' : '宿命之敵'}
+          </p>
         </div>
       </div>
 
+      <p className={`text-[16px] font-bold ${isCompatible ? 'text-primary' : 'text-red-400'}`}>
+        {name} ({id.replace('CLS_', '')})
+      </p>    
 
-      <p className="text-[16px] text-white/60 leading-relaxed italic">
-        {description.replace('CLS_', '')}
+      <p className="text-[14px] text-white/60 leading-relaxed italic pt-2">
+        {description?.replace('CLS_', '') ?? '尚無描述'}
       </p>
     </div>
   );
@@ -37,13 +41,15 @@ interface DestinyBondsProps {
   bonds: {
     compatible?: Array<{
       class_id: string;
+      advantage: string;
+      sync_rate: number;
       class_name: string;
-      description: string;
     }>;
     conflicting?: Array<{
       class_id: string;
       class_name: string;
-      description: string;
+      risk_level: string;
+      friction_reason: string;
     }>;
   };
 }
@@ -58,7 +64,7 @@ const DestinyBonds: React.FC<DestinyBondsProps> = ({ bonds }) => {
     );
   }
 
-  // 取第一個相容與衝突羈絆（若存在）
+  // 取第一個相容與衝突羈絆(若存在)
   const compatibleBond = bonds.compatible?.[0];
   const conflictingBond = bonds.conflicting?.[0];
 
@@ -67,15 +73,17 @@ const DestinyBonds: React.FC<DestinyBondsProps> = ({ bonds }) => {
       {compatibleBond && (
         <BondItem
           type="compatible"
-          name={compatibleBond.class_id}
-          description={compatibleBond.description}
+          id={compatibleBond.class_id}
+          name={compatibleBond.class_name}
+          description={compatibleBond.advantage}
         />
       )}
       {conflictingBond && (
         <BondItem
           type="conflicting"
-          name={conflictingBond.class_id}
-          description={conflictingBond.description}
+          id={conflictingBond.class_id}
+          name={conflictingBond.class_name}
+          description={conflictingBond.friction_reason}
         />
       )}
     </div>

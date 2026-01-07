@@ -195,10 +195,18 @@ async def run_agent_async(
 
     return result
 
-async def run_analytics_task(user_id: str, session_id: str, question_text: str, answer: str, test_category: str, options: list = None):
+async def run_analytics_task(
+    user_id: str,
+    session_id: str,
+    question_text: str,
+    answer: str,
+    test_category: str,
+    options: list = None,
+    question_type: str = "QUANTITATIVE",
+):
     """
     背景任務：執行 Analytics Agent 並將分析結果存入 Session
-    
+
     此函式被設計為 Fire-and-forget 的背景任務，避免阻塞主對話流程。
     它會啟動一個獨立的 Analytics Agent 用於分析玩家回答的心理特徵，
     並將結果存入 Session State 的 `accumulated_analytics` 列表中，供最終結算使用。
@@ -210,6 +218,7 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
         answer: 答案
         test_category: 測驗範疇
         options: 選項列表（可選）
+        question_type: 題型（預設 QUANTITATIVE）
     """
     try:
         logger.debug(f"🧠 [Background] Starting AI analysis for session {session_id}")
@@ -218,7 +227,9 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
         instruction = f"題目：{question_text}\n"
         if options:
             instruction += f"選項：{json.dumps(options, ensure_ascii=False)}\n"
-        instruction += f"玩家回答：{answer}\n測驗範疇：{test_category}"
+        instruction += f"玩家回答：{answer}\n"
+        instruction += f"測驗範疇：{test_category}\n"
+        instruction += f"題型：{question_type}"
         
         logger.info(f"🧠 [Background] Instruction: {instruction}")   
         # 使用通用執行器執行 Analytics Agent

@@ -32,8 +32,8 @@ def submit_summary(
     
     result = {"hero_chronicle": hero_chronicle}
     tool_context.state["summary_output"] = result
-    
-    logger.info(f"📜 New Hero Chronicle Summary Generated")
+
+    logger.info("📜 New Hero Chronicle Summary Generated")
     return result
 
 def create_summary_agent() -> Agent:

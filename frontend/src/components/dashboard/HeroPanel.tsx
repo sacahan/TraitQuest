@@ -37,7 +37,7 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
 
       <div className="relative rounded-xl overflow-hidden border border-primary/50 shadow-[0_0_15px_rgba(17,212,82,0.1)] bg-[#0e1f15] transition-all duration-300 group-hover:border-primary">
         <div
-          className="aspect-[7/8] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
+          className="aspect-[12/12] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
           style={{
             backgroundImage: `url(${avatarUrl ||
               (classId && classId !== "???" ? `/assets/images/classes/${classId.toLowerCase()}.png` : '/assets/images/classes/civilian.png')
@@ -57,7 +57,7 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
             </h2>
 
             <p className="text-[#92c9a4] font-bold text-base mt-0.5 tracking-wide">
-              {classId}
+              {classId.replace("CLS_", "")}
             </p>
 
             <p className="text-gray-300 text-xs mt-2 leading-relaxed border-l-2 border-primary/50 pl-2 italic">

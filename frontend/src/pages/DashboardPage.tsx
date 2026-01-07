@@ -77,21 +77,95 @@ const DashboardPage = () => {
         );
     }
 
-    const traits = profileData.heroProfile || {};
+    const profile = profileData.heroProfile || {};
     const identity = profileData.heroIdentity || {};
-    const syncPercent = profileData.syncPercent || 0;
+    const level = profileData.level || 1;
+    const exp = profileData.exp || 0;
 
     return (
         <div className="min-h-screen bg-[#050d09] text-white font-body selection:bg-primary/30 relative overflow-hidden flex flex-col">
             <Header />
 
             {/* Background Effects */}
-            <div className="fixed inset-0 pointer-events-none">
+            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]"></div>
+                {/* 頂部發光 */}
+                <div className="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-[#059669] rounded-full blur-[150px] opacity-30 animate-pulse-slow"></div>
+                {/* 底部發光 */}
+                <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-primary rounded-full blur-[180px] opacity-10"></div>
             </div>
 
             <main className="flex-1 relative z-10 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+                {/* Chronicle & Level Section - Side by Side */}
+                <div className="mb-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Chronicle - 2/3 width */}
+                    <motion.div
+                        className="lg:col-span-2"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                        <div className="bg-card-dark rounded-xl p-6 border border-primary/20 relative overflow-hidden group hover:border-primary/40 transition-colors h-full">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary">auto_stories</span>
+                                    <span className="text-[14px] font-bold text-primary uppercase tracking-widest">英雄史詩 (Chronicle)</span>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        const content = document.getElementById('chronicle-content');
+                                        if (content) {
+                                            content.classList.toggle('hidden');
+                                        }
+                                    }}
+                                    className="text-primary hover:text-primary/70 transition-colors"
+                                >
+                                    <span className="material-symbols-outlined">expand_more</span>
+                                </button>
+                            </div>
+                            <motion.div
+                                id="chronicle-content"
+                                className="transition-all duration-300"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 1, delay: 0.3 }}
+                            >
+                                <p className="text-gray-300 text-sm leading-relaxed font-serif italic border-l-2 border-primary/30 pl-4 py-1 min-h-[60px]">
+                                    {profileData.latestChronicle || "尚未開始你的冒險,命運之書正等待著你的筆跡。"}
+                                </p>
+                            </motion.div>
+                            <div className="absolute bottom-0 right-0 p-4 opacity-5 pointer-events-none">
+                                <span className="material-symbols-outlined text-[120px]">menu_book</span>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Level & Experience - 1/3 width */}
+                    <div className="lg:col-span-1">
+                        <div className="bg-card-dark rounded-xl p-5 border border-white/5 shadow-xl h-full flex flex-col justify-center">
+                            <div className="flex justify-between items-center mb-3">
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-lg">military_tech</span>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-primary">等級</span>
+                                </div>
+                                <span className="text-2xl font-bold text-white">Lv.{level}</span>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+                                    <span className="text-gray-400">經驗值</span>
+                                    <span className="text-white">{exp} / 5500 XP</span>
+                                </div>
+                                <div className="h-3 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-primary via-emerald-400 to-primary background-animate transition-all duration-1000"
+                                        style={{ width: `${Math.max(Math.min((exp / 5500) * 100, 100), 2)}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Hero section */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                     {/* Left: Hero Portrait */}
@@ -102,20 +176,6 @@ const DashboardPage = () => {
                             classId={identity.class?.id}
                             classDescription={identity.class?.description}
                         />
-
-                        {/* Awakening Progress */}
-                        <div className="bg-card-dark rounded-xl p-5 border border-white/5 shadow-xl">
-                            <div className="flex justify-between text-xs font-bold uppercase tracking-wider mb-2">
-                                <span className="text-primary">Awakening Sync</span>
-                                <span className="text-white">{syncPercent}%</span>
-                            </div>
-                            <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
-                                <div
-                                    className="h-full bg-gradient-to-r from-primary via-emerald-400 to-primary background-animate transition-all duration-1000"
-                                    style={{ width: `${syncPercent}%` }}
-                                ></div>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Right: Detailed Stats Cards */}
@@ -126,26 +186,25 @@ const DashboardPage = () => {
                             animate={{ opacity: 1, y: 0 }}
                             className="h-full"
                         >
-                            {!traits.stats || Object.keys(traits.stats).length === 0 ? (
+                            {!profile.stats || Object.keys(profile.stats).length === 0 ? (
                                 <LockedCard
-                                    label="本源屬性 (Big 5)"
+                                    label="角色屬性 (Big 5)"
                                     unlockHint="元素能量尚未共鳴。完成屬性覺醒試煉以解鎖你的五大本源力量。"
-                                    themeColor="blue"
-                                    iconName="radar"
-                                    onClick={() => window.location.href = '/map'}
+                                    themeColor="#00f0ff"
+                                    onClick={() => window.location.href = '/intro/bigfive'}
                                 />
                             ) : (
                                 <div className="bg-card-dark rounded-2xl p-6 border border-blue-500/30 h-full relative overflow-hidden group hover:border-blue-500/60 transition-colors">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex items-center gap-2">
                                             <span className="bg-blue-500/20 text-blue-300 p-1.5 rounded-lg border border-blue-500/30">
-                                                <span className="material-symbols-outlined text-lg">radar</span>
+                                                    <span className="material-symbols-outlined text-lg">water_drop</span>
                                             </span>
-                                            <span className="text-sm font-bold text-blue-300 uppercase tracking-widest">本源屬性 (Big 5)</span>
+                                                <span className="text-sm font-bold text-blue-300 uppercase tracking-widest">角色屬性 (Big 5)</span>
                                         </div>
                                     </div>
                                     <div className="flex items-center justify-center relative h-56">
-                                        <RadarChart stats={traits.stats} />
+                                            <RadarChart stats={profile.stats} />
                                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                             <span className="text-sm font-bold text-blue-400 bg-black/50 px-2 py-1 rounded backdrop-blur-sm border border-blue-500/20">
                                                 屬性調和
@@ -153,7 +212,7 @@ const DashboardPage = () => {
                                         </div>
                                     </div>
                                     <div className="text-center mt-4 space-y-2">
-                                        <p className="text-sm text-gray-500 uppercase tracking-widest font-black">元素共鳴完畢</p>
+                                            <p className="text-sm text-gray-500 uppercase tracking-widest font-black">屬性調和完畢</p>
                                         <div className="grid grid-cols-5 gap-2">
                                                 {[
                                                     { key: 'openness', label: '智力' },
@@ -162,7 +221,7 @@ const DashboardPage = () => {
                                                     { key: 'agreeableness', label: '魅力' },
                                                     { key: 'neuroticism', label: '洞察' }
                                                 ].map((item) => {
-                                                    const statObj = traits.stats?.[item.key] || { score: 50 };
+                                                    const statObj = profile.stats?.[item.key] || { score: 50 };
                                                     const score = typeof statObj === 'object' ? statObj.score : (statObj || 50);
 
                                                     return (
@@ -187,69 +246,30 @@ const DashboardPage = () => {
                             transition={{ delay: 0.1 }}
                             className="h-full"
                         >
-                            {!traits.stance_id ? (
+                            {!profile.stance_id ? (
                                 <LockedCard
-                                    label="戰技流派 (DISC)"
+                                    label="戰鬥流派 (DISC)"
                                     unlockHint="戰魂沈睡於此。唯有經歷試煉方能覺醒專屬於你的戰鬥風格。"
-                                    themeColor="red"
-                                    onClick={() => window.location.href = '/map'}
+                                    themeColor="#ff4f4f"
+                                    onClick={() => window.location.href = '/intro/disc'}
                                 />
                             ) : (
                                 <div className="bg-card-dark rounded-2xl p-6 border border-red-500/30 h-full group hover:border-red-500/60 transition-colors">
                                     <div className="flex justify-between items-start mb-6">
                                         <div className="flex items-center gap-2">
                                             <span className="bg-red-500/20 text-red-300 p-1.5 rounded-lg border border-red-500/30">
-                                                <span className="material-symbols-outlined text-lg">shield</span>
+                                                    <span className="material-symbols-outlined text-lg">swords</span>
                                             </span>
-                                            <span className="text-sm font-bold text-red-300 uppercase tracking-widest">戰技姿態 (DISC)</span>
+                                                <span className="text-sm font-bold text-red-300 uppercase tracking-widest">戰鬥流派 (DISC)</span>
                                         </div>
                                     </div>
                                     <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-red-400 transition-colors">
-                                        {traits.stance_id === 'D' ? '霸道征服者' : '優雅守護者'}
+                                            {profile.stance_id === 'STN_D' ? '烈焰戰姿' : profile.stance_id === 'STN_I' ? '潮汐之歌' : profile.stance_id === 'STN_S' ? '大地磐石' : profile.stance_id === 'STN_C' ? '星辰軌跡' : '未覺醒'}
                                     </h3>
-                                    <p className="text-sm text-gray-400 mb-4">{traits.stance_id} 型戰鬥風格</p>
+                                        <p className="text-sm text-gray-400 mb-4">{profile.stance_id.replace('STN_', '')} 型戰鬥風格</p>
                                     <div className="bg-black/30 p-3 rounded border border-white/10 italic text-sm text-gray-300">
                                         "以絕對的專注主宰戰局，洞察每一次破綻。"
                                     </div>
-                                </div>
-                            )}
-                        </motion.div>
-
-                        {/* Gallup/Talent Card */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="h-full"
-                        >
-                            {!traits.talent_ids || traits.talent_ids.length === 0 ? (
-                                <LockedCard
-                                    label="天命之技 (Gallup)"
-                                    unlockHint="上古卷軸封印著你的終極奧義。需集齊靈魂碎片以解鎖此力。"
-                                    themeColor="yellow"
-                                    iconName="lock_clock"
-                                    onClick={() => window.location.href = '/map'}
-                                />
-                            ) : (
-                                <div className="bg-card-dark rounded-2xl p-6 border border-yellow-500/30 h-full group hover:border-yellow-600/60 transition-colors">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div className="flex items-center gap-2">
-                                            <span className="bg-yellow-500/20 text-yellow-300 p-1.5 rounded-lg border border-yellow-500/30">
-                                                <span className="material-symbols-outlined text-lg">menu_book</span>
-                                            </span>
-                                            <span className="text-sm font-bold text-yellow-300 uppercase tracking-widest">傳奇天賦 (Talents)</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {traits.talent_ids.map((tid: string) => (
-                                            <span key={tid} className="bg-yellow-900/30 border border-yellow-500/30 text-yellow-500 text-sm font-bold px-2 py-1 rounded">
-                                                {tid.replace('TAL_', '')}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <p className="text-sm text-gray-400 mt-4 leading-relaxed">
-                                        已覺醒的靈魂天賦，賦予你超越常人的命運掌握力。
-                                    </p>
                                 </div>
                             )}
                         </motion.div>
@@ -261,38 +281,77 @@ const DashboardPage = () => {
                             transition={{ delay: 0.2 }}
                             className="h-full"
                         >
-                            {!traits.race_id ? (
+                            {!profile.race_id ? (
                                 <LockedCard
-                                    label="靈魂印記 (Enneagram)"
+                                    label="靈魂種族 (Enneagram)"
                                     unlockHint="深層靈魂尚未覺醒。完成靈魂探索試煉以揭示你的本質動機。"
-                                    themeColor="purple"
-                                    iconName="visibility_lock"
-                                    onClick={() => window.location.href = '/map'}
+                                    themeColor="#bd00ff"
+                                    onClick={() => window.location.href = '/intro/enneagram'}
                                 />
                             ) : (
-                                <div className="bg-card-dark rounded-2xl p-6 border border-purple-500/30 h-full relative overflow-hidden group hover:border-purple-500/60 transition-colors">
-                                    <div className="flex justify-between items-start mb-4">
+                                    <div className="bg-card-dark rounded-2xl p-6 border border-purple-500/30 h-full relative overflow-hidden group hover:border-purple-500/60 transition-colors">
+                                        <div className="flex justify-between items-start mb-4">
                                         <div className="flex items-center gap-2">
-                                            <span className="bg-purple-500/20 text-purple-300 p-1.5 rounded-lg border border-purple-500/30">
-                                                <span className="material-symbols-outlined text-lg">visibility</span>
+                                                <span className="bg-purple-500/20 text-purple-300 p-1.5 rounded-lg border border-purple-500/30">
+                                                    <span className="material-symbols-outlined text-lg">stars</span>
                                             </span>
-                                            <span className="text-sm font-bold text-purple-300 uppercase tracking-widest">靈魂印記 (Enneagram)</span>
+                                                <span className="text-sm font-bold text-purple-300 uppercase tracking-widest">靈魂種族 (Enneagram)</span>
+                                            </div>
+                                    </div>
+                                        <div className="relative z-10">
+                                            <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">
+                                                {profile.race_name || "尚未尋獲"}
+                                            </h3>
+                                            <div className="flex items-center gap-2 text-sm text-gray-300 bg-black/30 p-2 rounded border border-white/5">
+                                                <span className="material-symbols-outlined text-purple-400 text-sm">auto_stories</span>
+                                                <span>{profile.race_name || "試煉將於地圖中展開。"}</span>
+                                            </div>
                                         </div>
-                                        <span className="text-sm px-2 py-0.5 rounded bg-purple-900/50 text-purple-200 border border-purple-500/20">Lv. MAX</span>
-                                    </div>
-                                    <div className="relative z-10">
-                                        <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">
-                                            {identity.race?.name?.split('(')[0] || "尚未尋獲"}
-                                        </h3>
-                                        <p className="text-sm text-gray-400 font-mono mb-4">{identity.race?.name?.match(/\((.*?)\)/)?.[1] || ""}</p>
-                                        <div className="flex items-center gap-2 text-sm text-gray-300 bg-black/30 p-2 rounded border border-white/5">
-                                            <span className="material-symbols-outlined text-purple-400 text-sm">auto_stories</span>
-                                            <span>{identity.race?.description || "試煉將於地圖中展開。"}</span>
+                                        <div className="absolute -bottom-4 -right-4 text-purple-500/5 rotate-12 group-hover:scale-110 transition-transform duration-500">
+                                            <span className="material-symbols-outlined text-[100px]">visibility</span>
+                                        </div>
+                                </div>
+                            )}
+                        </motion.div>
+
+                        {/* Gallup/Talent Card */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="h-full"
+                        >
+                            {!profile.talent_ids || profile.talent_ids.length === 0 ? (
+                                <LockedCard
+                                    label="天賦技能 (Gallup)"
+                                    unlockHint="上古卷軸封印著你的終極奧義。需集齊靈魂碎片以解鎖此力。"
+                                    themeColor="#ffd000"
+                                    onClick={() => window.location.href = '/intro/gallup'}
+                                />
+                            ) : (
+                                    <div className="bg-card-dark rounded-2xl p-6 border border-yellow-500/30 h-full group hover:border-yellow-600/60 transition-colors">
+                                        <div className="flex justify-between items-start mb-6">
+                                        <div className="flex items-center gap-2">
+                                                <span className="bg-yellow-500/20 text-yellow-300 p-1.5 rounded-lg border border-yellow-500/30">
+                                                    <span className="material-symbols-outlined text-lg">trophy</span>
+                                            </span>
+                                                <span className="text-sm font-bold text-yellow-300 uppercase tracking-widest">天賦技能 (Talents)</span>
                                         </div>
                                     </div>
-                                    <div className="absolute -bottom-4 -right-4 text-purple-500/5 rotate-12 group-hover:scale-110 transition-transform duration-500">
-                                        <span className="material-symbols-outlined text-[100px]">visibility</span>
+                                        <div className="flex flex-wrap gap-2">
+                                            {profile.talent_ids.map((tid: string, index: number) => {
+                                                // 優先使用 talent_names,如果不存在則顯示 ID
+                                                const displayName = profile.talent_names?.[index] || tid.replace('TAL_', '');
+                                                return (
+                                                    <span key={tid} className="bg-yellow-900/30 border border-yellow-500/30 text-yellow-500 text-sm font-bold px-2 py-1 rounded">
+                                                        {displayName}
+                                                    </span>
+                                                );
+                                            })}
                                     </div>
+                                        <p className="text-sm text-gray-400 mt-4 leading-relaxed">
+                                            已覺醒的靈魂天賦，賦予你超越常人的命運掌握力。
+                                        </p>
                                 </div>
                             )}
                         </motion.div>
@@ -301,29 +360,12 @@ const DashboardPage = () => {
 
                 {/* Bottom Section: Destiny Guide and Bonds */}
                 <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    {/* Chronicle & Guide */}
-                    <div className="lg:col-span-8 space-y-8">
-                        {/* Chronicle */}
-                        <div className="bg-card-dark rounded-xl p-6 border border-primary/20 relative overflow-hidden group hover:border-primary/40 transition-colors">
-                            <div className="flex items-center gap-2 mb-4">
-                                <span className="material-symbols-outlined text-primary">auto_stories</span>
-                                <span className="text-sm font-bold text-primary uppercase tracking-widest">英雄史詩 (Chronicle)</span>
-                            </div>
-                            <p className="text-gray-300 text-sm leading-relaxed font-serif italic border-l-2 border-primary/30 pl-4 py-1">
-                                {profileData.latestChronicle || "尚未開始你的冒險，命運之書正等待著你的筆跡。"}
-                            </p>
-                            <div className="absolute bottom-0 right-0 p-4 opacity-5 pointer-events-none">
-                                <span className="material-symbols-outlined text-[120px]">menu_book</span>
-                            </div>
+                    {/* Destiny Guide Section */}
+                    <div className="lg:col-span-8 space-y-4">
+                        <div className="flex justify-between items-center px-1">
+                            <h3 className="text-lg font-bold text-white/60 tracking-widest uppercase">靈魂指引</h3>
                         </div>
-
-                        {/* Destiny Guide Section */}
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center px-1">
-                                <h3 className="text-lg font-bold text-white/60 tracking-widest uppercase">靈魂指引</h3>
-                            </div>
-                            <DestinyGuide guide={traits.destiny_guide || {}} />
-                        </div>
+                        <DestinyGuide guide={profile.destiny_guide || {}} />
                     </div>
 
                     {/* Bonds */}
@@ -331,7 +373,7 @@ const DashboardPage = () => {
                         <div className="flex justify-between items-center px-1">
                             <h3 className="text-lg font-bold text-white/60 tracking-widest uppercase">命運羈絆</h3>
                         </div>
-                        <DestinyBonds bonds={traits.destiny_bonds || {}} />
+                        <DestinyBonds bonds={profile.destiny_bonds || {}} />
                     </div>
                 </div>
 

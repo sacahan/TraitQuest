@@ -15,7 +15,7 @@ const REGIONS_MAPPING: Record<string, string> = {
   gallup: "Gallup 祭壇",
 };
 
-const QuestionnairePage = () => {
+const Questionnaire = () => {
   const { 
     submitAnswer, 
     currentQuestion, 
@@ -283,4 +283,4 @@ const QuestionnairePage = () => {
   );
 };
 
-export default QuestionnairePage;
+export default Questionnaire;

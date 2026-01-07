@@ -34,8 +34,8 @@ export const HomeQuestCard = ({ title, type, description, imageUrl, icon, route 
           {title}
         </h3>
       </div>
-      <p className="text-primary text-sm font-bold uppercase tracking-wider mb-2 font-display">Type: {type}</p>
-      <p className="text-gray-300 text-sm leading-relaxed mb-6 grow group-hover:text-gray-100 transition-colors font-body">
+      <p className="text-primary text-[14px] font-bold uppercase tracking-wider mb-2 font-display">{type}</p>
+      <p className="text-gray-300 text-[14px] leading-relaxed mb-6 grow group-hover:text-gray-100 transition-colors font-body">
         {description}
       </p>
       

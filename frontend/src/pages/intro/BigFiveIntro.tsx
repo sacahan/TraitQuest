@@ -10,7 +10,7 @@ const BigFiveIntro: React.FC = () => {
           <div className="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-guild-border text-primary text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(11,218,115,0.2)]">
               <span className="material-symbols-outlined text-sm">water_drop</span>
-              Big Five 人格分析
+              Big Five 能量場
             </div>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight">
               你的性格，決定你的

@@ -46,15 +46,15 @@
 
 - **核心形象區**：左側展示動態角色肖像、SSR 稱號、**覺醒進度 (Awakening)** 與 **法力充能 (Mana Charge)**。
 - **五大系統狀態**：中央以卡片形式呈現 Enneagram (種族)、MBTI (職業)、Big Five (屬性雷達圖)、DISC (戰姿)、Gallup (技能)。
-    - **解鎖機制**：未完成的測驗顯示鎖定狀態與解鎖引導。
+  - **解鎖機制**：未完成的測驗顯示鎖定狀態與解鎖引導。
 - **命運指引 (Destiny Guide)**：底部呈現四類動態建議：
-    - **每日預言 (Daily)**：根據今日人格相位給予的建議。
-    - **主線任務 (Main)**：長期成長的關鍵挑戰。
-    - **支線任務 (Side)**：探索自我潛能的小任務。
-    - **神諭 (Oracle)**：深度解析與警示。
+  - **每日預言 (Daily)**：根據今日人格相位給予的建議。
+  - **主線任務 (Main)**：長期成長的關鍵挑戰。
+  - **支線任務 (Side)**：探索自我潛能的小任務。
+  - **神諭 (Oracle)**：深度解析與警示。
 - **命運羈絆 (Destiny Bonds)**：提供相性分析：
-    - **建議夥伴 (Compatible)**：最適合組隊的人格類型及其加成。
-    - **警戒對象 (Conflicting)**：應保持距離的類型與風險提示。
+  - **建議夥伴 (Compatible)**：最適合組隊的人格類型及其加成。
+  - **警戒對象 (Conflicting)**：應保持距離的類型與風險提示。
 
 ---
 
@@ -67,25 +67,25 @@ TraitQuest 採用四大代理協作模型，由 **WebSocket Handler (`quest_ws.p
 此階段旨在透過 RPG 劇情採集玩家心理特徵：
 
 - **Questionnaire Agent (說書人)**：
-    作為引導者「艾比 (Abby)」，讀取玩家的 `hero_chronicle` (長期記憶) 與當前等級，動態生成包裹在 RPG 劇情中的情境題目。
+  作為引導者「艾比 (Abby)」，讀取玩家的 `hero_chronicle` (長期記憶) 與當前等級，動態生成包裹在 RPG 劇情中的情境題目。
 
 - **Analytics Agent (分析官)**：
-    接收玩家回答後，將非結構化的對話解析為**結構化的心理標籤增量**（如：`Openness +0.2`），並評估回答品質 (`quality_score`) 以決定經驗值加成。每次答題後即時執行。
+  接收玩家回答後，將非結構化的對話解析為**結構化的心理標籤增量**（如：`Openness +0.2`），並評估回答品質 (`quality_score`) 以決定經驗值加成。每次答題後即時執行。
 
 - **Summary Agent (史官)**：
-    將該輪對話歷程與性格趨勢壓縮為 300 字內的 `hero_chronicle` 摘要，確保 AI GM 在跨 Session 或跨題目時具備「長期記憶」能力。每 10 輪對話或測驗結束時觸發。
+  將該輪對話歷程與性格趨勢壓縮為 300 字內的 `hero_chronicle` 摘要，確保 AI GM 在跨 Session 或跨題目時具備「長期記憶」能力。每 10 輪對話或測驗結束時觸發。
 
 ### 2. 最終轉換階段 (The Final Transformation)
 
 當測驗完成後，系統進入嚴格的資料寫入流程：
 
 - **Transformation Agent (轉生代理)**：
-    執行「轉生儀式」，將 Analytics Agent 累積的**所有心理標籤增量加總後**，映射至預定義的遊戲資產 ID (如 `RACE_5`, `CLS_INTJ`)。同時生成「命運指引」與「命運羈絆」等敘事內容。
-    
-    **核心職責**：標籤映射 (Mapping) 與敘事生成，而非分析 (Analysis)。
+  執行「轉生儀式」，將 Analytics Agent 累積的**所有心理標籤增量加總後**，映射至預定義的遊戲資產 ID (如 `RACE_5`, `CLS_INTJ`)。同時生成「命運指引」與「命運羈絆」等敘事內容。
+
+  **核心職責**：標籤映射 (Mapping) 與敘事生成，而非分析 (Analysis)。
 
 - **Validator Agent (守望者)**：
-    系統的最後防線，負責「校對」Transformation Agent 產出的 ID 是否存在於 `game_definitions` 真值清單中。若發現 AI 幻覺 (自創 ID) 或 JSON 語義矛盾，將強制執行重試機制。
+  系統的最後防線，負責「校對」Transformation Agent 產出的 ID 是否存在於 `game_definitions` 真值清單中。若發現 AI 幻覺 (自創 ID) 或 JSON 語義矛盾，將強制執行重試機制。
 
 > Agent Prompt 詳細定義可見 [templates](templates.md)。
 
@@ -134,8 +134,8 @@ TraitQuest 採用四大代理協作模型，由 **WebSocket Handler (`quest_ws.p
 #### 3.5 維持一致性的關鍵公式
 
 ```
-一致性 = (sessionId 索引的 DB 歷史紀錄) 
-       + (Summary Agent 壓縮的語義摘要) 
+一致性 = (sessionId 索引的 DB 歷史紀錄)
+       + (Summary Agent 壓縮的語義摘要)
        + (WebSocket Handler 每一輪的 Context 注入)
 ```
 
@@ -245,6 +245,7 @@ CREATE INDEX idx_user_class ON traits ((final_report->>'class_id'));
 **WebSocket URL**: `ws://[host]/v1/quests/ws?sessionId={sessionId}&token={jwtToken}`
 
 **連線流程**:
+
 1. 前端透過 REST API 登入,取得 JWT Token
 2. 前端發起 WebSocket 連線,帶入 sessionId 與 token
 3. 後端驗證 token,建立連線並綁定 sessionId
@@ -423,7 +424,7 @@ AI GM **僅能從以下列表中提取 ID**。
 - `CLS_ENTJ` (帝國統帥)
 - ... 等共 **16 種**
 
-### 3. 戰略姿態 (Stance_ID: STN_D, STN_I, STN_S, STN_C)
+### 3. 戰鬥流派 (Stance_ID: STN_D, STN_I, STN_S, STN_C)
 
 - `STN_D`：烈焰戰姿 (攻)
 - `STN_I`：潮汐之歌 (援)
@@ -473,6 +474,7 @@ AI GM **僅能從以下列表中提取 ID**。
 每個測驗區域的解鎖**僅需**完成先決測驗：
 
 **公式**：
+
 ```
 區域可用 = (先決測驗已完成)
 ```
@@ -481,13 +483,13 @@ AI GM **僅能從以下列表中提取 ID**。
 
 #### 1.2 區域配置表
 
-| 區域 ID | 區域名稱 | 先決條件 | 解鎖獎勵 |
-|---------|----------|----------|----------|
-| `mbti` | MBTI 聖殿 | 無 | 核心職業 (Class) |
-| `bigfive` | Big Five 能量場 | 完成 MBTI 聖殿 | 角色屬性 (Stats) |
-| `enneagram` | Enneagram 冥想塔 | 完成 Big Five 能量場 | 靈魂種族 (Race) |
-| `disc` | DISC 戰鬥叢林 | 完成 Enneagram 冥想塔 | 對戰方式 (Stance) |
-| `gallup` | Gallup 祭壇 | 完成 DISC 戰鬥叢林 | 傳奇技能 (Talent) |
+| 區域 ID     | 區域名稱         | 先決條件              | 對應屬性 | Icon       | Color   |
+| ----------- | ---------------- | --------------------- | -------- | ---------- | ------- |
+| `mbti`      | MBTI 聖殿        | 無                    | 英雄職業 | psychology | #11D452 |
+| `bigfive`   | Big Five 能量場  | 完成 MBTI 聖殿        | 角色屬性 | water_drop | #00f0ff |
+| `disc`      | DISC 戰鬥叢林    | 完成 Enneagram 冥想塔 | 戰鬥流派 | swords     | #ff4f4f |
+| `enneagram` | Enneagram 冥想塔 | 完成 Big Five 能量場  | 靈魂種族 | stars      | #bd00ff |
+| `gallup`    | Gallup 祭壇      | 完成 DISC 戰鬥叢林    | 天賦技能 | trophy     | #ffd000 |
 
 #### 1.3 解鎖順序
 
@@ -499,11 +501,11 @@ MBTI 聖殿 → Big Five 能量場 → Enneagram 冥想塔 → DISC 戰鬥叢林
 
 #### 1.4 區域狀態定義
 
-| 狀態 | 說明 | 顯示效果 |
-|------|------|----------|
-| `CONQUERED` | 已完成該區域測驗 | 顯示「試煉已完成」，區域發光 |
-| `AVAILABLE` | 先決測驗已完成或無前置條件 | 正常顯示，可點擊進入 |
-| `LOCKED` | 先決測驗尚未完成 | 灰階顯示 + 覆蓋迷霧 + 鎖鏈圖示 |
+| 狀態        | 說明                       | 顯示效果                       |
+| ----------- | -------------------------- | ------------------------------ |
+| `CONQUERED` | 已完成該區域測驗           | 顯示「試煉已完成」，區域發光   |
+| `AVAILABLE` | 先決測驗已完成或無前置條件 | 正常顯示，可點擊進入           |
+| `LOCKED`    | 先決測驗尚未完成           | 灰階顯示 + 覆蓋迷霧 + 鎖鏈圖示 |
 
 ### 2. 等級系統
 
@@ -515,12 +517,12 @@ MBTI 聖殿 → Big Five 能量場 → Enneagram 冥想塔 → DISC 戰鬥叢林
 測驗 EXP = (100 × 題目數量 × 品質乘數) + 100 通關獎勵
 ```
 
-| 項目 | 數值 | 說明 |
-|------|------|------|
-| 每題基礎 EXP | 100 | - |
-| 品質乘數 | 1.0 ~ 1.2 | 由 Analytics Agent 評估 |
-| 通關獎勵 | 100 | 完成測驗額外獎勵 |
-| 10 題測驗總 EXP | 約 1100 | 確保 5 區通關達 Lv.11 |
+| 項目            | 數值      | 說明                    |
+| --------------- | --------- | ----------------------- |
+| 每題基礎 EXP    | 100       | -                       |
+| 品質乘數        | 1.0 ~ 1.2 | 由 Analytics Agent 評估 |
+| 通關獎勵        | 100       | 完成測驗額外獎勵        |
+| 10 題測驗總 EXP | 約 1100   | 確保 5 區通關達 Lv.11   |
 
 #### 2.2 升級公式
 
@@ -529,16 +531,17 @@ MBTI 聖殿 → Big Five 能量場 → Enneagram 冥想塔 → DISC 戰鬥叢林
 ```
 
 **範例**：
+
 - Lv.1 → Lv.2：需要 100 EXP
 - Lv.1 → Lv.11：累計需要 5500 EXP（約 5 次測驗）
 
 #### 2.3 等級里程碑
 
-| 等級 | 解鎖功能 | 影響 |
-|------|----------|------|
-| Lv.1~10 | 量化試煉 | 五段式選擇題，10 題/測驗 |
-| **Lv.11~15** | **靈魂對話模式** | 解鎖開放式文字輸入，AI 語義解析 |
-| **Lv.16以上** | **深邃試煉** | 題數增加至 15 題/測驗 (混合選擇與開放式輸入兩種形式) |
+| 等級           | 解鎖功能         | 影響                                                 |
+| -------------- | ---------------- | ---------------------------------------------------- |
+| Lv.1~10        | 量化試煉         | 五段式選擇題，10 題/測驗                             |
+| **Lv.11~15**   | **靈魂對話模式** | 解鎖開放式文字輸入，AI 語義解析                      |
+| **Lv.16 以上** | **深邃試煉**     | 題數增加至 15 題/測驗 (混合選擇與開放式輸入兩種形式) |
 
 > **關鍵機制**：完成 5 大區域後，玩家等級達到 Lv.11，解鎖「靈魂對話模式」
 
@@ -549,6 +552,7 @@ MBTI 聖殿 → Big Five 能量場 → Enneagram 冥想塔 → DISC 戰鬥叢林
 **Endpoint**: `GET /v1/map/regions?token={jwt}`
 
 **Response 範例**：
+
 ```json
 {
   "regions": [
