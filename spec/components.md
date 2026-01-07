@@ -449,7 +449,7 @@ export function BigFiveRadarCard({ stats }: BigFiveRadarCardProps) {
 | `questionnaire/questionnaire.html` | `Questionnaire.tsx` | NarrativeDisplay, QuestionDisplay, QuantitativeOptions, SoulNarrativeInput, DimensionSensors | useQuestStore, useWebSocket |
 | `analysis/analysis.html` | `Analysis.tsx` | HeroProfile, SystemStatusCards, BigFiveRadarCard, DestinyGuide, DestinyBonds | useAnalysisStore |
 | `mbti/mbti.html` | `MbtiIntro.tsx` | IntroHero, FeatureList, CTAButton | - |
-| `big_five/big_five.html` | `BigFiveIntro.tsx` | IntroHero, FeatureList, CTAButton | - |
+| `bigfive/bigfive.html` | `BigFiveIntro.tsx` | IntroHero, FeatureList, CTAButton | - |
 | `disc/disc.html` | `DiscIntro.tsx` | IntroHero, FeatureList, CTAButton | - |
 | `enneagram/enneagram.html` | `EnneagramIntro.tsx` | IntroHero, FeatureList, CTAButton | - |
 | `gallup/gallup.html` | `GallupIntro.tsx` | IntroHero, FeatureList, CTAButton | - |

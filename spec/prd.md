@@ -484,7 +484,7 @@ AI GM **僅能從以下列表中提取 ID**。
 | 區域 ID | 區域名稱 | 先決條件 | 解鎖獎勵 |
 |---------|----------|----------|----------|
 | `mbti` | MBTI 聖殿 | 無 | 核心職業 (Class) |
-| `big_five` | Big Five 能量場 | 完成 MBTI 聖殿 | 角色屬性 (Stats) |
+| `bigfive` | Big Five 能量場 | 完成 MBTI 聖殿 | 角色屬性 (Stats) |
 | `enneagram` | Enneagram 冥想塔 | 完成 Big Five 能量場 | 靈魂種族 (Race) |
 | `disc` | DISC 戰鬥叢林 | 完成 Enneagram 冥想塔 | 對戰方式 (Stance) |
 | `gallup` | Gallup 祭壇 | 完成 DISC 戰鬥叢林 | 傳奇技能 (Talent) |
@@ -559,7 +559,7 @@ MBTI 聖殿 → Big Five 能量場 → Enneagram 冥想塔 → DISC 戰鬥叢林
       "unlock_hint": "試煉已完成"
     },
     {
-      "id": "big_five",
+      "id": "bigfive",
       "name": "Big Five 能量場",
       "status": "AVAILABLE",
       "unlock_hint": null

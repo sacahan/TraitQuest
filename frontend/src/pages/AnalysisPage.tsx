@@ -35,7 +35,7 @@ const QUEST_CONFIG: Record<string, {
             typeLabel: result.class.metadata_info?.mbti || result.class_id?.replace('CLS_', '')
         } : null
     },
-    big_five: {
+    bigfive: {
         title: '屬性解析',
         icon: Target,
         color: 'from-purple-500 to-pink-500',

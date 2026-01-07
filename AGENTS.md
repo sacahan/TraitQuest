@@ -121,7 +121,7 @@ TraitQuest/
 │   ├── index/                           # 首頁
 │   ├── enneagram/                       # 九型人格介紹
 │   ├── mbti/                            # MBTI 介紹
-│   ├── big_five/                        # Big Five 介紹
+│   ├── bigfive/                         # Big Five 介紹
 │   ├── disc/                            # DISC 介紹
 │   ├── gallup/                          # Gallup 介紹
 │   ├── questionnaire/                   # 測驗互動頁面

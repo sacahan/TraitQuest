@@ -17,14 +17,14 @@ const QUESTS = [
     route: '/intro/mbti'
   },
   {
-    id: 'big_five',
+    id: 'bigfive',
     title: '五大心域（Big Five）',
     type: '屬性學派',
     description: '現代心理學中最具實證基礎的心性模型。以五條連續屬性，描繪你長期穩定的行為輪廓。',
     imageUrl: '/assets/images/big5_cover.webp',
     color: 'blue',
     icon: 'water_drop',
-    route: '/intro/big-five'
+    route: '/intro/bigfive'
   },
   {
     id: 'disc',

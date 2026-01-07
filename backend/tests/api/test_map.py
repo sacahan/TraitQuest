@@ -34,7 +34,7 @@ async def test_get_map_regions_initial_lock(mock_session_factory, mock_decode):
     # MBTI & Big Five should be AVAILABLE
     assert regions[0]["id"] == "mbti"
     assert regions[0]["status"] == "AVAILABLE"
-    assert regions[1]["id"] == "big_five"
+    assert regions[1]["id"] == "bigfive"
     assert regions[1]["status"] == "AVAILABLE"
     
     # Enneagram should be LOCKED (Needs Lv.3 or MBTI)

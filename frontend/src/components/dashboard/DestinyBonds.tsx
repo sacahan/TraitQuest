@@ -37,10 +37,12 @@ interface DestinyBondsProps {
   bonds: {
     compatible?: Array<{
       class_id: string;
+      class_name: string;
       description: string;
     }>;
     conflicting?: Array<{
       class_id: string;
+      class_name: string;
       description: string;
     }>;
   };

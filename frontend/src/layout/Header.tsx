@@ -6,7 +6,7 @@ import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
 // 五大分析介紹頁面配置（與 Home.tsx QUESTS 保持一致）
 const introPages = [
   { path: '/intro/mbti', name: 'MBTI', icon: 'psychology', description: '核心職業' },
-  { path: '/intro/big-five', name: 'Big Five', icon: 'water_drop', description: '基礎屬性' },
+  { path: '/intro/bigfive', name: 'Big Five', icon: 'water_drop', description: '基礎屬性' },
   { path: '/intro/enneagram', name: '九型人格', icon: 'stars', description: '靈魂種族' },
   { path: '/intro/disc', name: 'DISC', icon: 'swords', description: '戰鬥風格' },
   { path: '/intro/gallup', name: 'Gallup', icon: 'trophy', description: '傳奇技能' },

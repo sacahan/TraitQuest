@@ -9,7 +9,7 @@ import { Sparkles, Zap, MoveRight } from 'lucide-react';
 
 const REGIONS_MAPPING: Record<string, string> = {
   mbti: "MBTI 聖殿",
-  big_five: "Big Five 能量場",
+  bigfive: "Big Five 能量場",
   enneagram: "Enneagram 冥想塔",
   disc: "DISC 戰鬥叢林",
   gallup: "Gallup 祭壇",

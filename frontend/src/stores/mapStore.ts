@@ -26,7 +26,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000
 // 靜態視覺配置對照表
 const VISUAL_CONFIGS: Record<string, Partial<Region>> = {
   mbti: { color: '#11D452', icon: 'Sparkles', position: { top: '25%', left: '16%' } },
-  big_five: { color: '#00f0ff', icon: 'Zap', position: { top: '48%', left: '32%' } },
+  bigfive: { color: '#00f0ff', icon: 'Zap', position: { top: '48%', left: '32%' } },
   enneagram: { color: '#bd00ff', icon: 'ScrollText', position: { top: '30%', left: '70%' } },
   disc: { color: '#ff4f4f', icon: 'Sword', position: { top: '55%', left: '56%' } },
   gallup: { color: '#ffd000', icon: 'Trophy', position: { top: '10%', left: '45%' } },

@@ -18,7 +18,7 @@ REGIONS_CONFIG = [
         "prerequisite": None
     },
     {
-        "id": "big_five",
+        "id": "bigfive",
         "name": "Big Five 能量場",
         "description": "基礎屬性的磨練之場",
         "unlock_level": 2,
@@ -29,7 +29,7 @@ REGIONS_CONFIG = [
         "name": "Enneagram 冥想塔",
         "description": "靈魂種族的探索之塔",
         "unlock_level": 3,
-        "prerequisite": "big_five"
+        "prerequisite": "bigfive"
     },
     {
         "id": "disc",

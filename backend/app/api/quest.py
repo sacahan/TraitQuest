@@ -45,7 +45,7 @@ async def list_quests():
             "total_steps": 10
         },
         {
-            "id": "big_five",
+            "id": "bigfive",
             "title": "五維之鏡 (Big Five)",
             "description": "最科學的人格分析工具...",
             "icon": "shield",
@@ -81,7 +81,7 @@ async def get_map_regions():
             "preview_image": "/assets/images/map/region_mbti.png"
         },
         {
-            "id": "big_five",
+            "id": "bigfive",
             "name": "Big Five 屬性之泉",
             "description": "在生命之泉中照見真實自我，繪製你的個性雷達。",
             "icon": "water_drop",

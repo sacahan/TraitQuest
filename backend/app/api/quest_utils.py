@@ -263,7 +263,7 @@ async def run_analytics_task(user_id: str, session_id: str, question_text: str, 
 # 基礎題數配置（用於參考，實際計算由 level_service 處理）
 BASE_STEPS = {
     "mbti": 10,
-    "big_five": 15,
+    "bigfive": 15,
     "disc": 10,
     "enneagram": 10,
     "gallup": 10,

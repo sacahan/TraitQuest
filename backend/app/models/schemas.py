@@ -222,11 +222,11 @@ class QuestReport(BaseModel):
     根據 quest_type 只包含對應的分析結果：
     - enneagram → race_id, race
     - mbti → class_id, class_
-    - big_five → stats
+    - bigfive → stats
     - disc → stance_id, stance
     - gallup → talent_ids, talents
     """
-    quest_type: str = Field(..., description="測驗類型：mbti, big_five, disc, enneagram, gallup")
+    quest_type: str = Field(..., description="測驗類型：mbti, bigfive, disc, enneagram, gallup")
     
     # === 測驗結果（根據 quest_type 擇一填充）===
     race_id: Optional[str] = Field(None, description="靈魂種族 ID (Enneagram)")

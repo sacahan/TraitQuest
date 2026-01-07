@@ -75,7 +75,7 @@ function App() {
 
             {/* Intro Pages */}
             <Route path="/intro/mbti" element={<MbtiIntro />} />
-            <Route path="/intro/big-five" element={<BigFiveIntro />} />
+            <Route path="/intro/bigfive" element={<BigFiveIntro />} />
             <Route path="/intro/disc" element={<DiscIntro />} />
             <Route path="/intro/enneagram" element={<EnneagramIntro />} />
             <Route path="/intro/gallup" element={<GallupIntro />} />

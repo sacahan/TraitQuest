@@ -289,6 +289,7 @@ async def quest_ws_endpoint(
                     session_id=sessionId
                 )
                 transformation_session.state["quest_type"] = quest_id
+                await session_service.update_session(transformation_session)
                 
                 t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(accumulated_deltas, ensure_ascii=False)}"
                 
@@ -301,11 +302,8 @@ async def quest_ws_endpoint(
                     instruction=t_instruction,
                     output_key="transformation_output"
                 )
-                logger.info(f"<<< Result (Raw): {transformation_raw}")
-                
-                # AI 已透過 after_tool_callback 進行 DB 驗證，直接使用結果
+                logger.info(f"<<< Result: {transformation_raw}")
                 quest_report = transformation_raw
-                logger.info(f"<<< Quest Report: {quest_report}")
 
                 # 4. 執行 Summary Agent (生成史詩摘要)
                 logger.info("📝 4. Running Summary Agent...")

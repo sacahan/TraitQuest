@@ -15,7 +15,7 @@ const QUEST_CONFIG: Record<string, {
         title: 'MBTI 測驗',
         icon: 'Award',
     },
-    big_five: {
+    bigfive: {
         title: '大五人格測驗',
         icon: 'Target',
     },
@@ -199,7 +199,7 @@ const LaunchPage: React.FC = () => {
 
             <Header />
 
-            <main className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-20 lg:px-40">
+            <main className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-8 lg:px-40">
                 <div className="w-full max-w-[1100px] flex flex-col md:flex-row items-center gap-10 md:gap-20">
 
                     {/* 左側 Abby 形象 */}
