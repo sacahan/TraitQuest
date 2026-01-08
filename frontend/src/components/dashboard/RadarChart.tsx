@@ -1,4 +1,25 @@
+import {
+    Chart as ChartJS,
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Tooltip,
+    Legend,
+    type ChartData,
+    type ChartOptions
+} from 'chart.js';
+import { Radar } from 'react-chartjs-2';
 import { motion } from 'framer-motion';
+
+ChartJS.register(
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Tooltip,
+    Legend
+);
 
 interface RadarChartProps {
     stats: {
@@ -6,84 +27,112 @@ interface RadarChartProps {
     };
 }
 
+const ATTRIBUTE_MAP: Record<string, string> = {
+    STA_O: '智力 (O)',
+    STA_C: '防禦 (C)',
+    STA_E: '速度 (E)',
+    STA_A: '魅力 (A)',
+    STA_N: '洞察 (N)'
+};
+
+// Fixed order for the pentagon shape matches BigFivePanel
+const ATTRIBUTE_ORDER = ['STA_O', 'STA_C', 'STA_E', 'STA_A', 'STA_N'];
+
 const RadarChart = ({ stats }: RadarChartProps) => {
-    // 將 Big Five 映射到座標
-    // 順序：STA_IN (智力), STA_DE (防禦), STA_SP (速度), STA_CH (魅力), STA_NI (洞察)
-    const keys = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
-    const values = keys.map(k => {
-        const statObj = stats && stats[k];
-        if (typeof statObj === 'object' && statObj !== null) {
-            return (statObj as any).score || 50;
-        }
-        return (statObj as number) || 50;
+    if (!stats) return null;
+
+    // Prepare data
+    const values = ATTRIBUTE_ORDER.map(key => {
+        const val = stats[key];
+        // Handle both raw numbers and object format from backend
+        if (typeof val === 'number') return val;
+        if (typeof val === 'object' && val !== null) return val.score;
+        return 0; // Default fallback
     });
 
-    // 計算五角形頂點 (中心 50, 50, 半徑 40)
-    const points = values.map((v, i) => {
-        const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
-        const r = (v / 100) * 40;
-        return `${50 + r * Math.cos(angle)},${50 + r * Math.sin(angle)}`;
-    }).join(' ');
+    const data: ChartData<'radar'> = {
+        labels: ATTRIBUTE_ORDER.map(key => ATTRIBUTE_MAP[key]),
+        datasets: [
+            {
+                label: '屬性數值',
+                data: values,
+                backgroundColor: 'rgba(17, 212, 82, 0.25)', // #11D452 with opacity
+                borderColor: '#11D452', // #11D452 Neon Green
+                borderWidth: 2,
+                pointBackgroundColor: '#102216', // Dark background
+                pointBorderColor: '#D4AF37', // Gold border
+                pointHoverBackgroundColor: '#D4AF37',
+                pointHoverBorderColor: '#fff',
+                pointRadius: 3, // Slightly smaller than analysis for dashboard compactness
+                pointHoverRadius: 5,
+            },
+        ],
+    };
 
-    const gridPoints = (r: number) => {
-        return Array.from({ length: 5 }).map((_, i) => {
-            const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
-            return `${50 + r * Math.cos(angle)},${50 + r * Math.sin(angle)}`;
-        }).join(' ');
+    const options: ChartOptions<'radar'> = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            r: {
+                min: 0,
+                max: 100,
+                ticks: {
+                    display: false,
+                    stepSize: 20,
+                },
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    circular: false,
+                },
+                angleLines: {
+                    color: 'rgba(255, 255, 255, 0.2)',
+                },
+                pointLabels: {
+                    color: '#11D452',
+                    font: {
+                        size: 11, // Smaller font for dashboard
+                        family: '"Noto Sans TC", sans-serif',
+                        weight: 'bold',
+                    },
+                    backdropColor: 'transparent',
+                },
+            },
+        },
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                backgroundColor: 'rgba(16, 34, 22, 0.9)',
+                titleColor: '#11D452',
+                bodyColor: '#fff',
+                borderColor: '#D4AF37',
+                borderWidth: 1,
+                displayColors: false,
+                callbacks: {
+                    label: function (context) {
+                        return `${context.raw}`;
+                    }
+                }
+            }
+        },
     };
 
     return (
-      <div className="w-full h-full p-4 flex items-center justify-center">
-          <svg className="w-full h-full max-w-[300px] overflow-visible" viewBox="0 0 100 100">
-              {/* 網格 */}
-              <g fill="none" stroke="rgba(17, 212, 82, 0.2)" strokeWidth="0.5">
-                  <polygon points={gridPoints(40)} />
-                  <polygon points={gridPoints(30)} />
-                  <polygon points={gridPoints(20)} />
-                  <polygon points={gridPoints(10)} />
-                  {Array.from({ length: 5 }).map((_, i) => {
-                      const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
-                      return (
-                          <line
-                              key={i}
-                              x1="50" y1="50"
-                              x2={50 + 40 * Math.cos(angle)}
-                              y2={50 + 40 * Math.sin(angle)}
-                          />
-                      );
-                  })}
-              </g>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="w-full h-full relative flex items-center justify-center pointer-events-auto"
+        >
+            {/* Background Glow Effect */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#11D452] opacity-5 blur-[60px] rounded-full pointer-events-none"></div>
 
-              {/* 數據區塊 */}
-              <motion.polygon
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                  fill="rgba(17, 212, 82, 0.2)"
-                  stroke="#11D452"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                  points={points}
-                  className="animate-radar-polygon"
-              />
-
-              {/* 頂點點綴 */}
-              {values.map((v, i) => {
-                  const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
-                  const r = (v / 100) * 40;
-                  return (
-                      <circle
-                          key={i}
-                          cx={50 + r * Math.cos(angle)}
-                          cy={50 + r * Math.sin(angle)}
-                          r="1.5"
-                          fill="#11D452"
-                      />
-                  );
-              })}
-          </svg>
-      </div>
-  );
+            <div className="w-full h-full p-2">
+                <Radar data={data} options={options} />
+            </div>
+        </motion.div>
+    );
 };
 
 export default RadarChart;

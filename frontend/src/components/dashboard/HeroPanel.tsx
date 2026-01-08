@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
+import ActionButtons from '../shared/ActionButtons';
 
 interface HeroPanelProps {
     avatarUrl?: string;
@@ -14,13 +15,21 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
     classId = "???",
     classDescription = "尚未覺醒的靈魂..."
 }) => {
+    const panelRef = useRef<HTMLDivElement>(null);
+
     return (
         <motion.div
+            ref={panelRef}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="relative group perspective-1000"
         >
             <div className="absolute inset-0 bg-primary/10 rounded-2xl blur-2xl group-hover:bg-primary/20 transition-all duration-700"></div>
+
+            {/* Action Buttons */}
+            <div className="absolute top-2 right-2 z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ActionButtons targetRef={panelRef} filename={`hero-${classId || 'unknown'}`} />
+            </div>
 
             {/* Hero Label */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30">

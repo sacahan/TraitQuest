@@ -98,7 +98,7 @@ const QuestionnairePage = () => {
 
   return (
     <AppLayout backgroundVariant="none">
-      <div className="flex-grow">
+      <div className="w-full flex-grow flex flex-col">
         <Questionnaire />
       </div>
     </AppLayout>

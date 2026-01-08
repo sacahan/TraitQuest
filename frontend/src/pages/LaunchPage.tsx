@@ -272,7 +272,7 @@ const LaunchPage: React.FC = () => {
                                 </div>
                                 <div>
                                     <div className="text-[12px] text-white/50 uppercase tracking-wider">試煉類型</div>
-                                    <div className="text-white font-bold text-md">{QUEST_CONFIG[searchParams.get('type') || 'mbti']?.title || '心靈試煉'}</div>
+                                    <div className="text-white font-bold text-md cursor-pointer hover:text-primary" onClick={() => navigate('/intro/' + (searchParams.get('type') || 'mbti'))}>{QUEST_CONFIG[searchParams.get('type') || 'mbti']?.title || '心靈試煉'}</div>
                                 </div>
                             </div>
                             {/* 試煉數量 */}

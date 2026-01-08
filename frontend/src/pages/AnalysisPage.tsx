@@ -22,58 +22,67 @@ const AnalysisPage = () => {
     const [searchParams] = useSearchParams();
     const regionQuestId = searchParams.get('region');
     const { finalResult, questId, resetQuest } = useQuestStore();
-    const [localResult, setLocalResult] = useState<any>(null);
-    const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+    const [profileData, setProfileData] = useState<any>(null);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-    // 優先使用 Store 中的結果（剛完成測驗），否則使用本地抓取的歷史結果
-    const displayResult = finalResult || localResult;
-    const activeQuestId = questId || regionQuestId;
-
-    // 若無結果且無 region 參數，跳轉回地圖
-    // 若無結果且無 region 參數，顯示錯誤並跳轉回地圖
+    // 總是從 API 獲取最新的 Profile 資料，確保資料一致性
     useEffect(() => {
-        if (!finalResult && !regionQuestId && !isLoadingProfile) {
-            setShowErrorAlert(true);
-        }
-    }, [finalResult, regionQuestId, navigate, isLoadingProfile]);
+        const fetchProfile = async () => {
+            setIsLoadingProfile(true);
+            try {
+                const response = await apiClient.get('/auth/me');
+                const profile = response.data;
+                const heroProfile = profile.heroProfile || {};
+                const latestChronicle = profile.latestChronicle || '你的史詩正在等待編寫...';
 
-    // 如果帶有 region 參數且 Store 為空，嘗試抓取歷史資料
-    useEffect(() => {
-        const fetchHistory = async () => {
-            if (!finalResult && regionQuestId) {
-                setIsLoadingProfile(true);
-                try {
-                    const response = await apiClient.get('/auth/me');
-                    const profile = response.data;
-                    const heroProfile = profile.heroProfile || {};
-                    const latestChronicle = profile.latestChronicle || '你的史詩正在等著編寫...';
+                // 組合顯示用的資料結構
+                const result = {
+                    ...heroProfile,
+                    levelInfo: {
+                        level: profile.level,
+                        exp: profile.exp,
+                        // 如果 Store 中有剛剛完成的任務結果，且這是我們剛完成的任務，則顯示升級特效
+                        isLeveledUp: finalResult?.level_info?.is_level_up || false,
+                        earnedExp: finalResult?.level_info?.earned_exp || 0
+                    },
+                    latestChronicle
+                };
 
-                    if (heroProfile && Object.keys(heroProfile).length > 0) {
-                        const result = {
-                            ...heroProfile,
-                            levelInfo: {
-                                level: profile.level,
-                                exp: profile.exp,
-                                isLeveledUp: false,
-                                earnedExp: 0
-                            },
-                            latestChronicle
-                        };
-                        setLocalResult(result);
-                    } else {
-                        navigate('/map');
+                // 檢查是否有足夠的資料可以顯示
+                if (Object.keys(heroProfile).length > 0) {
+                    setProfileData(result);
+                } else if (!isLoadingProfile) {
+                    // 只有在非初始加載時才判斷為錯誤 (避免一閃而過的錯誤)
+                    // 但這裡是 fetch 結束，所以如果是空的，可能就是真的沒資料
+                    // 不過剛註冊可能沒資料，這取決於業務邏輯。
+                    // 假設 AnalysisPage 只有在有資料時才有意義 (除了 region 參數? 但 region 參數也是看資料)
+                    // 如果是直接與 regionQuestId 關聯...
+                    if (!regionQuestId && !finalResult) {
+                        // 如果沒有指定區域，也沒有剛剛的結果，且 Profile 也是空的，那就回地圖
+                        // 但如果有 regionQuestId，可能是要看特定區域的分析，但這裡我們統一顯示 Profile
+                        // 暫時維持原邏輯：沒資料就回地圖
+                        // setShowErrorAlert(true); // 暫不彈窗，直接回地圖或顯示空狀態?
+                        // 為了使用者體驗，如果真的沒資料，跳轉
+                        if (Object.keys(heroProfile).length === 0) {
+                            console.warn("No hero profile found, redirecting to map.");
+                            navigate('/map');
+                        }
                     }
-                } catch (error) {
-                    console.error("Failed to fetch history for AnalysisPage:", error);
-                    navigate('/map');
-                } finally {
-                    setIsLoadingProfile(false);
                 }
+            } catch (error) {
+                console.error("Failed to fetch profile for AnalysisPage:", error);
+                setShowErrorAlert(true);
+            } finally {
+                setIsLoadingProfile(false);
             }
         };
-        fetchHistory();
-    }, [finalResult, regionQuestId, navigate]);
+
+        fetchProfile();
+    }, [navigate, regionQuestId]); // 依賴項移除 finalResult，避免重複觸發，只在 mount 或 region 改變時抓取 (其實 region 改變不一定要重抓，但保險起見)
+
+    const activeQuestId = questId || regionQuestId;
+    const displayResult = profileData;
 
     if (isLoadingProfile) {
         return (
@@ -97,14 +106,14 @@ const AnalysisPage = () => {
                             animate={{ opacity: 1, y: 0 }}
                             className="text-primary text-sm font-black tracking-[0.4em] uppercase mb-2"
                         >
-                            Hero Chronicle Opening
+                            Loading Soul Architecture
                         </motion.p>
                         <motion.p
                             animate={{ opacity: [0.4, 1, 0.4] }}
                             transition={{ duration: 2, repeat: Infinity }}
                             className="text-white/60 text-xs font-serif italic tracking-wider"
                         >
-                            展開英雄史詩...
+                            正在讀取靈魂檔案...
                         </motion.p>
 
                         <div className="mt-6 w-32 h-[1px] bg-white/10 relative overflow-hidden rounded-full">
@@ -128,7 +137,7 @@ const AnalysisPage = () => {
 
     return (
         <AppLayout>
-            <div className="w-full max-w-[1200px] mx-auto px-4 py-24 md:px-8 relative z-10">
+            <div className="w-full max-w-[1200px] mx-auto px-4 py-14 md:px-8 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mb-12 items-start">
 
                     {/* Left Column: Abby & Chronicle */}
@@ -156,9 +165,14 @@ const AnalysisPage = () => {
                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-[#1a2e1a] border-t border-l border-[#293829] rotate-45 transform origin-center"></div>
 
                             <h3 className="text-primary font-bold text-sm mb-2 uppercase tracking-wider">心靈嚮導 Abby</h3>
-                            <p className="text-gray-200 text-[16px] font-serif italic leading-relaxed">
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 2.5, ease: "easeOut", delay: 0.5 }}
+                                className="text-gray-200 text-[16px] font-serif italic leading-relaxed"
+                            >
                                 "{displayResult.chronicle || displayResult.latestChronicle || "命運的齒輪開始轉動，你的靈魂特質已在星圖中顯現..."}"
-                            </p>
+                            </motion.p>
 
                             {/* Level Info - Integrated into Abby's section */}
                             <div className="mt-6 pt-6 border-t border-white/5 flex flex-col items-center gap-3">
@@ -218,42 +232,56 @@ const AnalysisPage = () => {
                                     <h3 className="text-2xl font-bold text-white">命運指引</h3>
                                 </div>
 
-                                <div className="flex flex-col gap-6">
-                                    <div className="space-y-4">
-                                        <div className="p-4 bg-[#112111]/50 rounded-lg border border-[#293829] hover:border-primary/20 transition-colors">
-                                            <h4 className="text-primary font-bold mb-2 flex items-center gap-2">
-                                                <span className="size-1.5 bg-primary rounded-full"></span>
-                                                今日預言
-                                            </h4>
-                                            <p className="text-gray-300 text-sm leading-relaxed">{displayResult.destiny_guide.daily}</p>
+                                <div className="flex flex-col gap-3">
+                                    {/* 今日預言 */}
+                                    <div className="bg-[#0e1f15] p-4 rounded-xl border border-white/5 hover:border-primary/30 hover:bg-[#12241a] transition-all group flex items-center gap-4">
+                                        <div className="hidden sm:flex size-10 rounded-full bg-primary/10 items-center justify-center shrink-0 border border-primary/20">
+                                            <Sparkles className="w-5 h-5 text-primary" />
                                         </div>
-                                        <div className="p-4 bg-[#112111]/50 rounded-lg border border-[#293829] hover:border-primary/20 transition-colors">
-                                            <h4 className="text-primary font-bold mb-2 flex items-center gap-2">
-                                                <span className="size-1.5 bg-primary rounded-full"></span>
-                                                主線任務
-                                            </h4>
-                                            <p className="text-gray-300 text-sm leading-relaxed">{displayResult.destiny_guide.main}</p>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start mb-1">
+                                                <div className="bg-primary/10 text-primary text-[14px] font-bold px-2 py-0.5 rounded border border-primary/20 uppercase">每日實踐</div>
+                                            </div>
+                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{displayResult.destiny_guide.daily}</p>
                                         </div>
                                     </div>
-                                    <div className="space-y-4">
-                                        <div className="p-4 bg-[#112111]/50 rounded-lg border border-[#293829] hover:border-primary/20 transition-colors">
-                                            <h4 className="text-primary font-bold mb-2 flex items-center gap-2">
-                                                <span className="size-1.5 bg-primary rounded-full"></span>
-                                                支線任務
-                                            </h4>
-                                            <p className="text-gray-300 text-sm leading-relaxed">{displayResult.destiny_guide.side}</p>
+
+                                    {/* 主線任務 */}
+                                    <div className="bg-[#0e1f15] p-4 rounded-xl border border-white/5 hover:border-amber-500/30 hover:bg-[#1f1a0e] transition-all group flex items-center gap-4">
+                                        <div className="hidden sm:flex size-10 rounded-full bg-amber-500/10 items-center justify-center shrink-0 border border-amber-500/20">
+                                            <TrendingUp className="w-5 h-5 text-amber-500" />
                                         </div>
-                                        <div className="p-4 bg-gradient-to-br from-[#112111]/70 to-[#1a2e1a]/50 rounded-lg border-2 border-primary/30 relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 p-2 opacity-10">
-                                                <Sparkles className="w-12 h-12 text-primary" />
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start mb-1">
+                                                <div className="bg-amber-500/10 text-amber-400 text-[14px] font-bold px-2 py-0.5 rounded border border-amber-500/20 uppercase">主線任務</div>
                                             </div>
-                                            <h4 className="text-primary font-bold mb-2 flex items-center gap-2">
-                                                <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-                                                神諭啟示
-                                            </h4>
-                                            <p className="text-primary/90 text-sm italic leading-relaxed font-serif">
-                                                「{displayResult.destiny_guide.oracle}」
-                                            </p>
+                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{displayResult.destiny_guide.main}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* 支線任務 */}
+                                    <div className="bg-[#0e1f15] p-4 rounded-xl border border-white/5 hover:border-sky-500/30 hover:bg-[#0e1c24] transition-all group flex items-center gap-4">
+                                        <div className="hidden sm:flex size-10 rounded-full bg-sky-500/10 items-center justify-center shrink-0 border border-sky-500/20">
+                                            <Compass className="w-5 h-5 text-sky-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start mb-1">
+                                                <div className="bg-sky-500/10 text-sky-400 text-[14px] font-bold px-2 py-0.5 rounded border border-sky-500/20 uppercase">支線任務</div>
+                                            </div>
+                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{displayResult.destiny_guide.side}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* 神諭啟示 */}
+                                    <div className="bg-[#0e1f15] p-4 rounded-xl border border-white/5 hover:border-purple-500/30 hover:bg-[#161024] transition-all group flex items-center gap-4">
+                                        <div className="hidden sm:flex size-10 rounded-full bg-purple-500/10 items-center justify-center shrink-0 border border-purple-500/20">
+                                            <Sparkles className="w-5 h-5 text-purple-500" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start mb-1">
+                                                <div className="bg-purple-500/10 text-purple-400 text-[14px] font-bold px-2 py-0.5 rounded border border-purple-500/20 uppercase flex items-center gap-1">神諭啟示</div>
+                                            </div>
+                                            <p className="text-gray-300 text-[16px] italic leading-relaxed font-serif">「{displayResult.destiny_guide.oracle}」</p>
                                         </div>
                                     </div>
                                 </div>

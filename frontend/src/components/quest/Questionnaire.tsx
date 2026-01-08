@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuestStore } from '../../stores/questStore';
 import NarrativeDisplay from './NarrativeDisplay';
 import QuestionCard from './QuestionCard';
@@ -46,16 +47,18 @@ const Questionnaire = () => {
     }
   }, [narrative]);
 
+  const navigate = useNavigate();
+
   // 當收到最終結果時，跳轉到分析頁面
   useEffect(() => {
     if (finalResult) {
-      window.location.href = '/analysis';
+      navigate(`/analysis?region=${regionName}`);
     }
-  }, [finalResult]);
+  }, [finalResult, navigate, regionName]);
 
   if (isCompleted) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-6 relative overflow-hidden">
+      <div className="w-full flex flex-col items-center justify-center min-h-[80vh] text-center p-6 relative overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] bg-[radial-gradient(circle,rgba(17,212,82,0.15)_0%,rgba(16,34,22,0)_70%)] opacity-60"></div>
@@ -121,7 +124,7 @@ const Questionnaire = () => {
               ) : (
                   <Zap className="w-6 h-6 animate-pulse text-primary" />
               )}
-              <span>{isLoading ? '儀式進行中...' : '啟動轉生儀式'}</span>
+              <span>{isLoading ? '儀式進行中，請勿離開畫面 >>>' : '啟動轉生儀式'}</span>
               {!isLoading && <MoveRight className="w-6 h-6 group-hover:translate-x-1 transition-transform bg-transparent" />}
             </motion.button>
           </div>
@@ -131,7 +134,7 @@ const Questionnaire = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col pt-8 relative">
+    <div className="w-full flex-1 flex flex-col pt-8 relative">
       <GlowEffect trigger={questionIndex} />
       {/* 頂部進度條區域 */}
       <div className="w-full max-w-3xl mx-auto px-6 mt-2 mb-0">

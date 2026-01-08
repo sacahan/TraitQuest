@@ -1,19 +1,29 @@
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import ActionButtons from '../shared/ActionButtons';
 
 interface MbtiPanelProps {
     result: any;
 }
 
 const MbtiPanel = ({ result }: MbtiPanelProps) => {
+    const panelRef = useRef<HTMLDivElement>(null);
+
     if (!result?.class) return null;
 
     return (
         <motion.div
+            ref={panelRef}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="relative group perspective-1000 w-full max-w-md mx-auto"
         >
             <div className="absolute inset-0 bg-primary/10 rounded-2xl blur-2xl group-hover:bg-primary/20 transition-all duration-700"></div>
+
+            {/* Action Buttons */}
+            <div className="absolute top-2 right-2 z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ActionButtons targetRef={panelRef} filename={`mbti-${result.class_id || 'result'}`} />
+            </div>
 
             {/* Hero Label */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30">
@@ -34,8 +44,8 @@ const MbtiPanel = ({ result }: MbtiPanelProps) => {
 
                     <div className="absolute bottom-0 left-0 w-full p-6 z-10">
                         <div className="flex items-center gap-1.5 mb-2">
-                            <span className="size-6 rounded bg-primary text-black flex items-center justify-center font-bold text-xs shadow-lg">M</span>
-                            <span className="text-primary font-bold text-xs tracking-widest uppercase">天選之道 (MBTI)</span>
+                            <span className="size-6 rounded bg-primary text-black flex items-center justify-center font-bold text-[10px] shadow-lg material-symbols-outlined">psychology</span>
+                            <span className="text-primary font-bold text-xs tracking-widest uppercase">英雄職業 (MBTI)</span>
                         </div>
 
                         <h2 className="text-3xl font-black text-white font-display tracking-tight mb-1">

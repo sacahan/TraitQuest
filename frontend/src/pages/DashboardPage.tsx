@@ -223,24 +223,17 @@ const DashboardPage = () => {
                                     </div>
                                     <div className="flex items-center justify-center relative h-56">
                                             <RadarChart stats={profile.stats} />
-                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                            <span className="text-sm font-bold text-blue-400 bg-black/50 px-2 py-1 rounded backdrop-blur-sm border border-blue-500/20">
-                                                屬性調和
-                                            </span>
-                                        </div>
                                     </div>
-                                    <div className="text-center mt-4 space-y-2">
-                                            <p className="text-sm text-gray-500 uppercase tracking-widest font-black">屬性調和完畢</p>
+                                        <div className="text-center mt-4 space-y-2">
                                         <div className="grid grid-cols-5 gap-2">
                                                 {[
-                                                    { key: 'openness', label: '智力' },
-                                                    { key: 'conscientiousness', label: '防禦' },
-                                                    { key: 'extraversion', label: '速度' },
-                                                    { key: 'agreeableness', label: '魅力' },
-                                                    { key: 'neuroticism', label: '洞察' }
+                                                    { key: 'STA_O', label: '智力' },
+                                                    { key: 'STA_C', label: '防禦' },
+                                                    { key: 'STA_E', label: '速度' },
+                                                    { key: 'STA_A', label: '魅力' },
+                                                    { key: 'STA_N', label: '洞察' }
                                                 ].map((item) => {
-                                                    const statObj = profile.stats?.[item.key] || { score: 50 };
-                                                    const score = typeof statObj === 'object' ? statObj.score : (statObj || 50);
+                                                    const score = profile.stats?.[item.key] || 0;
 
                                                     return (
                                                         <div key={item.key} className="flex flex-col items-center">

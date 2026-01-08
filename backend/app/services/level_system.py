@@ -22,7 +22,7 @@ class LevelSystemService:
         公式：(100 × 題數 × 品質) + 100 通關獎勵
         """
         base_per_question = 100
-        completion_bonus = 100
+        completion_bonus = 150
         quality_multiplier = max(1.0, min(1.2, avg_quality))
         total = round(base_per_question * num_questions * quality_multiplier) + completion_bonus
         return total

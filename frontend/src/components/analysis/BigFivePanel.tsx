@@ -1,79 +1,151 @@
-import { motion } from 'framer-motion';
+import {
+    Chart as ChartJS,
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Tooltip,
+    Legend,
+    type ChartData,
+    type ChartOptions
+} from 'chart.js';
+import { Radar } from 'react-chartjs-2';
 import { Target } from 'lucide-react';
+
+ChartJS.register(
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Tooltip,
+    Legend
+);
 
 interface BigFivePanelProps {
     result: any;
 }
 
-const BIGFIVE_MAP: Record<string, string> = {
-    STA_O: '開創性',
-    STA_C: '嚴謹性',
-    STA_E: '外向性',
-    STA_A: '親和性',
-    STA_N: '神經質'
+const RPG_ATTRIBUTE_MAP: Record<string, string> = {
+    STA_O: '智力 (O)', // Openness -> Intellect
+    STA_C: '防禦 (C)', // Conscientiousness -> Defense
+    STA_E: '速度 (E)', // Extraversion -> Speed
+    STA_A: '魅力 (A)', // Agreeableness -> Charm
+    STA_N: '洞察 (N)'  // Neuroticism -> Insight
 };
+
+// Fixed order for the pentagon shape
+const ATTRIBUTE_ORDER = ['STA_O', 'STA_C', 'STA_E', 'STA_A', 'STA_N'];
 
 const BigFivePanel = ({ result }: BigFivePanelProps) => {
     const stats = result?.stats;
     if (!stats) return null;
 
+    // Prepare data
+    const values = ATTRIBUTE_ORDER.map(key => {
+        const val = stats[key];
+        return typeof val === 'number' ? val : (val?.score || 0);
+    });
+
+    const data: ChartData<'radar'> = {
+        labels: ATTRIBUTE_ORDER.map(key => RPG_ATTRIBUTE_MAP[key]),
+        datasets: [
+            {
+                label: '屬性數值',
+                data: values,
+                backgroundColor: 'rgba(17, 212, 82, 0.25)', // #11D452 with opacity
+                borderColor: '#11D452', // #11D452 Neon Green
+                borderWidth: 2,
+                pointBackgroundColor: '#102216', // Dark background
+                pointBorderColor: '#D4AF37', // Gold border
+                pointHoverBackgroundColor: '#D4AF37',
+                pointHoverBorderColor: '#fff',
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            },
+        ],
+    };
+
+    const options: ChartOptions<'radar'> = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            r: {
+                min: 0,
+                max: 100,
+                ticks: {
+                    display: false, // Hide numeric ticks for cleaner look
+                    stepSize: 20,
+                },
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)',
+                    circular: false, // Polygon shape matches RPG stats better
+                },
+                angleLines: {
+                    color: 'rgba(255, 255, 255, 0.2)',
+                },
+                pointLabels: {
+                    color: '#11D452', // Neon Green Labels
+                    font: {
+                        size: 14,
+                        family: '"Noto Sans TC", sans-serif',
+                        weight: 'bold',
+                    },
+                    backdropColor: 'transparent',
+                },
+            },
+        },
+        plugins: {
+            legend: {
+                display: false, // Hide legend since we have a title
+            },
+            tooltip: {
+                backgroundColor: 'rgba(16, 34, 22, 0.9)',
+                titleColor: '#11D452',
+                bodyColor: '#fff',
+                borderColor: '#D4AF37',
+                borderWidth: 1,
+                displayColors: false,
+                callbacks: {
+                    label: function (context) {
+                        return `${context.raw}`;
+                    }
+                }
+            }
+        },
+    };
+
     return (
-        <div className="w-full max-w-4xl mx-auto">
-             <div className="flex items-center gap-4 mb-6">
-                <div className="h-[2px] flex-1 bg-gradient-to-r from-transparent to-purple-500/50"></div>
+        <div className="w-full h-full min-h-[400px] flex flex-col items-center justify-center relative p-4">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-2 w-full max-w-lg z-10">
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#11D452]/50"></div>
                 <div className="flex items-center gap-2">
-                    <Target className="w-6 h-6 text-purple-400" />
-                    <h2 className="text-2xl font-bold text-white whitespace-nowrap">
-                        <span className="text-purple-400">角色屬性</span> 解析
+                    <Target className="w-5 h-5 text-[#11D452]" />
+                    <h2 className="text-xl font-bold text-white tracking-wider">
+                        <span className="text-[#11D452]">角色</span> 屬性
                     </h2>
                 </div>
-                <div className="h-[2px] flex-1 bg-gradient-to-l from-transparent to-purple-500/50"></div>
+                <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#11D452]/50"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {Object.entries(stats).map(([key, value]: [string, any], index) => {
-                    // Handle both raw numbers and object format (legacy/store compatibility)
-                    const score = typeof value === 'number' ? value : value.score;
-                    const label = (typeof value === 'object' && value.label) ? value.label : (BIGFIVE_MAP[key] || key);
-                    
-                    return (
-                        <motion.div
-                            key={key}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            whileHover={{ y: -4, borderColor: 'rgba(192, 132, 252, 0.5)' }}
-                            className="bg-[#1a2e1a] border border-[#293829] rounded-xl p-6 transition-all duration-300 relative overflow-hidden group"
-                        >
-                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                <Target className="w-24 h-24 text-purple-500" />
-                            </div>
+            {/* Chart Container with decorative glow */}
+            <div className="relative w-full max-w-[500px] aspect-square">
+                {/* Background Glow Effect */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 h-2/3 bg-[#11D452] opacity-5 blur-[80px] rounded-full pointer-events-none"></div>
 
-                            <div className="flex items-center gap-4 mb-4 relative z-10">
-                                <div className="size-12 rounded-full bg-[#112111] border border-purple-500 flex items-center justify-center shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                                    <span className="text-purple-400 font-bold text-lg">{key.replace('STA_', '')}</span>
-                                </div>
-                                <div>
-                                    <h4 className="text-white font-bold text-lg">{label}</h4>
-                                    <span className="text-xs text-purple-400/80">基礎屬性</span>
-                                </div>
-                            </div>
-                            
-                            <div className="relative z-10">
-                                <div className="flex items-baseline gap-2 mb-2">
-                                    <span className="text-white text-4xl font-bold">{score}</span>
-                                    <span className="text-gray-500 text-sm">/ 100</span>
-                                </div>
-                                <div className="h-2 w-full bg-[#112111] rounded-full overflow-hidden border border-white/5">
-                                    <motion.div 
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${score}%` }}
-                                        transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
-                                        className="h-full bg-gradient-to-r from-purple-600 to-pink-500"
-                                    />
-                                </div>
-                            </div>
-                        </motion.div>
+                <Radar data={data} options={options} />
+            </div>
+
+            {/* Stat List Summary (Optional, for accessibility/quick read) */}
+            <div className="grid grid-cols-5 gap-2 w-full max-w-lg mt-4 text-center z-10">
+                {ATTRIBUTE_ORDER.map(key => {
+                    const val = stats[key];
+                    const score = typeof val === 'number' ? val : (val?.score || 0);
+                    return (
+                        <div key={key} className="flex flex-col items-center">
+                            <span className="text-[#11D452] text-xs font-bold mb-1">{RPG_ATTRIBUTE_MAP[key]}</span>
+                            <span className="text-white text-sm font-mono">{score}</span>
+                        </div>
                     );
                 })}
             </div>

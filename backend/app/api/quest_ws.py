@@ -350,6 +350,9 @@ async def quest_ws_endpoint(
                 # 5. 計算經驗值與升級 (Level Service)
                 logger.info("5. Calculating experience and level up...")
                 num_questions = len(analytics_list)
+                logger.info(
+                    f"📊 EXP Calc: {num_questions} questions, Avg Quality: {avg_quality:.2f}"
+                )
                 earned_exp = level_service.calculate_quest_exp(num_questions, avg_quality) 
                 new_lvl, new_exp, is_up = level_service.check_level_up(player_level, player_exp + earned_exp)
                 

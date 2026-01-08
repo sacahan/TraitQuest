@@ -7,8 +7,8 @@ import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
 const introPages = [
   { path: '/intro/mbti', name: 'MBTI 聖殿', icon: 'psychology', description: '英雄職業' },
   { path: '/intro/bigfive', name: 'Big Five 能量場', icon: 'water_drop', description: '角色屬性' },
-  { path: '/intro/disc', name: 'DISC 戰鬥叢林', icon: 'swords', description: '戰鬥流派' },
   { path: '/intro/enneagram', name: 'Enneagram 冥想塔', icon: 'stars', description: '靈魂種族' },
+  { path: '/intro/disc', name: 'DISC 戰鬥叢林', icon: 'swords', description: '戰鬥流派' },
   { path: '/intro/gallup', name: 'Gallup 祭壇', icon: 'trophy', description: '天賦技能' },
 ];
 
