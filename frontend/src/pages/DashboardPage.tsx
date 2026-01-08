@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../stores/authStore';
 import apiClient from '../services/apiClient';
 import { Header } from '../layout/Header';
 import { Footer } from '../layout/Footer';
+import MagicHourglass from '../components/ui/MagicHourglass';
 
 // 引入模組化組件
 import HeroPanel from '../components/dashboard/HeroPanel';
@@ -35,15 +36,46 @@ const DashboardPage = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-[#050d09] text-primary">
-                <div className="relative w-24 h-24 mb-8">
-                    <div className="absolute inset-0 border-4 border-primary/20 rounded-full"></div>
-                    <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                    <div className="absolute inset-x-0 -bottom-12 text-center font-display tracking-[0.3em] text-sm animate-pulse">
-                        靈魂凝聚中...
+            <AnimatePresence>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-[#0a0f0d]/90 backdrop-blur-xl z-[100] flex flex-col items-center justify-center overflow-hidden"
+                >
+                    {/* 背景氛圍光 */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#11D45222_0%,_transparent_70%)] animate-pulse"></div>
+
+                    <div className="relative flex items-center justify-center scale-125 lg:scale-150 mb-12">
+                        <MagicHourglass />
                     </div>
-                </div>
-            </div>
+
+                    <div className="mt-8 flex flex-col items-center z-10">
+                        <motion.p
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-primary text-sm font-black tracking-[0.4em] uppercase mb-2"
+                        >
+                            Soul Awakening
+                        </motion.p>
+                        <motion.p
+                            animate={{ opacity: [0.4, 1, 0.4] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="text-white/60 text-xs font-serif italic tracking-wider"
+                        >
+                            靈魂凝聚中... 開啟英雄史詩
+                        </motion.p>
+
+                        <div className="mt-6 w-32 h-[1px] bg-white/10 relative overflow-hidden rounded-full">
+                            <motion.div
+                                animate={{ left: ["-100%", "100%"] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                className="absolute top-0 bottom-0 w-1/2 bg-gradient-to-r from-transparent via-primary/40 to-transparent"
+                            />
+                        </div>
+                    </div>
+                </motion.div>
+            </AnimatePresence>
         );
     }
 

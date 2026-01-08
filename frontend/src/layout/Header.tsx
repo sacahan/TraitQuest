@@ -95,7 +95,7 @@ export const Header = () => {
               </div>
 
               <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/dashboard">
-                英雄史詩
+                公會大廳
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             </nav>
