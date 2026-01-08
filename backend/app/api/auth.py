@@ -123,16 +123,16 @@ async def get_me(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends
         "syncPercent": sync_percent,
         "heroIdentity": {
             "race": {
-                "id": race_info.id if race_info else None,
+                "id": race_info.id if race_info else "",
                 "name": race_info.name if race_info else "尚未覺醒",
                 "description": race_info.metadata_info.get("description") if race_info else ""
             },
             "class": {
-                "id": class_info.id if class_info else None,
+                "id": class_info.id if class_info else "",
                 "name": class_info.name if class_info else "平民",
                 "description": class_info.metadata_info.get("traits") if class_info else ""
             }
         },
         "heroProfile": hero_profile,
-        "latestChronicle": latest_quest.hero_chronicle if latest_quest else None
+        "latestChronicle": latest_quest.hero_chronicle if latest_quest else ''
     }

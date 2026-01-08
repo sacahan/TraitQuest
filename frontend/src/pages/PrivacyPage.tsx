@@ -3,7 +3,7 @@ import AppLayout from '../layout/AppLayout';
 const PrivacyPage = () => {
     return (
         <AppLayout backgroundVariant="none">
-            <div className="flex-grow flex flex-col items-center relative">
+            <div className="w-full flex-grow flex flex-col items-center relative">
                 {/* Hero Section */}
                 <section className="w-full relative py-20 overflow-hidden border-b border-[#23482f]">
                     <div
