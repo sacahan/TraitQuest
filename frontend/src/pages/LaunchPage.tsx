@@ -1,8 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Header } from '../layout/Header';
-import { Footer } from '../layout/Footer';
+import AppLayout from '../layout/AppLayout';
 import { useAuthStore } from '../stores/authStore';
 import { useMapStore } from '../stores/mapStore';
 import { AlertModal } from '../components/ui/AlertModal';
@@ -121,7 +120,7 @@ const LaunchPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-background-dark text-white relative overflow-hidden">
+        <AppLayout backgroundVariant="subtle">
             <AlertModal
                 isOpen={alertConfig.isOpen}
                 onClose={handleErrorClose}
@@ -131,7 +130,7 @@ const LaunchPage: React.FC = () => {
                 onConfirm={handleErrorClose}
             />
 
-            {/* 魔法背景特效層 */}
+            {/* 魔法背景特效層 - 粒子與羽毛效果 */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 {/* 粒子特效 (使用 Framer Motion 模擬) */}
                 {[...Array(6)].map((_, i) => (
@@ -190,16 +189,9 @@ const LaunchPage: React.FC = () => {
                         find your soul
                     </motion.div>
                 ))}
-
-                {/* 頂部發光 */}
-                <div className="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-[#059669] rounded-full blur-[150px] opacity-30 animate-pulse"></div>
-                {/* 底部發光 */}
-                <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-primary rounded-full blur-[180px] opacity-10"></div>
             </div>
 
-            <Header />
-
-            <main className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-8 lg:px-40">
+            <div className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-8 lg:px-40">
                 <div className="w-full max-w-[1100px] flex flex-col md:flex-row items-center gap-10 md:gap-20">
 
                     {/* 左側 Abby 形象 */}
@@ -353,10 +345,8 @@ const LaunchPage: React.FC = () => {
                     <span className="material-symbols-outlined text-base">verified_user</span>
                     <p className="text-xs font-medium tracking-wide">魔法結界已啟動，您的心靈數據絕對安全</p>
                 </div>
-            </main>
-
-            <Footer />
-        </div>
+            </div>
+        </AppLayout>
     );
 };
 

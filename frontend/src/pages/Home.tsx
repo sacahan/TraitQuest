@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { Header } from '../layout/Header';
-import { Footer } from '../layout/Footer';
+import AppLayout from '../layout/AppLayout';
 import { HomeQuestCard } from '../components/quest/HomeQuestCard';
 import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
 
@@ -63,10 +62,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-background-dark min-h-screen font-body flex flex-col">
-      <Header />
-      
-      <main className="flex-grow">
+    <AppLayout backgroundVariant="none">
+      <div className="flex-grow">
         {/* Hero Section */}
         <section className="w-full px-4 md:px-10 py-8 flex justify-center">
           <div className="w-full max-w-[1200px]">
@@ -168,10 +165,8 @@ const Home = () => {
             </div>
           </div>
         </section>
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </AppLayout>
   );
 };
 

@@ -101,7 +101,7 @@ export const useQuestStore = create<QuestState>((set, get) => {
       // Actually, we can import useAuthStore at the top provided circular deps are handled or use getState().
       // Since we can't use hooks inside callbacks easily, we use useAuthStore.getState()
 
-      const { level_info, class_id, hero_avatar_url } = data;
+      const { level_info, class_id } = data;
       const updates: any = {
         level: level_info.level,
         exp: level_info.exp

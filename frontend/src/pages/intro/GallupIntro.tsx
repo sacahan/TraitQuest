@@ -1,9 +1,9 @@
 import React from 'react'
-import IntroLayout from '../../layout/IntroLayout'
+import AppLayout from '../../layout/AppLayout'
 
 const GallupIntro: React.FC = () => {
   return (
-    <IntroLayout title="Gallup 介紹">
+    <AppLayout>
       {/* Hero Section */}
       <div className="w-full max-w-[1200px] px-4 py-10 md:px-6 lg:py-20">
         <div className="flex flex-col-reverse lg:flex-row gap-10 items-center">
@@ -123,7 +123,7 @@ const GallupIntro: React.FC = () => {
               </button>
           </div>
       </section>
-    </IntroLayout>
+    </AppLayout>
   )
 }
 

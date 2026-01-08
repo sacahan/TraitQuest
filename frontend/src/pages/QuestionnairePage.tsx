@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Header } from '../layout/Header';
-import { Footer } from '../layout/Footer';
+import AppLayout from '../layout/AppLayout';
 import { useQuestStore } from '../stores/questStore';
 import { useAuthStore } from '../stores/authStore';
 import { useMapStore } from '../stores/mapStore';
@@ -68,25 +67,22 @@ const QuestionnairePage = () => {
   // 顯示載入畫面
   if (isChecking) {
     return (
-      <div className="flex flex-col min-h-screen bg-background-dark">
-        <Header />
-        <main className="flex-grow flex items-center justify-center">
+      <AppLayout backgroundVariant="none">
+        <div className="flex-grow flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-white/60">正在檢查區域狀態...</p>
           </div>
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </AppLayout>
     );
   }
 
   // 顯示鎖定提示
   if (showLockedModal) {
     return (
-      <div className="flex flex-col min-h-screen bg-background-dark">
-        <Header />
-        <main className="flex-grow flex items-center justify-center">
+      <AppLayout backgroundVariant="none">
+        <div className="flex-grow flex items-center justify-center">
           <AlertModal
             isOpen={true}
             title="區域封印中"
@@ -95,20 +91,17 @@ const QuestionnairePage = () => {
             onConfirm={handleLockedConfirm}
             onClose={handleLockedConfirm}
           />
-        </main>
-        <Footer />
-      </div>
+        </div>
+      </AppLayout>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-grow">
+    <AppLayout backgroundVariant="none">
+      <div className="flex-grow">
         <Questionnaire />
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppLayout>
   );
 };
 

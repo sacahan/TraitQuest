@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
-import { Header } from '../layout/Header'
-import { Footer } from '../layout/Footer'
+import AppLayout from '../layout/AppLayout'
 import MapEffects from '../components/map/MapEffects'
 import RegionMarker from '../components/map/RegionMarker'
 import { useMapStore } from '../stores/mapStore'
@@ -14,9 +13,8 @@ const MapPage: React.FC = () => {
   }, [fetchRegions])
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a160e]">
-      <Header />
-      <main className="flex-grow flex flex-col relative overflow-hidden min-h-[calc(100vh-140px)]">
+    <AppLayout backgroundVariant="none">
+      <div className="flex-grow flex flex-col relative overflow-hidden min-h-[calc(100vh-140px)]">
         <MapEffects />
 
         {/* 頁面標題與簡介 */}
@@ -106,9 +104,8 @@ const MapPage: React.FC = () => {
             </div>
           ))}
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppLayout>
   )
 }
 

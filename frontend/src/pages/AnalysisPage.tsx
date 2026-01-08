@@ -6,8 +6,7 @@ import apiClient from '../services/apiClient';
 import {
     TrendingUp, ChevronRight, Shield, Compass, Users, Sparkles
 } from 'lucide-react';
-import { Header } from '../layout/Header';
-import { Footer } from '../layout/Footer';
+import AppLayout from '../layout/AppLayout';
 import MagicHourglass from '../components/ui/MagicHourglass';
 import { AlertModal } from '../components/ui/AlertModal';
 
@@ -128,21 +127,9 @@ const AnalysisPage = () => {
     const { levelInfo } = displayResult;
 
     return (
-        <div className="min-h-screen bg-background-dark text-white font-display relative overflow-hidden">
-            <Header />
-
-            {/* Background Effects - 背景呼吸效果 */}
-            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                {/* 頂部發光 */}
-                <div className="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-[#059669] rounded-full blur-[150px] opacity-30 animate-pulse-slow"></div>
-                {/* 底部發光 */}
-                <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-primary rounded-full blur-[180px] opacity-10"></div>
-            </div>
-
-            <main className="flex-1 flex flex-col items-center w-full max-w-[1200px] mx-auto px-4 py-24 md:px-8 relative z-10">
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-[1200px] mx-auto mb-12 items-start">
+        <AppLayout>
+            <div className="w-full max-w-[1200px] mx-auto px-4 py-24 md:px-8 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mb-12 items-start">
 
                     {/* Left Column: Abby & Chronicle */}
                     <div className="w-full flex flex-col items-center">
@@ -359,19 +346,16 @@ const AnalysisPage = () => {
                         </div>
                     </div>
                 </div>
-            </main>
-
-            <Footer />
+            </div>
             <AlertModal
                 isOpen={showErrorAlert}
                 onClose={() => navigate('/map')}
                 title="資料錯誤"
                 message="無法讀取冒險結果，將返回地圖。"
-                type="error"
                 confirmText="返回地圖"
                 onConfirm={() => navigate('/map')}
             />
-        </div>
+        </AppLayout>
     );
 };
 

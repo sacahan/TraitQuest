@@ -1,12 +1,9 @@
-import { Header } from '../layout/Header';
-import { Footer } from '../layout/Footer';
+import AppLayout from '../layout/AppLayout';
 
 const AboutPage = () => {
     return (
-        <div className="flex flex-col min-h-screen bg-[#050d09] text-[#e0eadd] selection:bg-primary selection:text-[#102216]">
-            <Header />
-
-            <main className="flex-grow flex flex-col items-center relative">
+        <AppLayout backgroundVariant="none">
+            <div className="flex-grow flex flex-col items-center relative">
                 {/* Hero Section */}
                 <section className="w-full relative py-20 overflow-hidden border-b border-[#23482f]">
                     <div
@@ -116,10 +113,8 @@ const AboutPage = () => {
                         </div>
                     </div>
                 </section>
-            </main>
-
-            <Footer />
-        </div>
+            </div>
+        </AppLayout>
     );
 };
 

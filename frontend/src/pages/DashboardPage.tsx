@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../stores/authStore';
 import apiClient from '../services/apiClient';
-import { Header } from '../layout/Header';
-import { Footer } from '../layout/Footer';
+import AppLayout from '../layout/AppLayout';
 import MagicHourglass from '../components/ui/MagicHourglass';
 
 // 引入模組化組件
@@ -82,8 +81,7 @@ const DashboardPage = () => {
     // 如果 profileData 為 null，顯示空狀態
     if (!profileData) {
         return (
-            <div className="min-h-screen bg-[#050d09] text-white font-body selection:bg-primary/30 relative overflow-hidden flex flex-col">
-                <Header />
+            <AppLayout backgroundVariant="none">
                 <div className="flex-1 flex items-center justify-center">
                     <div className="text-center space-y-4">
                         <p className="text-gray-400 text-lg">無法載入英雄資料</p>
@@ -104,8 +102,7 @@ const DashboardPage = () => {
                         </button>
                     </div>
                 </div>
-                <Footer />
-            </div>
+            </AppLayout>
         );
     }
 
@@ -115,19 +112,8 @@ const DashboardPage = () => {
     const exp = profileData.exp || 0;
 
     return (
-        <div className="min-h-screen bg-[#050d09] text-white font-body selection:bg-primary/30 relative overflow-hidden flex flex-col">
-            <Header />
-
-            {/* Background Effects */}
-            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                {/* 頂部發光 */}
-                <div className="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-[#059669] rounded-full blur-[150px] opacity-30 animate-pulse-slow"></div>
-                {/* 底部發光 */}
-                <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-primary rounded-full blur-[180px] opacity-10"></div>
-            </div>
-
-            <main className="flex-1 relative z-10 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <AppLayout>
+            <div className="flex-1 relative z-10 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
                 {/* Chronicle & Level Section - Side by Side */}
                 <div className="mb-12 grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Chronicle - 2/3 width */}
@@ -419,10 +405,8 @@ const DashboardPage = () => {
                         <span className="truncate font-body uppercase tracking-wider">重返地圖</span>
                     </button>
                 </div>
-            </main>
-
-            <Footer />
-        </div>
+            </div>
+        </AppLayout>
     );
 };
 

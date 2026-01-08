@@ -1,9 +1,9 @@
 import React from 'react'
-import IntroLayout from '../../layout/IntroLayout'
+import AppLayout from '../../layout/AppLayout'
 
 const MbtiIntro: React.FC = () => {
   return (
-    <IntroLayout title="MBTI 介紹">
+    <AppLayout>
       <div className="w-full max-w-[1200px] px-4 py-10 md:px-6 lg:py-20">
         <div className="flex flex-col-reverse lg:flex-row gap-10 items-center">
           <div className="flex flex-col gap-6 flex-1 text-center lg:text-left items-center lg:items-start">
@@ -226,7 +226,7 @@ const MbtiIntro: React.FC = () => {
           </button>
         </div>
       </section>
-    </IntroLayout>
+    </AppLayout>
   )
 }
 
