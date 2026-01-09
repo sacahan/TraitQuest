@@ -282,12 +282,8 @@ async def quest_ws_endpoint(
                 analytics_list = questionnaire_session.state.get("accumulated_analytics", [])
                 
                 total_quality = 0
-                # accumulated_deltas = {}
-                # for item in analytics_list:
-                #     total_quality += item.get("quality_score", 1.0)
-                #     deltas = item.get("trait_deltas", {})
-                #     for tag, val in deltas.items():
-                #         accumulated_deltas[tag] = accumulated_deltas.get(tag, 0) + val
+                for item in analytics_list:
+                    total_quality += item.get("quality_score", 1.0)
                 
                 avg_quality = total_quality / len(analytics_list) if analytics_list else 1.0
                 

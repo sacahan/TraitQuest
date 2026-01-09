@@ -116,15 +116,15 @@ const EnneagramIntro: React.FC = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {renderRaceCard('1號：完美主義者', '鐵律族', '追求秩序與完美的靈魂，源自遠古法典之山。', 'primary')}
-            {renderRaceCard('2號：給予者', '聖靈族', '渴望被愛與付出的靈魂，源自生命之泉。', 'primary')}
-            {renderRaceCard('3號：成就者', '輝光族', '追求成就與注視的靈魂，源自永恆烈陽。', 'primary')}
-            {renderRaceCard('4號：浪漫者', '幻影族', '沉浸於獨特與憂傷的靈魂，源自迷霧森林。', 'primary')}
-            {renderRaceCard('5號：觀察者', '智者族', '渴求知識與觀察的靈魂，源自星辰圖書館。', 'primary')}
-            {renderRaceCard('6號：懷疑論者', '堅盾族', '追求安全與忠誠的靈魂，源自地下堡壘。', 'primary')}
-            {renderRaceCard('7號：享樂主義者', '秘風族', '追求自由與新奇的靈魂，源自流浪之雲。', 'primary')}
-            {renderRaceCard('8號：挑戰者', '霸龍族', '追求力量與控制的靈魂，源自火山熔岩。', 'primary')}
-            {renderRaceCard('9號：和平締造者', '蒼翠族', '追求和平與融合的靈魂，源自萬物母林。', 'primary')}
+            {renderRaceCard('1號：完美主義者', '鐵律之魂', '追求秩序與完美的靈魂，源自遠古法典之山。', 'primary')}
+            {renderRaceCard('2號：給予者', '聖靈之魂', '渴望被愛與付出的靈魂，源自生命之泉。', 'primary')}
+            {renderRaceCard('3號：成就者', '輝光之魂', '追求成就與注視的靈魂，源自永恆烈陽。', 'primary')}
+            {renderRaceCard('4號：浪漫者', '幻影之魂', '沉浸於獨特與憂傷的靈魂，源自迷霧森林。', 'primary')}
+            {renderRaceCard('5號：觀察者', '智者之魂', '渴求知識與觀察的靈魂，源自星辰圖書館。', 'primary')}
+            {renderRaceCard('6號：懷疑論者', '堅盾之魂', '追求安全與忠誠的靈魂，源自地下堡壘。', 'primary')}
+            {renderRaceCard('7號：享樂主義者', '秘風之魂', '追求自由與新奇的靈魂，源自流浪之雲。', 'primary')}
+            {renderRaceCard('8號：挑戰者', '霸龍之魂', '追求力量與控制的靈魂，源自火山熔岩。', 'primary')}
+            {renderRaceCard('9號：和平締造者', '蒼翠之魂', '追求和平與融合的靈魂，源自萬物母林。', 'primary')}
           </div>
         </div>
       </section>

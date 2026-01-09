@@ -46,7 +46,7 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
 
             <div className="relative rounded-xl overflow-hidden border border-primary/50 shadow-[0_0_15px_rgba(17,212,82,0.1)] bg-[#0e1f15] transition-all duration-300 group-hover:border-primary">
                 <div
-                    className="aspect-[12/12] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
+                    className="aspect-[4/5] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
                     style={{
                         backgroundImage: `url(${avatarUrl ||
                             (classId && classId !== "???" ? `/assets/images/classes/${classId.toLowerCase()}.png` : '/assets/images/classes/civilian.png')
@@ -58,7 +58,7 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
                     <div className="absolute bottom-0 left-0 w-full p-4 z-10">
                         <div className="flex items-center gap-1.5 mb-1.5">
                             <span className="size-5 rounded bg-primary text-black flex items-center justify-center font-bold text-xs shadow-lg">M</span>
-                            <span className="text-primary font-bold text-xs tracking-widest uppercase">天選之道 (MBTI)</span>
+                            <span className="text-primary font-bold text-xs tracking-widest uppercase">英雄職業 (MBTI)</span>
                         </div>
 
                         <h2 className="text-2xl font-black text-white font-display tracking-tight text-glow">

@@ -82,7 +82,6 @@ const AnalysisPage = () => {
     }, [navigate, regionQuestId]); // 依賴項移除 finalResult，避免重複觸發，只在 mount 或 region 改變時抓取 (其實 region 改變不一定要重抓，但保險起見)
 
     const activeQuestId = questId || regionQuestId;
-    const displayResult = profileData;
 
     if (isLoadingProfile) {
         return (
@@ -129,11 +128,11 @@ const AnalysisPage = () => {
         );
     }
 
-    if (!displayResult || !activeQuestId) {
+    if (!profileData || !activeQuestId) {
         return null;
     }
 
-    const { levelInfo } = displayResult;
+    const { levelInfo } = profileData;
 
     return (
         <AppLayout>
@@ -163,16 +162,18 @@ const AnalysisPage = () => {
                             className="relative w-full bg-[#1a2e1a]/80 backdrop-blur-md border border-[#293829] rounded-2xl p-6 text-center shadow-xl"
                         >
                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-[#1a2e1a] border-t border-l border-[#293829] rotate-45 transform origin-center"></div>
-
-                            <h3 className="text-primary font-bold text-sm mb-2 uppercase tracking-wider">心靈嚮導 Abby</h3>
                             <motion.p
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 2.5, ease: "easeOut", delay: 0.5 }}
-                                className="text-gray-200 text-[16px] font-serif italic leading-relaxed"
+                                className="text-gray-200 text-[16px] font-serif italic leading-relaxed text-left"
                             >
-                                "{displayResult.chronicle || displayResult.latestChronicle || "命運的齒輪開始轉動，你的靈魂特質已在星圖中顯現..."}"
+                                "{profileData.chronicle || profileData.latestChronicle || "命運的齒輪開始轉動，你的靈魂特質已在星圖中顯現..."}"
                             </motion.p>
+                            <div className="flex items-center justify-end gap-2">
+                                <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/50"></div>
+                                <p className="text-primary/80 text-sm font-bold tracking-wider italic">心靈嚮導 Abby</p>
+                            </div>
 
                             {/* Level Info - Integrated into Abby's section */}
                             <div className="mt-6 pt-6 border-t border-white/5 flex flex-col items-center gap-3">
@@ -206,11 +207,11 @@ const AnalysisPage = () => {
 
                     {/* Right Column: Specialized Result Panels */}
                     <div className="w-full">
-                        {activeQuestId === 'mbti' && <MbtiPanel result={displayResult} />}
-                        {activeQuestId === 'enneagram' && <EnneagramPanel result={displayResult} />}
-                        {activeQuestId === 'bigfive' && <BigFivePanel result={displayResult} />}
-                        {activeQuestId === 'disc' && <DiscPanel result={displayResult} />}
-                        {activeQuestId === 'gallup' && <GallupPanel result={displayResult} />}
+                        {activeQuestId === 'mbti' && <MbtiPanel result={profileData} />}
+                        {activeQuestId === 'enneagram' && <EnneagramPanel result={profileData} />}
+                        {activeQuestId === 'bigfive' && <BigFivePanel result={profileData} />}
+                        {activeQuestId === 'disc' && <DiscPanel result={profileData} />}
+                        {activeQuestId === 'gallup' && <GallupPanel result={profileData} />}
                     </div>
                 </div>
 
@@ -220,7 +221,7 @@ const AnalysisPage = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
                         {/* Destiny Guide 命運指引 */}
-                        {displayResult.destiny_guide && (
+                        {profileData.destiny_guide && (
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -242,7 +243,7 @@ const AnalysisPage = () => {
                                             <div className="flex justify-between items-start mb-1">
                                                 <div className="bg-primary/10 text-primary text-[14px] font-bold px-2 py-0.5 rounded border border-primary/20 uppercase">每日實踐</div>
                                             </div>
-                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{displayResult.destiny_guide.daily}</p>
+                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{profileData.destiny_guide.daily}</p>
                                         </div>
                                     </div>
 
@@ -255,7 +256,7 @@ const AnalysisPage = () => {
                                             <div className="flex justify-between items-start mb-1">
                                                 <div className="bg-amber-500/10 text-amber-400 text-[14px] font-bold px-2 py-0.5 rounded border border-amber-500/20 uppercase">主線任務</div>
                                             </div>
-                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{displayResult.destiny_guide.main}</p>
+                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{profileData.destiny_guide.main}</p>
                                         </div>
                                     </div>
 
@@ -268,7 +269,7 @@ const AnalysisPage = () => {
                                             <div className="flex justify-between items-start mb-1">
                                                 <div className="bg-sky-500/10 text-sky-400 text-[14px] font-bold px-2 py-0.5 rounded border border-sky-500/20 uppercase">支線任務</div>
                                             </div>
-                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{displayResult.destiny_guide.side}</p>
+                                            <p className="text-gray-300 text-[16px] leading-relaxed italic font-serif">{profileData.destiny_guide.side}</p>
                                         </div>
                                     </div>
 
@@ -281,7 +282,7 @@ const AnalysisPage = () => {
                                             <div className="flex justify-between items-start mb-1">
                                                 <div className="bg-purple-500/10 text-purple-400 text-[14px] font-bold px-2 py-0.5 rounded border border-purple-500/20 uppercase flex items-center gap-1">神諭啟示</div>
                                             </div>
-                                            <p className="text-gray-300 text-[16px] italic leading-relaxed font-serif">「{displayResult.destiny_guide.oracle}」</p>
+                                            <p className="text-gray-300 text-[16px] italic leading-relaxed font-serif">「{profileData.destiny_guide.oracle}」</p>
                                         </div>
                                     </div>
                                 </div>
@@ -289,7 +290,7 @@ const AnalysisPage = () => {
                         )}
 
                         {/* Destiny Bonds 命運羈絆 */}
-                        {displayResult.destiny_bonds && (
+                        {profileData.destiny_bonds && (
                             <div className="flex flex-col gap-6 w-full h-full">
                                 {/* 建議夥伴 */}
                                 <motion.div
@@ -303,7 +304,7 @@ const AnalysisPage = () => {
                                         天命盟友
                                     </h3>
                                     <div className="space-y-3">
-                                        {displayResult.destiny_bonds.compatible.map((bond: any, idx: number) => (
+                                        {profileData.destiny_bonds.compatible.map((bond: any, idx: number) => (
                                             <div key={idx} className="p-4 bg-[#112111]/50 rounded-lg border border-primary/20 hover:border-primary/40 transition-colors hover:bg-primary/5">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <h4 className="text-white font-bold">{bond.class_name} <span className="text-xs text-gray-500 font-normal ml-1">({bond.class_id.replace('CLS_', '').replace('STN_', '')})</span></h4>
@@ -329,7 +330,7 @@ const AnalysisPage = () => {
                                         宿命之敵
                                     </h3>
                                     <div className="space-y-3">
-                                        {displayResult.destiny_bonds.conflicting.map((bond: any, idx: number) => (
+                                        {profileData.destiny_bonds.conflicting.map((bond: any, idx: number) => (
                                             <div key={idx} className="p-4 bg-[#2a1111]/50 rounded-lg border border-red-500/20 hover:border-red-500/40 transition-colors hover:bg-red-500/5">
                                                 <div className="flex items-center justify-between mb-2">
                                                     <h4 className="text-white font-bold">{bond.class_name} <span className="text-xs text-gray-500 font-normal ml-1">({bond.class_id.replace('CLS_', '').replace('STN_', '')})</span></h4>
