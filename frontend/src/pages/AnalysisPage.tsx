@@ -26,62 +26,64 @@ const AnalysisPage = () => {
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-    // 總是從 API 獲取最新的 Profile 資料，確保資料一致性
+    const activeQuestId = questId || regionQuestId;
+
+    // 總是從 API 獲取最新的 Report 資料 (QuestReport)
     useEffect(() => {
         const fetchProfile = async () => {
+            if (!activeQuestId) return;
+
             setIsLoadingProfile(true);
             try {
-                const response = await apiClient.get('/auth/me');
-                const profile = response.data;
-                const heroProfile = profile.heroProfile || {};
-                const latestChronicle = profile.latestChronicle || '你的史詩正在等待編寫...';
+                // [Modified] 根據 quest type 獲取專屬報告
+                const response = await apiClient.get(`/quests/report/${activeQuestId}`);
+                const report = response.data;
 
-                // 組合顯示用的資料結構
+                if (!report) {
+                    throw new Error("No report data found");
+                }
+
+                // 映射後端資料結構到前端組件所需格式
+                // Backend: QuestReport { level_info, hero_chronicle, destiny_guide, ... }
                 const result = {
-                    ...heroProfile,
-                    levelInfo: {
-                        level: profile.level,
-                        exp: profile.exp,
-                        // 如果 Store 中有剛剛完成的任務結果，且這是我們剛完成的任務，則顯示升級特效
-                        isLeveledUp: finalResult?.level_info?.is_level_up || false,
-                        earnedExp: finalResult?.level_info?.earned_exp || 0
-                    },
-                    latestChronicle
+                    ...report, // 包含 race, class, stats 等
+
+                    // 映射 level_info (snake_case) -> levelInfo (Frontend prop)
+                    levelInfo: report.level_info ? {
+                        level: report.level_info.level,
+                        exp: report.level_info.exp,
+                        isLeveledUp: report.level_info.isLeveledUp,
+                        earnedExp: report.level_info.earnedExp,
+                        milestone: report.level_info.milestone
+                    } : null,
+
+                    // 顯示用的 chronicle
+                    chronicle: report.hero_chronicle
                 };
 
-                // 檢查是否有足夠的資料可以顯示
-                if (Object.keys(heroProfile).length > 0) {
-                    setProfileData(result);
-                } else if (!isLoadingProfile) {
-                    // 只有在非初始加載時才判斷為錯誤 (避免一閃而過的錯誤)
-                    // 但這裡是 fetch 結束，所以如果是空的，可能就是真的沒資料
-                    // 不過剛註冊可能沒資料，這取決於業務邏輯。
-                    // 假設 AnalysisPage 只有在有資料時才有意義 (除了 region 參數? 但 region 參數也是看資料)
-                    // 如果是直接與 regionQuestId 關聯...
-                    if (!regionQuestId && !finalResult) {
-                        // 如果沒有指定區域，也沒有剛剛的結果，且 Profile 也是空的，那就回地圖
-                        // 但如果有 regionQuestId，可能是要看特定區域的分析，但這裡我們統一顯示 Profile
-                        // 暫時維持原邏輯：沒資料就回地圖
-                        // setShowErrorAlert(true); // 暫不彈窗，直接回地圖或顯示空狀態?
-                        // 為了使用者體驗，如果真的沒資料，跳轉
-                        if (Object.keys(heroProfile).length === 0) {
-                            console.warn("No hero profile found, redirecting to map.");
-                            navigate('/map');
-                        }
-                    }
-                }
+                setProfileData(result);
             } catch (error) {
-                console.error("Failed to fetch profile for AnalysisPage:", error);
-                setShowErrorAlert(true);
+                console.error("Failed to fetch quest report:", error);
+
+                // 如果是 404，可能是該測驗還沒做過
+                // 這裡可以導向地圖或顯示 Empty State
+                // 暫時維持回地圖導向 (除錯時可以先註解掉)
+                if (!finalResult) {
+                    // 只有在剛做完測驗也沒有結果時才強制導向
+                    // 如果是單純查看舊資料失敗，可能只需顯示錯誤
+                    console.warn("Redirecting to map due to missing report.");
+                    // navigate('/map'); // 暫時保留錯誤提示面板而不直接跳轉
+                    setShowErrorAlert(true);
+                }
             } finally {
                 setIsLoadingProfile(false);
             }
         };
 
         fetchProfile();
-    }, [navigate, regionQuestId]); // 依賴項移除 finalResult，避免重複觸發，只在 mount 或 region 改變時抓取 (其實 region 改變不一定要重抓，但保險起見)
+    }, [navigate, activeQuestId]); // 依賴 activeQuestId
 
-    const activeQuestId = questId || regionQuestId;
+
 
     if (isLoadingProfile) {
         return (

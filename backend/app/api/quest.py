@@ -1,9 +1,17 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from typing import List
 from pydantic import BaseModel
+import uuid
 
 from app.db.session import get_db
+from app.db.models import UserQuest
+from app.models.schemas import QuestReport
+from app.core.security import decode_access_token
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(prefix="/quests", tags=["quests"])
 
@@ -65,6 +73,57 @@ async def get_quest_result(sessionId: str, db: AsyncSession = Depends(get_db)):
         "stats": {"O": 80, "C": 70, "E": 60, "A": 90, "N": 40},
         "summary": "你是一位冷靜、機智且深具洞察力的策略家..."
     }
+
+@router.get("/report/{quest_type}", response_model=QuestReport)
+async def get_quest_report(
+    quest_type: str,
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    取得指定類型測驗的最新報告
+
+    Args:
+        quest_type: 測驗類型 (mbti, bigfive, disc, enneagram, gallup)
+
+    Returns:
+        quest_report: 該測驗的完整分析報告 (QuestReport)，並包含 hero_chronicle
+    """
+    # 驗證 Token
+    payload = decode_access_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    user_id_str = payload.get("sub")
+    if not user_id_str:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+
+    user_id = uuid.UUID(user_id_str)
+
+    # 查詢最新的 UserQuest
+    result = await db.execute(
+        select(UserQuest)
+        .where(
+            UserQuest.user_id == user_id,
+            UserQuest.quest_type == quest_type,
+            UserQuest.quest_report.isnot(None),
+        )
+        .order_by(UserQuest.completed_at.desc())
+        .limit(1)
+    )
+    quest = result.scalar_one_or_none()
+
+    if not quest:
+        raise HTTPException(status_code=404, detail="Quest report not found")
+
+    # 組合 QuestReport
+    report_data = quest.quest_report
+    # 注入 hero_chronicle
+    if quest.hero_chronicle:
+        report_data["hero_chronicle"] = quest.hero_chronicle
+
+    return report_data
+
 
 @router.get("/map", response_model=List[RegionInfo])
 async def get_map_regions():

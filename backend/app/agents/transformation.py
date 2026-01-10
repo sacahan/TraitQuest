@@ -16,11 +16,11 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 
 | quest_type | 必須輸出的欄位 |
 |-----------|------------|
-| mbti      | class_id, class_name, destiny_guide, destiny_bonds |
-| enneagram | race_id, race_name, destiny_guide, destiny_bonds |
+| mbti      | class_id, hero_class, destiny_guide, destiny_bonds |
+| enneagram | race_id, race, destiny_guide, destiny_bonds |
 | bigfive   | stats, destiny_guide, destiny_bonds |
-| disc      | stance_id, stance_name, destiny_guide, destiny_bonds |
-| gallup    | talent_ids, talent_names, destiny_guide, destiny_bonds |
+| disc      | stance_id, stance, destiny_guide, destiny_bonds |
+| gallup    | talent_ids, talents, destiny_guide, destiny_bonds |
 
 ---
 
@@ -60,7 +60,7 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 | RACE_9 | The Peacemaker | 追求和平與融合的靈魂，源自萬物母林 | 蒼翠族 |
 
 ### Big Five → 屬性 (Stats)
-輸出 key: STA_O, STA_C, STA_E, STA_A, STA_N 與 value: 累積數值轉換為 0-100 的字典
+輸出 key: STA_O, STA_C, STA_E, STA_A, STA_N 與 value: 累積數值 (0-100) 的字典
 
 ### DISC → 姿態 (Stance)
 | ID | 名稱 | 特性 | 戰技 |
@@ -71,44 +71,44 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 | STN_C | Compliance | 佈下陷阱，以邏輯解構 | 星辰軌跡 |
 
 ### Gallup → 天賦 (Talent)
-選出 5 個最契合的技能，共 33 種天賦：
+選出 6 個最契合的技能，共 33 種天賦：
 
-| ID | 名稱 | 領域 |
+| ID | 名稱 | Symbol |
 |----|------|------|
-| TAL_ACH | 成就 | 執行力 (Executing) |
-| TAL_ARR | 排定 | 執行力 (Executing) |
-| TAL_BEL | 信仰 | 執行力 (Executing) |
-| TAL_CON | 公平 | 執行力 (Executing) |
-| TAL_DEL | 謹慎 | 執行力 (Executing) |
-| TAL_DIS | 紀律 | 執行力 (Executing) |
-| TAL_FOC | 專注 | 執行力 (Executing) |
-| TAL_RES | 責任 | 執行力 (Executing) |
-| TAL_RSV | 修復 | 執行力 (Executing) |
-| TAL_ACT | 激活 | 影響力 (Influencing) |
-| TAL_COM | 統率 | 影響力 (Influencing) |
-| TAL_CMU | 溝通 | 影響力 (Influencing) |
-| TAL_CPT | 競爭 | 影響力 (Influencing) |
-| TAL_MAX | 完美 | 影響力 (Influencing) |
-| TAL_SAD | 自信 | 影響力 (Influencing) |
-| TAL_SIG | 追求 | 影響力 (Influencing) |
-| TAL_WOO | 取悅 | 影響力 (Influencing) |
-| TAL_ADP | 適應 | 關係建立 (Relationship Building) |
-| TAL_CNR | 關聯 | 關係建立 (Relationship Building) |
-| TAL_DEV | 發展 | 關係建立 (Relationship Building) |
-| TAL_EMP | 共感 | 關係建立 (Relationship Building) |
-| TAL_HAR | 和諧 | 關係建立 (Relationship Building) |
-| TAL_INC | 包容 | 關係建立 (Relationship Building) |
-| TAL_IND | 個別 | 關係建立 (Relationship Building) |
-| TAL_POS | 積極 | 關係建立 (Relationship Building) |
-| TAL_REL | 交往 | 關係建立 (Relationship Building) |
-| TAL_ANA | 分析 | 戰略思維 (Strategic Thinking) |
-| TAL_CTX | 回顧 | 戰略思維 (Strategic Thinking) |
-| TAL_FUT | 前瞻 | 戰略思維 (Strategic Thinking) |
-| TAL_IDE | 理念 | 戰略思維 (Strategic Thinking) |
-| TAL_INP | 蒐集 | 戰略思維 (Strategic Thinking) |
-| TAL_ITL | 思維 | 戰略思維 (Strategic Thinking) |
-| TAL_LEA | 學習 | 戰略思維 (Strategic Thinking) |
-| TAL_STR | 戰略 | 戰略思維 (Strategic Thinking) |
+| TAL_ACH | 成就 | flag  |
+| TAL_ARR | 排定 | tune |
+| TAL_BEL | 信仰 | verified |
+| TAL_CON | 公平 | balance |
+| TAL_DEL | 謹慎 | shield |
+| TAL_DIS | 紀律 | rule |
+| TAL_FOC | 專注 | center_focus_strong |
+| TAL_RES | 責任 | task_alt |
+| TAL_RSV | 修復 | healing |
+| TAL_ACT | 激活 | bolt |
+| TAL_COM | 統率 | campaign |
+| TAL_CMU | 溝通 | chat |
+| TAL_CPT | 競爭 | emoji_events |
+| TAL_MAX | 完美 | diamond |
+| TAL_SAD | 自信 | accessibility_new |
+| TAL_SIG | 追求 | star |
+| TAL_WOO | 取悅 | group_add |
+| TAL_ADP | 適應 | waves |
+| TAL_CNR | 關聯 | hub |
+| TAL_DEV | 發展 | sprout |
+| TAL_EMP | 共感 | favorite |
+| TAL_HAR | 和諧 | handshake |
+| TAL_INC | 包容 | all_inclusive |
+| TAL_IND | 個別 | fingerprint |
+| TAL_POS | 積極 | sunny |
+| TAL_REL | 交往 | diversity_1 |
+| TAL_ANA | 分析 | analytics |
+| TAL_CTX | 回顧 | history |
+| TAL_FUT | 前瞻 | visibility |
+| TAL_IDE | 理念 | lightbulb |
+| TAL_INP | 蒐集 | inventory_2 |
+| TAL_ITL | 思維 | psychology |
+| TAL_LEA | 學習 | school |
+| TAL_STR | 戰略 | route |
 
 ---
 
@@ -118,7 +118,11 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 ```json
 {
   "class_id": "CLS_INTJ",
-  "class_name": "戰略法師",
+  "hero_class": {
+    "id": "CLS_INTJ",
+    "name": "戰略法師",
+    "description": "獨立、戰略、高冷、冷靜"
+  },
   "destiny_guide": {
     "daily": "今日宜深度思考，避免倉促決策",
     "main": "提升與他人的溝通技巧，平衡理性與感性",
@@ -130,24 +134,22 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
       {
         "class_id": "CLS_ENFP",
         "class_name": "元素召喚師",
-        "description": "互補能量，激發創意與執行力"
+        "sync_rate": 90,
+        "advantage": "互補能量，激發創意與執行力"
       },
       {
         "class_id": "CLS_INFJ",
         "class_name": "神聖牧師",
-        "description": "深層理解，共同追求遠大目標"
+        "sync_rate": 85,
+        "advantage": "深層理解，共同追求遠大目標"
       }
     ],
     "conflicting": [
       {
         "class_id": "CLS_ESFJ",
         "class_name": "輔助神官",
-        "description": "價值觀與行動方式差異過大"
-      },
-      {
-        "class_id": "CLS_ESTP",
-        "class_name": "暗影刺客",
-        "description": "計劃性與即興性的劇烈衝突"
+        "risk_level": "高",
+        "friction_reason": "價值觀與行動方式差異過大"
       }
     ]
   }
@@ -175,6 +177,7 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
       {
         "class_id": "CLS_INFP",
         "class_name": "吟遊詩人",
+        "sync_rate": 88,
         "description": "共享創意思維，互相激發靈感"
       }
     ],
@@ -182,7 +185,8 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
       {
         "class_id": "CLS_ESTJ",
         "class_name": "秩序騎士",
-        "description": "自由度與規則性的矛盾"
+        "risk_level": "高",
+        "friction_reason": "自由度與規則性的矛盾"
       }
     ]
   }
@@ -192,8 +196,12 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 ### Enneagram 輸出範例：
 ```json
 {
-  "race_id": "RACE_1",
-  "race_name": "鐵律族",
+  "race_id": "RACE_5",
+  "race": {
+    "id": "RACE_5",
+    "name": "智者之魂",
+    "description": "渴求知識與觀察的靈魂"
+  },
   "destiny_guide": {
     "daily": "今日宜深度思考，避免倉促決策",
     "main": "提升與他人的溝通技巧，平衡理性與感性",
@@ -203,65 +211,55 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
   "destiny_bonds": {
     "compatible": [
       {
-        "class_id": "CLS_ENFP",
-        "class_name": "元素召喚師",
-        "description": "互補能量，激發創意與執行力"
-      },
-      {
-        "class_id": "CLS_INFJ",
-        "class_name": "神聖牧師",
-        "description": "深層理解，共同追求遠大目標"
+         "class_id": "CLS_ENFP",
+         "class_name": "元素召喚師",
+         "sync_rate": 92,
+         "advantage": "互補能量，激發創意"
       }
     ],
     "conflicting": [
       {
-        "class_id": "CLS_ESFJ",
-        "class_name": "輔助神官",
-        "description": "價值觀與行動方式差異過大"
-      },
-      {
-        "class_id": "CLS_ESTP",
-        "class_name": "暗影刺客",
-        "description": "計劃性與即興性的劇烈衝突"
+         "class_id": "CLS_ESTP",
+         "class_name": "暗影刺客",
+         "risk_level": "高",
+         "friction_reason": "計劃性與即興性的衝突"
       }
     ]
   }
 }
+```
 
 ### DISC 輸出範例：
 ```json
 {
   "stance_id": "STN_I",
-  "stance_name": "潮汐之歌",
+  "stance": {
+    "id": "STN_I",
+    "origin": "Influence",
+    "name": "潮汐之歌",
+    "description": "激勵隊友，以魅力掌控"
+  },
   "destiny_guide": {
-    "daily": "今日宜深度思考，避免倉促決策",
-    "main": "提升與他人的溝通技巧，平衡理性與感性",
-    "side": "嘗試分享你的規劃給信任的朋友",
-    "oracle": "孤獨的塔頂，是智者的試煉場"
+    "daily": "今日宜探索新知，嘗試不同的思考角度",
+    "main": "強化自律習慣，提升執行效率",
+    "side": "參加一場社交活動，挑戰你的舒適圈",
+    "oracle": "平衡五行，方能掌握命運之輪"
   },
   "destiny_bonds": {
     "compatible": [
       {
-        "class_id": "CLS_ENFP",
-        "class_name": "元素召喚師",
-        "description": "互補能量，激發創意與執行力"
-      },
-      {
-        "class_id": "CLS_INFJ",
-        "class_name": "神聖牧師",
-        "description": "深層理解，共同追求遠大目標"
+        "class_id": "CLS_INFP",
+        "class_name": "吟遊詩人",
+        "sync_rate": 88,
+        "description": "共享創意思維，互相激發靈感"
       }
     ],
     "conflicting": [
       {
-        "class_id": "CLS_ESFJ",
-        "class_name": "輔助神官",
-        "description": "價值觀與行動方式差異過大"
-      },
-      {
-        "class_id": "CLS_ESTP",
-        "class_name": "暗影刺客",
-        "description": "計劃性與即興性的劇烈衝突"
+        "class_id": "CLS_ESTJ",
+        "class_name": "秩序騎士",
+        "risk_level": "高",
+        "friction_reason": "自由度與規則性的矛盾"
       }
     ]
   }
@@ -271,48 +269,63 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 ### Gallup 輸出範例：
 ```json
 {
-  "talent_ids": ["TAL_ACH", "TAL_ARR", "TAL_BEL", "TAL_CON", "TAL_DEL"],
-  "talent_names": ["成就", "排定", "信仰", "公平", "謹慎"],
+  "talent_ids": ["TAL_ACH", "TAL_ARR", "TAL_BEL"],
+  "talents": [
+    {
+      "id": "TAL_ACH",
+      "name": "成就",
+      "origin": "Achievement",
+      "symbol": "flag",
+      "description": "追求成就，追求成功"
+    },
+    {
+      "id": "TAL_ARR",
+      "name": "排定",
+      "origin": "Arrangement",
+      "symbol": "flag",
+      "description": "組織與安排"
+    },
+    {
+      "id": "TAL_BEL",
+      "name": "信仰",
+      "origin": "Belief",
+      "symbol": "flag",
+      "description": "追求信仰，追求真理"
+    }
+  ],
   "destiny_guide": {
-    "daily": "今日宜深度思考，避免倉促決策",
-    "main": "提升與他人的溝通技巧，平衡理性與感性",
-    "side": "嘗試分享你的規劃給信任的朋友",
-    "oracle": "孤獨的塔頂，是智者的試煉場"
+    "daily": "今日宜探索新知，嘗試不同的思考角度",
+    "main": "強化自律習慣，提升執行效率",
+    "side": "參加一場社交活動，挑戰你的舒適圈",
+    "oracle": "平衡五行，方能掌握命運之輪"
   },
   "destiny_bonds": {
     "compatible": [
       {
-        "class_id": "CLS_ENFP",
-        "class_name": "元素召喚師",
-        "description": "互補能量，激發創意與執行力"
-      },
-      {
-        "class_id": "CLS_INFJ",
-        "class_name": "神聖牧師",
-        "description": "深層理解，共同追求遠大目標"
+        "class_id": "CLS_INFP",
+        "class_name": "吟遊詩人",
+        "sync_rate": 88,
+        "description": "共享創意思維，互相激發靈感"
       }
     ],
     "conflicting": [
       {
-        "class_id": "CLS_ESFJ",
-        "class_name": "輔助神官",
-        "description": "價值觀與行動方式差異過大"
-      },
-      {
-        "class_id": "CLS_ESTP",
-        "class_name": "暗影刺客",
-        "description": "計劃性與即興性的劇烈衝突"
+        "class_id": "CLS_ESTJ",
+        "class_name": "秩序騎士",
+        "risk_level": "高",
+        "friction_reason": "自由度與規則性的矛盾"
       }
     ]
   }
 }
+```
 
 ---
 
 ## ⚠️ 重要約束
 
 1. **只能使用上方列出的合法 ID**
-2. **必須同時輸出 ID 與完整物件**（如 class_id + class）
+2. **必須同時輸出 ID 與完整物件**（如 class_id + hero_class, race_id + race, stance_id + stance）
 3. **destiny_bonds 的 compatible 與 conflicting 各需 2-3 個項目**
 4. **唯一輸出方式：調用 `submit_transformation` 工具**
 5. **所有類型都必須輸出 destiny_guide 與 destiny_bonds**
@@ -342,7 +355,7 @@ def submit_transformation(
         race: 種族完整物件 {id, name, description}。enneagram 測驗時必填。
         class_id: 英雄職業 ID (CLS_XXX)。mbti 測驗時必填。
         hero_class: 職業完整物件 {id, name, description}。mbti 測驗時必填。
-        stats: 五大屬性數值 (0-100)，格式：{STA_O, STA_C, STA_E, STA_A, STA_N}。bigfive 測驗時必填。
+        stats: 五大屬性數值 (0-100)，格式：{openness: int, conscientiousness: int, extraversion: int, agreeableness: int, neuroticism: int}。bigfive 測驗時必填。
         stance_id: 戰略姿態 ID (STN_X)。disc 測驗時必填。
         stance: 姿態完整物件 {id, name, description}。disc 測驗時必填。
         talent_ids: 傳奇技能 ID 列表 (2-3 個)。gallup 測驗時必填。
@@ -379,30 +392,39 @@ def submit_transformation(
     """
     result = {}
 
-    # 只保存非 None 的值
+    # --- 1. 處理 Stats (Big Five) ---
+    if stats is not None:
+        # stats 直接為 STA_O, STA_C, STA_E, STA_A, STA_N -> 數值
+        result["stats"] = stats
+
+    # --- 2. 處理其它資產引用 (Race, Class, Stance, Talent) ---
     if race_id is not None:
         result["race_id"] = race_id
     if race is not None:
         result["race"] = race
+
     if class_id is not None:
         result["class_id"] = class_id
     if hero_class is not None:
-        result["class"] = hero_class  # 在結果中使用 "class" key
-    if stats is not None:
-        result["stats"] = stats
+        result["class"] = hero_class
+
     if stance_id is not None:
         result["stance_id"] = stance_id
     if stance is not None:
         result["stance"] = stance
+
     if talent_ids is not None:
         result["talent_ids"] = talent_ids
     if talents is not None:
         result["talents"] = talents
+
+    # --- 3. 處理通用欄位 ---
     if destiny_guide is not None:
         result["destiny_guide"] = destiny_guide
     if destiny_bonds is not None:
         result["destiny_bonds"] = destiny_bonds
 
+    # 確保 state 被更新
     tool_context.state["transformation_output"] = result
 
     logger.debug(f"✨ Transformation Result Generated: {list(result.keys())}")

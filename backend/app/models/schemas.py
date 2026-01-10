@@ -16,7 +16,7 @@ TraitQuest - 資料結構定義
 """
 
 from pydantic import BaseModel, Field, field_validator
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 from enum import Enum
 
 
@@ -133,17 +133,18 @@ class StatValue(BaseModel):
 
 class Stats(BaseModel):
     """Big Five 五大屬性"""
-    openness: StatValue = Field(..., description="開放性 → 智力(O)")
-    conscientiousness: StatValue = Field(..., description="嚴謹性 → 防禦(C)")
-    extraversion: StatValue = Field(..., description="外向性 → 速度(E)")
-    agreeableness: StatValue = Field(..., description="親和性 → 魅力(A)")
-    neuroticism: StatValue = Field(..., description="神經質 → 洞察(N)")
+
+    STA_O: Union[int, StatValue] = Field(..., description="開放性 → 智力(O)")
+    STA_C: Union[int, StatValue] = Field(..., description="嚴謹性 → 防禦(C)")
+    STA_E: Union[int, StatValue] = Field(..., description="外向性 → 速度(E)")
+    STA_A: Union[int, StatValue] = Field(..., description="親和性 → 魅力(A)")
+    STA_N: Union[int, StatValue] = Field(..., description="神經質 → 洞察(N)")
     
     @field_validator('*')
     @classmethod
     def validate_stat_value(cls, v):
-        if not isinstance(v, StatValue):
-            raise ValueError("Each stat must be a StatValue object")
+        if not isinstance(v, (StatValue, int)):
+            raise ValueError("Each stat must be a StatValue object or integer")
         return v
 
 
@@ -166,7 +167,7 @@ class CompatibleBond(BaseModel):
     """相容羈絆（建議夥伴）"""
     class_id: str = Field(..., description="相容職業 ID（如：CLS_INFJ）")
     class_name: str = Field(..., description="相容職業名稱（如：調解者）")
-    sync_rate: int = Field(..., ge=80, le=100, description="同步率 (80-100%)")
+    sync_rate: int = Field(..., ge=0, le=100, description="同步率 (0-100%)")
     advantage: str = Field(..., description="合作優勢描述")
 
 
@@ -247,6 +248,7 @@ class QuestReport(BaseModel):
     destiny_guide: DestinyGuide = Field(..., description="命運指引")
     destiny_bonds: Optional[DestinyBonds] = Field(None, description="命運羈絆")
     level_info: LevelInfo = Field(..., description="升級資訊")
+    hero_chronicle: Optional[str] = Field(None, description="該次測驗生成的英雄史詩")
 
 
 # =============================================================================
