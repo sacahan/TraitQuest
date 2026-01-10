@@ -10,6 +10,7 @@ from app.db.session import get_db
 from app.db.models import UserQuest
 from app.models.schemas import QuestReport
 from app.core.security import decode_access_token
+from app.services.level_system import get_exp_for_level
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -117,7 +118,33 @@ async def get_quest_report(
         raise HTTPException(status_code=404, detail="Quest report not found")
 
     # 組合 QuestReport
-    report_data = quest.quest_report
+    report_data = quest.quest_report.copy()
+
+    # [FIX] 注入必要欄位 quest_type (schema 要求)
+    report_data["quest_type"] = quest.quest_type
+
+    # [FIX] 動態注入 expToNextLevel 和 expProgress
+    if "level_info" in report_data and report_data["level_info"]:
+        level_info = report_data["level_info"]
+        current_level = level_info.get("level", 1)
+        current_exp = level_info.get("exp", 0)
+
+        # 計算下一級所需總經驗值（累積制）
+        next_level_total_exp = get_exp_for_level(current_level + 1)
+        level_info["expToNextLevel"] = next_level_total_exp
+
+        # 計算當前等級進度
+        current_level_exp_threshold = get_exp_for_level(current_level)
+        exp_in_current_level = current_exp - current_level_exp_threshold
+        exp_needed_for_next = next_level_total_exp - current_level_exp_threshold
+
+        if exp_needed_for_next > 0:
+            level_info["expProgress"] = max(
+                0.0, min(1.0, exp_in_current_level / exp_needed_for_next)
+            )
+        else:
+            level_info["expProgress"] = 0.0
+
     # 注入 hero_chronicle
     if quest.hero_chronicle:
         report_data["hero_chronicle"] = quest.hero_chronicle

@@ -9,26 +9,32 @@ import { AlertModal } from '../components/ui/AlertModal';
 const QUEST_CONFIG: Record<string, {
     title: string;
     icon: string;
+    preface?: string;
 }> = {
     mbti: {
         title: 'MBTI 測驗',
         icon: 'Award',
+        preface: 'MBTI 測驗是目前最廣泛使用的人格測驗工具之一，它通過分析個人在四種基本人格傾向上的表現，幫助人們了解自己的性格特點和偏好。'
     },
     bigfive: {
         title: '大五人格測驗',
         icon: 'Target',
+        preface: '大五人格測驗用來量化你的人格特質強度，包括外向性、情緒穩定性、開放性、盡責性和直覺性。'
     },
     disc: {
         title: 'DISC 倫理測驗',
         icon: 'Shield',
+        preface: 'DISC 倫理測驗判斷你在工作與壓力情境下的行為風格，分析你的性格特點和偏好。'
     },
     enneagram: {
         title: '九型人格測驗',
         icon: 'Users',
+        preface: '九型人格測驗洞悉你行為背後的核心動機與恐懼，適合自我覺察與成長。'
     },
     'gallup': {
         title: '馬斯洛需求測驗',
         icon: 'Compass',
+        preface: '馬斯洛需求測驗判斷你目前被什麼層級的需求驅動，常用於動機設計與管理。'
     },
 };
 
@@ -250,12 +256,12 @@ const LaunchPage: React.FC = () => {
                         >
                             <span className="material-symbols-outlined absolute -top-4 -left-2 text-primary text-5xl opacity-30 transform -rotate-12">format_quote</span>
                             <div className="relative z-10 space-y-4">
-                                <p className="text-emerald-50 text-lg md:text-xl leading-relaxed font-medium tracking-wide">
-                                    「親愛的旅人，你聽見了嗎？那是內心深處的召喚。請放慢呼吸，感受周圍流動的能量。這裡沒有評判，只有接納與發現。」
+                                <p className="text-emerald-50 text-lg md:text-xl leading-relaxed font-medium tracking-wide font-serif">
+                                    「{QUEST_CONFIG[searchParams.get('type') || 'mbti']?.preface || '親愛的旅人，你聽見了嗎？那是內心深處的召喚。請放慢呼吸，感受周圍流動的能量。這裡沒有評判，只有接納與發現。'}」
                                 </p>
                                 <div className="flex items-center justify-end gap-2">
                                     <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/50"></div>
-                                    <p className="text-primary/80 text-sm font-bold tracking-wider">ABBY</p>
+                                    <p className="text-primary/80 text-sm font-bold tracking-wider font-serif italic">Abby</p>
                                 </div>
                             </div>
                             {/* 四角裝飾 */}
@@ -293,7 +299,7 @@ const LaunchPage: React.FC = () => {
                                 <div>
                                     <div className="text-[12px] text-white/50 uppercase tracking-wider">試煉形式</div>
                                     <div className="text-white font-bold text-md">{questMode.name}</div>
-                                    <div className="text-[12px] text-purple-400/70">{questMode.mode === 'QUANTITATIVE' ? '選擇題型' : '開放式輸入'}</div>
+                                    <div className="text-[12px] text-purple-400/70">{questMode.mode === 'QUANTITATIVE' ? '選擇題' : '文字輸入'}</div>
                                 </div>
                             </div>
                             {/* 解鎖提示 */}
@@ -325,7 +331,7 @@ const LaunchPage: React.FC = () => {
                                 className="group relative flex-1 h-16 bg-gradient-to-r from-[#059669] to-[#10b981] hover:to-[#34d399] text-white font-bold text-lg rounded-2xl overflow-hidden transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_35px_rgba(52,211,153,0.5)] border border-white/10 active:scale-95"
                             >
                                 <div className="relative flex items-center justify-center gap-3">
-                                    <span>準備好了，開啟連結</span>
+                                    <span>準備好了，接受試煉</span>
                                     <span className="material-symbols-outlined group-hover:translate-x-1 group-hover:scale-110 transition-transform">auto_awesome</span>
                                 </div>
                             </button>

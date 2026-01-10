@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import ActionButtons from '../shared/ActionButtons';
 
@@ -44,7 +44,7 @@ const EnneagramPanel = ({ result }: EnneagramPanelProps) => {
 
             <div className="relative rounded-xl overflow-hidden border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)] bg-[#0e1f15] transition-all duration-300 group-hover:border-purple-400">
                 <div
-                    className="aspect-[8/8] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
+                    className="aspect-[4/5] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
                     style={{
                         backgroundImage: `url(/assets/images/races/race_${raceNumber}.png)`
                     }}

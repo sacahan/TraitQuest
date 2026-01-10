@@ -82,7 +82,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
           style={{ borderColor: !isLocked ? `${region.color}44` : 'rgba(255,255,255,0.05)' }}
         >
           <span
-            className="font-display font-bold text-[14px] tracking-[0.2em] uppercase flex items-center gap-2"
+            className="font-display font-bold text-[12px] tracking-[0.2em] uppercase flex items-center gap-2"
             style={{ color: isLocked ? '#52525b' : '#fff' }}
           >
             {region.name}

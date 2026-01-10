@@ -149,7 +149,7 @@ const DashboardPage = () => {
                             <p className="text-gray-300 text-[16px] leading-relaxed font-serif italic border-l-2 border-primary/30 pl-4 py-1 min-h-[60px]">
                                 {profileData.latestChronicle || "尚未開始你的冒險,命運之書正等待著你的筆跡。"}
                             </p>
-                            <div className="flex items-center justify-end gap-2">
+                            <div className="flex items-center justify-end gap-2 mt-2 mr-6">
                                 <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/50"></div>
                                 <p className="text-primary/80 text-sm font-bold tracking-wider italic">心靈嚮導 Abby</p>
                             </div>
@@ -181,10 +181,10 @@ const DashboardPage = () => {
                                 <div className="flex-1 h-2 bg-black/40 rounded-full overflow-hidden border border-white/5">
                                     <div
                                         className="h-full bg-gradient-to-r from-primary via-emerald-400 to-primary background-animate transition-all duration-1000"
-                                        style={{ width: `${Math.max(Math.min((exp / 5500) * 100, 100), 2)}%` }}
+                                        style={{ width: `${Math.max((profileData.expProgress || 0) * 100, 2)}%` }}
                                     ></div>
                                 </div>
-                                <span className="text-gray-400 font-mono whitespace-nowrap">{exp} XP</span>
+                                <span className="text-gray-400 font-mono whitespace-nowrap">{exp} / {profileData.expToNextLevel || '???'} XP</span>
                             </div>
                         </div>
                     </div>
@@ -284,7 +284,7 @@ const DashboardPage = () => {
                                                             }`}>
                                                             <span className="material-symbols-outlined text-lg">swords</span>
                                                         </span>
-                                                        <span className={`text-sm font-bold uppercase tracking-widest ${profile.stance_id === 'STN_I' ? 'text-cyan-300' :
+                                                        <span className={`text-xs font-bold uppercase tracking-widest ${profile.stance_id === 'STN_I' ? 'text-cyan-300' :
                                                             profile.stance_id === 'STN_S' ? 'text-emerald-300' :
                                                                 profile.stance_id === 'STN_C' ? 'text-violet-300' :
                                                                     'text-red-300'
@@ -302,7 +302,7 @@ const DashboardPage = () => {
                                                                     profile.stance_id === 'STN_C' ? '星辰軌跡' : '未覺醒'}
                                                     </h3>
 
-                                                    <p className={`font-bold text-sm tracking-wide mb-3 ${profile.stance_id === 'STN_I' ? 'text-cyan-400' :
+                                                    <p className={`font-bold text-sm tracking-wide mb-1 italic ${profile.stance_id === 'STN_I' ? 'text-cyan-400' :
                                                         profile.stance_id === 'STN_S' ? 'text-emerald-400' :
                                                             profile.stance_id === 'STN_C' ? 'text-violet-400' :
                                                                 'text-red-400'
@@ -310,8 +310,8 @@ const DashboardPage = () => {
                                                         {profile.stance_id.replace('STN_', '')} Type
                                                     </p>
 
-                                                    <div className="backdrop-blur-sm p-3 italic text-sm text-gray-300 line-clamp-2 ">
-                                                        "以絕對的專注主宰戰局，洞察每一次破綻。"
+                                                    <div className="backdrop-blur-sm p-1 italic text-sm text-gray-300 line-clamp-2 ">
+                                                        {profile.stance?.description || '以絕對的專注主宰戰局，洞察每一次破綻。'}
                                                     </div>
                                                 </div>
                                             </div>

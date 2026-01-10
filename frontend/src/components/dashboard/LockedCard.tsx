@@ -61,7 +61,7 @@ const LockedCard: React.FC<LockedCardProps> = ({ label, unlockHint, themeColor =
         </p>
         <button
           onClick={onClick}
-          className={`bg-[#13261a] text-gray-400 border border-white/10 px-4 py-1.5 rounded text-sm font-bold transition-all flex items-center gap-1 ${themeClasses.btn}`}
+          className={`bg-[#13261a] text-gray-400 border border-white/10 px-4 py-1.5 rounded text-sm font-bold transition-all flex items-center gap-1 cursor-pointer hover:scale-105 hover:border-white/50 ${themeClasses.btn}`}
         >
           探尋源流
         </button>

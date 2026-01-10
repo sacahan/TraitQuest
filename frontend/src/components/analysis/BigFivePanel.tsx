@@ -48,6 +48,7 @@ const BigFivePanel = ({ result }: BigFivePanelProps) => {
 
     const data: ChartData<'radar'> = {
         labels: ATTRIBUTE_ORDER.map(key => RPG_ATTRIBUTE_MAP[key]),
+
         datasets: [
             {
                 label: '屬性數值',

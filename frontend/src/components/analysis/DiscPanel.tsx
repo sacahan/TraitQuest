@@ -76,7 +76,7 @@ const DiscPanel = ({ result }: DiscPanelProps) => {
 
             <div className={`relative rounded-xl overflow-hidden border border-white/10 ${theme.border} ${theme.shadow} bg-[#1a0f0f] transition-all duration-300 mt-4 aspect-[3/4]`}>
                 <div
-                    className="absolute inset-0 bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-1000 ease-out"
+                    className="aspect-[4/5] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
                     style={{
                         // Use generated stance assets
                         backgroundImage: `url(/assets/images/stances/${stanceId?.toLowerCase()}.png)`

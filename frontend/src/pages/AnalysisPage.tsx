@@ -50,11 +50,8 @@ const AnalysisPage = () => {
 
                     // 映射 level_info (snake_case) -> levelInfo (Frontend prop)
                     levelInfo: report.level_info ? {
-                        level: report.level_info.level,
-                        exp: report.level_info.exp,
-                        isLeveledUp: report.level_info.isLeveledUp,
-                        earnedExp: report.level_info.earnedExp,
-                        milestone: report.level_info.milestone
+                        ...report.level_info,
+                        expProgress: report.level_info.exp / report.level_info.expToNextLevel,
                     } : null,
 
                     // 顯示用的 chronicle
@@ -62,7 +59,13 @@ const AnalysisPage = () => {
                 };
 
                 setProfileData(result);
-            } catch (error) {
+            } catch (error: any) {
+                // 忽略被取消的請求
+                if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
+                    console.log("Request was cancelled (likely due to StrictMode)");
+                    return;
+                }
+
                 console.error("Failed to fetch quest report:", error);
 
                 // 如果是 404，可能是該測驗還沒做過
@@ -72,7 +75,7 @@ const AnalysisPage = () => {
                     // 只有在剛做完測驗也沒有結果時才強制導向
                     // 如果是單純查看舊資料失敗，可能只需顯示錯誤
                     console.warn("Redirecting to map due to missing report.");
-                    // navigate('/map'); // 暫時保留錯誤提示面板而不直接跳轉
+                    // navigate('/map');
                     setShowErrorAlert(true);
                 }
             } finally {
@@ -81,7 +84,8 @@ const AnalysisPage = () => {
         };
 
         fetchProfile();
-    }, [navigate, activeQuestId]); // 依賴 activeQuestId
+
+    }, [navigate, activeQuestId, finalResult]); // 依賴 activeQuestId
 
 
 
@@ -130,8 +134,42 @@ const AnalysisPage = () => {
         );
     }
 
-    if (!profileData || !activeQuestId) {
-        return null;
+    if (!activeQuestId) {
+        return (
+            <AppLayout>
+                <div className="flex items-center justify-center h-[60vh]">
+                    <p className="text-white/60">未指定測驗類型</p>
+                </div>
+            </AppLayout>
+        );
+    }
+
+    // 當正在載入或資料還沒回來時，如果是正在載入就顯示 Hourglass (原本邏輯)
+    // 但如果載入完成了 profileData 還是 null，通常代表失敗了，這時應該讓 AppLayout 渲染以便顯示 AlertModal
+    if (!profileData && !isLoadingProfile) {
+        return (
+            <AppLayout>
+                <div className="flex items-center justify-center h-[60vh]">
+                    <div className="text-center">
+                        <p className="text-white/60 mb-4">無法讀取報告資料</p>
+                        <button
+                            onClick={() => navigate('/map')}
+                            className="text-primary hover:underline"
+                        >
+                            返回地圖
+                        </button>
+                    </div>
+                </div>
+                <AlertModal
+                    isOpen={showErrorAlert}
+                    onClose={() => navigate('/map')}
+                    title="資料錯誤"
+                    message="無法讀取冒險結果，將返回地圖。"
+                    confirmText="返回地圖"
+                    onConfirm={() => navigate('/map')}
+                />
+            </AppLayout>
+        );
     }
 
     const { levelInfo } = profileData;
@@ -172,35 +210,35 @@ const AnalysisPage = () => {
                             >
                                 "{profileData.chronicle || profileData.latestChronicle || "命運的齒輪開始轉動，你的靈魂特質已在星圖中顯現..."}"
                             </motion.p>
-                            <div className="flex items-center justify-end gap-2">
+                            <div className="flex items-center justify-end gap-2 mt-2 mr-4">
                                 <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-primary/50"></div>
                                 <p className="text-primary/80 text-sm font-bold tracking-wider italic">心靈嚮導 Abby</p>
                             </div>
 
+
                             {/* Level Info - Integrated into Abby's section */}
                             <div className="mt-6 pt-6 border-t border-white/5 flex flex-col items-center gap-3">
-                                <div className="flex items-center gap-4 text-sm">
-                                    <span className="text-primary font-bold">Lv.{levelInfo?.level || 1}</span>
-                                    <div className="w-32 md:w-48 h-2 bg-black/40 rounded-full overflow-hidden border border-white/5">
+                                <div className="flex items-center gap-4 text-sm w-full">
+                                    <div className="flex items-center gap-1">
+                                        <span className="material-symbols-outlined text-lg text-primary">military_tech</span>
+                                        <span className="text-primary font-bold whitespace-nowrap">Lv.{levelInfo?.level || 1}</span>
+                                    </div>
+                                    <div className="flex-1 h-2 bg-black/40 rounded-full overflow-hidden border border-white/5">
                                         <div
-                                            className="h-full bg-gradient-to-r from-primary via-emerald-400 to-primary background-animate"
-                                            style={{ width: `${Math.max(Math.min(((levelInfo?.exp || 0) / 5500) * 100, 100), 2)}%` }}
+                                            className="h-full bg-gradient-to-r from-primary via-emerald-400 to-primary background-animate transition-all duration-1000"
+                                            style={{ width: `${levelInfo?.expProgress * 100}%` }}
                                         ></div>
                                     </div>
-                                    <span className="text-gray-400 font-mono">{levelInfo?.exp || 0} XP</span>
+                                    <span className="text-gray-400 font-mono whitespace-nowrap">{levelInfo?.exp || 0} / {levelInfo?.expToNextLevel || 'Max'} XP</span>
                                 </div>
 
-                                {levelInfo && levelInfo.earnedExp > 0 && (
+                                {levelInfo && levelInfo.isLeveledUp && (
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         className="flex items-center gap-2 text-primary"
                                     >
-                                        <TrendingUp className="w-4 h-4" />
-                                        <span className="text-sm font-bold">+{levelInfo.earnedExp} EXP</span>
-                                        {levelInfo.isLeveledUp && (
-                                            <span className="ml-2 text-xs font-black animate-bounce bg-primary text-black px-2 py-0.5 rounded">LEVEL UP!</span>
-                                        )}
+                                        <span className="text-xs font-black animate-bounce bg-primary text-black px-2 py-0.5 rounded">LEVEL UP!</span>
                                     </motion.div>
                                 )}
                             </div>

@@ -9,7 +9,7 @@ const MapPage: React.FC = () => {
     const { regions, fetchRegions } = useMapStore()
 
     useEffect(() => {
-        fetchRegions()
+        fetchRegions(true)
     }, [fetchRegions])
 
     return (

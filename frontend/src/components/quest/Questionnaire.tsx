@@ -52,9 +52,9 @@ const Questionnaire = () => {
   // 當收到最終結果時，跳轉到分析頁面
   useEffect(() => {
     if (finalResult) {
-      navigate(`/analysis?region=${regionName}`);
+      navigate(`/analysis?region=${questId}`);
     }
-  }, [finalResult, navigate, regionName]);
+  }, [finalResult, navigate, questId]);
 
   if (isCompleted) {
     return (

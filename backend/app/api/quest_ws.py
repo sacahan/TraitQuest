@@ -343,14 +343,22 @@ async def quest_ws_endpoint(
                 if not hero_chronicle:
                     hero_chronicle = f"冒險者 {display_name} 在 {quest_id} 試煉中留下了足跡。"
 
-                # 5. 計算經驗值與升級 (Level Service)
+                # 5. 計算經驗值與升級 (Level Service - 累計制)
                 logger.info("5. Calculating experience and level up...")
                 num_questions = len(analytics_list)
                 logger.info(
                     f"📊 EXP Calc: {num_questions} questions, Avg Quality: {avg_quality:.2f}"
                 )
-                earned_exp = level_service.calculate_quest_exp(num_questions, avg_quality) 
-                new_lvl, new_exp, is_up = level_service.check_level_up(player_level, player_exp + earned_exp)
+                earned_exp = level_service.calculate_quest_exp(
+                    num_questions, avg_quality
+                )
+                new_total_exp = player_exp + earned_exp  # 累計總 EXP
+                new_lvl, _, is_up = level_service.check_level_up(
+                    player_level, new_total_exp
+                )
+
+                # 計算等級進度資訊
+                progress_info = level_service.get_level_progress(new_total_exp)
                 
                 # 6. 持久化存入資料庫
                 logger.info("6. Persisting to database...")
@@ -362,7 +370,7 @@ async def quest_ws_endpoint(
                     
                     update_values = {
                         "level": new_lvl,
-                        "exp": new_exp
+                        "exp": new_total_exp,  # 儲存累計總 EXP
                     }
 
                     # 更新頭像與職業 ID（如果是 MBTI 測驗）
@@ -395,14 +403,16 @@ async def quest_ws_endpoint(
                     quest = quest_res.scalar_one_or_none()
                     
                     if quest:
-                        # 構造 QuestReport
+                        # 構造 QuestReport（包含完整 level_info）
                         db_report = quest_report.copy()
                         db_report["quest_type"] = quest_id
                         db_report["level_info"] = {
                             "level": new_lvl,
-                            "exp": new_exp,
+                            "exp": new_total_exp,
+                            "expToNextLevel": progress_info["next_threshold"],
+                            "expProgress": progress_info["progress"],
                             "isLeveledUp": is_up,
-                            "earnedExp": earned_exp
+                            "earnedExp": earned_exp,
                         }
                         
                         quest.quest_report = db_report
@@ -415,9 +425,11 @@ async def quest_ws_endpoint(
                 logger.info("7. Returning final result to frontend...")
                 quest_report["levelInfo"] = {
                     "level": new_lvl,
-                    "exp": new_exp,
+                    "exp": new_total_exp,
+                    "expToNextLevel": progress_info["next_threshold"],
+                    "expProgress": progress_info["progress"],
                     "isLeveledUp": is_up,
-                    "earnedExp": earned_exp
+                    "earnedExp": earned_exp,
                 }
 
                 if is_up:

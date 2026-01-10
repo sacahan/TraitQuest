@@ -35,7 +35,7 @@ const MbtiPanel = ({ result }: MbtiPanelProps) => {
 
             <div className="relative rounded-xl overflow-hidden border border-primary/50 shadow-[0_0_15px_rgba(17,212,82,0.1)] bg-[#0e1f15] transition-all duration-300 group-hover:border-primary mt-4 aspect-[7/9]">
                 <div
-                    className="absolute inset-2 bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out"
+                    className="aspect-[4/5] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
                     style={{
                         backgroundImage: `url(/assets/images/classes/${result.class_id?.toLowerCase() || 'civilian'}.png)`
                     }}

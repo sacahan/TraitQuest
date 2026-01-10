@@ -16,21 +16,21 @@
     @keyframes breathing-white {
       0%,
         100% {
-          box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.2);
         }
       
         50% {
-          box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+          box-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 50px rgba(255, 255, 255, 0.5);
         }
       }
 
     @keyframes breathing-glow {
       0%,
       100% {
-        box-shadow: 0 0 15px rgba(17, 212, 82, 0.4);
+        box-shadow: 0 0 20px rgba(17, 212, 82, 0.5), 0 0 40px rgba(17, 212, 82, 0.3);
       }
       50% {
-        box-shadow: 0 0 35px rgba(17, 212, 82, 0.8);
+        box-shadow: 0 0 50px rgba(17, 212, 82, 1), 0 0 80px rgba(17, 212, 82, 0.6);
       }
     }
 @keyframes breathing {

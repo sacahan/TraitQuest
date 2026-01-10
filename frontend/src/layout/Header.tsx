@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import CustomGoogleAuthButton from '../components/auth/CustomGoogleAuthButton';
+import { useGoogleAuth } from '../hooks/useGoogleAuth';
 
 // 五大分析介紹頁面配置（與 Home.tsx QUESTS 保持一致）
 const introPages = [
@@ -14,6 +15,7 @@ const introPages = [
 
 export const Header = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
+  const { login } = useGoogleAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -28,6 +30,15 @@ export const Header = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleLinkClick = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    if (isAuthenticated) {
+      navigate(path);
+    } else {
+      login(path);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
@@ -45,10 +56,14 @@ export const Header = () => {
           <div className="flex items-center gap-4 md:gap-8 ml-auto">
             {/* Navigation */}
             <nav className="hidden md:flex items-center gap-6 text-white">
-              <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/map">
+              <a
+                href="/map"
+                onClick={(e) => handleLinkClick(e, '/map')}
+                className="text-sm font-bold hover:text-primary transition-colors relative group cursor-pointer"
+              >
                 心靈大陸
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+              </a>
 
               {/* 探索指南下拉選單 */}
               <div className="relative" ref={dropdownRef}>
@@ -94,10 +109,14 @@ export const Header = () => {
                 </div>
               </div>
 
-              <Link className="text-sm font-bold hover:text-primary transition-colors relative group" to="/dashboard">
+              <a
+                href="/dashboard"
+                onClick={(e) => handleLinkClick(e, '/dashboard')}
+                className="text-sm font-bold hover:text-primary transition-colors relative group cursor-pointer"
+              >
                 公會大廳
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+              </a>
             </nav>
 
             {/* Auth Button */}

@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Optional
+from typing import Optional, List
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     SECRET_KEY: str = ""
     LOG_FILE_PATH: Optional[str] = "logs/app.log"
+
+    # CORS - 開發環境預設，正式環境請透過環境變數設定
+    CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
     # Google OAuth
     GOOGLE_CLIENT_ID: str = ""

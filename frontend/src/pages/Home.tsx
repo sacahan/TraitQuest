@@ -62,7 +62,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <AppLayout backgroundVariant="none">
+    <AppLayout backgroundVariant="subtle">
       <div className="flex-grow">
         {/* Hero Section */}
         <section className="w-full px-4 md:px-10 py-8 flex justify-center">

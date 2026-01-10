@@ -153,6 +153,8 @@ class AssetReference(BaseModel):
     id: str = Field(..., description="資產 ID（如：RACE_1, CLS_INTJ）")
     name: str = Field(..., description="資產名稱（如：完美主義者）")
     description: str = Field(..., description="資產描述")
+    origin: str = Field(..., description="資產原始名稱（如：Activator）")
+    symbol: str = Field(..., description="資產圖示（如：flag）")
 
 
 class DestinyGuide(BaseModel):
@@ -187,15 +189,15 @@ class DestinyBonds(BaseModel):
     @field_validator('compatible')
     @classmethod
     def validate_compatible_count(cls, v):
-        if not (2 <= len(v) <= 3):
-            raise ValueError("Compatible bonds must have 2-3 entries")
+        if not (1 <= len(v) <= 3):
+            raise ValueError("Compatible bonds must have 1-3 entries")
         return v
     
     @field_validator('conflicting')
     @classmethod
     def validate_conflicting_count(cls, v):
-        if not (2 <= len(v) <= 3):
-            raise ValueError("Conflicting bonds must have 2-3 entries")
+        if not (1 <= len(v) <= 3):
+            raise ValueError("Conflicting bonds must have 1-3 entries")
         return v
 
 
@@ -204,11 +206,13 @@ class DestinyBonds(BaseModel):
 # =============================================================================
 
 class LevelInfo(BaseModel):
-    """升級資訊"""
+    """升級資訊 - 支援累計制 EXP"""
     level: int = Field(..., description="當前等級")
-    exp: int = Field(..., description="當前經驗值")
+    exp: int = Field(..., description="累積總經驗值")
+    expToNextLevel: Optional[int] = Field(None, description="下一級所需累計 EXP 門檻")
+    expProgress: Optional[float] = Field(None, description="當前等級進度 (0.0 ~ 1.0)")
     isLeveledUp: bool = Field(False, description="是否升級")
-    earnedExp: int = Field(0, description="獲得的經驗值")
+    earnedExp: int = Field(0, description="本次獲得的經驗值")
     milestone: Optional[str] = Field(None, description="里程碑訊息")
 
 
@@ -296,45 +300,45 @@ class HeroProfile(BaseModel):
                 "race": {
                     "id": "RACE_5",
                     "name": "觀察者",
-                    "description": "知識追求者，以理性洞察世界"
+                    "description": "知識追求者，以理性洞察世界",
                 },
                 "class_id": "CLS_INTJ",
                 "class": {
                     "id": "CLS_INTJ",
                     "name": "建築師",
-                    "description": "策略大師，擅長系統思考"
+                    "description": "策略大師，擅長系統思考",
                 },
                 "stats": {
-                    "openness": {"label": "智力(O)", "score": 85},
-                    "conscientiousness": {"label": "防禦(C)", "score": 75},
-                    "extraversion": {"label": "速度(E)", "score": 40},
-                    "agreeableness": {"label": "魅力(A)", "score": 50},
-                    "neuroticism": {"label": "洞察(N)", "score": 70}
+                    "STA_O": {"label": "智力(O)", "score": 85},
+                    "STA_C": {"label": "防禦(C)", "score": 75},
+                    "STA_E": {"label": "速度(E)", "score": 40},
+                    "STA_A": {"label": "魅力(A)", "score": 50},
+                    "STA_N": {"label": "洞察(N)", "score": 70},
                 },
                 "stance_id": "STN_C",
                 "stance": {
                     "id": "STN_C",
-                    "name": "謹慎戰術家",
-                    "description": "以精密計算主宰戰場"
+                    "name": "星辰軌跡",
+                    "description": "佈下陷阱，以邏輯解構",
                 },
                 "talent_ids": ["TAL_STRATEGIC", "TAL_ANALYTICAL"],
                 "talents": [
                     {
                         "id": "TAL_STRATEGIC",
                         "name": "戰略思維",
-                        "description": "擅長制定長期計劃"
+                        "description": "擅長制定長期計劃",
                     },
                     {
                         "id": "TAL_ANALYTICAL",
                         "name": "分析洞察",
-                        "description": "快速解構複雜問題"
-                    }
+                        "description": "快速解構複雜問題",
+                    },
                 ],
                 "destiny_guide": {
                     "daily": "今日宜深度思考，避免倉促決策",
                     "main": "本月目標：提升溝通表達能力",
                     "side": "嘗試主動分享你的想法給他人",
-                    "oracle": "智慧之光照亮孤獨的道路"
+                    "oracle": "智慧之光照亮孤獨的道路",
                 },
                 "destiny_bonds": {
                     "compatible": [
@@ -342,7 +346,7 @@ class HeroProfile(BaseModel):
                             "class_id": "CLS_ENFP",
                             "class_name": "競選者",
                             "sync_rate": 90,
-                            "advantage": "互補思維，激發創意"
+                            "advantage": "互補思維，激發創意",
                         }
                     ],
                     "conflicting": [
@@ -350,10 +354,10 @@ class HeroProfile(BaseModel):
                             "class_id": "CLS_ESFJ",
                             "class_name": "執政官",
                             "risk_level": "高",
-                            "friction_reason": "價值觀差異過大"
+                            "friction_reason": "價值觀差異過大",
                         }
-                    ]
-                }
+                    ],
+                },
             }
         }
     }

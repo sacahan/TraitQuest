@@ -49,15 +49,15 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 ### Enneagram → 種族 (Race)
 | ID | 性格 | 特性 |族名|
 |----|------|------|------|
-| RACE_1 | The Perfectionist | 追求秩序與完美的靈魂，源自遠古法典之山 | 鐵律族 |
-| RACE_2 | The Helper | 渴望被愛與付出的靈魂，源自生命之泉 | 聖靈族 |
-| RACE_3 | The Achiever | 追求成就與注視的靈魂，源自永恆烈陽 | 輝光族 |
-| RACE_4 | The Romantic | 沉浸於獨特與憂傷的靈魂，源自迷霧森林 | 幻影族 |
-| RACE_5 | The Observer | 渴求知識與觀察的靈魂，源自星辰圖書館 | 智者族 |
-| RACE_6 | The Loyalist | 追求安全與忠誠的靈魂，源自地下堡壘 | 堅盾族 |
-| RACE_7 | The Epicure | 追求自由與新奇的靈魂，源自流浪之雲 | 秘風族 |
-| RACE_8 | The Challenger | 追求力量與控制的靈魂，源自火山熔岩 | 霸龍族 |
-| RACE_9 | The Peacemaker | 追求和平與融合的靈魂，源自萬物母林 | 蒼翠族 |
+| RACE_1 | The Perfectionist | 追求秩序與完美的靈魂，源自遠古法典之山 | 鐵律之魂 |
+| RACE_2 | The Helper | 渴望被愛與付出的靈魂，源自生命之泉 | 聖靈之魂 |
+| RACE_3 | The Achiever | 追求成就與注視的靈魂，源自永恆烈陽 | 輝光之魂 |
+| RACE_4 | The Romantic | 沉浸於獨特與憂傷的靈魂，源自迷霧森林 | 幻影之魂 |
+| RACE_5 | The Observer | 渴求知識與觀察的靈魂，源自星辰圖書館 | 智者之魂 |
+| RACE_6 | The Loyalist | 追求安全與忠誠的靈魂，源自地下堡壘 | 堅盾之魂 |
+| RACE_7 | The Epicure | 追求自由與新奇的靈魂，源自流浪之雲 | 秘風之魂 |
+| RACE_8 | The Challenger | 追求力量與控制的靈魂，源自火山熔岩 | 霸龍之魂 |
+| RACE_9 | The Peacemaker | 追求和平與融合的靈魂，源自萬物母林 | 蒼翠之魂 |
 
 ### Big Five → 屬性 (Stats)
 輸出 key: STA_O, STA_C, STA_E, STA_A, STA_N 與 value: 累積數值 (0-100) 的字典
@@ -269,7 +269,7 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 ### Gallup 輸出範例：
 ```json
 {
-  "talent_ids": ["TAL_ACH", "TAL_ARR", "TAL_BEL"],
+  "talent_ids": ["TAL_ACH", "TAL_ARR", "TAL_BEL", ...],
   "talents": [
     {
       "id": "TAL_ACH",
@@ -291,7 +291,8 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
       "origin": "Belief",
       "symbol": "flag",
       "description": "追求信仰，追求真理"
-    }
+    },
+    ...
   ],
   "destiny_guide": {
     "daily": "今日宜探索新知，嘗試不同的思考角度",
@@ -355,11 +356,11 @@ def submit_transformation(
         race: 種族完整物件 {id, name, description}。enneagram 測驗時必填。
         class_id: 英雄職業 ID (CLS_XXX)。mbti 測驗時必填。
         hero_class: 職業完整物件 {id, name, description}。mbti 測驗時必填。
-        stats: 五大屬性數值 (0-100)，格式：{openness: int, conscientiousness: int, extraversion: int, agreeableness: int, neuroticism: int}。bigfive 測驗時必填。
+        stats: 五大屬性數值 (0-100)，格式：{STA_O: int, STA_C: int, STA_E: int, STA_A: int, STA_N: int}。bigfive 測驗時必填。
         stance_id: 戰略姿態 ID (STN_X)。disc 測驗時必填。
-        stance: 姿態完整物件 {id, name, description}。disc 測驗時必填。
-        talent_ids: 傳奇技能 ID 列表 (2-3 個)。gallup 測驗時必填。
-        talents: 技能完整物件列表 [{id, name, description}, ...]。gallup 測驗時必填。
+        stance: 姿態完整物件 {id, origin, name, description}。disc 測驗時必填。
+        talent_ids: 傳奇技能 ID 列表 (6 個)。gallup 測驗時必填。
+        talents: 技能完整物件列表 [{id, name, origin, symbol, description}, ...]。gallup 測驗時必填。
         destiny_guide: 命運指引字典，**所有測驗必填**。
             格式：{
                 "daily": "今日預言",
@@ -537,7 +538,7 @@ async def validate_transformation_output(
                 logger.error(f"❌ DB 驗證失敗！無效的資產 ID: {invalid_ids}")
                 # 記錄錯誤但不中斷流程，讓後續邏輯處理
             else:
-                logger.info(f"✅ DB 驗證通過：所有 ID 皆存在於 game_definitions")
+                logger.info("✅ DB 驗證通過：所有 ID 皆存在於 game_definitions")
         except Exception as e:
             logger.error(f"❌ DB 驗證過程發生錯誤: {e}")
     
