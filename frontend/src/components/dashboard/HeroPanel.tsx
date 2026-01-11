@@ -41,9 +41,9 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
                     ? "bg-gradient-to-r from-primary to-emerald-400"
                     : "bg-gradient-to-r from-gray-600 to-gray-500"
                     } text-black text-sm font-black px-4 py-1 rounded-full shadow-[0_0_15px_rgba(17,212,82,0.6)] border border-white/20 tracking-widest uppercase flex items-center gap-1`}>
-                    <span className="material-symbols-outlined text-sm">
+                    {/* <span className="material-symbols-outlined text-sm">
                         {classId && classId !== "???" ? "bolt" : "lock"}
-                    </span>
+                    </span> */}
                     {classId && classId !== "???" ? "Hero Awakened" : "Sealed Soul"}
                 </div>
             </div>

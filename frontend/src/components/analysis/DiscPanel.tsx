@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Shield } from 'lucide-react';
 import ActionButtons from '../shared/ActionButtons';
 
 interface DiscPanelProps {
@@ -63,7 +62,7 @@ const DiscPanel = ({ result }: DiscPanelProps) => {
     const theme = STANCE_THEMES[stanceId] || STANCE_THEMES['STN_D']; // Default fallback
 
     return (
-        <motion.div 
+        <motion.div
             ref={panelRef}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -79,7 +78,6 @@ const DiscPanel = ({ result }: DiscPanelProps) => {
             {/* Label */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-full flex justify-center">
                 <div className={`bg-gradient-to-r ${theme.gradient} text-white text-sm font-black px-4 py-1 rounded-full ${theme.shadow} border border-white/20 tracking-widest uppercase flex items-center gap-1 min-w-max`}>
-                    <Shield className="w-3 h-3 fill-current" />
                     Battle Stance
                 </div>
             </div>
@@ -97,8 +95,8 @@ const DiscPanel = ({ result }: DiscPanelProps) => {
                     <div className="absolute bottom-0 left-0 w-full p-6 z-10">
                         <div className="flex items-center gap-1.5 mb-2">
                             <div className={`size-6 rounded bg-gradient-to-br ${theme.gradient} flex items-center justify-center shadow-lg border border-white/20`}>
-                                <Shield className="w-3.5 h-3.5 text-white fill-current" />
-                             </div>
+                                D
+                            </div>
                             <span className={`${theme.text} font-bold text-xs tracking-widest uppercase`}>戰鬥流派 (DISC)</span>
                         </div>
 
