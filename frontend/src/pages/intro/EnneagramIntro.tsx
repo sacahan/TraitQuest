@@ -149,43 +149,54 @@ const EnneagramIntro: React.FC = () => {
 function renderRaceCard(type: string, race: string, desc: string, _color: string) {
   const num = type.split('號')[0];
   const role = type.split('：')[1] || type;
+  const imageSrc = `/assets/images/races/race_${num}.png`;
 
-    return (
-      <div className="relative group p-8 rounded-2xl bg-[#14261d] border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(11,218,115,0.15)] overflow-hidden">
-        {/* Background Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 group-hover:to-primary/10 transition-all duration-500"></div>
+  return (
+    <div className="relative group p-8 rounded-2xl bg-[#14261d] border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(11,218,115,0.15)] overflow-hidden">
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 group-hover:to-primary/10 transition-all duration-500"></div>
 
-        {/* Large Watermark Number */}
-        <div className="absolute -right-6 -top-10 text-[140px] font-black text-white/[0.03] group-hover:text-primary/[0.08] transition-colors duration-500 select-none leading-none z-0 rotate-12">
-          {num}
-        </div>
+      {/* Large Watermark Number */}
+      <div className="absolute -right-6 -top-10 text-[140px] font-black text-white/[0.03] group-hover:text-primary/[0.08] transition-colors duration-500 select-none leading-none z-0 rotate-12">
+        {num}
+      </div>
 
-        <div className="relative z-10 flex flex-col h-full">
-          {/* Header: Role & Number */}
-          <div className="flex justify-between items-center mb-6">
-            <span className="inline-flex items-center justify-center size-8 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-black group-hover:bg-primary group-hover:text-[#10231a] transition-all duration-300 shadow-[0_0_10px_rgba(11,218,115,0.2)]">
-              {num}
-            </span>
-            <div className="h-[1px] flex-1 bg-gradient-to-r from-primary/20 to-transparent mx-4"></div>
+      {/* Character Watermark */}
+      <div className="absolute -right-8 -bottom-8 w-48 h-48 opacity-[0.1] group-hover:opacity-[0.25] transition-all duration-500 pointer-events-none grayscale group-hover:grayscale-0 mix-blend-overlay group-hover:mix-blend-normal">
+        <img src={imageSrc} alt="" className="w-full h-full object-contain transform rotate-6 scale-110 group-hover:scale-125 transition-transform" />
+      </div>
+
+      <div className="relative z-10 flex flex-col h-full">
+        {/* Header: Avatar, Line & Number */}
+        <div className="flex items-center gap-4 mb-6">
+          <div className="size-16 rounded-xl bg-[#0d1c14] border border-white/10 p-1 group-hover:border-primary/50 transition-colors shadow-lg shrink-0 overflow-hidden">
+            <img src={imageSrc} alt={race} className="w-full h-full object-cover rounded-lg group-hover:scale-110 transition-transform duration-500" />
           </div>
 
-          {/* Race Name */}
-          <h3 className="text-3xl font-black text-white mb-2 group-hover:text-primary transition-colors tracking-tight drop-shadow-sm">
-            {race}
-          </h3>
+          <div className="h-[1px] flex-1 bg-gradient-to-r from-primary/20 to-transparent"></div>
 
-          {/* Role Name Subtitle */}
-          <div className="text-[#90cbad] text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-80 group-hover:opacity-100 transition-opacity">
-            {role}
-          </div>
+          <span className="inline-flex items-center justify-center size-8 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-black group-hover:bg-primary group-hover:text-[#10231a] transition-all duration-300 shadow-[0_0_10px_rgba(11,218,115,0.2)]">
+            {num}
+          </span>
+        </div>
 
-          {/* Description */}
-          <p className="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-4 mt-auto group-hover:text-gray-200 transition-colors">
-            {desc}
-          </p>
+        {/* Race Name */}
+        <h3 className="text-3xl font-black text-white mb-2 group-hover:text-primary transition-colors tracking-tight drop-shadow-sm">
+          {race}
+        </h3>
+
+        {/* Role Name Subtitle */}
+        <div className="text-[#90cbad] text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-80 group-hover:opacity-100 transition-opacity">
+          {role}
         </div>
-        </div>
-    )
+
+        {/* Description */}
+        <p className="text-gray-400 text-sm leading-relaxed border-t border-white/5 pt-4 mt-auto group-hover:text-gray-200 transition-colors">
+          {desc}
+        </p>
+      </div>
+    </div>
+  )
 }
 
 export default EnneagramIntro

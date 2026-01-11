@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Zap, Brain } from 'lucide-react';
 import ActionButtons from '../shared/ActionButtons';
 
 interface MbtiPanelProps {
@@ -28,7 +29,7 @@ const MbtiPanel = ({ result }: MbtiPanelProps) => {
             {/* Hero Label */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30">
                 <div className="bg-gradient-to-r from-primary to-emerald-400 text-black text-sm font-black px-4 py-1 rounded-full shadow-[0_0_15px_rgba(17,212,82,0.6)] border border-white/20 tracking-widest uppercase flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">bolt</span>
+                    <Zap size={14} className="fill-current" />
                     Hero Awakened
                 </div>
             </div>
@@ -44,7 +45,9 @@ const MbtiPanel = ({ result }: MbtiPanelProps) => {
 
                     <div className="absolute bottom-0 left-0 w-full p-6 z-10">
                         <div className="flex items-center gap-1.5 mb-2">
-                            <span className="size-6 rounded bg-primary text-black flex items-center justify-center font-bold text-[10px] shadow-lg material-symbols-outlined">psychology</span>
+                            <span className="size-6 rounded bg-primary text-black flex items-center justify-center font-bold shadow-lg">
+                                <Brain size={14} className="fill-current" />
+                            </span>
                             <span className="text-primary font-bold text-xs tracking-widest uppercase">英雄職業 (MBTI)</span>
                         </div>
 

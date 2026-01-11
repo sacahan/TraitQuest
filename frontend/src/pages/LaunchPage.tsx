@@ -14,27 +14,27 @@ const QUEST_CONFIG: Record<string, {
     mbti: {
         title: 'MBTI 測驗',
         icon: 'Award',
-        preface: 'MBTI 測驗是目前最廣泛使用的人格測驗工具之一，它通過分析個人在四種基本人格傾向上的表現，幫助人們了解自己的性格特點和偏好。'
+        preface: 'MBTI 的基礎建立在心理學家卡爾·榮格 (Carl Jung) 的認知功能理論之上。這不是將人分類的標籤，而是幫助你成長的地圖。'
     },
     bigfive: {
         title: '大五人格測驗',
         icon: 'Target',
-        preface: '大五人格測驗用來量化你的人格特質強度，包括外向性、情緒穩定性、開放性、盡責性和直覺性。'
-    },
-    disc: {
-        title: 'DISC 倫理測驗',
-        icon: 'Shield',
-        preface: 'DISC 倫理測驗判斷你在工作與壓力情境下的行為風格，分析你的性格特點和偏好。'
+        preface: 'Big Five 是目前最具科學實證基礎的人格特質模型。它不是單純的標籤，而是五個光譜維度。在 TraitQuest 的世界裡，我們將這些維度具象化為你的角色屬性。'
     },
     enneagram: {
         title: '九型人格測驗',
         icon: 'Users',
-        preface: '九型人格測驗洞悉你行為背後的核心動機與恐懼，適合自我覺察與成長。'
+        preface: 'Enneagram 不僅僅是性格分類，它是一個關於核心動機、恐懼與潛能轉化的智慧系統。它幫助你理解自己和他人，並引導你走向更深刻的自我覺察。'
+    },
+    disc: {
+        title: 'DISC 倫理測驗',
+        icon: 'Shield',
+        preface: 'DISC 模式由心理學家威廉·馬斯頓 (William Marston) 所建立，旨在描述人類在不同環境下的行為反應，面對挑戰、人際、節奏與規範時的自然傾向。'
     },
     'gallup': {
         title: '馬斯洛需求測驗',
         icon: 'Compass',
-        preface: '馬斯洛需求測驗判斷你目前被什麼層級的需求驅動，常用於動機設計與管理。'
+        preface: '蓋洛普天賦優勢 (CliftonStrengths) 告訴我們：修補弱點只能讓你平庸，發揮優勢才能讓你傑出。在你的優勢領域中，你就是戰場上的絕對 VIP。'
     },
 };
 

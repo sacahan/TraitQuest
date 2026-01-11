@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Users } from 'lucide-react';
 import ActionButtons from '../shared/ActionButtons';
 
 interface EnneagramPanelProps {
@@ -37,7 +38,7 @@ const EnneagramPanel = ({ result }: EnneagramPanelProps) => {
             {/* Soul Origin Label */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30">
                 <div className="bg-gradient-to-r from-purple-600 to-purple-400 text-white text-sm font-black px-4 py-1 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.6)] border border-white/20 tracking-widest uppercase flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">groups</span>
+                    <Users size={14} className="fill-current" />
                     Soul Origin
                 </div>
             </div>

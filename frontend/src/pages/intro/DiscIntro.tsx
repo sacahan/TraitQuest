@@ -81,44 +81,44 @@ const DiscIntro: React.FC = () => {
             </div>
           </div>
           <div className="flex-1 w-full max-w-[500px]">
-             <div className="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-1 h-full bg-primary/50"></div>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="size-12 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-2xl">radar</span>
-                  </div>
-                  <div>
-                    <h4 className="text-white font-bold">Stance Radar</h4>
-                    <p className="text-[#90cbad] text-xs">即時行為捕捉中...</p>
+            <div className="bg-[#102219] border border-[#31684d] rounded-xl p-6 shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-1 h-full bg-primary/50"></div>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="size-12 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary text-2xl">radar</span>
+                </div>
+                <div>
+                  <h4 className="text-white font-bold">Stance Radar</h4>
+                  <p className="text-[#90cbad] text-xs">即時行為捕捉中...</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 rounded-lg bg-[#1a3323] border border-red-500/20">
+                  <div className="text-red-400 text-[14px] font-bold uppercase mb-1">D - 掌控</div>
+                  <div className="h-1 w-full bg-red-900/30 rounded-full overflow-hidden">
+                    <div className="h-full bg-red-500 w-[70%]" style={{ animation: 'grow 2s ease-out' }}></div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 rounded-lg bg-[#1a3323] border border-red-500/20">
-                  <div className="text-red-400 text-[14px] font-bold uppercase mb-1">D - 掌控</div>
-                    <div className="h-1 w-full bg-red-900/30 rounded-full overflow-hidden">
-                      <div className="h-full bg-red-500 w-[70%]" style={{ animation: 'grow 2s ease-out' }}></div>
-                    </div>
-                  </div>
-                  <div className="p-3 rounded-lg bg-[#1a3323] border border-yellow-500/20">
+                <div className="p-3 rounded-lg bg-[#1a3323] border border-yellow-500/20">
                   <div className="text-yellow-400 text-[14px] font-bold uppercase mb-1">I - 影響</div>
-                    <div className="h-1 w-full bg-yellow-900/30 rounded-full overflow-hidden">
-                      <div className="h-full bg-yellow-500 w-[85%]" style={{ animation: 'grow 2s ease-out 0.2s' }}></div>
-                    </div>
+                  <div className="h-1 w-full bg-yellow-900/30 rounded-full overflow-hidden">
+                    <div className="h-full bg-yellow-500 w-[85%]" style={{ animation: 'grow 2s ease-out 0.2s' }}></div>
                   </div>
-                  <div className="p-3 rounded-lg bg-[#1a3323] border border-green-500/20">
+                </div>
+                <div className="p-3 rounded-lg bg-[#1a3323] border border-green-500/20">
                   <div className="text-green-400 text-[14px] font-bold uppercase mb-1">S - 穩定</div>
-                    <div className="h-1 w-full bg-green-900/30 rounded-full overflow-hidden">
-                      <div className="h-full bg-green-500 w-[45%]" style={{ animation: 'grow 2s ease-out 0.4s' }}></div>
-                    </div>
+                  <div className="h-1 w-full bg-green-900/30 rounded-full overflow-hidden">
+                    <div className="h-full bg-green-500 w-[45%]" style={{ animation: 'grow 2s ease-out 0.4s' }}></div>
                   </div>
-                  <div className="p-3 rounded-lg bg-[#1a3323] border border-blue-500/20">
+                </div>
+                <div className="p-3 rounded-lg bg-[#1a3323] border border-blue-500/20">
                   <div className="text-blue-400 text-[14px] font-bold uppercase mb-1">C - 遵從</div>
-                    <div className="h-1 w-full bg-blue-900/30 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-500 w-[60%]" style={{ animation: 'grow 2s ease-out 0.6s' }}></div>
-                    </div>
+                  <div className="h-1 w-full bg-blue-900/30 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-500 w-[60%]" style={{ animation: 'grow 2s ease-out 0.6s' }}></div>
                   </div>
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -132,12 +132,12 @@ const DiscIntro: React.FC = () => {
               每種架勢都有其獨特的作戰優勢與潛在弱點。在 TraitQuest 的世界中，協同不同戰架的朋友能產生強大的戰場羈絆。
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {renderStanceCard('掌控 - Dominance', '烈焰戰姿', '快速進攻,以力量壓制對手。在戰場上是衝鋒陷陣的先鋒,擅長短時間內解決威脅。', 'red', 'swords')}
-            {renderStanceCard('影響 - Influence', '潮汐之歌', '激勵隊友,以魅力掌控全場。你是戰場上的靈魂人物,擅長透過影響他人來掌控全局節奏。', 'yellow', 'magic_button')}
-            {renderStanceCard('穩守 - Steadiness', '大地磐石', '穩守陣地,以韌性保護夥伴。你是最可靠的後盾,能在持久戰中提供最穩定的支持與耐力。', 'green', 'shield_with_heart')}
-            {renderStanceCard('分析 - Conscientiousness', '星辰軌跡', '佈下陷阱,以邏輯解構威脅。擅長分析戰況細節,對你來說,每一個精確的數據都是獲勝的關鍵。', 'blue', 'biotech')}
+            {renderStanceCard('掌控 - Dominance', '烈焰戰姿', '快速進攻,以力量壓制對手。在戰場上是衝鋒陷陣的先鋒,擅長短時間內解決威脅。', 'red')}
+            {renderStanceCard('影響 - Influence', '潮汐之歌', '激勵隊友,以魅力掌控全場。你是戰場上的靈魂人物,擅長透過影響他人來掌控全局節奏。', 'yellow')}
+            {renderStanceCard('穩守 - Steadiness', '大地磐石', '穩守陣地,以韌性保護夥伴。你是最可靠的後盾,能在持久戰中提供最穩定的支持與耐力。', 'green')}
+            {renderStanceCard('分析 - Conscientiousness', '星辰軌跡', '佈下陷阱,以邏輯解構威脅。擅長分析戰況細節,對你來說,每一個精確的數據都是獲勝的關鍵。', 'blue')}
           </div>
         </div>
       </section>
@@ -145,13 +145,13 @@ const DiscIntro: React.FC = () => {
       {/* Integration Section */}
       <section className="w-full bg-[#102216] py-16 border-y-1 border-[#23482f] border-guild-border/50">
         <div className="w-full max-w-[1200px] px-4 mx-auto text-center">
-            <h3 className="text-white text-3xl font-bold mb-6">為什麼需要 DISC？</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-                {renderFeatureItem('衝衝突排除', '了解對方的戰鬥節奏，減少組隊時的人員摩合。')}
-                {renderFeatureItem('有效溝通', '學習用對方聽得懂的頻道發送指令，提升戰鬥效率。')}
-                {renderFeatureItem('職務匹配', '將最適合的人放在最適合的位置，不論是坦、補還是打。')}
-                {renderFeatureItem('自我成長', '察覺自己的行為盲點，解鎖進階的人格形態。')}
-            </div>
+          <h3 className="text-white text-3xl font-bold mb-6">為什麼需要 DISC？</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+            {renderFeatureItem('衝突排除', '了解對方的戰鬥節奏，減少組隊時的人員摩合。')}
+            {renderFeatureItem('有效溝通', '學習用對方聽得懂的頻道發送指令，提升戰鬥效率。')}
+            {renderFeatureItem('職務匹配', '將最適合的人放在最適合的位置，不論是坦、補還是打。')}
+            {renderFeatureItem('自我成長', '察覺自己的行為盲點，解鎖進階的人格形態。')}
+          </div>
         </div>
       </section>
 
@@ -172,39 +172,53 @@ const DiscIntro: React.FC = () => {
   )
 }
 
-function renderStanceCard(type: string, title: string, desc: string, color: string, icon: string) {
-    const colorMap: any = {
-        red: 'border-red-500/30 hover:border-red-500 shadow-red-500/5 hover:shadow-red-500/20 bg-red-950/20 text-red-400',
-        yellow: 'border-yellow-500/30 hover:border-yellow-500 shadow-yellow-500/5 hover:shadow-yellow-500/20 bg-yellow-950/20 text-yellow-400',
-        green: 'border-primary/30 hover:border-primary shadow-primary/5 hover:shadow-primary/20 bg-green-950/20 text-primary',
-        blue: 'border-blue-500/30 hover:border-blue-500 shadow-blue-500/5 hover:shadow-blue-500/20 bg-blue-950/20 text-blue-400',
-    }
+function renderStanceCard(type: string, title: string, desc: string, color: string) {
+  const colorMap: any = {
+    red: 'border-red-500/30 hover:border-red-500 shadow-red-500/5 hover:shadow-red-500/20 bg-red-950/20 text-red-400',
+    yellow: 'border-yellow-500/30 hover:border-yellow-500 shadow-yellow-500/5 hover:shadow-yellow-500/20 bg-yellow-950/20 text-yellow-400',
+    green: 'border-primary/30 hover:border-primary shadow-primary/5 hover:shadow-primary/20 bg-green-950/20 text-primary',
+    blue: 'border-blue-500/30 hover:border-blue-500 shadow-blue-500/5 hover:shadow-blue-500/20 bg-blue-950/20 text-blue-400',
+  }
 
-    return (
-        <div className={`p-8 rounded-3xl border-2 transition-all duration-500 group ${colorMap[color]}`}>
-            <div className="flex items-start gap-6">
-                <div className="size-16 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <span className="material-symbols-outlined text-4xl">{icon}</span>
-                </div>
-                <div>
-                <div className="text-xs font-bold tracking-[0.2em] uppercase mb-1 opacity-70">{type}</div>
-                <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
-                <p className="text-gray-400 group-hover:text-gray-200 transition-colors leading-relaxed">
-                    {desc}
-                </p>
-                </div>
-            </div>
+  const imageKeyMap: any = {
+    red: 'd',
+    yellow: 'i',
+    green: 's',
+    blue: 'c'
+  }
+
+  const imageSrc = `/assets/images/stances/stn_${imageKeyMap[color]}.png`;
+
+  return (
+    <div className={`relative p-8 rounded-3xl border-2 transition-all duration-500 group overflow-hidden ${colorMap[color]}`}>
+      {/* Background Watermark */}
+      <div className="absolute -right-12 -bottom-12 w-64 h-64 opacity-[0.05] group-hover:opacity-[0.15] transition-all duration-500 pointer-events-none grayscale group-hover:grayscale-0 mix-blend-overlay group-hover:mix-blend-normal">
+        <img src={imageSrc} alt="" className="w-full h-full object-contain transform rotate-12 scale-125 transition-transform" />
+      </div>
+
+      <div className="relative z-10 flex items-start gap-6">
+        <div className="size-20 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform overflow-hidden shadow-inner">
+          <img src={imageSrc} alt={title} className="w-full h-full object-cover" />
         </div>
-    )
+        <div>
+          <div className="text-xs font-bold tracking-[0.2em] uppercase mb-1 opacity-70">{type}</div>
+          <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
+          <p className="text-gray-400 group-hover:text-gray-200 transition-colors leading-relaxed text-sm">
+            {desc}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function renderFeatureItem(title: string, desc: string) {
-    return (
-        <div className="p-6 rounded-xl bg-surface border border-guild-border hover:border-primary transition-colors">
-            <h4 className="text-white font-bold mb-2">{title}</h4>
-            <p className="text-[#90cbad] text-sm">{desc}</p>
-        </div>
-    )
+  return (
+    <div className="p-6 rounded-xl bg-surface border border-guild-border hover:border-primary transition-colors">
+      <h4 className="text-white font-bold mb-2">{title}</h4>
+      <p className="text-[#90cbad] text-sm">{desc}</p>
+    </div>
+  )
 }
 
 export default DiscIntro

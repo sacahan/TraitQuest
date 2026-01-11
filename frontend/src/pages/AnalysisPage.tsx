@@ -229,7 +229,7 @@ const AnalysisPage = () => {
                                             style={{ width: `${levelInfo?.expProgress * 100}%` }}
                                         ></div>
                                     </div>
-                                    <span className="text-gray-400 font-mono whitespace-nowrap">{levelInfo?.exp || 0} / {levelInfo?.expToNextLevel || 'Max'} XP</span>
+                                    <span className="text-gray-400 font-mono whitespace-nowrap">{levelInfo?.exp || 0} XP</span>
                                 </div>
 
                                 {levelInfo && levelInfo.isLeveledUp && (

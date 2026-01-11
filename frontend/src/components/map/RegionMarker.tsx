@@ -1,7 +1,7 @@
 import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Region } from '../../stores/mapStore'
-import { Lock, Sparkles, Zap, ScrollText, Sword, Trophy, AlertCircle } from 'lucide-react'
+import { Lock, Sparkles, Zap, ScrollText, Sword, Trophy, AlertCircle, RotateCcw, BookOpen } from 'lucide-react'
 
 const ICON_MAP: Record<string, any> = {
   Sparkles, Zap, ScrollText, Sword, Trophy
@@ -20,9 +20,8 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
 
   const handleClick = () => {
     if (isLocked) return
-    if (isConquered) {
-      window.location.href = `/analysis?region=${region.id}`
-    } else {
+    // For conquered regions, we let the popup handle the interaction
+    if (!isConquered) {
       window.location.href = `/launch?type=${region.id}`
     }
   }
@@ -30,7 +29,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
   return (
     <div
       ref={markerRef}
-      className="absolute z-20 group hover:!z-[100]"
+      className={`absolute z-20 group ${isHovered ? 'z-[100]' : ''}`}
       style={{
         top: region.position?.top,
         left: region.position?.left,
@@ -39,7 +38,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleClick}
     >
-      <div className={`relative flex flex-col items-center ${isLocked ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+      <div className={`relative flex flex-col items-center ${isLocked ? 'cursor-not-allowed' : isConquered ? 'cursor-default' : 'cursor-pointer'}`}>
         {/* Glow Layer */}
         {!isLocked && (
           <div
@@ -99,26 +98,64 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute bottom-full mb-6 w-64 bg-zinc-900/90 border border-white/10 rounded-xl p-4 shadow-2xl z-[9999] pointer-events-none backdrop-blur-xl"
+              className="absolute bottom-full mb-6 w-72 bg-zinc-900/95 border border-white/10 rounded-xl p-4 shadow-2xl z-[9999] backdrop-blur-xl pointer-events-auto
+                after:content-[''] after:absolute after:top-full after:left-0 after:w-full after:h-6 after:bg-transparent"
               style={{ borderColor: isLocked ? 'rgba(255,255,255,0.1)' : `${region.color}44` }}
             >
-              <h3 className="text-sm font-bold text-white mb-2 uppercase tracking-wide">{region.name}</h3>
+              <h3 className="text-sm font-bold text-white mb-2 uppercase tracking-wide flex items-center justify-between">
+                {region.name}
+                {isConquered && <Trophy size={14} className="text-yellow-500" />}
+              </h3>
 
               {isLocked ? (
                 <div className="flex items-start gap-2 text-red-500/70">
                   <AlertCircle size={14} className="shrink-0 mt-0.5" />
                   <p className="text-[12px] italic leading-relaxed">{region.unlock_hint || "前置條件未達成"}</p>
                 </div>
-              ) : (
-                  <div className="space-y-4">
-                    <p className="text-[12px] text-white/50 italic leading-relaxed">「此處的命運正等待你的抉擇...」</p>
-                    <div
-                      className="w-full py-2 bg-white text-black text-center text-[12px] font-black uppercase tracking-widest"
-                      style={{ backgroundColor: region.color }}
+              ) : isConquered ? (
+                <div className="space-y-3">
+                  <p className="text-[12px] text-zinc-400 italic leading-relaxed">
+                    「你已征服此地，但靈魂的試煉永無止境...」
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        window.location.href = `/launch?type=${region.id}`
+                      }}
+                      className="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-white/5 transition-colors group/btn"
                     >
-                      {isConquered ? '回顧轉生歷程' : '踏入試煉之路'}
-                    </div>
+                      <RotateCcw size={16} className="text-zinc-400 group-hover/btn:text-white transition-colors" />
+                      <span className="text-[10px] text-zinc-400 group-hover/btn:text-white font-medium">再戰</span>
+                    </button>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        window.location.href = `/analysis?region=${region.id}`
+                      }}
+                      className="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-white/5 transition-colors group/btn"
+                    >
+                      <BookOpen size={16} style={{ color: region.color }} />
+                      <span className="text-[10px] text-zinc-300 group-hover/btn:text-white font-medium">回顧歷程</span>
+                    </button>
                   </div>
+                </div>
+              ) : (
+                    <div className="space-y-4">
+                      <p className="text-[12px] text-white/50 italic leading-relaxed">「此處的命運正等待你的抉擇...」</p>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.location.href = `/launch?type=${region.id}`
+                        }}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-black text-[12px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                        style={{ backgroundColor: region.color }}
+                      >
+                        <span>踏入試煉之路</span>
+                        <Sword size={14} fill="currentColor" />
+                      </button>
+                    </div>
               )}
             </motion.div>
           )}

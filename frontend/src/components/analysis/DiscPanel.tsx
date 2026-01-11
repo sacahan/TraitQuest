@@ -1,5 +1,7 @@
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
+import ActionButtons from '../shared/ActionButtons';
 
 interface DiscPanelProps {
     result: any;
@@ -53,6 +55,8 @@ const STANCE_THEMES: Record<string, {
 };
 
 const DiscPanel = ({ result }: DiscPanelProps) => {
+    const panelRef = useRef<HTMLDivElement>(null);
+
     if (!result?.stance) return null;
 
     const stanceId = result.stance_id;
@@ -60,11 +64,17 @@ const DiscPanel = ({ result }: DiscPanelProps) => {
 
     return (
         <motion.div 
+            ref={panelRef}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="relative group perspective-1000 w-full max-w-md mx-auto"
         >
             <div className={`absolute inset-0 ${theme.glow} rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-700`}></div>
+
+            {/* Action Buttons */}
+            <div className="absolute top-2 right-2 z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ActionButtons targetRef={panelRef} filename={`disc-${result.stance_id || 'result'}`} />
+            </div>
 
             {/* Label */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 w-full flex justify-center">

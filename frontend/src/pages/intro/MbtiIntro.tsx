@@ -238,21 +238,23 @@ function renderClassCard(code: string, title: string, className: string, desc: s
     yellow: 'hover:border-yellow-500 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] text-yellow-400'
   }
 
+  const imageSrc = `/assets/images/classes/cls_${code.toLowerCase()}.png`
+
   return (
     <div className={`group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden ${colorMap[color]}`}>
-      <div className="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
-        <span className="material-symbols-outlined text-7xl transform rotate-12">{icon}</span>
+      <div className="absolute -right-6 -bottom-6 opacity-10 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none select-none">
+        <img src={imageSrc} alt="" className="w-32 h-32 object-cover transform -rotate-12 filter grayscale contrast-125" />
       </div>
-      <div className="flex items-center gap-3 mb-3 relative z-10">
-        <div className={`size-10 rounded-lg bg-[#0d1c14] border border-[#31684d] group-hover:border-current flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-          <span className="material-symbols-outlined">{icon}</span>
+      <div className="flex items-center gap-4 mb-3 relative z-10">
+        <div className={`size-14 rounded-xl bg-[#0d1c14] border border-[#31684d] group-hover:border-current flex items-center justify-center shrink-0 overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-inner`}>
+          <img src={imageSrc} alt={code} className="w-full h-full object-cover" />
         </div>
         <div>
-          <h5 className="text-2xl font-black text-white leading-none">{code}</h5>
-          <span className="text-[10px] uppercase font-bold tracking-wider">{title}</span>
+          <h5 className="text-2xl font-black text-white leading-none mb-1">{code}</h5>
+          <span className="text-[10px] uppercase font-bold tracking-widest bg-black/20 px-2 py-0.5 rounded">{title}</span>
         </div>
       </div>
-      <div className="relative z-10">
+      <div className="relative z-10 pl-1">
         <h6 className="text-white font-bold text-lg mb-1 group-hover:text-current transition-colors">{className}</h6>
         <p className="text-xs text-[#90cbad] leading-relaxed group-hover:text-white/80 transition-colors">{desc}</p>
       </div>
