@@ -4,16 +4,20 @@ import ActionButtons from '../shared/ActionButtons';
 
 interface HeroPanelProps {
     avatarUrl?: string;
-    className?: string;
+    className?: string;     // Hero Class Name text
     classId?: string;
     classDescription?: string;
+    fullHeight?: boolean;   // New prop to enable filling parent height
+    rootClassName?: string; // Class for the root container
 }
 
 const HeroPanel: React.FC<HeroPanelProps> = ({
     avatarUrl,
     className = "未知職業",
     classId = "???",
-    classDescription = "尚未覺醒的靈魂..."
+    classDescription = "尚未覺醒的靈魂...",
+    fullHeight = false,
+    rootClassName = ""
 }) => {
     const panelRef = useRef<HTMLDivElement>(null);
 
@@ -22,9 +26,9 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
             ref={panelRef}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative group perspective-1000"
+            className={`relative group perspective-1000 ${fullHeight ? 'h-full flex flex-col' : ''} ${rootClassName}`}
         >
-            <div className="absolute inset-0 bg-primary/10 rounded-2xl blur-2xl group-hover:bg-primary/20 transition-all duration-700"></div>
+            <div className={`absolute inset-0 bg-primary/10 rounded-2xl blur-2xl group-hover:bg-primary/20 transition-all duration-700 ${fullHeight ? 'h-full' : ''}`}></div>
 
             {/* Action Buttons */}
             <div className="absolute top-2 right-2 z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -44,9 +48,9 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
                 </div>
             </div>
 
-            <div className="relative rounded-xl overflow-hidden border border-primary/50 shadow-[0_0_15px_rgba(17,212,82,0.1)] bg-[#0e1f15] transition-all duration-300 group-hover:border-primary">
+            <div className={`relative rounded-xl overflow-hidden border border-primary/50 shadow-[0_0_15px_rgba(17,212,82,0.1)] bg-[#0e1f15] transition-all duration-300 group-hover:border-primary ${fullHeight ? 'h-full flex-1' : ''}`}>
                 <div
-                    className="aspect-[4/5] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
+                    className={`${fullHeight ? 'h-full w-full' : 'aspect-[4/5] w-full'} bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative`}
                     style={{
                         backgroundImage: `url(${avatarUrl ||
                             (classId && classId !== "???" ? `/assets/images/classes/${classId.toLowerCase()}.png` : '/assets/images/classes/civilian.png')

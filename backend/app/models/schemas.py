@@ -153,8 +153,12 @@ class AssetReference(BaseModel):
     id: str = Field(..., description="資產 ID（如：RACE_1, CLS_INTJ）")
     name: str = Field(..., description="資產名稱（如：完美主義者）")
     description: str = Field(..., description="資產描述")
-    origin: str = Field(..., description="資產原始名稱（如：Activator）")
-    symbol: str = Field(..., description="資產圖示（如：flag）")
+    origin: Optional[str] = Field(
+        None, description="資產原始名稱（如：Activator），Gallup 天賦必填"
+    )
+    symbol: Optional[str] = Field(
+        None, description="資產圖示（如：flag），Gallup 天賦必填"
+    )
 
 
 class DestinyGuide(BaseModel):

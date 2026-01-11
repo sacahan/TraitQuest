@@ -13,6 +13,14 @@ import DestinyGuide from '../components/dashboard/DestinyGuide';
 import DestinyBonds from '../components/dashboard/DestinyBonds';
 import LockedCard from '../components/dashboard/LockedCard';
 
+interface Talent {
+    id: string;
+    name: string;
+    origin: string;
+    symbol: string;
+    description: string;
+}
+
 const DashboardPage = () => {
     const { } = useAuthStore();
     const navigate = useNavigate();
@@ -161,18 +169,19 @@ const DashboardPage = () => {
                 </motion.div>
 
                 {/* Hero section */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
                     {/* Left: Hero Portrait */}
-                    <div className="lg:col-span-5 space-y-6">
+                    <div className="lg:col-span-5 flex flex-col gap-6">
                         <HeroPanel
                             avatarUrl={profileData.heroAvatarUrl}
                             className={identity.class?.name}
                             classId={identity.class?.id}
                             classDescription={identity.class?.description}
+                            fullHeight={true}
                         />
 
                         {/* Level & Experience - Moved here */}
-                        <div className="bg-card-dark rounded-xl p-5 border border-white/5 shadow-xl flex flex-col justify-center">
+                        <div className="bg-card-dark rounded-xl p-5 border border-white/5 shadow-xl flex flex-col justify-center shrink-0">
                             <div className="flex items-center justify-center gap-4 text-sm w-full">
                                 <div className="flex items-center gap-1">
                                     <span className="material-symbols-outlined text-lg text-primary">military_tech</span>
@@ -190,7 +199,7 @@ const DashboardPage = () => {
                     </div>
 
                     {/* Right: Detailed Stats Cards */}
-                    <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
                         {/* Big 5 Stats Card */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -235,6 +244,56 @@ const DashboardPage = () => {
                                                         </div>
                                                     );
                                                 })}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </motion.div>
+
+                        {/* Enneagram Info Card */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="h-full"
+                        >
+                            {!profile.race_id ? (
+                                <LockedCard
+                                    label="靈魂種族 (Enneagram)"
+                                    unlockHint="深層靈魂尚未覺醒。完成靈魂探索試煉以揭示你的本質動機。"
+                                    themeColor="#bd00ff"
+                                    onClick={() => window.location.href = '/intro/enneagram'}
+                                />
+                            ) : (
+                                <div className="relative group h-full">
+                                    <div className="absolute inset-0 bg-purple-500/10 rounded-2xl blur-lg group-hover:bg-purple-500/20 transition-all duration-700"></div>
+                                    <div className="relative rounded-xl overflow-hidden border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)] bg-[#0e1f15] transition-all duration-300 group-hover:border-purple-400 h-full">
+                                        <div
+                                            className="aspect-[21/24] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
+                                            style={{
+                                                backgroundImage: `url(/assets/images/races/race_${profile.race_id?.match(/RACE_(\d+)/)?.[1] || '1'}.png)`
+                                            }}
+                                        >
+                                            <div className="absolute inset-0 bg-gradient-to-t from-[#0e1f15] via-[#0e1f15]/30 to-transparent"></div>
+
+                                            <div className="absolute bottom-0 left-0 w-full p-4 z-10">
+                                                <div className="flex items-center gap-1.5 mb-1">
+                                                    <span className="size-4 rounded bg-purple-600 text-white flex items-center justify-center font-bold text-[10px] shadow-lg">E</span>
+                                                    <span className="text-purple-400 font-bold text-[10px] tracking-widest uppercase">靈魂種族 (Enneagram)</span>
+                                                </div>
+
+                                                <h3 className="text-xl font-black text-white font-display tracking-tight group-hover:text-purple-200 transition-colors">
+                                                    {profile.race?.name || "尚未尋獲"}
+                                                </h3>
+
+                                                <p className="text-[#c9a0dc] font-bold text-sm mt-0.5 tracking-wide">
+                                                    {profile.race_id?.replace("RACE_", "Type ")}
+                                                </p>
+
+                                                <p className="text-gray-300 text-xs mt-2 leading-relaxed border-l-2 border-purple-500/50 pl-2 italic line-clamp-2">
+                                                    {profile.race?.description || "試煉將於地圖中展開。"}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -291,7 +350,7 @@ const DashboardPage = () => {
                                                             }`}>戰鬥流派 (DISC)</span>
                                                     </div>
 
-                                                    <h3 className={`text-2xl font-black font-display tracking-tight mb-1 transition-colors drop-shadow-lg ${profile.stance_id === 'STN_I' ? 'text-white group-hover:text-cyan-200' :
+                                                    <h3 className={`text-[20px] font-black font-display tracking-tight mb-1 transition-colors drop-shadow-lg ${profile.stance_id === 'STN_I' ? 'text-white group-hover:text-cyan-200' :
                                                         profile.stance_id === 'STN_S' ? 'text-white group-hover:text-emerald-200' :
                                                             profile.stance_id === 'STN_C' ? 'text-white group-hover:text-violet-200' :
                                                                 'text-white group-hover:text-red-200'
@@ -315,56 +374,6 @@ const DashboardPage = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                    </div>
-                                </div>
-                            )}
-                        </motion.div>
-
-                        {/* Enneagram Info Card */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="h-full"
-                        >
-                            {!profile.race_id ? (
-                                <LockedCard
-                                    label="靈魂種族 (Enneagram)"
-                                    unlockHint="深層靈魂尚未覺醒。完成靈魂探索試煉以揭示你的本質動機。"
-                                    themeColor="#bd00ff"
-                                    onClick={() => window.location.href = '/intro/enneagram'}
-                                />
-                            ) : (
-                                    <div className="relative group h-full">
-                                        <div className="absolute inset-0 bg-purple-500/10 rounded-2xl blur-lg group-hover:bg-purple-500/20 transition-all duration-700"></div>
-                                        <div className="relative rounded-xl overflow-hidden border border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)] bg-[#0e1f15] transition-all duration-300 group-hover:border-purple-400 h-full">
-                                            <div
-                                                className="aspect-[12/10] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
-                                                style={{
-                                                    backgroundImage: `url(/assets/images/races/race_${profile.race_id?.match(/RACE_(\d+)/)?.[1] || '1'}.png)`
-                                                }}
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-t from-[#0e1f15] via-[#0e1f15]/30 to-transparent"></div>
-
-                                                <div className="absolute bottom-0 left-0 w-full p-4 z-10">
-                                                    <div className="flex items-center gap-1.5 mb-1">
-                                                        <span className="size-4 rounded bg-purple-600 text-white flex items-center justify-center font-bold text-[10px] shadow-lg">E</span>
-                                                        <span className="text-purple-400 font-bold text-[10px] tracking-widest uppercase">靈魂種族 (Enneagram)</span>
-                                                    </div>
-
-                                                    <h3 className="text-xl font-black text-white font-display tracking-tight group-hover:text-purple-200 transition-colors">
-                                                        {profile.race?.name || "尚未尋獲"}
-                                                    </h3>
-
-                                                    <p className="text-[#c9a0dc] font-bold text-sm mt-0.5 tracking-wide">
-                                                        {profile.race_id?.replace("RACE_", "Type ")}
-                                                    </p>
-
-                                                    <p className="text-gray-300 text-xs mt-2 leading-relaxed border-l-2 border-purple-500/50 pl-2 italic line-clamp-2">
-                                                        {profile.race?.description || "試煉將於地圖中展開。"}
-                                                    </p>
-                                            </div>
-                                            </div>
                                         </div>
                                 </div>
                             )}
@@ -377,7 +386,7 @@ const DashboardPage = () => {
                             transition={{ delay: 0.2 }}
                             className="h-full"
                         >
-                            {!profile.talent_ids || profile.talent_ids.length === 0 ? (
+                            {!profile.talents || profile.talents.length === 0 ? (
                                 <LockedCard
                                     label="天賦技能 (Gallup)"
                                     unlockHint="上古卷軸封印著你的終極奧義。需集齊靈魂碎片以解鎖此力。"
@@ -385,30 +394,60 @@ const DashboardPage = () => {
                                     onClick={() => window.location.href = '/intro/gallup'}
                                 />
                             ) : (
-                                    <div className="bg-card-dark rounded-2xl p-6 border border-yellow-500/30 h-full group hover:border-yellow-600/60 transition-colors">
-                                        <div className="flex justify-between items-start mb-6">
-                                        <div className="flex items-center gap-2">
+                                    <div className="bg-card-dark rounded-2xl p-6 border border-yellow-500/30 h-full group hover:border-yellow-600/60 transition-colors flex flex-col">
+                                        <div className="flex justify-between items-start mb-4 shrink-0">
+                                            <div className="flex items-center gap-2">
                                                 <span className="bg-yellow-500/20 text-yellow-300 p-1.5 rounded-lg border border-yellow-500/30">
                                                     <span className="material-symbols-outlined text-lg">trophy</span>
-                                            </span>
+                                                </span>
                                                 <span className="text-sm font-bold text-yellow-300 uppercase tracking-widest">天賦技能 (Talents)</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-2 content-start min-h-0">
+                                            {profile.talents.map((tal: Talent) => (
+                                                <div
+                                                    key={tal.id}
+                                                    className="group/item relative"
+                                                >
+                                                    <div className="cursor-help flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-yellow-900/20 border border-yellow-500/20 hover:bg-yellow-500/20 hover:border-yellow-400/50 transition-all duration-300">
+                                                        <span className="material-symbols-outlined text-[18px] text-yellow-400 group-hover/item:text-yellow-300 transition-colors">
+                                                            {tal.symbol || 'stars'}
+                                                        </span>
+                                                        <span className="text-sm font-bold text-yellow-500 group-hover/item:text-yellow-200 transition-colors">
+                                                            {tal.name}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Hover Popup */}
+                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-64 p-4 rounded-xl bg-[#0a0f0d]/95 backdrop-blur-xl border border-yellow-500/40 shadow-[0_0_30px_rgba(234,179,8,0.2)] opacity-0 translate-y-2 pointer-events-none group-hover/item:opacity-100 group-hover/item:translate-y-0 group-hover/item:pointer-events-auto transition-all duration-300 z-50">
+                                                        <div className="flex items-center gap-2 mb-2 pb-2 border-b border-yellow-500/20">
+                                                            <div className="size-8 rounded-full bg-yellow-500/20 flex items-center justify-center border border-yellow-500/30">
+                                                                <span className="material-symbols-outlined text-yellow-300 text-sm">
+                                                                    {tal.symbol || 'stars'}
+                                                                </span>
+                                                            </div>
+                                                            <h4 className="text-yellow-200 font-bold text-sm tracking-wide">
+                                                                {tal.name} ({tal.origin})
+                                                            </h4>
+                                                        </div>
+                                                        <p className="text-xs text-justify text-gray-300 leading-relaxed font-body">
+                                                            {tal.description}
+                                                        </p>
+
+                                                        {/* Decorative triangle */}
+                                                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-[1px] border-8 border-transparent border-t-yellow-500/40"></div>
+                                                    </div>
+                                                </div>
+                                            ))}
+
+                                            {(!profile.talents || profile.talents.length === 0) && (
+                                                <p className="text-sm text-gray-400 mt-4 leading-relaxed text-center italic w-full">
+                                                    已覺醒的靈魂天賦，賦予你超越常人的命運掌握力。
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {profile.talent_ids.map((tid: string, index: number) => {
-                                                // 優先使用 talent_names,如果不存在則顯示 ID
-                                                const displayName = profile.talent_names?.[index] || tid.replace('TAL_', '');
-                                                return (
-                                                    <span key={tid} className="bg-yellow-900/30 border border-yellow-500/30 text-yellow-500 text-sm font-bold px-2 py-1 rounded">
-                                                        {displayName}
-                                                    </span>
-                                                );
-                                            })}
-                                    </div>
-                                        <p className="text-sm text-gray-400 mt-4 leading-relaxed">
-                                            已覺醒的靈魂天賦，賦予你超越常人的命運掌握力。
-                                        </p>
-                                </div>
                             )}
                         </motion.div>
                     </div>
