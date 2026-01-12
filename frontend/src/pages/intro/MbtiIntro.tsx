@@ -230,7 +230,7 @@ const MbtiIntro: React.FC = () => {
   )
 }
 
-function renderClassCard(code: string, title: string, className: string, desc: string, color: string, icon: string) {
+function renderClassCard(code: string, title: string, className: string, desc: string, color: string, _icon: string) {
   const colorMap: any = {
     purple: 'hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] text-purple-400',
     green: 'hover:border-primary hover:shadow-[0_0_20px_rgba(11,218,115,0.3)] text-primary',

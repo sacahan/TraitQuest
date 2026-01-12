@@ -14,6 +14,10 @@ from app.core.logging_config import configure_logging
 from app.db.session import engine
 from app.core.redis_client import redis_client
 from app.core.config import settings
+from pathlib import Path
+
+# 定義靜態檔案目錄
+STATIC_DIR = Path("/app/static")
 
 # Initialize logging
 configure_logging(log_file=settings.LOG_FILE_PATH)
@@ -165,11 +169,57 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
+    # 如果靜態檔案目錄存在（Docker 環境），優先返回 index.html
+    if STATIC_DIR.exists() and (STATIC_DIR / "index.html").exists():
+        from fastapi.responses import FileResponse
+
+        return FileResponse(STATIC_DIR / "index.html")
+
     return {"message": "Welcome to TraitQuest API", "status": "active"}
 
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+@app.get("/api/health")
+async def api_health_check():
+    """健康檢查端點（Docker 容器使用）"""
+    return {"status": "healthy"}
+
+
+# =============================================================================
+# 靜態檔案服務（Docker 生產環境）
+# =============================================================================
+# 僅當 /app/static 目錄存在時掛載，用於 Docker 容器提供前端 SPA
+
+if STATIC_DIR.exists() and STATIC_DIR.is_dir():
+    from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
+
+    # 掛載 assets 目錄（JS/CSS/圖片等）
+    assets_dir = STATIC_DIR / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+
+    # SPA Fallback：所有非 API 路徑返回 index.html
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        """SPA 路由 fallback：返回 index.html 讓前端路由處理"""
+        # 嘗試返回靜態檔案
+        file_path = STATIC_DIR / full_path
+        if file_path.exists() and file_path.is_file():
+            return FileResponse(file_path)
+
+        # 否則返回 index.html（SPA fallback）
+        index_path = STATIC_DIR / "index.html"
+        if index_path.exists():
+            return FileResponse(index_path)
+
+        # 如果沒有 index.html，返回 API root
+        return {"message": "Welcome to TraitQuest API", "status": "active"}
+
+    logger.info("✅ [StaticFiles] 靜態檔案服務已啟用：/app/static")
+
 
 if __name__ == "__main__":
     import uvicorn

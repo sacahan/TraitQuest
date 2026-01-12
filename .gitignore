@@ -5,3 +5,7 @@ dist/
 .env
 *.pyc
 __pycache__/
+
+# Docker secrets
+scripts/.env.docker
+scripts/github_copilot/
