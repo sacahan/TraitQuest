@@ -30,7 +30,10 @@ class Settings(BaseSettings):
     LOG_FILE_PATH: Optional[str] = "logs/app.log"
 
     # CORS - 開發環境預設，正式環境請透過環境變數設定
-    CORS_ORIGINS: List[str] = ["http://localhost:3000"]
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "https://traitquest.brianhan.cc",
+    ]
 
     # Google OAuth
     GOOGLE_CLIENT_ID: str = ""

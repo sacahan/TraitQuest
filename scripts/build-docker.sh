@@ -30,6 +30,10 @@ DOCKER_TAG="${DOCKER_TAG:-latest}"
 DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 BUILDX_BUILDER_NAME="traitquest-builder"
 
+# Hardcoded Frontend Environment Variables
+VITE_API_BASE_URL="https://traitquest.brianhan.cc/v1"
+VITE_GOOGLE_CLIENT_ID="824374244473-06a44nrl7ramqnt270k86i74oe2npsn6.apps.googleusercontent.com"
+
 # 顏色定義
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -63,6 +67,10 @@ print_error() {
 
 print_success() {
     echo -e "${GREEN}✅ $1${NC}"
+}
+
+print_info() {
+    echo -e "${BLUE}ℹ️  $1${NC}"
 }
 
 # -----------------------------------------------------------------------------
@@ -141,7 +149,8 @@ interactive_mode() {
     if [[ "$ACTION" == "push" || "$ACTION" == "build-push" ]]; then
         if [[ -z "$DOCKER_USERNAME" ]]; then
             echo ""
-            read -r -p "請輸入 Docker Hub 使用者名稱: " DOCKER_USERNAME
+            read -r -p "請輸入 Docker Hub 使用者名稱 [預設: sacahan]: " input_username
+            DOCKER_USERNAME="${input_username:-sacahan}"
         fi
     fi
 }
@@ -175,12 +184,24 @@ build_image() {
     PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
     cd "$PROJECT_ROOT"
     
+    # Use global variables
+    local vite_api_base_url="$VITE_API_BASE_URL"
+    local vite_google_client_id="$VITE_GOOGLE_CLIENT_ID"
+
     # 建置參數
     BUILD_ARGS=(
         "--platform" "$PLATFORMS"
         "-t" "$FULL_IMAGE_NAME"
         "-f" "scripts/Dockerfile"
     )
+
+    if [[ -n "$vite_api_base_url" ]]; then
+        BUILD_ARGS+=("--build-arg" "VITE_API_BASE_URL=$vite_api_base_url")
+    fi
+
+    if [[ -n "$vite_google_client_id" ]]; then
+        BUILD_ARGS+=("--build-arg" "VITE_GOOGLE_CLIENT_ID=$vite_google_client_id")
+    fi
     
     # 如果需要推送
     if [[ "$push_flag" == "push" ]]; then
