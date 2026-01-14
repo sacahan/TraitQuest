@@ -238,7 +238,7 @@ function renderClassCard(code: string, title: string, className: string, desc: s
     yellow: 'hover:border-yellow-500 hover:shadow-[0_0_20px_rgba(234,179,8,0.3)] text-yellow-400'
   }
 
-  const imageSrc = `/assets/images/classes/cls_${code.toLowerCase()}.png`
+  const imageSrc = `/assets/images/classes/cls_${code.toLowerCase()}.webp`
 
   return (
     <div className={`group relative bg-[#183426] rounded-xl border-2 border-[#31684d] p-5 transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden ${colorMap[color]}`}>

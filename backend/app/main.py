@@ -195,27 +195,51 @@ async def api_health_check():
 if STATIC_DIR.exists() and STATIC_DIR.is_dir():
     from fastapi.staticfiles import StaticFiles
     from fastapi.responses import FileResponse
+    from starlette.responses import Response
+    from starlette.types import Scope
+
+    class CachedStaticFiles(StaticFiles):
+        """自定義靜態檔案服務，對特定資源加入長期快取標頭"""
+
+        async def get_response(self, path: str, scope: Scope) -> Response:
+            response = await super().get_response(path, scope)
+            # /assets 底下的資源通常包含 hash 或為靜態圖片，設定長期快取
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+            return response
 
     # 掛載 assets 目錄（JS/CSS/圖片等）
     assets_dir = STATIC_DIR / "assets"
     if assets_dir.exists():
-        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+        app.mount(
+            "/assets", CachedStaticFiles(directory=str(assets_dir)), name="assets"
+        )
 
     # SPA Fallback：所有非 API 路徑返回 index.html
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
         """SPA 路由 fallback：返回 index.html 讓前端路由處理"""
-        # 嘗試返回靜態檔案
         file_path = STATIC_DIR / full_path
-        if file_path.exists() and file_path.is_file():
-            return FileResponse(file_path)
 
-        # 否則返回 index.html（SPA fallback）
+        # 1. 嘗試返回靜態檔案（如 robots.txt, favicon.ico 等不在 assets 內的檔案）
+        if file_path.exists() and file_path.is_file():
+            response = FileResponse(file_path)
+            if file_path.suffix in [".html", ".json"]:
+                response.headers["Cache-Control"] = "no-cache, must-revalidate"
+            else:
+                response.headers["Cache-Control"] = (
+                    "public, max-age=31536000, immutable"
+                )
+            return response
+
+        # 2. 否則返回 index.html（SPA fallback）
         index_path = STATIC_DIR / "index.html"
         if index_path.exists():
-            return FileResponse(index_path)
+            response = FileResponse(index_path)
+            # index.html 絕對不能快取，以確保使用者能拿到最新的 JS/CSS 引用
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
+            return response
 
-        # 如果沒有 index.html，返回 API root
+        # 3. 如果連 index.html 都沒有，返回 API root
         return {"message": "Welcome to TraitQuest API", "status": "active"}
 
     logger.info("✅ [StaticFiles] 靜態檔案服務已啟用：/app/static")

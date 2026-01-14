@@ -36,7 +36,7 @@ const MbtiPanel = ({ result }: MbtiPanelProps) => {
                 <div
                     className="aspect-[4/5] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
                     style={{
-                        backgroundImage: `url(/assets/images/classes/${result.class_id?.toLowerCase() || 'civilian'}.png)`
+                        backgroundImage: `url(/assets/images/classes/${result.class_id?.toLowerCase() || 'civilian'}.webp)`
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0e1f15] via-[#0e1f15]/20 to-transparent"></div>

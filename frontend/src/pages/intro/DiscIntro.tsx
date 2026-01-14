@@ -187,7 +187,7 @@ function renderStanceCard(type: string, title: string, desc: string, color: stri
     blue: 'c'
   }
 
-  const imageSrc = `/assets/images/stances/stn_${imageKeyMap[color]}.png`;
+  const imageSrc = `/assets/images/stances/stn_${imageKeyMap[color]}.webp`;
 
   return (
     <div className={`relative p-8 rounded-3xl border-2 transition-all duration-500 group overflow-hidden ${colorMap[color]}`}>

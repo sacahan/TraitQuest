@@ -149,7 +149,7 @@ const EnneagramIntro: React.FC = () => {
 function renderRaceCard(type: string, race: string, desc: string, _color: string) {
   const num = type.split('號')[0];
   const role = type.split('：')[1] || type;
-  const imageSrc = `/assets/images/races/race_${num}.png`;
+  const imageSrc = `/assets/images/races/race_${num}.webp`;
 
   return (
     <div className="relative group p-8 rounded-2xl bg-[#14261d] border border-white/5 hover:border-primary/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(11,218,115,0.15)] overflow-hidden">

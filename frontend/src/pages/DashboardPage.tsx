@@ -271,7 +271,7 @@ const DashboardPage = () => {
                                         <div
                                             className="aspect-[21/24] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
                                             style={{
-                                                backgroundImage: `url(/assets/images/races/race_${profile.race_id?.match(/RACE_(\d+)/)?.[1] || '1'}.png)`
+                                                backgroundImage: `url(/assets/images/races/race_${profile.race_id?.match(/RACE_(\d+)/)?.[1] || '1'}.webp)`
                                             }}
                                         >
                                             <div className="absolute inset-0 bg-gradient-to-t from-[#0e1f15] via-[#0e1f15]/30 to-transparent"></div>
@@ -329,7 +329,7 @@ const DashboardPage = () => {
                                             <div
                                                 className="aspect-[11/12] w-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-700 ease-out relative"
                                                 style={{
-                                                    backgroundImage: `url(/assets/images/stances/${profile.stance_id?.toLowerCase() || 'stn_d'}.png)`
+                                                    backgroundImage: `url(/assets/images/stances/${profile.stance_id?.toLowerCase() || 'stn_d'}.webp)`
                                                 }}
                                             >
                                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0e1f15] via-[#0e1f15]/40 to-transparent"></div>

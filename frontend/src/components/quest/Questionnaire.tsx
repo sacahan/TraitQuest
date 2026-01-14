@@ -180,7 +180,7 @@ const Questionnaire = () => {
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
                 style={{
-                  backgroundImage: "url('/assets/images/quest_bg.png')"
+                  backgroundImage: "url('/assets/images/quest_bg.webp')"
                 }}
               ></div>
             </div>

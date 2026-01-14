@@ -219,7 +219,7 @@ const LaunchPage: React.FC = () => {
                             <div className="w-full h-full rounded-full overflow-hidden border-4 border-[#064e3b] relative group">
                                 <div
                                     className="w-full h-full bg-center bg-cover bg-no-repeat transition-transform duration-1000 ease-in-out group-hover:scale-110"
-                                    style={{ backgroundImage: 'url("/assets/images/quest_bg.png")' }}
+                                    style={{ backgroundImage: 'url("/assets/images/quest_bg.webp")' }}
                                 />
                             </div>
 

@@ -87,7 +87,7 @@ const DiscPanel = ({ result }: DiscPanelProps) => {
                     className="aspect-[4/5] w-full bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative"
                     style={{
                         // Use generated stance assets
-                        backgroundImage: `url(/assets/images/stances/${stanceId?.toLowerCase()}.png)`
+                        backgroundImage: `url(/assets/images/stances/${stanceId?.toLowerCase()}.webp)`
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0d] via-[#0a0f0d]/40 to-transparent"></div>

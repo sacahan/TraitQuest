@@ -53,7 +53,7 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
                     className={`${fullHeight ? 'h-full w-full' : 'aspect-[4/5] w-full'} bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative`}
                     style={{
                         backgroundImage: `url(${avatarUrl ||
-                            (classId && classId !== "???" ? `/assets/images/classes/${classId.toLowerCase()}.png` : '/assets/images/classes/civilian.png')
+                            (classId && classId !== "???" ? `/assets/images/classes/${classId.toLowerCase()}.webp` : '/assets/images/classes/civilian.webp')
                             })`
                     }}
                 >

@@ -187,7 +187,7 @@ const AnalysisPage = () => {
                             <div className="relative size-32 md:size-40 rounded-full border-4 border-[#293829] bg-[#1a2e1a] overflow-hidden flex items-center justify-center">
                                 <div
                                     className="w-full h-full bg-cover bg-center"
-                                    style={{ backgroundImage: 'url("/assets/images/quest_bg.png")' }}
+                                    style={{ backgroundImage: 'url("/assets/images/quest_bg.webp")' }}
                                 />
                             </div>
                             <div className="absolute bottom-2 right-2 bg-[#1a2e1a] rounded-full p-1.5 border border-[#293829]">
