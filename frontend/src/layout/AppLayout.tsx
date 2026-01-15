@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import BackgroundEffects from './BackgroundEffects';
+import BackToTop from '../components/ui/BackToTop';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -38,6 +39,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({
       </main>
 
       <Footer />
+
+      {/* 手機版返回頂部按鈕 */}
+      <BackToTop />
     </div>
   );
 };

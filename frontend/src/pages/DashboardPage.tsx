@@ -173,7 +173,6 @@ const DashboardPage = () => {
                     {/* Left: Hero Portrait */}
                     <div className="lg:col-span-5 flex flex-col gap-6">
                         <HeroPanel
-                            avatarUrl={profileData.heroAvatarUrl}
                             className={identity.class?.name}
                             classId={identity.class?.id}
                             classDescription={identity.class?.description}
@@ -193,7 +192,7 @@ const DashboardPage = () => {
                                         style={{ width: `${Math.max((profileData.expProgress || 0) * 100, 2)}%` }}
                                     ></div>
                                 </div>
-                                <span className="text-gray-400 font-mono whitespace-nowrap">{exp} / {profileData.expToNextLevel || '???'} XP</span>
+                                <span className="text-gray-400 font-mono whitespace-nowrap">{exp} XP</span>
                             </div>
                         </div>
                     </div>

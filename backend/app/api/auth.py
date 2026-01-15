@@ -39,7 +39,7 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
         user = User(
             google_id=google_id,
             display_name=name,
-            hero_avatar_url="/assets/images/classes/civilian.png",
+            hero_avatar_url="/assets/images/classes/civilian.webp",
         )
         db.add(user)
         await db.commit()
@@ -51,7 +51,7 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
     return {
         "userId": str(user.id),
         "displayName": user.display_name,
-        "avatarUrl": user.hero_avatar_url or "/assets/images/classes/civilian.png",
+        "avatarUrl": user.hero_avatar_url or "/assets/images/classes/civilian.webp",
         "level": user.level,
         "exp": user.exp,
         "isNewUser": is_new_user,
@@ -127,21 +127,14 @@ async def get_me(
 
     # 計算下一級所需總經驗值
     next_level_total_exp = get_exp_for_level(current_level + 1)
-    current_level_exp_threshold = get_exp_for_level(current_level)
 
-    # 計算當前等級進度
-    exp_in_current_level = current_exp - current_level_exp_threshold
-    exp_needed_for_next = next_level_total_exp - current_level_exp_threshold
-
-    if exp_needed_for_next > 0:
-        exp_progress = max(0.0, min(1.0, exp_in_current_level / exp_needed_for_next))
-    else:
-        exp_progress = 0.0
+    # 計算等級進度
+    exp_progress = max(0.0, min(1.0, current_exp / next_level_total_exp))
 
     return {
         "userId": str(user.id),
         "displayName": user.display_name,
-        "avatarUrl": user.hero_avatar_url or "/assets/images/classes/civilian.png",
+        "avatarUrl": user.hero_avatar_url or "/assets/images/classes/civilian.webp",
         "heroAvatarUrl": user.hero_avatar_url,
         "heroClassId": user.hero_class_id,
         "level": user.level,

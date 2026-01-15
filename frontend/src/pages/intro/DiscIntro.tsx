@@ -156,7 +156,7 @@ const DiscIntro: React.FC = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="w-full bg-[#102216] py-20">
+      <section className="w-full bg-[#102216] py-20 px-4">
         <div className="max-w-4xl mx-auto px-6 text-center bg-[#1a3323] p-10 rounded-3xl border-2 border-primary shadow-[0_0_30px_rgba(17,212,82,0.2)]">
           <h3 className="text-white text-4xl font-black mb-4">你的戰鬥架勢是什麼？</h3>
           <p className="text-[#90cbad] text-lg mb-8">透過 TraitQuest 獨家的心理地圖，找出你在壓力下的最佳戰鬥姿態。</p>

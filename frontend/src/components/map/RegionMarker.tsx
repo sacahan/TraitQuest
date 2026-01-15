@@ -18,12 +18,17 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
   const isConquered = region.status === 'CONQUERED'
   const IconComponent = ICON_MAP[region.icon || 'Sparkles'] || Sparkles
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
     if (isLocked) return
-    // For conquered regions, we let the popup handle the interaction
-    if (!isConquered) {
-      window.location.href = `/launch?type=${region.id}`
+
+    // For conquered regions, toggle popup on mobile/touch
+    if (isConquered) {
+      e.stopPropagation()
+      setIsHovered(!isHovered)
+      return
     }
+
+    window.location.href = `/launch?type=${region.id}`
   }
 
   return (
@@ -86,7 +91,20 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
           >
             {region.name}
             {isConquered && (
-              <span className="text-[9px] bg-primary/20 px-1.5 py-0.5 rounded text-primary border border-primary/30">已征服</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] bg-primary/20 px-1.5 py-0.5 rounded text-primary border border-primary/30">已征服</span>
+                {/* Mobile-only Rematch Action */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    window.location.href = `/launch?type=${region.id}`
+                  }}
+                  className="sm:hidden flex items-center gap-1 bg-red-600/90 hover:bg-red-500 px-2 py-0.5 rounded text-white text-[9px] font-bold border border-red-400/30 transition-colors shadow-lg shadow-red-900/40"
+                >
+                  <RotateCcw size={10} strokeWidth={3} />
+                  再戰
+                </button>
+              </div>
             )}
           </span>
         </div>

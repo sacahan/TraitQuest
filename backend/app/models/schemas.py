@@ -17,6 +17,7 @@ TraitQuest - 資料結構定義
 
 from pydantic import BaseModel, Field, field_validator
 from typing import List, Dict, Optional, Union
+from datetime import datetime
 from enum import Enum
 
 
@@ -257,6 +258,7 @@ class QuestReport(BaseModel):
     destiny_bonds: Optional[DestinyBonds] = Field(None, description="命運羈絆")
     level_info: LevelInfo = Field(..., description="升級資訊")
     hero_chronicle: Optional[str] = Field(None, description="該次測驗生成的英雄史詩")
+    completed_at: Optional[datetime] = Field(None, description="測驗完成時間")
 
 
 # =============================================================================

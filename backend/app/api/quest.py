@@ -149,6 +149,10 @@ async def get_quest_report(
     if quest.hero_chronicle:
         report_data["hero_chronicle"] = quest.hero_chronicle
 
+    # [FIX] 注入 completed_at
+    if quest.completed_at:
+        report_data["completed_at"] = quest.completed_at
+
     return report_data
 
 
@@ -164,7 +168,7 @@ async def get_map_regions():
             "status": "CONQUERED",
             "progress": 100,
             "color": "#22d3ee",
-            "preview_image": "/assets/images/map/region_mbti.png"
+            "preview_image": "/assets/images/map/region_mbti.webp",
         },
         {
             "id": "bigfive",
@@ -174,7 +178,7 @@ async def get_map_regions():
             "status": "UNLOCKED",
             "progress": 0,
             "color": "#10b981",
-            "preview_image": "/assets/images/map/region_big5.png"
+            "preview_image": "/assets/images/map/region_big5.webp",
         },
         {
             "id": "enneagram",
@@ -184,7 +188,7 @@ async def get_map_regions():
             "status": "UNLOCKED",
             "progress": 0,
             "color": "#a78bfa",
-            "preview_image": "/assets/images/map/region_enneagram.png"
+            "preview_image": "/assets/images/map/region_enneagram.webp",
         },
         {
             "id": "disc",
@@ -194,7 +198,7 @@ async def get_map_regions():
             "status": "UNLOCKED",
             "progress": 0,
             "color": "#dc2626",
-            "preview_image": "/assets/images/map/region_disc.png"
+            "preview_image": "/assets/images/map/region_disc.webp",
         },
         {
             "id": "gallup",
@@ -204,6 +208,6 @@ async def get_map_regions():
             "status": "LOCKED",
             "progress": 40,
             "color": "#fbbf24",
-            "preview_image": "/assets/images/map/region_gallup.png"
-        }
+            "preview_image": "/assets/images/map/region_gallup.webp",
+        },
     ]

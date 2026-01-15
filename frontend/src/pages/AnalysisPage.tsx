@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuestStore } from '../stores/questStore';
 import apiClient from '../services/apiClient';
 import {
-    TrendingUp, ChevronRight, Shield, Compass, Users, Sparkles
+    TrendingUp, ChevronRight, Shield, Compass, Users, Sparkles, History
 } from 'lucide-react';
 import AppLayout from '../layout/AppLayout';
 import MagicHourglass from '../components/ui/MagicHourglass';
@@ -243,6 +243,38 @@ const AnalysisPage = () => {
                                 )}
                             </div>
                         </motion.div>
+
+
+                        {/* Last Test Time - RPG Style */}
+                        {profileData.completed_at && (
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="mt-3 w-full group relative"
+                            >
+                                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-emerald-500/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+                                <div className="relative flex items-center justify-between p-3 bg-[#1a2e1a]/40 border border-white/5 rounded-lg backdrop-blur-sm group-hover:border-primary/30 transition-colors">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-1.5 rounded-md bg-primary/10 text-primary border border-primary/20 group-hover:shadow-[0_0_10px_rgba(17,212,82,0.2)] transition-shadow">
+                                            <History className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] text-primary/60 font-black tracking-[0.2em] uppercase leading-tight">SYNC TIMESTAMP</span>
+                                            <span className="text-xs text-gray-300 font-mono mt-1 tracking-wider">
+                                                {new Date(profileData.completed_at).toLocaleString('zh-TW', {
+                                                    year: 'numeric',
+                                                    month: '2-digit',
+                                                    day: '2-digit',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                    hour12: false
+                                                })}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
                     </div>
 
                     {/* Right Column: Specialized Result Panels */}
@@ -254,7 +286,6 @@ const AnalysisPage = () => {
                         {activeQuestId === 'gallup' && <GallupPanel result={profileData} />}
                     </div>
                 </div>
-
 
                 {/* Bottom Section: Destiny Info & Actions */}
                 <div className="w-full max-w-[1200px] mx-auto space-y-12">
@@ -390,17 +421,20 @@ const AnalysisPage = () => {
 
                     {/* 按鈕區 */}
                     <div className="w-full flex flex-col items-center gap-6 pb-12">
-                        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
+
+
+                        {/* Secondary Actions */}
+                        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg opacity-80">
                             <button
                                 onClick={() => {
                                     resetQuest();
                                     navigate('/dashboard');
                                 }}
-                                className="flex-1 group relative overflow-hidden rounded-full bg-primary px-8 py-4 text-[#10231a] font-extrabold shadow-[0_0_20px_rgba(54,226,54,0.4)] transition-all hover:shadow-[0_0_30px_rgba(54,226,54,0.6)] hover:scale-105 active:scale-95"
+                                className="flex-1 rounded-full border border-white/10 bg-[#0a1510] px-6 py-3 text-gray-300 font-bold hover:bg-white/5 transition-all active:scale-95"
                             >
-                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                <span className="flex items-center justify-center gap-2">
                                     前往公會大廳
-                                    <ChevronRight className="w-5 h-5" />
+                                    <ChevronRight className="w-4 h-4" />
                                 </span>
                             </button>
                             <button
@@ -408,7 +442,7 @@ const AnalysisPage = () => {
                                     resetQuest();
                                     navigate('/map');
                                 }}
-                                className="flex-1 rounded-full border border-primary/30 bg-[#1a2e1a] px-8 py-4 text-white font-bold hover:bg-primary/10 transition-all hover:border-primary active:scale-95"
+                                className="flex-1 rounded-full border border-white/10 bg-[#0a1510] px-6 py-3 text-gray-300 font-bold hover:bg-white/5 transition-all active:scale-95"
                             >
                                 返回地圖
                             </button>

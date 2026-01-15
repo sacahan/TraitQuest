@@ -18,6 +18,7 @@ export const Header = () => {
   const { login } = useGoogleAuth();
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // 點擊外部關閉下拉選單
@@ -41,6 +42,7 @@ export const Header = () => {
   };
 
   return (
+    <>
     <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-background-light/80 dark:bg-[#102216]/80 border-b border-solid border-b-[#23482f]">
       <div className="w-full px-4 md:px-10 py-3">
         <div className="flex items-center justify-between w-full">
@@ -144,8 +146,94 @@ export const Header = () => {
               </CustomGoogleAuthButton>
             )}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-white p-2"
+            onClick={() => setMobileMenuOpen(true)}
+            aria-label="menu"
+            data-testid="mobile-menu-btn"
+          >
+            <span className="material-symbols-outlined text-3xl">menu</span>
+          </button>
         </div>
       </div>
-    </header>
+
+      </header>
+
+      {/* Mobile Navigation Sidebar/Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-[#0a1510] md:hidden flex flex-col p-6 animate-in fade-in slide-in-from-right duration-300 border-l-4 border-primary/20">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-xl font-display font-black text-white tracking-tight">TraitQuest</h2>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-white p-2 hover:bg-white/10 rounded-full transition-colors"
+            >
+              <span className="material-symbols-outlined text-3xl">close</span>
+            </button>
+          </div>
+
+          <nav className="flex flex-col gap-4">
+            <Link
+              to="/map"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all group"
+            >
+              <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">map</span>
+              <span className="text-lg font-bold text-white">心靈大陸</span>
+            </Link>
+
+            <Link
+              to="/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all group"
+            >
+              <span className="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">castle</span>
+              <span className="text-lg font-bold text-white">公會大廳</span>
+            </Link>
+
+            <div className="h-[1px] bg-white/10 my-2"></div>
+            <p className="text-xs font-bold text-white/40 uppercase tracking-widest px-2 mb-2">副本試煉</p>
+
+            {introPages.map((page) => (
+              <Link
+                key={page.path}
+                to={page.path}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-4 p-3 rounded-lg hover:bg-primary/10 transition-colors group"
+              >
+                <span className="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">{page.icon}</span>
+                <span className="text-base font-medium text-gray-300 group-hover:text-white transition-colors">{page.name}</span>
+              </Link>
+            ))}
+          </nav>
+
+          {isAuthenticated && (
+            <div className="mt-auto pt-6 border-t border-white/10">
+              <div className="flex items-center gap-3 mb-6">
+                <div
+                  className="size-10 rounded-full bg-cover bg-center border border-primary/30"
+                  style={{ backgroundImage: `url(${user?.avatarUrl})` }}
+                ></div>
+                <div className="flex flex-col">
+                  <span className="text-white font-bold">{user?.displayName}</span>
+                  <span className="text-xs text-primary/80 uppercase tracking-wider">冒險者</span>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full py-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 font-bold hover:bg-red-500/20 transition-colors"
+              >
+                登出
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </>
   );
 };

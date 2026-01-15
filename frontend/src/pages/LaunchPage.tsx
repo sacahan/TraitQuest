@@ -328,9 +328,9 @@ const LaunchPage: React.FC = () => {
                         <div className="flex flex-col sm:flex-row gap-5 pt-2">
                             <button
                                 onClick={handleStart}
-                                className="group relative flex-1 h-16 bg-gradient-to-r from-[#059669] to-[#10b981] hover:to-[#34d399] text-white font-bold text-lg rounded-2xl overflow-hidden transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_35px_rgba(52,211,153,0.5)] border border-white/10 active:scale-95"
+                                className="group relative w-full sm:flex-1 h-16 bg-gradient-to-r from-[#059669] to-[#10b981] hover:to-[#34d399] text-white font-bold text-lg rounded-2xl overflow-hidden transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_35px_rgba(52,211,153,0.5)] border border-white/10 active:scale-95"
                             >
-                                <div className="relative flex items-center justify-center gap-3">
+                                <div className="relative h-full flex items-center justify-center gap-3">
                                     <span>準備好了，接受試煉</span>
                                     <span className="material-symbols-outlined group-hover:translate-x-1 group-hover:scale-110 transition-transform">auto_awesome</span>
                                 </div>

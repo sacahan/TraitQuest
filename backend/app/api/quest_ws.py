@@ -375,7 +375,7 @@ async def quest_ws_endpoint(
 
                     # 更新頭像與職業 ID（如果是 MBTI 測驗）
                     if hero_class_id:
-                        filename = hero_class_id.lower() + ".png"
+                        filename = hero_class_id.lower() + ".webp"
                         update_values["hero_class_id"] = hero_class_id
                         update_values["hero_avatar_url"] = f"/assets/images/classes/{filename}"
                     

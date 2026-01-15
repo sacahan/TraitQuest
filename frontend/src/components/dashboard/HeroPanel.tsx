@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import ActionButtons from '../shared/ActionButtons';
 
 interface HeroPanelProps {
-    avatarUrl?: string;
     className?: string;     // Hero Class Name text
     classId?: string;
     classDescription?: string;
@@ -12,7 +11,6 @@ interface HeroPanelProps {
 }
 
 const HeroPanel: React.FC<HeroPanelProps> = ({
-    avatarUrl,
     className = "未知職業",
     classId = "???",
     classDescription = "尚未覺醒的靈魂...",
@@ -50,11 +48,11 @@ const HeroPanel: React.FC<HeroPanelProps> = ({
 
             <div className={`relative rounded-xl overflow-hidden border border-primary/50 shadow-[0_0_15px_rgba(17,212,82,0.1)] bg-[#0e1f15] transition-all duration-300 group-hover:border-primary ${fullHeight ? 'h-full flex-1' : ''}`}>
                 <div
-                    className={`${fullHeight ? 'h-full w-full' : 'aspect-[4/5] w-full'} bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative`}
+                    className={`${fullHeight ? 'h-full w-full min-h-[450px]' : 'aspect-[4/5] w-full'} bg-center bg-no-repeat bg-cover group-hover:scale-102 transition-transform duration-700 ease-out relative`}
                     style={{
-                        backgroundImage: `url(${avatarUrl ||
-                            (classId && classId !== "???" ? `/assets/images/classes/${classId.toLowerCase()}.webp` : '/assets/images/classes/civilian.webp')
-                            })`
+                        backgroundImage: `url(${classId && classId !== "???"
+                            ? `/assets/images/classes/${classId.toLowerCase()}.webp`
+                            : '/assets/images/classes/civilian.webp'})`
                     }}
                 >
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0e1f15] via-[#0e1f15]/20 to-transparent"></div>
