@@ -28,6 +28,7 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
     google_id = google_info["sub"]
     name = google_info.get("name")
     picture = google_info.get("picture")
+    email = google_info.get("email")
 
     # Check if user exists
     result = await db.execute(select(User).where(User.google_id == google_id))
@@ -38,12 +39,19 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
         is_new_user = True
         user = User(
             google_id=google_id,
+            email=email,
             display_name=name,
             hero_avatar_url="/assets/images/classes/civilian.webp",
         )
         db.add(user)
         await db.commit()
         await db.refresh(user)
+    else:
+        # 現有用戶：若 email 為空則更新
+        if email and not user.email:
+            user.email = email
+            await db.commit()
+            await db.refresh(user)
 
     # Create access token
     access_token = create_access_token(data={"sub": str(user.id)})

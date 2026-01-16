@@ -9,6 +9,7 @@ class User(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     google_id = Column(String, unique=True, nullable=False, index=True)
+    email = Column(String, nullable=True, index=True)
     display_name = Column(String)
     level = Column(Integer, default=1)
     exp = Column(Integer, default=0)
