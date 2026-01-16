@@ -76,7 +76,7 @@ class LevelSystemService:
         if level >= 16:
             return 15
         else:
-            return 3
+            return 10
 
     @staticmethod
     def get_quest_mode(level: int) -> dict:
