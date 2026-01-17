@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>TraitQuest - 心靈大陸</title>
+    <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <!-- BEGIN: Custom CSS -->
+    <style data-purpose="layout-and-theme">
+        body {
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuC8eAF9uaJPwJiOl4Xk-0IIsGHke6xyDvHuolY6P0iqsKoMC-hxjPRzG2qDpA1JKaSDAzZxeTPuQB66Xnm9D32nXNURbLSVpP9TacbieQpS4Y6uCRu7rqkH6b9c9-zaiaElC_c77ypUX3E_SPQarQXLkkzKxt5sJm6G-1rlx0cd2CASjdNFVo73FPDGa58JKcGWoWdPzY_dXGzy8FjmHmo-5Th81Fqk_X5LrTBZIfvSpPeVRaEnawY8LalPpAJFYGWsnnE-I41hQKhh);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: "Times New Roman", "Noto Serif TC", serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* The main parchment container */
+        .scroll-container {
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuC1BLnebzkf1Ms97nsCUQUKP4ZN8VYI3DBjMKQgXGbmX8go4rnap8tCMVfpABJbw_Z_rm027K_0jK0WfXIFcR-IQQnKG1vYA4oFp93sbUYpxN-32Iunn8t_um42IotnxF4zFFjqCii089DVh_IvgC5WoruKfiPyBfNL67i5i7x_4FcpKzxaE_9BSIgrtQf_tT6evaAkIHgD1nVbHOGiBvErwDwcW2RNdtPH6muToHkZQrq2b29C4_W_-MGp8JDoB1n0grD7-mt48UJj);
+            background-size: cover;
+            /* Ensure texture covers the div */
+            border: 15px solid #4a5d4a;
+            /* Dark mossy green stone color */
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+            max-width: 600px;
+            width: 90%;
+            /* Responsive width */
+            margin: 50px auto;
+            padding: 40px;
+            position: relative
+        }
+    </style>
+    <style data-purpose="components">
+        /* Avatar Styling */
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #50ffb0;
+            box-shadow: 0 0 20px #50ffb0;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto
+        }
+
+        /* Text Effects */
+        .neon-text {
+            color: #50ffb0;
+            text-shadow: 0 0 10px #50ffb0;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            font-weight: 900;
+            margin-top: 1rem;
+        }
+
+        /* Instructions Box (Dark Box) */
+        .instructions-box {
+            background-color: rgba(30, 40, 30, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #50ffb0;
+            margin-top: 20px;
+            color: #eee
+        }
+
+        /* Primary Action Button (Matches Header Style) */
+        .action-button {
+            background-color: #11D452;
+            color: #112217;
+            border-radius: 9999px;
+            /* rounded-full */
+            height: 40px;
+            /* h-10 */
+            padding: 0 24px;
+            /* px-6 */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.875rem;
+            /* text-sm */
+            font-weight: 700;
+            /* font-bold */
+            text-decoration: none;
+            box-shadow: 0 0 15px rgba(17, 212, 82, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            overflow: hidden;
+            min-width: 100px;
+        }
+
+        .action-button:hover {
+            background-color: #0fb847;
+            /* hover:bg-primary-hover */
+            transform: scale(1.05);
+            /* hover:scale-105 */
+        }
+
+        .action-button:active {
+            transform: scale(0.95);
+            /* active:scale-95 */
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .space-y-4>*+* {
+            margin-top: 1rem;
+        }
+
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+
+        .text-base {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+
+        .font-black {
+            font-weight: 900;
+        }
+
+        .font-serif {
+            font-family: serif;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .leading-relaxed {
+            line-height: 1.625;
+        }
+
+        .text-green-800 {
+            color: #166534;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .pl-2 {
+            padding-left: 0.5rem;
+        }
+
+        .pl-1 {
+            padding-left: 0.25rem;
+        }
+
+        .mt-8 {
+            margin-top: 2rem;
+        }
+
+        .mt-10 {
+            margin-top: 2.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+
+        .z-10 {
+            z-index: 10;
+        }
+
+        .text-white\/50 {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+
+        .tracking-\[0\.2em\] {
+            letter-spacing: 0.2em;
+        }
+
+        .opacity-80 {
+            opacity: 0.8;
+        }
+
+        /* ===== RWD Media Queries ===== */
+        @media only screen and (max-width: 600px) {
+            .scroll-container {
+                padding: 24px 16px;
+                margin: 20px auto;
+                border-width: 10px;
+                width: 95%;
+            }
+
+            .avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .neon-text {
+                font-size: 1.5rem;
+                line-height: 1.8rem;
+            }
+
+            .text-lg {
+                font-size: 1rem;
+                line-height: 1.5rem;
+            }
+
+            .text-base {
+                font-size: 0.875rem;
+                line-height: 1.25rem;
+            }
+
+            .instructions-box {
+                padding: 16px;
+            }
+
+            .action-button {
+                width: 100%;
+                padding: 0 16px;
+            }
+        }
+
+        @media only screen and (max-width: 400px) {
+            .neon-text {
+                font-size: 1.25rem;
+                line-height: 1.5rem;
+            }
+
+            .scroll-container {
+                padding: 16px 12px;
+                border-width: 8px;
+            }
+
+            .avatar {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+    <!-- END: Custom CSS -->
+</head>
+
+<body class="antialiased">
+    <!-- BEGIN: Main Scroll Container -->
+    <!-- This represents the physical parchment/scroll the user is reading -->
+    <main class="scroll-container">
+        <!-- BEGIN: Header Section -->
+        <header class="text-center space-y-4 mb-8">
+            <!-- Avatar -->
+            <img alt="Guide Abby" class="avatar" src="{{ avatar_src }}" />
+            <!-- Main Title -->
+            <h1 class="text-4xl font-black neon-text mt-4">來到心靈大陸的勇者</h1>
+            <!-- Quote -->
+            <blockquote class="italic text-[#2f3f2f] text-lg mt-2 font-serif" style="color: #2f3f2f;">
+                「冒險者的靈魂，是通往真實之徑的唯一鑰匙。」
+            </blockquote>
+            <!-- Intro Text -->
+            <p class="text-[#333] text-base leading-relaxed mt-4 font-semibold" style="color: #333;">
+                歡迎來到 TraitQuest！這是一份由嚮導 Abby 為你準備的心靈契約。在正式踏上旅程前，請仔細閱讀卷軸內容。
+            </p>
+        </header>
+        <!-- END: Header Section -->
+        <!-- BEGIN: Section 1 - Instructions -->
+        <!-- Dark box with neon accents for high contrast instructions -->
+        <section class="instructions-box" data-purpose="instructions">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-[#50ffb0]">
+                <span>≡</span> 遊玩指示
+            </h2>
+            <ul class="space-y-3 pl-2" style="list-style: none; padding-left: 0;">
+                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
+                    <span class="text-xl">�️</span>
+                    <span>前往「星圖」選擇試煉區域</span>
+                </li>
+                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
+                    <span class="text-xl">⚔️</span>
+                    <span>接受試煉並回答心靈的聲音</span>
+                </li>
+                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
+                    <span class="text-xl">📜</span>
+                    <span>解鎖屬於你的英雄檔案與天賦</span>
+                </li>
+            </ul>
+        </section>
+        <!-- END: Section 1 - Instructions -->
+        <!-- BEGIN: Section 2 - Notes -->
+        <!-- Plain text directly on parchment for notes -->
+        <section class="mt-8 px-2" data-purpose="notes">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-[#2f3f2f]" style="color: #2f3f2f;">
+                <span>🛡️</span> 冒險注意事項
+            </h2>
+            <ul class="space-y-3 text-[#333] font-medium pl-1" style="color: #333; list-style: none; padding-left: 0;">
+                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
+                    <span class="text-green-800 mt-1">🟢</span>
+                    <span>請在安靜且不受干擾的環境下進行測驗，以降低靈魂的雜訊。</span>
+                </li>
+                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
+                    <span class="text-green-800 mt-1">🟢</span>
+                    <span>直覺是勇者最強大的武器，每個問題請在 10 秒內作答。</span>
+                </li>
+            </ul>
+        </section>
+        <!-- END: Section 2 - Notes -->
+        <!-- BEGIN: Action Footer -->
+        <footer class="mt-10 flex flex-col items-center">
+            <!-- Primary Action Button -->
+            <a href="{{ action_url }}" class="action-button">
+                <span>啟程：傳送至冒險起點</span>
+            </a>
+            <!-- Technical Flavor Text -->
+            <div class="text-[#50ffb0] text-xs tracking-[0.2em] mt-3 font-sans font-bold opacity-80">
+                TELEPORTATION RUNE V1.0
+            </div>
+        </footer>
+        <!-- END: Action Footer -->
+    </main>
+    <!-- END: Main Scroll Container -->
+    <!-- BEGIN: Page Footer -->
+    <!-- Copyright info outside the scroll container -->
+    <footer class="mb-8 text-center text-white/50 text-sm font-sans z-10">
+        <p>TraitQuest © 2026</p>
+    </footer>
+    <!-- END: Page Footer -->
+</body>
+
+</html>

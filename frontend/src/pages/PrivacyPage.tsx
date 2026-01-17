@@ -187,7 +187,7 @@ const PrivacyPage = () => {
                                     <span className="text-white font-bold">資料刪除</span>
                                 </div>
                                 <p className="text-sm text-[#90cbad]">
-                                    您有權要求刪除您的資料。您可以透過發送電子郵件至 <a href="mailto:support@brianhan.cc" className="text-primary hover:underline">sacahan@gmail.com</a>，或使用應用程式設定中的「刪除帳號」功能來申請資料刪除。收到申請後，我們將在 <strong>30 天內</strong>永久刪除您的資料。
+                                    您有權要求刪除您的資料。您可以透過發送電子郵件至 <a href="mailto:admin@brianhan.cc" className="text-primary hover:underline">admin@brianhan.cc</a>，或使用應用程式設定中的「刪除帳號」功能來申請資料刪除。收到申請後，我們將在 <strong>30 天內</strong>永久刪除您的資料。
                                 </p>
                             </div>
                         </div>

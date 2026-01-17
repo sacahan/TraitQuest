@@ -67,10 +67,10 @@ const AboutPage = () => {
                 {/* Guild Masters */}
                 <section className="w-full bg-[#0d1c14] py-20 border-y border-[#23482f]">
                     <div className="max-w-[1000px] mx-auto px-6 text-center">
-                        <h2 className="text-white text-3xl font-black mb-12">Founders</h2>
+                        <h2 className="text-white text-3xl font-black mb-12">Dei Creatores</h2>
                         <div className="flex flex-wrap justify-center gap-12">
                             <div className="flex flex-col items-center gap-4">
-                                <div className="relative size-32 group">
+                                <a href="mailto:admin@brianhan.cc" className="relative size-32 group cursor-pointer">
                                     <div
                                         className="absolute inset-0 bg-primary opacity-20 blur-xl group-hover:opacity-60 transition-opacity rounded-full"
                                     ></div>
@@ -83,7 +83,7 @@ const AboutPage = () => {
                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGJeAbTo7PcyMoWcIJT9UPoUDWxw2WlFhtUtOL1mXw_ZSYNw_qOlJr0UDaPYcn5Q23MKUGAkcVw1_39yn1UJcbrMtNFURwu9_B4U1B4u-gWdU45jZ9VXu13omJjBAjiiKC47uaKZOcn0nYxfn0D8Ssak0ealxlXdHj15FHNeUOceIeEsAekvEGEpQvwmY4H7U9lgxOxc8xRJF74FnQ2BeLC9SvCoOjs2oQZegqKr15AB2dFaL_RJNPFKpVo0HYgNKaiYrQXrVYZPKW"
                                         />
                                     </div>
-                                </div>
+                                </a>
                                 <div>
                                     <h4 className="text-white font-bold text-xl">Brian Han</h4>
                                     <span className="text-primary text-xs font-mono uppercase tracking-widest">Architect</span>
@@ -91,7 +91,7 @@ const AboutPage = () => {
                             </div>
 
                             <div className="flex flex-col items-center gap-4">
-                                <div className="relative size-32 group">
+                                <a href="mailto:admin@brianhan.cc" className="relative size-32 group cursor-pointer">
                                     <div
                                         className="absolute inset-0 bg-primary opacity-20 blur-xl group-hover:opacity-60 transition-opacity rounded-full"
                                     ></div>
@@ -104,7 +104,7 @@ const AboutPage = () => {
                                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdgsdPqi5uGvwrf5iPWXEJC9qS8i9aTLpjHw3SiAV2TTttciCM3iZNUdRRPurYc2p92sLZgoPOMhkZDbN1mC4faxb2KKyofRy9P5uCJY-C22N-vAsHP76EH_60g3b-zk0wnyr38wNP8fpHLbX_XIHXmdO9At5o9JytdxUKLu2Fgt0gLU4JGL_uWVMbJhkaE-rh2QlFPisJ99D43_dTbqiCXh7lTlnLmHWsZ3HYuY_bNKyU_7vs6rTdJhmV91GcvmDPMYWmBFcHNN1k"
                                         />
                                     </div>
-                                </div>
+                                </a>
                                 <div>
                                     <h4 className="text-white font-bold text-xl">Abby Wang</h4>
                                     <span className="text-primary text-xs font-mono uppercase tracking-widest">Spirit Guide</span>

@@ -140,7 +140,7 @@ const TermsPage = () => {
                                     </h3>
                                     <p className="mb-3">您有權要求刪除您的資料。您可以透過以下方式申請：</p>
                                     <ul className="list-disc pl-5 space-y-2">
-                                        <li>發送電子郵件至 <a href="mailto:support@brianhan.cc" className="text-primary hover:underline">sacahan@gmail.com</a></li>
+                                        <li>發送電子郵件至 <a href="mailto:admin@brianhan.cc" className="text-primary hover:underline">admin@brianhan.cc</a></li>
                                         <li>使用應用程式設定中的「刪除帳號」功能</li>
                                     </ul>
                                     <p className="mt-3">收到申請後，我們將在 <strong className="text-primary">30 天內</strong>永久刪除您的資料。</p>

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -6,6 +6,7 @@ from sqlalchemy import func
 from app.db.session import get_db
 from app.db.models import User, UserQuest, GameDefinition
 from app.core.security import verify_google_token, create_access_token, decode_access_token
+from app.services.email_service import send_welcome_email
 from pydantic import BaseModel
 
 
@@ -19,7 +20,11 @@ class LoginRequest(BaseModel):
 
 
 @router.post("/login")
-async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
+async def login(
+    request: LoginRequest,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
+):
     # Verify Google Token
     google_info = await verify_google_token(request.token)
     if not google_info:
@@ -46,6 +51,10 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_db)):
         db.add(user)
         await db.commit()
         await db.refresh(user)
+
+        # Send Welcome Email
+        if email:
+            background_tasks.add_task(send_welcome_email, email, name)
     else:
         # 現有用戶：若 email 為空則更新
         if email and not user.email:
