@@ -6,371 +6,426 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>TraitQuest - 心靈大陸</title>
     <!-- Custom Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&amp;display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         rel="stylesheet" />
     <!-- BEGIN: Custom CSS -->
     <style data-purpose="layout-and-theme">
         body {
-            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuC8eAF9uaJPwJiOl4Xk-0IIsGHke6xyDvHuolY6P0iqsKoMC-hxjPRzG2qDpA1JKaSDAzZxeTPuQB66Xnm9D32nXNURbLSVpP9TacbieQpS4Y6uCRu7rqkH6b9c9-zaiaElC_c77ypUX3E_SPQarQXLkkzKxt5sJm6G-1rlx0cd2CASjdNFVo73FPDGa58JKcGWoWdPzY_dXGzy8FjmHmo-5Th81Fqk_X5LrTBZIfvSpPeVRaEnawY8LalPpAJFYGWsnnE-I41hQKhh);
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            font-family: "Times New Roman", "Noto Serif TC", serif;
+            background-color: #0f1a14;
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(17, 212, 82, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 0%, #1a3323 0%, #0f1a14 60%);
+            font-family: "Noto Serif TC", "Times New Roman", serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             margin: 0;
             padding: 0;
         }
 
-        /* The main parchment container */
-        .scroll-container {
-            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuC1BLnebzkf1Ms97nsCUQUKP4ZN8VYI3DBjMKQgXGbmX8go4rnap8tCMVfpABJbw_Z_rm027K_0jK0WfXIFcR-IQQnKG1vYA4oFp93sbUYpxN-32Iunn8t_um42IotnxF4zFFjqCii089DVh_IvgC5WoruKfiPyBfNL67i5i7x_4FcpKzxaE_9BSIgrtQf_tT6evaAkIHgD1nVbHOGiBvErwDwcW2RNdtPH6muToHkZQrq2b29C4_W_-MGp8JDoB1n0grD7-mt48UJj);
-            background-size: cover;
-            /* Ensure texture covers the div */
-            border: 15px solid #4a5d4a;
-            /* Dark mossy green stone color */
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+        /* 主容器 */
+        .main-container {
             max-width: 600px;
-            width: 90%;
-            /* Responsive width */
-            margin: 50px auto;
-            padding: 40px;
-            position: relative
-        }
-    </style>
-    <style data-purpose="components">
-        /* Avatar Styling */
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid #50ffb0;
-            box-shadow: 0 0 20px #50ffb0;
-            object-fit: cover;
-            display: block;
-            margin: 0 auto
+            width: 100%;
+            margin: 0 auto;
+            padding: 0;
+            position: relative;
         }
 
-        /* Text Effects */
-        .neon-text {
-            color: #50ffb0;
-            text-shadow: 0 0 10px #50ffb0;
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-            font-weight: 900;
-            margin-top: 1rem;
-        }
-
-        /* Instructions Box (Dark Box) */
-        .instructions-box {
-            background-color: rgba(30, 40, 30, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #50ffb0;
-            margin-top: 20px;
-            color: #eee
-        }
-
-        /* Primary Action Button (Matches Header Style) */
-        .action-button {
-            background-color: #11D452;
-            color: #112217;
-            border-radius: 9999px;
-            /* rounded-full */
-            height: 40px;
-            /* h-10 */
-            padding: 0 24px;
-            /* px-6 */
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.875rem;
-            /* text-sm */
-            font-weight: 700;
-            /* font-bold */
-            text-decoration: none;
-            box-shadow: 0 0 15px rgba(17, 212, 82, 0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
+        /* Hero 區塊 */
+        .hero-section {
+            background: linear-gradient(180deg, rgba(26, 51, 35, 0.6) 0%, rgba(15, 26, 20, 0.9) 100%);
+            border-bottom: 1px solid #23482f;
+            padding: 48px 24px 40px;
+            text-align: center;
+            position: relative;
             overflow: hidden;
-            min-width: 100px;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(17, 212, 82, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* 徽章 */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(17, 212, 82, 0.1);
+            border: 1px solid rgba(17, 212, 82, 0.3);
+            border-radius: 9999px;
+            padding: 6px 16px;
+            margin-bottom: 20px;
+        }
+
+        .badge-icon {
+            color: #11D452;
+            font-size: 14px;
+        }
+
+        .badge-text {
+            color: #11D452;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* 主標題 */
+        .hero-title {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }
+
+        .hero-title-highlight {
+            color: #11D452;
+            text-shadow: 0 0 20px rgba(17, 212, 82, 0.5);
+        }
+
+        /* 引言 */
+        .hero-quote {
+            color: #90cbad;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 16px 0 0 0;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 內容區塊 */
+        .content-section {
+            padding: 32px 24px;
+        }
+
+        /* 章節卡片 */
+        .section-card {
+            background: rgba(26, 51, 35, 0.4);
+            border: 1px solid #23482f;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            border-color: rgba(17, 212, 82, 0.3);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(17, 212, 82, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .section-icon {
+            color: #11D452;
+            font-size: 28px;
+        }
+
+        .section-title {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .section-content {
+            color: #90cbad;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* 列表項目 */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            color: #11D452;
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .feature-text {
+            color: #90cbad;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* 提示卡片 */
+        .tip-card {
+            background: rgba(17, 212, 82, 0.1);
+            border: 1px solid rgba(17, 212, 82, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .tip-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .tip-icon {
+            color: #11D452;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .tip-text {
+            color: #11D452;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* CTA 區塊 */
+        .cta-section {
+            text-align: center;
+            padding: 32px 24px 40px;
+            border-top: 1px solid #23482f;
+        }
+
+        /* 主要按鈕 */
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #11D452;
+            color: #0f1a14;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 9999px;
+            box-shadow: 0 0 30px rgba(17, 212, 82, 0.4);
+            transition: all 0.3s ease;
         }
 
         .action-button:hover {
-            background-color: #0fb847;
-            /* hover:bg-primary-hover */
+            background: #0fb847;
             transform: scale(1.05);
-            /* hover:scale-105 */
+            box-shadow: 0 0 40px rgba(17, 212, 82, 0.6);
         }
 
-        .action-button:active {
-            transform: scale(0.95);
-            /* active:scale-95 */
+        .button-icon {
+            font-size: 18px;
         }
 
-        .text-center {
-            text-align: center;
-        }
-
-        .space-y-4>*+* {
-            margin-top: 1rem;
-        }
-
-        .mb-8 {
-            margin-bottom: 2rem;
-        }
-
-        .mt-4 {
-            margin-top: 1rem;
-        }
-
-        .italic {
-            font-style: italic;
-        }
-
-        .text-lg {
-            font-size: 1.125rem;
-            line-height: 1.75rem;
-        }
-
-        .text-base {
-            font-size: 1rem;
-            line-height: 1.5rem;
-        }
-
-        .font-black {
-            font-weight: 900;
-        }
-
-        .font-serif {
-            font-family: serif;
-        }
-
-        .font-semibold {
-            font-weight: 600;
-        }
-
-        .font-bold {
+        /* 技術風味文字 */
+        .tech-text {
+            color: rgba(17, 212, 82, 0.7);
+            font-size: 11px;
             font-weight: 700;
-        }
-
-        .leading-relaxed {
-            line-height: 1.625;
-        }
-
-        .text-green-800 {
-            color: #166534;
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        .flex-col {
-            flex-direction: column;
-        }
-
-        .items-center {
-            align-items: center;
-        }
-
-        .justify-center {
-            justify-content: center;
-        }
-
-        .gap-2 {
-            gap: 0.5rem;
-        }
-
-        .pl-2 {
-            padding-left: 0.5rem;
-        }
-
-        .pl-1 {
-            padding-left: 0.25rem;
-        }
-
-        .mt-8 {
-            margin-top: 2rem;
-        }
-
-        .mt-10 {
-            margin-top: 2.5rem;
-        }
-
-        .mt-2 {
-            margin-top: 0.5rem;
-        }
-
-        .mt-3 {
-            margin-top: 0.75rem;
-        }
-
-        .z-10 {
-            z-index: 10;
-        }
-
-        .text-white\/50 {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .text-sm {
-            font-size: 0.875rem;
-            line-height: 1.25rem;
-        }
-
-        .tracking-\[0\.2em\] {
             letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 16px;
         }
 
-        .opacity-80 {
-            opacity: 0.8;
+        /* 頁尾 */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid #23482f;
+        }
+
+        .footer-text {
+            color: rgba(144, 203, 173, 0.5);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .footer-link {
+            color: #11D452;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Avatar 樣式 */
+        .avatar-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #11D452;
+            box-shadow: 0 0 20px rgba(17, 212, 82, 0.4);
+            object-fit: cover;
         }
 
         /* ===== RWD Media Queries ===== */
-        @media only screen and (max-width: 600px) {
-            .scroll-container {
+        @media only screen and (max-width: 480px) {
+            .hero-section {
+                padding: 32px 16px;
+            }
+
+            .hero-title {
+                font-size: 26px;
+            }
+
+            .hero-quote {
+                font-size: 14px;
+            }
+
+            .content-section {
                 padding: 24px 16px;
-                margin: 20px auto;
-                border-width: 10px;
-                width: 95%;
             }
 
-            .avatar {
-                width: 80px;
-                height: 80px;
+            .section-card {
+                padding: 20px 16px;
             }
 
-            .neon-text {
-                font-size: 1.5rem;
-                line-height: 1.8rem;
+            .section-title {
+                font-size: 16px;
             }
 
-            .text-lg {
-                font-size: 1rem;
-                line-height: 1.5rem;
-            }
-
-            .text-base {
-                font-size: 0.875rem;
-                line-height: 1.25rem;
-            }
-
-            .instructions-box {
-                padding: 16px;
+            .cta-section {
+                padding: 24px 16px 32px;
             }
 
             .action-button {
-                width: 100%;
-                padding: 0 16px;
-            }
-        }
-
-        @media only screen and (max-width: 400px) {
-            .neon-text {
-                font-size: 1.25rem;
-                line-height: 1.5rem;
-            }
-
-            .scroll-container {
-                padding: 16px 12px;
-                border-width: 8px;
-            }
-
-            .avatar {
-                width: 60px;
-                height: 60px;
+                padding: 12px 24px;
+                font-size: 15px;
             }
         }
     </style>
     <!-- END: Custom CSS -->
 </head>
 
-<body class="antialiased">
-    <!-- BEGIN: Main Scroll Container -->
-    <!-- This represents the physical parchment/scroll the user is reading -->
-    <main class="scroll-container">
-        <!-- BEGIN: Header Section -->
-        <header class="text-center space-y-4 mb-8">
+<body>
+    <div class="main-container">
+        <!-- BEGIN: Hero Section -->
+        <section class="hero-section">
             <!-- Avatar -->
-            <img alt="Guide Abby" class="avatar" src="{{ avatar_src }}" />
-            <!-- Main Title -->
-            <h1 class="text-4xl font-black neon-text mt-4">來到心靈大陸的勇者</h1>
-            <!-- Quote -->
-            <blockquote class="italic text-[#2f3f2f] text-lg mt-2 font-serif" style="color: #2f3f2f;">
-                「冒險者的靈魂，是通往真實之徑的唯一鑰匙。」
-            </blockquote>
-            <!-- Intro Text -->
-            <p class="text-[#333] text-base leading-relaxed mt-4 font-semibold" style="color: #333;">
-                歡迎來到 TraitQuest！這是一份由嚮導 Abby 為你準備的心靈契約。在正式踏上旅程前，請仔細閱讀卷軸內容。
+            <div class="avatar-container">
+                <img alt="嚮導 Abby" class="avatar" src="{{ avatar_src }}" />
+            </div>
+            <!-- 徽章 -->
+            <div class="badge">
+                <span class="material-symbols-outlined badge-icon">auto_awesome</span>
+                <span class="badge-text">靈魂契約 (Soul Contract)</span>
+            </div>
+            <!-- 主標題 -->
+            <h1 class="hero-title">
+                歡迎來到<br />
+                <span class="hero-title-highlight">心靈大陸</span>
+            </h1>
+            <!-- 引言 -->
+            <p class="hero-quote">
+                恭喜你踏上這段覺醒之旅，嚮導 Abby 已準備好引領你探索靈魂的奧秘。
             </p>
-        </header>
-        <!-- END: Header Section -->
-        <!-- BEGIN: Section 1 - Instructions -->
-        <!-- Dark box with neon accents for high contrast instructions -->
-        <section class="instructions-box" data-purpose="instructions">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-[#50ffb0]">
-                <span>≡</span> 遊玩指示
-            </h2>
-            <ul class="space-y-3 pl-2" style="list-style: none; padding-left: 0;">
-                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
-                    <span class="text-xl">�️</span>
-                    <span>前往「星圖」選擇試煉區域</span>
-                </li>
-                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
-                    <span class="text-xl">⚔️</span>
-                    <span>接受試煉並回答心靈的聲音</span>
-                </li>
-                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
-                    <span class="text-xl">📜</span>
-                    <span>解鎖屬於你的英雄檔案與天賦</span>
-                </li>
-            </ul>
         </section>
-        <!-- END: Section 1 - Instructions -->
-        <!-- BEGIN: Section 2 - Notes -->
-        <!-- Plain text directly on parchment for notes -->
-        <section class="mt-8 px-2" data-purpose="notes">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-[#2f3f2f]" style="color: #2f3f2f;">
-                <span>🛡️</span> 冒險注意事項
-            </h2>
-            <ul class="space-y-3 text-[#333] font-medium pl-1" style="color: #333; list-style: none; padding-left: 0;">
-                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
-                    <span class="text-green-800 mt-1">🟢</span>
-                    <span>請在安靜且不受干擾的環境下進行測驗，以降低靈魂的雜訊。</span>
-                </li>
-                <li class="flex items-start gap-2" style="margin-bottom: 0.75rem;">
-                    <span class="text-green-800 mt-1">🟢</span>
-                    <span>直覺是勇者最強大的武器，每個問題請在 10 秒內作答。</span>
-                </li>
-            </ul>
+        <!-- END: Hero Section -->
+        
+        <!-- BEGIN: Content Section -->
+        <section class="content-section">
+            <!-- 遊玩指示 -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="material-symbols-outlined section-icon">explore</span>
+                    <h2 class="section-title">探索指南 (Adventure Guide)</h2>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="material-symbols-outlined feature-icon">map</span>
+                        <span class="feature-text">前往「星圖」選擇你的第一個試煉區域</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="material-symbols-outlined feature-icon">swords</span>
+                        <span class="feature-text">接受心靈試煉，聆聽靈魂深處的聲音</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="material-symbols-outlined feature-icon">auto_stories</span>
+                        <span class="feature-text">解鎖專屬於你的英雄檔案與天賦技能</span>
+                    </li>
+                    </ul>
+            </div>
+            
+            <!-- 冒險注意事項 -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="material-symbols-outlined section-icon">shield</span>
+                    <h2 class="section-title">冒險須知 (Adventure Notes)</h2>
+                </div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <span class="material-symbols-outlined feature-icon">check_circle</span>
+                        <span class="feature-text">請在安靜且不受干擾的環境下進行測驗，以降低靈魂的雜訊。</span>
+                    </li>
+                    <li class="feature-item">
+                        <span class="material-symbols-outlined feature-icon">check_circle</span>
+                        <span class="feature-text">直覺是勇者最強大的武器，每個問題請在 10 秒內作答。</span>
+                    </li>
+                    </ul>
+                <!-- 提示卡片 -->
+                <div class="tip-card">
+                    <div class="tip-content">
+                        <span class="material-symbols-outlined tip-icon">lightbulb</span>
+                        <span class="tip-text">完成所有五大試煉區域後，你將獲得完整的英雄身分解析！</span>
+                    </div>
+                </div>
+                </div>
         </section>
-        <!-- END: Section 2 - Notes -->
-        <!-- BEGIN: Action Footer -->
-        <footer class="mt-10 flex flex-col items-center">
-            <!-- Primary Action Button -->
+        <!-- END: Content Section -->
+        
+        <!-- BEGIN: CTA Section -->
+        <section class="cta-section">
             <a href="{{ action_url }}" class="action-button">
+                <span class="material-symbols-outlined button-icon">rocket_launch</span>
                 <span>啟程：傳送至冒險起點</span>
             </a>
-            <!-- Technical Flavor Text -->
-            <div class="text-[#50ffb0] text-xs tracking-[0.2em] mt-3 font-sans font-bold opacity-80">
-                TELEPORTATION RUNE V1.0
-            </div>
+            <p class="tech-text">TELEPORTATION RUNE V2.0</p>
+            </section>
+            <!-- END: CTA Section -->
+            
+            <!-- BEGIN: Footer -->
+            <footer class="footer">
+                <p class="footer-text">
+                    TraitQuest © 2026 · <a href="mailto:admin@brianhan.cc" class="footer-link">聯繫我們</a>
+                </p>
         </footer>
-        <!-- END: Action Footer -->
-    </main>
-    <!-- END: Main Scroll Container -->
-    <!-- BEGIN: Page Footer -->
-    <!-- Copyright info outside the scroll container -->
-    <footer class="mb-8 text-center text-white/50 text-sm font-sans z-10">
-        <p>TraitQuest © 2026</p>
-    </footer>
-    <!-- END: Page Footer -->
+        <!-- END: Footer -->
+        </div>
 </body>
 
 </html>
