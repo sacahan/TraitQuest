@@ -112,11 +112,11 @@ const BigFiveIntro: React.FC = () => {
             <p className="text-[#90cbad] mt-2">Personality to Stats Conversion</p>
           </div>
           <div className="flex flex-col gap-6">
-            {renderTraitRow('開放性', 'Openness', '智力', 'INT', '魔法與知識的泉源。', '高開放性代表你對新觀念的接受度極高，如同擁有無限魔力的法師。你善於學習新技能，能迅速理解複雜的魔法理論。', 'auto_awesome', 'blue', '01')}
-            {renderTraitRow('盡責性', 'Conscientiousness', '防禦', 'DEF', '堅不可摧的自律之盾。', '高盡責性轉化為強大的物理防禦。透過周全的計畫與執行力，你能像重裝騎士般為隊伍抵擋混亂。', 'assignment_turned_in', 'yellow', '02')}
-            {renderTraitRow('外向性', 'Extraversion', '速度', 'SPD', '迅捷的社交反應力。', '高外向性賦予你極高的敏捷度。你總是充滿能量，能快速發起話題並帶動節奏。', 'local_fire_department', 'red', '03')}
-            {renderTraitRow('親和性', 'Agreeableness', '魅力', 'CHA', '治癒人心的光環。', '高親和性是對應魅力的關鍵屬性。你能團結隊伍，獲得 NPC 的好感，是公會中最受歡迎的力量。', 'volunteer_activism', 'pink', '04')}
-            {renderTraitRow('神經質', 'Neuroticism', '洞察', 'INS', '預知危險的第六感。', '雖然情緒波動如暗影，但這讓你比任何人更早察覺迷宮中的陷阱與危機。', 'thunderstorm', 'purple', '05')}
+            {renderTraitRow('開放性', 'Openness', '智力', 'INT', '魔法與知識的泉源。', '高開放性代表你對新觀念的接受度極高，如同擁有無限魔力的法師。你善於學習新技能，能迅速理解複雜的魔法理論。', 'auto_awesome', 'blue')}
+            {renderTraitRow('盡責性', 'Conscientiousness', '防禦', 'DEF', '堅不可摧的自律之盾。', '高盡責性轉化為強大的物理防禦。透過周全的計畫與執行力，你能像重裝騎士般為隊伍抵擋混亂。', 'assignment_turned_in', 'yellow')}
+            {renderTraitRow('外向性', 'Extraversion', '速度', 'SPD', '迅捷的社交反應力。', '高外向性賦予你極高的敏捷度。你總是充滿能量，能快速發起話題並帶動節奏。', 'local_fire_department', 'red')}
+            {renderTraitRow('親和性', 'Agreeableness', '魅力', 'CHA', '治癒人心的光環。', '高親和性是對應魅力的關鍵屬性。你能團結隊伍，獲得 NPC 的好感，是公會中最受歡迎的力量。', 'volunteer_activism', 'pink')}
+            {renderTraitRow('神經質', 'Neuroticism', '洞察', 'INS', '預知危險的第六感。', '雖然情緒波動如暗影，但這讓你比任何人更早察覺迷宮中的陷阱與危機。', 'thunderstorm', 'purple')}
           </div>
         </div>
       </section>
@@ -153,8 +153,8 @@ const BigFiveIntro: React.FC = () => {
   )
 }
 
-function renderTraitRow(trait: string, traitEn: string, stat: string, statAbbr: string, summary: string, detail: string, icon: string, color: string, _index: string) {
-  const colorMap: any = {
+function renderTraitRow(trait: string, traitEn: string, stat: string, statAbbr: string, summary: string, detail: string, icon: string, color: string) {
+  const colorMap: Record<string, string> = {
     blue: 'from-blue-900/20 group-hover:from-blue-900/40 border-blue-500/30 text-blue-400 group-hover:text-blue-300',
     yellow: 'from-yellow-900/20 group-hover:from-yellow-900/40 border-yellow-500/30 text-yellow-400 group-hover:text-yellow-300',
     red: 'from-red-900/20 group-hover:from-red-900/40 border-red-500/30 text-red-400 group-hover:text-red-300',

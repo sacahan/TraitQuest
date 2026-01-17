@@ -1,6 +1,16 @@
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 
 const MagicHourglass = () => {
+  // 預先計算粒子動畫的隨機參數,避免在 render 時呼叫 Math.random()
+  const particleAnimations = useMemo(() => {
+    return Array.from({ length: 5 }, (_, i) => ({
+      xOffset: Math.sin(i) * 20,
+      duration: 2 + Math.random(),
+      delay: Math.random() * 2
+    }));
+  }, []);
+
   return (
     <div className="relative w-32 h-32 flex items-center justify-center">
       
@@ -122,21 +132,21 @@ const MagicHourglass = () => {
       </motion.div>
 
       {/* 粒子效果 */}
-      {[...Array(5)].map((_, i) => (
+      {particleAnimations.map((anim, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-primary rounded-full blur-[1px]"
           initial={{ opacity: 0, scale: 0 }}
           animate={{
             y: [-20, -50],
-            x: Math.sin(i) * 20,
+            x: anim.xOffset,
             opacity: [0, 1, 0],
             scale: [0, 1.2, 0]
           }}
           transition={{
-            duration: 2 + Math.random(),
+            duration: anim.duration,
             repeat: Infinity,
-            delay: Math.random() * 2
+            delay: anim.delay
           }}
         />
       ))}

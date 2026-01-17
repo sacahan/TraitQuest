@@ -1,11 +1,6 @@
 import apiClient from './apiClient';
+import type { QuestResponse } from '../types/quest';
 
-export interface QuestResponse {
-  sessionId: string;
-  narrative: string;
-  question: any;
-  isCompleted: boolean;
-}
 
 export const questService = {
   startQuest: async (questId: string): Promise<QuestResponse> => {

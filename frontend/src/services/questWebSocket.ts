@@ -1,8 +1,11 @@
-type EventCallback = (data: any) => void;
+// 考慮到 WebSocket 傳輸的資料多樣性，使用泛型來讓調用方定義資料型別
+type EventCallback<T = unknown> = (data: T) => void; 
 
 class QuestWebSocketClient {
   private socket: WebSocket | null = null;
-  private callbacks: Map<string, EventCallback[]> = new Map();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private callbacks: Map<string, EventCallback<any>[]> = new Map();
+
   private baseUrl: string;
 
   constructor() {
@@ -40,21 +43,27 @@ class QuestWebSocketClient {
     });
   }
 
-  on(event: string, callback: EventCallback) {
+  // 允許調用者指定 T，預設為 unknown
+  on<T = unknown>(event: string, callback: EventCallback<T>) {
     if (!this.callbacks.has(event)) {
       this.callbacks.set(event, []);
     }
-    this.callbacks.get(event)?.push(callback);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.callbacks.get(event)?.push(callback as EventCallback<any>);
   }
 
-  private trigger(event: string, data: any) {
+  private trigger(event: string, data: unknown) {
     const eventCallbacks = this.callbacks.get(event);
     if (eventCallbacks) {
-      eventCallbacks.forEach(callback => callback(data));
+      // 這裡使用 safe cast 並配合 eslint-disable，因為這是底層 Dispatcher
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      eventCallbacks.forEach(callback => callback(data as any));
     }
   }
 
-  send(event: string, data: any) {
+
+
+  send(event: string, data: unknown) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify({ event, data }));
     } else {
@@ -71,3 +80,4 @@ class QuestWebSocketClient {
 }
 
 export const questWsClient = new QuestWebSocketClient();
+

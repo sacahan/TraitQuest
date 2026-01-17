@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import AppLayout from '../layout/AppLayout';
 import { useAuthStore } from '../stores/authStore';
@@ -125,6 +125,21 @@ const LaunchPage: React.FC = () => {
         navigate('/map');
     };
 
+    // 預先計算粒子動畫的隨機參數,避免在 render 時呼叫 Math.random()
+    const particleAnimations = useMemo(() => {
+        return Array.from({ length: 6 }, () => ({
+            xOffset: Math.random() * 5,
+            duration: 6 + Math.random() * 6,
+        }));
+    }, []);
+
+    // 預先計算羽毛動畫的隨機參數
+    const featherAnimations = useMemo(() => {
+        return Array.from({ length: 3 }, () => ({
+            duration: 12 + Math.random() * 5,
+        }));
+    }, []);
+
     return (
         <AppLayout backgroundVariant="subtle">
             <AlertModal
@@ -139,7 +154,7 @@ const LaunchPage: React.FC = () => {
             {/* 魔法背景特效層 - 粒子與羽毛效果 */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 {/* 粒子特效 (使用 Framer Motion 模擬) */}
-                {[...Array(6)].map((_, i) => (
+                {particleAnimations.map((anim, i) => (
                     <motion.div
                         key={`particle-${i}`}
                         className="absolute rounded-full bg-primary/20 blur-sm"
@@ -151,12 +166,12 @@ const LaunchPage: React.FC = () => {
                         }}
                         animate={{
                             y: '-10vh',
-                            x: `${10 + i * 15 + Math.random() * 5}%`,
+                            x: `${10 + i * 15 + anim.xOffset}%`,
                             scale: 1.2,
                             opacity: [0, 0.6, 0.4, 0]
                         }}
                         transition={{
-                            duration: 6 + Math.random() * 6,
+                            duration: anim.duration,
                             repeat: Infinity,
                             delay: i * 1.5,
                             ease: "linear"
@@ -166,7 +181,7 @@ const LaunchPage: React.FC = () => {
                 ))}
 
                 {/* 羽毛特效 */}
-                {[...Array(3)].map((_, i) => (
+                {featherAnimations.map((anim, i) => (
                     <motion.div
                         key={`feather-${i}`}
                         className="absolute text-white/10 text-2xl"
@@ -185,7 +200,7 @@ const LaunchPage: React.FC = () => {
                             opacity: [0, 0.5, 0]
                         }}
                         transition={{
-                            duration: 12 + Math.random() * 5,
+                            duration: anim.duration,
                             repeat: Infinity,
                             delay: i * 3,
                             ease: "linear"

@@ -128,10 +128,10 @@ const MbtiIntro: React.FC = () => {
                 </div>
               </div>
             </div>
-            {renderClassCard('INTJ', '建築師', '戰略法師', '富有想像力與戰略性的思想家，總是有計畫地對付 Boss。', 'purple', 'strategy')}
-            {renderClassCard('INTP', '邏輯學家', '煉金術士', '對萬物充滿好奇的發明家，致力於研究世界運行的真理。', 'purple', 'science')}
-            {renderClassCard('ENTJ', '指揮官', '領主騎士', '大膽、富有想像力且意志強大的領導者，總能找到開路的方法。', 'purple', 'military_tech')}
-            {renderClassCard('ENTP', '辯論家', '混沌術士', '聰明好奇的思想者，無法抗拒智力挑戰與打破常規的誘惑。', 'purple', 'psychology')}
+            {renderClassCard('INTJ', '建築師', '戰略法師', '富有想像力與戰略性的思想家，總是有計畫地對付 Boss。', 'purple')}
+            {renderClassCard('INTP', '邏輯學家', '煉金術士', '對萬物充滿好奇的發明家，致力於研究世界運行的真理。', 'purple')}
+            {renderClassCard('ENTJ', '指揮官', '領主騎士', '大膽、富有想像力且意志強大的領導者，總能找到開路的方法。', 'purple')}
+            {renderClassCard('ENTP', '辯論家', '混沌術士', '聰明好奇的思想者，無法抗拒智力挑戰與打破常規的誘惑。', 'purple')}
           </div>
 
           {/* 縱橫捭闔 */}
@@ -148,10 +148,10 @@ const MbtiIntro: React.FC = () => {
                 </div>
               </div>
             </div>
-            {renderClassCard('INFJ', '提倡者', '神聖牧師', '安靜而神秘，同時鼓舞人心且不知疲倦的理想主義者。', 'green', 'spa')}
-            {renderClassCard('INFP', '調停者', '吟遊詩人', '詩意，善良的利他主義者，總是熱情地幫助隊友補血。', 'green', 'lyrics')}
-            {renderClassCard('ENFJ', '主人公', '光明聖騎士', '富有魅力且鼓舞人心的領導者，有能力讓聽眾為之著迷。', 'green', 'shield')}
-            {renderClassCard('ENFP', '競選者', '元素召喚師', '熱情，富有創造力愛社交的自由靈魂，總能找到微笑的理由。', 'green', 'auto_awesome')}
+            {renderClassCard('INFJ', '提倡者', '神聖牧師', '安靜而神秘,同時鼓舞人心且不知疲倦的理想主義者。', 'green')}
+            {renderClassCard('INFP', '調停者', '吟遊詩人', '詩意，善良的利他主義者，總是熱情地幫助隊友補血。', 'green')}
+            {renderClassCard('ENFJ', '主人公', '光明聖騎士', '富有魅力且鼓舞人心的領導者，有能力讓聽眾為之著迷。', 'green')}
+            {renderClassCard('ENFP', '競選者', '元素召喚師', '熱情，富有創造力愛社交的自由靈魂，總能找到微笑的理由。', 'green')}
           </div>
 
           {/* 皇家守衛 */}
@@ -168,10 +168,10 @@ const MbtiIntro: React.FC = () => {
                 </div>
               </div>
             </div>
-            {renderClassCard('ISTJ', '物流師', '重裝守衛', '事實求是，可靠的現實主義者，不願讓外物干擾自己的職責。', 'blue', 'inventory')}
-            {renderClassCard('ISFJ', '守衛者', '守護治療師', '非常專注而溫暖的守護者，時刻準備著保護所愛之人。', 'blue', 'local_hospital')}
-            {renderClassCard('ESTJ', '總經理', '秩序騎士', '出色的管理者，能夠在混亂的戰場上管理事情與人員。', 'blue', 'gavel')}
-            {renderClassCard('ESFJ', '執政官', '輔助神官', '極有同情心，愛社交受歡迎的人，總是熱心提供幫助。', 'blue', 'diversity_3')}
+            {renderClassCard('ISTJ', '物流師', '重裝守衛', '事實求是，可靠的現實主義者，不願讓外物干擾自己的職責。', 'blue')}
+            {renderClassCard('ISFJ', '守衛者', '守護治療師', '非常專注而溫暖的守護者，時刻準備著保護所愛之人。', 'blue')}
+            {renderClassCard('ESTJ', '總經理', '秩序騎士', '出色的管理者，能夠在混亂的戰場上管理事情與人員。', 'blue')}
+            {renderClassCard('ESFJ', '執政官', '輔助神官', '極有同情心，愛社交受歡迎的人，總是熱心提供幫助。', 'blue')}
           </div>
 
           {/* 探險聯盟 */}
@@ -188,10 +188,10 @@ const MbtiIntro: React.FC = () => {
                 </div>
               </div>
             </div>
-            {renderClassCard('ISTP', '鑑賞家', '武器工匠', '大膽而實際的實驗家，擅長使用所有形式的工具。', 'yellow', 'construction')}
-            {renderClassCard('ISFP', '探險家', '森林遊俠', '靈活有魅力的藝術家，時刻準備著探索和體驗新鮮事物。', 'yellow', 'palette')}
-            {renderClassCard('ESTP', '企業家', '暗影刺客', '聰明，精力充沛善於感知的人，真心享受冒險邊緣的生活。', 'yellow', 'bolt')}
-            {renderClassCard('ESFP', '表演者', '幻術舞者', '自發性強，精力充沛且熱情的表演者，隊伍裡的氣氛擔當。', 'yellow', 'theater_comedy')}
+            {renderClassCard('ISTP', '鑑賞家', '武器工匠', '大膽而實際的實驗家，擅長使用所有形式的工具。', 'yellow')}
+            {renderClassCard('ISFP', '探險家', '森林遊俠', '靈活有魅力的藝術家，時刻準備著探索和體驗新鮮事物。', 'yellow')}
+            {renderClassCard('ESTP', '企業家', '暗影刺客', '聰明，精力充沛善於感知的人，真心享受冒險邊緣的生活。', 'yellow')}
+            {renderClassCard('ESFP', '表演者', '幻術舞者', '自發性強，精力充沛且熱情的表演者，隊伍裡的氣氛擔當。', 'yellow')}
           </div>
         </div>
       </div>
@@ -230,8 +230,8 @@ const MbtiIntro: React.FC = () => {
   )
 }
 
-function renderClassCard(code: string, title: string, className: string, desc: string, color: string, _icon: string) {
-  const colorMap: any = {
+function renderClassCard(code: string, title: string, className: string, desc: string, color: string) {
+  const colorMap: Record<string, string> = {
     purple: 'hover:border-purple-500 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] text-purple-400',
     green: 'hover:border-primary hover:shadow-[0_0_20px_rgba(11,218,115,0.3)] text-primary',
     blue: 'hover:border-blue-500 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] text-blue-400',

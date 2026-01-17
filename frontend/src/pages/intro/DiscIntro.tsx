@@ -173,14 +173,14 @@ const DiscIntro: React.FC = () => {
 }
 
 function renderStanceCard(type: string, title: string, desc: string, color: string) {
-  const colorMap: any = {
+  const colorMap: Record<string, string> = {
     red: 'border-red-500/30 hover:border-red-500 shadow-red-500/5 hover:shadow-red-500/20 bg-red-950/20 text-red-400',
     yellow: 'border-yellow-500/30 hover:border-yellow-500 shadow-yellow-500/5 hover:shadow-yellow-500/20 bg-yellow-950/20 text-yellow-400',
     green: 'border-primary/30 hover:border-primary shadow-primary/5 hover:shadow-primary/20 bg-green-950/20 text-primary',
     blue: 'border-blue-500/30 hover:border-blue-500 shadow-blue-500/5 hover:shadow-blue-500/20 bg-blue-950/20 text-blue-400',
   }
 
-  const imageKeyMap: any = {
+  const imageKeyMap: Record<string, string> = {
     red: 'd',
     yellow: 'i',
     green: 's',

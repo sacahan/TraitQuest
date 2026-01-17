@@ -2,14 +2,7 @@ import { create } from 'zustand';
 import { questWsClient } from '../services/questWebSocket';
 import { useAuthStore } from './authStore';
 import { v4 as uuidv4 } from 'uuid';
-
-interface Question {
-  id: string;
-  type: 'QUANTITATIVE' | 'SOUL_NARRATIVE';
-  text: string;
-  options?: { id: string; text: string }[];
-  visualFeedback?: string;
-}
+import type { Question, FinalResult, QuestUpdateData } from '../types/quest';
 
 interface QuestState {
   sessionId: string | null;
@@ -18,7 +11,7 @@ interface QuestState {
   narrative: string;
   guideMessage: string;
   isCompleted: boolean;
-  finalResult: any | null;
+  finalResult: FinalResult | null;
   isLoading: boolean;
   questionIndex: number;
   totalSteps: number;
@@ -31,10 +24,11 @@ interface QuestState {
   resetQuest: () => void;
 }
 
+
 export const useQuestStore = create<QuestState>((set, get) => {
   // 設置事件監聽器
-  questWsClient.on('first_question', (data) => {
-    const newState: any = {
+  questWsClient.on('first_question', (data: QuestUpdateData) => {
+    const newState: Partial<QuestState> = {
       narrative: data.narrative || '',
       questionIndex: data.questionIndex ?? 0,
       totalSteps: data.totalSteps ?? 10,
@@ -53,19 +47,12 @@ export const useQuestStore = create<QuestState>((set, get) => {
     } else {
       newState.currentQuestion = null;
       newState.currentQuestion = null;
-      // Removed auto-continue to allow user to manually start trial via UI button
-      // setTimeout(() => {
-      //   const state = get();
-      //   if (!state.currentQuestion && !state.isCompleted) {
-      //     state.continueQuest();
-      //   }
-      // }, 3000);
     }
-    set(newState);
+    set(newState as QuestState);
   });
 
-  questWsClient.on('next_question', (data) => {
-    const newState: any = {
+  questWsClient.on('next_question', (data: QuestUpdateData) => {
+    const newState: Partial<QuestState> = {
       currentQuestion: data.question ? {
         ...data.question,
         id: data.question.id || `q_${data.questionIndex || Date.now()}`
@@ -79,49 +66,41 @@ export const useQuestStore = create<QuestState>((set, get) => {
     if (data.guideMessage) {
       newState.guideMessage = data.guideMessage;
     }
-    set(newState);
+    set(newState as QuestState);
   });
 
-  questWsClient.on('quest_complete', (data) => {
+  questWsClient.on('quest_complete', (data: QuestUpdateData) => {
     set({
       isCompleted: true,
-      narrative: data.message,
+      narrative: data.message || '',
       isLoading: false
     });
   });
 
-  questWsClient.on('final_result', (data) => {
+  questWsClient.on('final_result', (data: FinalResult) => {
     console.log("🔮 Received final result:", data);
     set({ finalResult: data, isLoading: false });
 
     // Sync level and other info to authStore
     if (data.level_info) {
-      // We need to dynamically import or direct store access? 
-      // Since we are inside create, we can just import the store hook, but we need the store instance.
-      // Actually, we can import useAuthStore at the top provided circular deps are handled or use getState().
-      // Since we can't use hooks inside callbacks easily, we use useAuthStore.getState()
-
       const { level_info, class_id } = data;
-      const updates: any = {
+      const updates: { level: number; exp: number; heroClassId?: string } = {
         level: level_info.level,
         exp: level_info.exp
       };
 
       // Also update class/avatar if present (e.g. from MBTI result)
       if (class_id) updates.heroClassId = class_id;
-      // The backend `QuestReport` might not return `hero_avatar_url` directly inside `final_result` root, 
-      // checking schemas.py... QuestReport has `level_info`, `class_id` etc.
-      // But `authStore` User has `heroAvatarUrl`.
-      // Let's rely on what's available. 
 
       useAuthStore.getState().updateUser(updates);
     }
   });
 
-  questWsClient.on('error', (data) => {
+  questWsClient.on('error', (data: { message: string }) => {
     console.error('Quest Error:', data.message);
     set({ isLoading: false });
   });
+
 
   return {
     sessionId: null,

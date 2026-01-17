@@ -49,14 +49,15 @@ export const useMapStore = create<MapState>((set) => ({
         params: { token }
       })
 
-      const regionsWithVisuals = response.data.regions.map((r: any) => ({
+      const regionsWithVisuals = response.data.regions.map((r: Region) => ({
         ...r,
         ...VISUAL_CONFIGS[r.id]
       }))
 
       set({ regions: regionsWithVisuals, isLoading: false })
-    } catch (error: any) {
-      set({ error: error.message || 'Failed to fetch map regions', isLoading: false })
+    } catch (error) {
+      const dbError = error as Error;
+      set({ error: dbError.message || 'Failed to fetch map regions', isLoading: false })
     }
   },
   checkRegionAccess: async (regionId: string) => {
@@ -68,8 +69,9 @@ export const useMapStore = create<MapState>((set) => ({
         params: { token, region_id: regionId }
       })
       return response.data
-    } catch (error: any) {
-      return { can_enter: false, message: error.message || 'Failed to check access', status: 'LOCKED' }
+    } catch (error) {
+      const dbError = error as Error;
+      return { can_enter: false, message: dbError.message || 'Failed to check access', status: 'LOCKED' }
     }
   }
 }))

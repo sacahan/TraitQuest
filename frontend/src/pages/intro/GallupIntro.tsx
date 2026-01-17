@@ -128,7 +128,7 @@ const GallupIntro: React.FC = () => {
 }
 
 function renderTalentTypeCard(title: string, sub: string, desc: string, color: string) {
-    const colorMap: any = {
+  const colorMap: Record<string, string> = {
         blue: 'border-blue-500/30 text-blue-400',
         red: 'border-red-500/30 text-red-400',
         primary: 'border-primary/30 text-primary',
@@ -146,7 +146,7 @@ function renderTalentTypeCard(title: string, sub: string, desc: string, color: s
 
 function renderTalentRow(title: string, desc: string, color: string, talents: string[]) {
   // 定義各領域的主題色與特效
-  const themes: any = {
+  const themes: Record<string, { bg: string; accent: string; glow: string; title: string; tag: string }> = {
     blue: {
       bg: 'bg-blue-950/20 hover:bg-blue-950/30',
       accent: 'bg-blue-500',
