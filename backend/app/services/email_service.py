@@ -28,7 +28,8 @@ def send_welcome_email(
     avatar_url: str = None,
 ):
     """
-    Sends a welcome email to the new user.
+    發送歡迎郵件給新用戶。
+    使用 CID 嵌入圖片以確保跨郵件客戶端相容性。
     """
     if not SMTP_HOST or not SMTP_USER or not SMTP_PASSWORD:
         print("SMTP not configured. Skipping welcome email.")
@@ -38,12 +39,13 @@ def send_welcome_email(
         # Load Template
         template = env.get_template("welcome_email.html")
 
-        # Prepare avatar source
-        # Use local quest_bg.webp via CID
+        # 使用 CID 嵌入圖片（確保跨客戶端相容性）
         avatar_src = "cid:avatar_image"
 
         html_content = template.render(
-            username=username, action_url=frontend_url, avatar_src=avatar_src
+            username=username,
+            action_url=frontend_url,
+            avatar_src=avatar_src,
         )
 
         # Create Message
@@ -61,28 +63,37 @@ def send_welcome_email(
         part_html = MIMEText(html_content, "html")
         msg_alternative.attach(part_html)
 
-        # Attach Local Avatar Image (quest_bg.webp) as CID
-        avatar_path = os.path.abspath(
+        # 圖片路徑配置
+        images_dir = os.path.abspath(
             os.path.join(
                 os.path.dirname(__file__),
-                "../../../frontend/public/assets/images/quest_bg.webp",
+                "../../../frontend/public/assets/images",
             )
         )
 
-        if os.path.exists(avatar_path):
-            try:
-                with open(avatar_path, "rb") as f:
-                    img_data = f.read()
-                    img_part = MIMEBase("image", "webp")
-                    img_part.set_payload(img_data)
-                    encoders.encode_base64(img_part)
-                    img_part.add_header("Content-ID", "<avatar_image>")
-                    img_part.add_header(
-                        "Content-Disposition", "inline", filename="quest_bg.webp"
-                    )
-                    msg.attach(img_part)
-            except Exception as e:
-                print(f"Warning: Could not attach local image: {e}")
+        # 嵌入圖片列表: (檔名, CID, MIME subtype)
+        images_to_embed = [
+            ("quest_bg.webp", "avatar_image", "webp"),
+        ]
+
+        for filename, cid, subtype in images_to_embed:
+            img_path = os.path.join(images_dir, filename)
+            if os.path.exists(img_path):
+                try:
+                    with open(img_path, "rb") as f:
+                        img_data = f.read()
+                        img_part = MIMEBase("image", subtype)
+                        img_part.set_payload(img_data)
+                        encoders.encode_base64(img_part)
+                        img_part.add_header("Content-ID", f"<{cid}>")
+                        img_part.add_header(
+                            "Content-Disposition", "inline", filename=filename
+                        )
+                        msg.attach(img_part)
+                except Exception as e:
+                    print(f"Warning: Could not attach image {filename}: {e}")
+            else:
+                print(f"Warning: Image not found: {img_path}")
 
         # Send Email
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:

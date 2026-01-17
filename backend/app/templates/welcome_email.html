@@ -1,431 +1,317 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:o="urn:schemas-microsoft-com:office:office" lang="zh-TW">
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
     <title>TraitQuest - 心靈大陸</title>
-    <!-- Custom Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-        rel="stylesheet" />
-    <!-- BEGIN: Custom CSS -->
-    <style data-purpose="layout-and-theme">
+    <!--[if mso]>
+                                    <noscript>
+                                        <xml>
+                                            <o:OfficeDocumentSettings>
+                                                <o:PixelsPerInch>96</o:PixelsPerInch>
+                                            </o:OfficeDocumentSettings>
+                                        </xml>
+                                    </noscript>
+                                    <![endif]-->
+    <style type="text/css">
+        :root {
+            color-scheme: light dark;
+            supported-color-schemes: light dark;
+        }
+
+        /* 基礎重置 - 這些在大多數客戶端會被保留 */
+        body,
+        table,
+        td,
+        p,
+        a,
+        li,
+        blockquote {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            outline: none;
+            text-decoration: none;
+        }
         body {
-            background-color: #0f1a14;
-            background-image: 
-                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(17, 212, 82, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 50% 0%, #1a3323 0%, #0f1a14 60%);
-            font-family: "Noto Serif TC", "Times New Roman", serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
         }
-
-        /* 主容器 */
-        .main-container {
-            max-width: 600px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 0;
-            position: relative;
-        }
-
-        /* Hero 區塊 */
-        .hero-section {
-            background: linear-gradient(180deg, rgba(26, 51, 35, 0.6) 0%, rgba(15, 26, 20, 0.9) 100%);
-            border-bottom: 1px solid #23482f;
-            padding: 48px 24px 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 400px;
-            height: 200px;
-            background: radial-gradient(ellipse, rgba(17, 212, 82, 0.2) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        /* 徽章 */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(17, 212, 82, 0.1);
-            border: 1px solid rgba(17, 212, 82, 0.3);
-            border-radius: 9999px;
-            padding: 6px 16px;
-            margin-bottom: 20px;
-        }
-
-        .badge-icon {
+        /* 連結顏色 */
+        a {
             color: #11D452;
-            font-size: 14px;
         }
-
-        .badge-text {
-            color: #11D452;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* 主標題 */
-        .hero-title {
-            color: #ffffff;
-            font-size: 32px;
-            font-weight: 900;
-            margin: 0 0 8px 0;
-            line-height: 1.3;
-        }
-
-        .hero-title-highlight {
-            color: #11D452;
-            text-shadow: 0 0 20px rgba(17, 212, 82, 0.5);
-        }
-
-        /* 引言 */
-        .hero-quote {
-            color: #90cbad;
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 16px 0 0 0;
-            max-width: 450px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* 內容區塊 */
-        .content-section {
-            padding: 32px 24px;
-        }
-
-        /* 章節卡片 */
-        .section-card {
-            background: rgba(26, 51, 35, 0.4);
-            border: 1px solid #23482f;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .section-card:hover {
-            border-color: rgba(17, 212, 82, 0.3);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(17, 212, 82, 0.1);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .section-icon {
-            color: #11D452;
-            font-size: 28px;
-        }
-
-        .section-title {
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .section-content {
-            color: #90cbad;
-            font-size: 15px;
-            line-height: 1.7;
-        }
-
-        /* 列表項目 */
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .feature-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .feature-icon {
-            color: #11D452;
-            font-size: 20px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .feature-text {
-            color: #90cbad;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        /* 提示卡片 */
-        .tip-card {
-            background: rgba(17, 212, 82, 0.1);
-            border: 1px solid rgba(17, 212, 82, 0.3);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        .tip-content {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        .tip-icon {
-            color: #11D452;
-            font-size: 18px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .tip-text {
-            color: #11D452;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        /* CTA 區塊 */
-        .cta-section {
-            text-align: center;
-            padding: 32px 24px 40px;
-            border-top: 1px solid #23482f;
-        }
-
-        /* 主要按鈕 */
-        .action-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: #11D452;
-            color: #0f1a14;
-            font-size: 16px;
-            font-weight: 700;
-            text-decoration: none;
-            padding: 14px 32px;
-            border-radius: 9999px;
-            box-shadow: 0 0 30px rgba(17, 212, 82, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .action-button:hover {
-            background: #0fb847;
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(17, 212, 82, 0.6);
-        }
-
-        .button-icon {
-            font-size: 18px;
-        }
-
-        /* 技術風味文字 */
-        .tech-text {
-            color: rgba(17, 212, 82, 0.7);
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-top: 16px;
-        }
-
-        /* 頁尾 */
-        .footer {
-            text-align: center;
-            padding: 24px;
-            border-top: 1px solid #23482f;
-        }
-
-        .footer-text {
-            color: rgba(144, 203, 173, 0.5);
-            font-size: 13px;
-            margin: 0;
-        }
-
-        .footer-link {
-            color: #11D452;
-            text-decoration: none;
-        }
-
-        .footer-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Avatar 樣式 */
-        .avatar-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 3px solid #11D452;
-            box-shadow: 0 0 20px rgba(17, 212, 82, 0.4);
-            object-fit: cover;
-        }
-
-        /* ===== RWD Media Queries ===== */
-        @media only screen and (max-width: 480px) {
-            .hero-section {
-                padding: 32px 16px;
+        /* 響應式 - 部分客戶端支援 */
+        @media only screen and (max-width: 600px) {
+            .mobile-full-width {
+                width: 100% !important;
             }
-
-            .hero-title {
-                font-size: 26px;
-            }
-
-            .hero-quote {
-                font-size: 14px;
-            }
-
-            .content-section {
-                padding: 24px 16px;
-            }
-
-            .section-card {
-                padding: 20px 16px;
-            }
-
-            .section-title {
-                font-size: 16px;
-            }
-
-            .cta-section {
-                padding: 24px 16px 32px;
-            }
-
-            .action-button {
-                padding: 12px 24px;
-                font-size: 15px;
+            .mobile-padding {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
             }
         }
     </style>
-    <!-- END: Custom CSS -->
-</head>
+    </head>
+    <body bgcolor="#0f1a14"
+        style="margin: 0; padding: 0; background-color: #0f1a14; font-family: 'Georgia', 'Times New Roman', serif;">
+        <!-- 外層容器 -->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#0f1a14"
+            style="background-color: #0f1a14;">
+            <tr>
+                <td align="center" bgcolor="#0f1a14" style="padding: 20px 0; background-color: #0f1a14;">
+                    <!-- 主內容容器 600px -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600"
+                        class="mobile-full-width" bgcolor="#102216" style="max-width: 600px; background-color: #102216;">
+    
+                        <!-- ========== HERO 區塊 ========== -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#102216"
+                            style="background-color: #102216;">
+                            <tr>
+                                <td align="center" bgcolor="#102216" style="padding: 48px 24px 40px 24px; background-color: #102216;">
+                                    <!-- Avatar -->
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td align="center" style="padding-bottom: 20px;">
+                                            <img src="{{ avatar_src }}" alt="嚮導 Abby" width="80" height="80"
+                                                style="display: block; width: 80px; height: 80px; border-radius: 50%; border: 3px solid #11D452; object-fit: cover;" />
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- 徽章 -->
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td align="center"
+                                            style="background-color: #1a3323; border: 1px solid #23482f; border-radius: 20px; padding: 6px 16px;">
+                                            <span
+                                                style="color: #11D452; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">✨
+                                                靈魂契約 (Soul Contract)</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- 主標題 -->
+                                <h1
+                                    style="color: #ffffff; font-size: 32px; font-weight: bold; margin: 24px 0 8px 0; line-height: 1.3; font-family: 'Georgia', 'Times New Roman', serif;">
+                                    歡迎來到<br />
+                                    <span style="color: #11D452;">心靈大陸</span>
+                                    </h1>
+                                    <!-- 引言 -->
+                                <p style="color: #90cbad; font-size: 16px; line-height: 1.6; margin: 16px 0 0 0; max-width: 450px;">
+                                    恭喜你踏上這段覺醒之旅，嚮導 Abby 已準備好引領你探索靈魂的奧秘。
+                                </p>
+                                </td>
+                                </tr>
+                                </table>
+                                <!-- ========== 分隔線 ========== -->
 
-<body>
-    <div class="main-container">
-        <!-- BEGIN: Hero Section -->
-        <section class="hero-section">
-            <!-- Avatar -->
-            <div class="avatar-container">
-                <img alt="嚮導 Abby" class="avatar" src="{{ avatar_src }}" />
-            </div>
-            <!-- 徽章 -->
-            <div class="badge">
-                <span class="material-symbols-outlined badge-icon">auto_awesome</span>
-                <span class="badge-text">靈魂契約 (Soul Contract)</span>
-            </div>
-            <!-- 主標題 -->
-            <h1 class="hero-title">
-                歡迎來到<br />
-                <span class="hero-title-highlight">心靈大陸</span>
-            </h1>
-            <!-- 引言 -->
-            <p class="hero-quote">
-                恭喜你踏上這段覺醒之旅，嚮導 Abby 已準備好引領你探索靈魂的奧秘。
-            </p>
-        </section>
-        <!-- END: Hero Section -->
-        
-        <!-- BEGIN: Content Section -->
-        <section class="content-section">
-            <!-- 遊玩指示 -->
-            <div class="section-card">
-                <div class="section-header">
-                    <span class="material-symbols-outlined section-icon">explore</span>
-                    <h2 class="section-title">探索指南 (Adventure Guide)</h2>
-                </div>
-                <ul class="feature-list">
-                    <li class="feature-item">
-                        <span class="material-symbols-outlined feature-icon">map</span>
-                        <span class="feature-text">前往「星圖」選擇你的第一個試煉區域</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="material-symbols-outlined feature-icon">swords</span>
-                        <span class="feature-text">接受心靈試煉，聆聽靈魂深處的聲音</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="material-symbols-outlined feature-icon">auto_stories</span>
-                        <span class="feature-text">解鎖專屬於你的英雄檔案與天賦技能</span>
-                    </li>
-                    </ul>
-            </div>
-            
-            <!-- 冒險注意事項 -->
-            <div class="section-card">
-                <div class="section-header">
-                    <span class="material-symbols-outlined section-icon">shield</span>
-                    <h2 class="section-title">冒險須知 (Adventure Notes)</h2>
-                </div>
-                <ul class="feature-list">
-                    <li class="feature-item">
-                        <span class="material-symbols-outlined feature-icon">check_circle</span>
-                        <span class="feature-text">請在安靜且不受干擾的環境下進行測驗，以降低靈魂的雜訊。</span>
-                    </li>
-                    <li class="feature-item">
-                        <span class="material-symbols-outlined feature-icon">check_circle</span>
-                        <span class="feature-text">直覺是勇者最強大的武器，每個問題請在 10 秒內作答。</span>
-                    </li>
-                    </ul>
-                <!-- 提示卡片 -->
-                <div class="tip-card">
-                    <div class="tip-content">
-                        <span class="material-symbols-outlined tip-icon">lightbulb</span>
-                        <span class="tip-text">完成所有五大試煉區域後，你將獲得完整的英雄身分解析！</span>
-                    </div>
-                </div>
-                </div>
-        </section>
-        <!-- END: Content Section -->
-        
-        <!-- BEGIN: CTA Section -->
-        <section class="cta-section">
-            <a href="{{ action_url }}" class="action-button">
-                <span class="material-symbols-outlined button-icon">rocket_launch</span>
-                <span>啟程：傳送至冒險起點</span>
-            </a>
-            <p class="tech-text">TELEPORTATION RUNE V2.0</p>
-            </section>
-            <!-- END: CTA Section -->
-            
-            <!-- BEGIN: Footer -->
-            <footer class="footer">
-                <p class="footer-text">
-                    TraitQuest © 2026 · <a href="mailto:admin@brianhan.cc" class="footer-link">聯繫我們</a>
-                </p>
-        </footer>
-        <!-- END: Footer -->
-        </div>
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td style="height: 1px; background-color: #23482f;"></td>
+                                    </tr>
+                                </table>
+                                <!-- ========== 內容區塊 ========== -->
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#102216">
+                                    <tr>
+                                        <td class="mobile-padding" bgcolor="#102216" style="padding: 32px 24px; background-color: #102216;">
+                                            <!-- 探索指南卡片 -->
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#1a3323"
+                                                style="background-color: #1a3323; border: 1px solid #23482f; border-radius: 12px; margin-bottom: 20px;">
+                                                <tr>
+                                                    <td bgcolor="#1a3323" style="padding: 24px; background-color: #1a3323;">
+                                                        <!-- 卡片標題 -->
+                                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                                <td style="padding-bottom: 16px;">
+                                                                    <span style="color: #11D452; font-size: 24px; vertical-align: middle;">🧭</span>
+                                                                    <span
+                                                                        style="color: #ffffff; font-size: 18px; font-weight: bold; vertical-align: middle; padding-left: 8px;">探索指南
+                                                                        (Adventure Guide)</span>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!-- 功能列表 -->
+                                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                                <td style="padding: 8px 0;">
+                                                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tr>
+                                                                            <td style="width: 30px; vertical-align: top;">
+                                                                                <span style="color: #11D452; font-size: 18px;">🗺️</span>
+                                                                            </td>
+                                                                            <td style="color: #90cbad; font-size: 15px; line-height: 1.5;">
+                                                                                前往「星圖」選擇你的第一個試煉區域
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding: 8px 0;">
+                                                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tr>
+                                                                            <td style="width: 30px; vertical-align: top;">
+                                                                                <span style="color: #11D452; font-size: 18px;">⚔️</span>
+                                                                            </td>
+                                                                            <td style="color: #90cbad; font-size: 15px; line-height: 1.5;">
+                                                                                接受心靈試煉，聆聽靈魂深處的聲音
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding: 8px 0;">
+                                                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tr>
+                                                                            <td style="width: 30px; vertical-align: top;">
+                                                                                <span style="color: #11D452; font-size: 18px;">📖</span>
+                                                                            </td>
+                                                                            <td style="color: #90cbad; font-size: 15px; line-height: 1.5;">
+                                                                                解鎖專屬於你的英雄檔案與天賦技能
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!-- 冒險須知卡片 -->
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#1a3323"
+                                                style="background-color: #1a3323; border: 1px solid #23482f; border-radius: 12px;">
+                                                <tr>
+                                                    <td bgcolor="#1a3323" style="padding: 24px; background-color: #1a3323;">
+                                                        <!-- 卡片標題 -->
+                                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                                <td style="padding-bottom: 16px;">
+                                                                    <span style="color: #11D452; font-size: 24px; vertical-align: middle;">🛡️</span>
+                                                                    <span
+                                                                        style="color: #ffffff; font-size: 18px; font-weight: bold; vertical-align: middle; padding-left: 8px;">冒險須知
+                                                                        (Adventure Notes)</span>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!-- 注意事項列表 -->
+                                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            <tr>
+                                                                <td style="padding: 8px 0;">
+                                                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tr>
+                                                                            <td style="width: 30px; vertical-align: top;">
+                                                                                <span style="color: #11D452; font-size: 18px;">✓</span>
+                                                                            </td>
+                                                                            <td style="color: #90cbad; font-size: 15px; line-height: 1.5;">
+                                                                                請在安靜且不受干擾的環境下進行測驗，以降低靈魂的雜訊。
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="padding: 8px 0;">
+                                                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                                        <tr>
+                                                                            <td style="width: 30px; vertical-align: top;">
+                                                                                <span style="color: #11D452; font-size: 18px;">✓</span>
+                                                                            </td>
+                                                                            <td style="color: #90cbad; font-size: 15px; line-height: 1.5;">
+                                                                                直覺是勇者最強大的武器，每個問題請在 10 秒內作答。
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!-- 提示卡片 -->
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 16px;">
+                                                <tr>
+                                                    <td style="background-color: #1a3323; border: 1px solid #23482f; border-radius: 8px; padding: 12px 16px;">
+                                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                            <tr>
+                                                                <td style="width: 26px; vertical-align: top;">
+                                                                    <span style="color: #11D452; font-size: 16px;">💡</span>
+                                                                </td>
+                                                                <td style="color: #11D452; font-size: 14px; line-height: 1.5;">
+                                                                    完成所有五大試煉區域後，你將獲得完整的英雄身分解析！
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            </td>
+                                            </tr>
+                                            </table>
+                                            </td>
+                                            </tr>
+                                            </table>
+                                            <!-- ========== 分隔線 ========== -->
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                <tr>
+                                                    <td style="height: 1px; background-color: #23482f;"></td>
+                                                </tr>
+                                            </table>
+                                            <!-- ========== CTA 區塊 ========== -->
+                                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                <tr>
+                                                    <td align="center" style="padding: 40px 24px;">
+                                                        <!-- CTA 按鈕 -->
+                                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                                            <tr>
+                                                                <td align="center" style="border-radius: 30px; background-color: #11D452;">
+                                                                    <a href="{{ action_url }}" target="_blank"
+                                                                        style="display: inline-block; padding: 14px 32px; font-size: 16px; font-weight: bold; color: #0f1a14; text-decoration: none; font-family: 'Georgia', 'Times New Roman', serif;">
+                                                                        🚀 啟程：傳送至冒險起點
+                                                                    </a>
+                                        </td>
+                                        </tr>
+                                        </table>
+                                        <!-- 技術風味文字 -->
+                                        <p
+                                            style="color: #4db870; font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-top: 16px;">
+                                            TELEPORTATION RUNE V2.0
+                                        </p>
+                                        </td>
+                                        </tr>
+                                        </table>
+                                        <!-- ========== 分隔線 ========== -->
+                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tr>
+                                                <td style="height: 1px; background-color: #23482f;"></td>
+                                            </tr>
+                                        </table>
+                                        <!-- ========== Footer ========== -->
+                                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                            <tr>
+                                                <td align="center" style="padding: 24px;">
+                                                    <p style="color: #5a8a70; font-size: 13px; margin: 0; font-family: 'Georgia', 'Times New Roman', serif;">
+                                                        TraitQuest © 2026 · <a href="mailto:admin@brianhan.cc"
+                                                            style="color: #11D452; text-decoration: none;">聯繫我們</a>
+                                                    </p>
+                                                </td>
+                                                </tr>
+                                                </table>
+                                                </table>
+                                                <!-- 主內容容器結束 -->
+                                                </td>
+                                                </tr>
+                                                </table>
 </body>
-
 </html>
