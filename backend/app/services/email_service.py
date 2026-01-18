@@ -5,13 +5,14 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 from jinja2 import Environment, FileSystemLoader
+from app.core.config import settings
 
-# Configuration
-SMTP_HOST = os.getenv("SMTP_HOST")
-SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-SMTP_USER = os.getenv("SMTP_USER")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-SENDER_EMAIL = os.getenv("SENDER_EMAIL", SMTP_USER)
+# Configuration - 使用 Pydantic settings 讀取 .env
+SMTP_HOST = settings.SMTP_HOST
+SMTP_PORT = settings.SMTP_PORT
+SMTP_USER = settings.SMTP_USER
+SMTP_PASSWORD = settings.SMTP_PASSWORD
+SENDER_EMAIL = settings.SENDER_EMAIL or SMTP_USER
 SENDER_NAME = "TraitQuest Guide Abby"
 
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "../templates")

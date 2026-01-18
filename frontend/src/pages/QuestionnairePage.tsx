@@ -4,6 +4,7 @@ import AppLayout from '../layout/AppLayout';
 import { useQuestStore } from '../stores/questStore';
 import { useAuthStore } from '../stores/authStore';
 import { useMapStore } from '../stores/mapStore';
+import { questWsClient } from '../services/questWebSocket';
 import Questionnaire from '../components/quest/Questionnaire';
 import { AlertModal } from '../components/ui/AlertModal';
 
@@ -55,6 +56,22 @@ const QuestionnairePage = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken, isUnlocked]); // 只在 accessToken 和 isUnlocked 變化時評估，且內部有 !sessionId 鎖定
+
+  // 監聽特定事件並滾動到頂部
+  useEffect(() => {
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // 訂閱事件
+    questWsClient.on('next_question', scrollToTop);
+    questWsClient.on('quest_complete', scrollToTop);
+    questWsClient.on('final_result', scrollToTop);
+
+    // 注意：questWsClient 沒有提供 off 方法來取消訂閱
+    // 這是一個設計限制，但由於頁面卸載時會 resetQuest() 並 disconnect()
+    // 所以不會造成記憶體洩漏問題
+  }, []);
 
   const handleLockedConfirm = () => {
     navigate('/map', {

@@ -33,6 +33,8 @@ BUILDX_BUILDER_NAME="traitquest-builder"
 # Hardcoded Frontend Environment Variables
 VITE_API_BASE_URL="https://traitquest.brianhan.cc/v1"
 VITE_GOOGLE_CLIENT_ID="824374244473-06a44nrl7ramqnt270k86i74oe2npsn6.apps.googleusercontent.com"
+# WebSocket URL: 從 API URL 推導（https → wss），並加上 /quests/ws 路徑
+VITE_WS_BASE_URL="wss://traitquest.brianhan.cc/v1/quests/ws"
 
 # 顏色定義
 RED='\033[0;31m'
@@ -187,6 +189,7 @@ build_image() {
     # Use global variables
     local vite_api_base_url="$VITE_API_BASE_URL"
     local vite_google_client_id="$VITE_GOOGLE_CLIENT_ID"
+    local vite_ws_base_url="$VITE_WS_BASE_URL"
 
     # 建置參數
     BUILD_ARGS=(
@@ -201,6 +204,10 @@ build_image() {
 
     if [[ -n "$vite_google_client_id" ]]; then
         BUILD_ARGS+=("--build-arg" "VITE_GOOGLE_CLIENT_ID=$vite_google_client_id")
+    fi
+
+    if [[ -n "$vite_ws_base_url" ]]; then
+        BUILD_ARGS+=("--build-arg" "VITE_WS_BASE_URL=$vite_ws_base_url")
     fi
     
     # 如果需要推送

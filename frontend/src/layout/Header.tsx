@@ -141,7 +141,7 @@ export const Header = () => {
                 </button>
               </div>
             ) : (
-              <CustomGoogleAuthButton className="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary hover:bg-primary-hover text-[#112217] text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 animate-breathing-glow shadow-[0_0_15px_rgba(17,212,82,0.3)]">
+                  <CustomGoogleAuthButton className="hidden md:flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary hover:bg-primary-hover text-[#112217] text-sm font-bold transition-all duration-300 transform hover:scale-105 active:scale-95 animate-breathing-glow shadow-[0_0_15px_rgba(17,212,82,0.3)]">
                 <span>Google 登入</span>
               </CustomGoogleAuthButton>
             )}
@@ -163,7 +163,7 @@ export const Header = () => {
 
       {/* Mobile Navigation Sidebar/Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-[#0a1510] md:hidden flex flex-col p-6 animate-in fade-in slide-in-from-right duration-300 border-l-4 border-primary/20">
+        <div className="fixed inset-0 z-[100] bg-[#0a1510] md:hidden flex flex-col p-6 animate-in fade-in slide-in-from-right duration-300 border-l-4 border-primary/20 overflow-y-auto">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-xl font-display font-black text-white tracking-tight">TraitQuest</h2>
             <button
@@ -209,7 +209,7 @@ export const Header = () => {
             ))}
           </nav>
 
-          {isAuthenticated && (
+          {isAuthenticated ? (
             <div className="mt-auto pt-6 border-t border-white/10">
               <div className="flex items-center gap-3 mb-6">
                 <div
@@ -230,6 +230,12 @@ export const Header = () => {
               >
                 登出
               </button>
+            </div>
+          ) : (
+            <div className="mt-auto pt-6 border-t border-white/10">
+              <CustomGoogleAuthButton className="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary hover:bg-primary-hover text-[#112217] text-base font-bold transition-all duration-300 transform active:scale-95 shadow-[0_0_15px_rgba(17,212,82,0.3)]">
+                <span>Google 登入</span>
+              </CustomGoogleAuthButton>
             </div>
           )}
         </div>

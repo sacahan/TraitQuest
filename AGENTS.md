@@ -25,6 +25,18 @@
 - **驗證**：唯一支持 Google OAuth。
 - **AI 權限**：AI GM 僅有「匹配權」與「描述權」，**嚴禁**「創造權」。所有資產 ID 必須來自預定義清單。
 
+### 生產環境變數 (Docker Build)
+
+Docker 建置時需要在 `build-docker.sh` 中設定以下前端環境變數：
+
+| 變數名稱                | 說明                                      | 範例值                                                                         |
+| :---------------------- | :---------------------------------------- | :----------------------------------------------------------------------------- |
+| `VITE_API_BASE_URL`     | 後端 API 基礎 URL                         | `https://traitquest.brianhan.cc/v1`                                            |
+| `VITE_WS_BASE_URL`      | WebSocket 連線 URL（需對應 API URL 協議） | `wss://traitquest.brianhan.cc/v1/quests/ws`                                    |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth Client ID                    | `824374244473-06a44nrl7ramqnt270k86i74oe2npsn6.apps.googleusercontent.com`     |
+
+> **注意**：WebSocket URL 協議需與 API URL 一致（`https` → `wss`，`http` → `ws`）。
+
 ---
 
 ## 3. 系統架構 (System Architecture)

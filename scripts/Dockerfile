@@ -22,11 +22,13 @@ RUN npm ci --silent
 # 複製前端原始碼
 COPY frontend/ ./
 
-# 設定生產環境 API URL（將由 docker-run.sh 傳入）
+# 設定生產環境 URL（將由 build-docker.sh 傳入）
 ARG VITE_API_BASE_URL=/v1
 ARG VITE_GOOGLE_CLIENT_ID
+ARG VITE_WS_BASE_URL
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 ENV VITE_GOOGLE_CLIENT_ID=${VITE_GOOGLE_CLIENT_ID}
+ENV VITE_WS_BASE_URL=${VITE_WS_BASE_URL}
 
 # 建置前端
 RUN npm run build
