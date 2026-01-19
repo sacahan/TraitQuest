@@ -12,7 +12,7 @@ const QuestionnairePage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const questType = searchParams.get('type') || 'unknown';
-  const { initQuest, resetQuest, sessionId } = useQuestStore();
+  const { initQuest, resetQuest, sessionId, error: questError } = useQuestStore();
   const { accessToken } = useAuthStore();
   const { checkRegionAccess } = useMapStore();
   const [isChecking, setIsChecking] = useState(true);
@@ -107,6 +107,24 @@ const QuestionnairePage = () => {
             confirmText="返回地圖"
             onConfirm={handleLockedConfirm}
             onClose={handleLockedConfirm}
+          />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  // 顯示連線錯誤
+  if (questError) {
+    return (
+      <AppLayout backgroundVariant="none">
+        <div className="flex-grow flex items-center justify-center">
+          <AlertModal
+            isOpen={true}
+            title="連接失敗"
+            message={questError}
+            confirmText="返回地圖"
+            onConfirm={() => navigate('/map')}
+            onClose={() => navigate('/map')}
           />
         </div>
       </AppLayout>

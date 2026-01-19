@@ -43,7 +43,7 @@ const LaunchPage: React.FC = () => {
     const [searchParams] = useSearchParams();
 
     const { user, fetchUser } = useAuthStore();
-    const { regions, fetchRegions } = useMapStore();
+    const { regions, fetchRegions, error: mapError } = useMapStore();
 
     // Default values if user not loaded yet
     const questMode = user?.questMode || { mode: 'QUANTITATIVE', name: '量化試煉', description: '五段式選擇題' };
@@ -108,7 +108,24 @@ const LaunchPage: React.FC = () => {
         }
     }, [searchParams, regions]);
 
+    // Error handling effect
+    useEffect(() => {
+        if (mapError) {
+            setAlertConfig({
+                isOpen: true,
+                title: "星圖通訊中斷",
+                message: "無法與星圖伺服器建立連線，請檢查網路連線或稍後再試。",
+                confirmText: "重試連線"
+            });
+        }
+    }, [mapError]);
+
     const handleStart = () => {
+        if (mapError) {
+            fetchRegions(true); // Retry
+            return;
+        }
+
         const type = searchParams.get('type');
         if (type) {
             // Double check (though useEffect should cover it)
@@ -116,13 +133,27 @@ const LaunchPage: React.FC = () => {
             if (region && region.status === 'LOCKED') {
                 return; // Alert should be showing already
             }
+            if (!region && regions.length > 0) {
+                // Component might be mounting/regions loading, strict check
+                setAlertConfig({
+                    isOpen: true,
+                    title: "區域資料異常",
+                    message: "正在同步星圖數據，請稍候再試...",
+                    confirmText: "好的"
+                });
+                return;
+            }
             navigate(`/questionnaire?type=${type}`);
         }
     };
 
     const handleErrorClose = () => {
         setAlertConfig(prev => ({ ...prev, isOpen: false }));
-        navigate('/map');
+        if (mapError) {
+            fetchRegions(true); // Retry action
+        } else {
+            navigate('/map');
+        }
     };
 
     // 預先計算粒子動畫的隨機參數,避免在 render 時呼叫 Math.random()

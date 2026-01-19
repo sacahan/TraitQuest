@@ -22,9 +22,9 @@ set -e
 # -----------------------------------------------------------------------------
 # 配置區
 # -----------------------------------------------------------------------------
-CONTAINER_NAME="${CONTAINER_NAME:-traitquest}"
+CONTAINER_NAME="${CONTAINER_NAME:-traitquest-api}"
 NETWORK_NAME="${NETWORK_NAME:-sacahan-network}"
-IMAGE_NAME="${IMAGE_NAME:-sacahan/traitquest:latest}"
+IMAGE_NAME="${IMAGE_NAME:-sacahan/traitquest-api:latest}"
 HOST_PORT="${HOST_PORT:-8000}"
 LOGS_DIR="${LOGS_DIR:-./logs}"
 

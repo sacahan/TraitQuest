@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Region } from '../../stores/mapStore'
 import { Lock, Sparkles, Zap, ScrollText, Sword, Trophy, AlertCircle, RotateCcw, BookOpen } from 'lucide-react'
@@ -13,6 +14,7 @@ interface RegionMarkerProps {
 
 const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
   const [isHovered, setIsHovered] = React.useState(false)
+  const navigate = useNavigate()
   const markerRef = React.useRef<HTMLDivElement>(null)
   const isLocked = region.status === 'LOCKED'
   const isConquered = region.status === 'CONQUERED'
@@ -28,8 +30,8 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
       return
     }
 
-    window.location.href = `/launch?type=${region.id}`
-  }
+    navigate(`/launch?type=${region.id}`);
+  };
 
   return (
     <div
@@ -97,7 +99,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    window.location.href = `/launch?type=${region.id}`
+                    navigate(`/launch?type=${region.id}`);
                   }}
                   className="sm:hidden flex items-center gap-1 bg-red-600/90 hover:bg-red-500 px-2 py-0.5 rounded text-white text-[9px] font-bold border border-red-400/30 transition-colors shadow-lg shadow-red-900/40"
                 >
@@ -139,7 +141,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        window.location.href = `/launch?type=${region.id}`
+                          navigate(`/launch?type=${region.id}`);
                       }}
                       className="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-white/5 transition-colors group/btn"
                     >
@@ -150,7 +152,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
-                        window.location.href = `/analysis?region=${region.id}`
+                          navigate(`/analysis?region=${region.id}`);
                       }}
                       className="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-white/5 transition-colors group/btn"
                     >
@@ -165,7 +167,7 @@ const RegionMarker: React.FC<RegionMarkerProps> = ({ region }) => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
-                          window.location.href = `/launch?type=${region.id}`
+                          navigate(`/launch?type=${region.id}`);
                         }}
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-black text-[12px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
                         style={{ backgroundColor: region.color }}

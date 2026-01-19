@@ -16,6 +16,7 @@ interface QuestState {
   questionIndex: number;
   totalSteps: number;
   expGained: number;
+  error: string | null;
 
   // Actions
   initQuest: (questId: string, token: string) => Promise<void>;
@@ -114,16 +115,20 @@ export const useQuestStore = create<QuestState>((set, get) => {
     questionIndex: 0,
     totalSteps: 10,
     expGained: 0,
+    error: null,
 
     initQuest: async (questId, token) => {
       const sessionId = uuidv4();
-      set({ sessionId, questId, isLoading: true });
+      set({ sessionId, questId, isLoading: true, error: null });
       try {
         await questWsClient.connect(sessionId, token);
         questWsClient.send('start_quest', { questId });
       } catch (error) {
         console.error("Failed to connect to quest server:", error);
-        set({ isLoading: false });
+        set({
+          isLoading: false,
+          error: error instanceof Error ? error.message : "無法連接至心靈伺服器 (WebSocket Connection Failed)"
+        });
       }
     },
 
@@ -150,6 +155,7 @@ export const useQuestStore = create<QuestState>((set, get) => {
         isCompleted: false,
         finalResult: null,
         isLoading: false,
+        error: null,
         questionIndex: 0,
         totalSteps: 10
       });
