@@ -257,6 +257,16 @@
         animation: drawPolygon 2s ease-out forwards;
         animation-delay: 0.5s;
       }
+
+      .hero-bg-responsive {
+        background-image: linear-gradient(rgba(16, 34, 22, 0.7) 0%, rgba(16, 34, 22, 0.85) 100%), url("/assets/images/hero_bg_mobile.webp");
+      }
+
+      @media (min-width: 768px) {
+        .hero-bg-responsive {
+          background-image: linear-gradient(rgba(16, 34, 22, 0.7) 0%, rgba(16, 34, 22, 0.85) 100%), url("/assets/images/hero_bg.webp");
+        }
+      }
         .glass-panel {
           background: rgba(14, 31, 21, 0.6);
           backdrop-filter: blur(12px);

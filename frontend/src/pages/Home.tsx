@@ -68,10 +68,7 @@ const Home = () => {
         <section className="w-full px-4 md:px-10 py-8 flex justify-center">
           <div className="w-full max-w-[1200px]">
             <div
-              className="flex min-h-[560px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden group shadow-2xl shadow-primary/10 transition-all duration-500 hover:shadow-primary/30"
-              style={{
-                backgroundImage: 'linear-gradient(rgba(16, 34, 22, 0.7) 0%, rgba(16, 34, 22, 0.85) 100%), url("/assets/images/hero_bg.webp")'
-              }}
+              className="flex min-h-[560px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden group shadow-2xl shadow-primary/10 transition-all duration-500 hover:shadow-primary/30 hero-bg-responsive"
             >
               <div className="absolute top-4 left-4 text-white/20 transition-transform duration-700 group-hover:rotate-45">
                 <span className="material-symbols-outlined text-6xl rotate-12 font-variation-FILL-1">swords</span>

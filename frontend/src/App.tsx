@@ -1,20 +1,25 @@
+import { Suspense, lazy, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
 import { useAuthStore } from './stores/authStore'
-import DashboardPage from './pages/DashboardPage'
-import AnalysisPage from './pages/AnalysisPage'
+import PageLoader from './components/ui/PageLoader'
 import Home from './pages/Home'
-import QuestionnairePage from './pages/QuestionnairePage'
-import MapPage from './pages/MapPage'
-import MbtiIntro from './pages/intro/MbtiIntro'
-import BigFiveIntro from './pages/intro/BigFiveIntro'
-import DiscIntro from './pages/intro/DiscIntro'
-import EnneagramIntro from './pages/intro/EnneagramIntro'
-import GallupIntro from './pages/intro/GallupIntro'
-import AboutPage from './pages/AboutPage'
-import PrivacyPage from './pages/PrivacyPage'
-import TermsPage from './pages/TermsPage'
-import LaunchPage from './pages/LaunchPage'
+
+// Lazy load components
+const DashboardPage = lazy(() => import('./pages/DashboardPage'))
+const AnalysisPage = lazy(() => import('./pages/AnalysisPage'))
+const QuestionnairePage = lazy(() => import('./pages/QuestionnairePage'))
+const MapPage = lazy(() => import('./pages/MapPage'))
+const LaunchPage = lazy(() => import('./pages/LaunchPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
+const TermsPage = lazy(() => import('./pages/TermsPage'))
+
+// Lazy load Intro Pages
+const MbtiIntro = lazy(() => import('./pages/intro/MbtiIntro'))
+const BigFiveIntro = lazy(() => import('./pages/intro/BigFiveIntro'))
+const DiscIntro = lazy(() => import('./pages/intro/DiscIntro'))
+const EnneagramIntro = lazy(() => import('./pages/intro/EnneagramIntro'))
+const GallupIntro = lazy(() => import('./pages/intro/GallupIntro'))
 
 /**
  * 全域自動捲動至頂部組件
@@ -50,41 +55,43 @@ function App() {
         </div>
 
         <div className="relative z-10 flex-1 flex flex-col">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/questionnaire"
-              element={isAuthenticated ? <QuestionnairePage /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/map"
-              element={isAuthenticated ? <MapPage /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/launch"
-              element={isAuthenticated ? <LaunchPage /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/dashboard"
-              element={isAuthenticated ? <DashboardPage /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/analysis"
-              element={isAuthenticated ? <AnalysisPage /> : <Navigate to="/" />}
-            />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/questionnaire"
+                element={isAuthenticated ? <QuestionnairePage /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/map"
+                element={isAuthenticated ? <MapPage /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/launch"
+                element={isAuthenticated ? <LaunchPage /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/dashboard"
+                element={isAuthenticated ? <DashboardPage /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/analysis"
+                element={isAuthenticated ? <AnalysisPage /> : <Navigate to="/" />}
+              />
 
-            {/* Intro Pages */}
-            <Route path="/intro/mbti" element={<MbtiIntro />} />
-            <Route path="/intro/bigfive" element={<BigFiveIntro />} />
-            <Route path="/intro/disc" element={<DiscIntro />} />
-            <Route path="/intro/enneagram" element={<EnneagramIntro />} />
-            <Route path="/intro/gallup" element={<GallupIntro />} />
+              {/* Intro Pages */}
+              <Route path="/intro/mbti" element={<MbtiIntro />} />
+              <Route path="/intro/bigfive" element={<BigFiveIntro />} />
+              <Route path="/intro/disc" element={<DiscIntro />} />
+              <Route path="/intro/enneagram" element={<EnneagramIntro />} />
+              <Route path="/intro/gallup" element={<GallupIntro />} />
 
-            {/* Static Pages */}
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/services" element={<TermsPage />} />
-          </Routes>
+              {/* Static Pages */}
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/services" element={<TermsPage />} />
+            </Routes>
+          </Suspense>
         </div>
       </div>
     </Router>
