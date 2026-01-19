@@ -35,6 +35,26 @@ function ScrollToTop() {
   return null;
 }
 
+/**
+ * GitHub Pages SPA 重導向處理組件
+ * 處理從 404.html 傳來的 redirect 參數，導航至正確路徑
+ */
+function RedirectHandler() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const redirectPath = params.get('redirect');
+
+    if (redirectPath) {
+      // 清除 URL 中的 redirect 參數，導航至目標路徑
+      window.history.replaceState(null, '', redirectPath);
+    }
+  }, [location.search]);
+
+  return null;
+}
+
 function App() {
   const { isAuthenticated } = useAuthStore()
 
@@ -46,6 +66,7 @@ function App() {
       }}
     >
       <ScrollToTop />
+      <RedirectHandler />
       <div className="bg-background-dark min-h-screen relative overflow-hidden flex flex-col">
         {/* 背景發光層 (Nebula Layers) */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">

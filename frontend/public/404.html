@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>TraitQuest - 靈魂覺醒之旅</title>
+  <script>
+    // GitHub Pages SPA Fallback
+    // 將所有路徑重導至 index.html，由前端路由處理
+    const path = window.location.pathname;
+    const search = window.location.search;
+    const hash = window.location.hash;
+    
+    // 構建新的 URL，使用 query string 傳遞原始路徑
+    const redirectUrl = '/?redirect=' + encodeURIComponent(path + search + hash);
+    
+    // 替換當前頁面（不保留歷史記錄）
+    window.location.replace(redirectUrl);
+  </script>
+</head>
+<body>
+  <noscript>
+    <p>請啟用 JavaScript 以使用 TraitQuest。</p>
+    <p><a href="/">返回首頁</a></p>
+  </noscript>
+</body>
+</html>

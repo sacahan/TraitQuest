@@ -1,0 +1,66 @@
+# GitHub Pages 部署工作流程
+# 當 main 分支有推送且影響 frontend/ 目錄時自動執行
+# 建置 React/Vite 前端並部署至 GitHub Pages
+
+name: 部署前端至 GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - ".github/workflows/gh-pages.yml"
+  workflow_dispatch: # 允許手動觸發
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時只允許一個部署任務運行
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 檢出程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 安裝依賴
+        working-directory: frontend
+        run: npm ci
+
+      - name: 建置前端
+        working-directory: frontend
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://traitquest-api.brianhan.cc/v1
+          VITE_WS_BASE_URL: wss://traitquest-api.brianhan.cc/v1/quests/ws
+          VITE_GOOGLE_CLIENT_ID: 824374244473-06a44nrl7ramqnt270k86i74oe2npsn6.apps.googleusercontent.com
+
+      - name: 上傳建置產物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 部署至 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

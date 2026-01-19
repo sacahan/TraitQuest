@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# TraitQuest Docker 映像建置與推送腳本
+# TraitQuest 後端 Docker 映像建置與推送腳本
 # =============================================================================
 # 用法：
 #   ./build-docker.sh [動作] [平台]
@@ -25,16 +25,10 @@ set -e
 # -----------------------------------------------------------------------------
 # 配置區
 # -----------------------------------------------------------------------------
-DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-traitquest}"
+DOCKER_IMAGE_NAME="${DOCKER_IMAGE_NAME:-traitquest-api}"
 DOCKER_TAG="${DOCKER_TAG:-latest}"
 DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 BUILDX_BUILDER_NAME="traitquest-builder"
-
-# Hardcoded Frontend Environment Variables
-VITE_API_BASE_URL="https://traitquest.brianhan.cc/v1"
-VITE_GOOGLE_CLIENT_ID="824374244473-06a44nrl7ramqnt270k86i74oe2npsn6.apps.googleusercontent.com"
-# WebSocket URL: 從 API URL 推導（https → wss），並加上 /quests/ws 路徑
-VITE_WS_BASE_URL="wss://traitquest.brianhan.cc/v1/quests/ws"
 
 # 顏色定義
 RED='\033[0;31m'
@@ -50,7 +44,7 @@ NC='\033[0m' # No Color
 print_header() {
     echo ""
     echo -e "${CYAN}╔═══════════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║${NC}  🌌 ${BLUE}TraitQuest Docker 建置工具${NC}                                   ${CYAN}║${NC}"
+    echo -e "${CYAN}║${NC}  🌌 ${BLUE}TraitQuest 後端 Docker 建置工具${NC}                             ${CYAN}║${NC}"
     echo -e "${CYAN}╚═══════════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 }
@@ -186,29 +180,12 @@ build_image() {
     PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
     cd "$PROJECT_ROOT"
     
-    # Use global variables
-    local vite_api_base_url="$VITE_API_BASE_URL"
-    local vite_google_client_id="$VITE_GOOGLE_CLIENT_ID"
-    local vite_ws_base_url="$VITE_WS_BASE_URL"
-
-    # 建置參數
+    # 建置參數（後端專用，無需前端環境變數）
     BUILD_ARGS=(
         "--platform" "$PLATFORMS"
         "-t" "$FULL_IMAGE_NAME"
         "-f" "scripts/Dockerfile"
     )
-
-    if [[ -n "$vite_api_base_url" ]]; then
-        BUILD_ARGS+=("--build-arg" "VITE_API_BASE_URL=$vite_api_base_url")
-    fi
-
-    if [[ -n "$vite_google_client_id" ]]; then
-        BUILD_ARGS+=("--build-arg" "VITE_GOOGLE_CLIENT_ID=$vite_google_client_id")
-    fi
-
-    if [[ -n "$vite_ws_base_url" ]]; then
-        BUILD_ARGS+=("--build-arg" "VITE_WS_BASE_URL=$vite_ws_base_url")
-    fi
     
     # 如果需要推送
     if [[ "$push_flag" == "push" ]]; then
