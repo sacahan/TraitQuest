@@ -2,15 +2,14 @@ import json
 import logging
 import asyncio
 import uuid
-from typing import Dict, List
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query, Depends
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
 from app.core.security import decode_access_token
 from app.core.session import session_service
-from app.core.redis_client import redis_client
+# redis_client 暫時未使用
 from app.agents.transformation import transformation_agent
 from app.agents.summary import summary_agent
 from app.services.level_system import level_service
-from app.services.game_assets import game_assets_service
+# game_assets_service 暫時未使用
 from app.db.session import AsyncSessionLocal
 from app.db.models import User, UserQuest
 from sqlalchemy import select, update, func
@@ -99,23 +98,17 @@ async def quest_ws_endpoint(
                 
                 # [Fix] Explicitly save session state initialization
                 await session_service.update_session(questionnaire_session)
-                
-                # 在資料庫建立 UserQuest 紀錄 (標記測驗開始)
-                async with AsyncSessionLocal() as db_session:
-                    new_quest = UserQuest(
-                        user_id=uuid.UUID(user_id),
-                        quest_type=quest_id,
-                        interactions=[]
-                    )
-                    db_session.add(new_quest)
-                    await db_session.commit()
-                
+
+                # [方案 A] 不在此處建立 UserQuest 記錄
+                # 記錄將在 request_result 完成時才建立
+                # 這樣未完成的測驗不會留下空記錄
+
                 # 讀取玩家的歷史記憶摘要（用於維持敘事連貫性）
                 hero_chronicle = await get_hero_chronicle(user_id)
                 chronicle_context = ""
                 if hero_chronicle:
                     chronicle_context = f"\n\n[玩家歷史摘要]：{hero_chronicle}\n"
-                
+
                 # 取得試煉模式資訊
                 quest_mode = level_service.get_quest_mode(player_level)
 
@@ -135,7 +128,7 @@ async def quest_ws_endpoint(
                 # 確保第一題有 ID
                 if result.get("question") and not result["question"].get("id"):
                     result["question"]["id"] = f"q_0_{sessionId[:8]}"
-                
+
                 result["questionIndex"] = 0
                 result["totalSteps"] = total_steps
                 await manager.send_event(sessionId, "next_question", result)
@@ -144,7 +137,7 @@ async def quest_ws_endpoint(
             elif event_type == "submit_answer":
                 answer = payload.get("answer")
                 question_index = payload.get("questionIndex", 0)
-                
+
                 # 獲取當前題目上下文 (為了給 Analytics Agent 分析使用)
                 # [Optimization] Use existing session object
                 current_question_text = ""
@@ -166,25 +159,13 @@ async def quest_ws_endpoint(
                         "type": current_type,
                     }
                 )
-                
+
                 # [Fix] Explicitly save session state (interactions)
                 await session_service.update_session(questionnaire_session)
 
-                # 即時同步 interactions 到資料庫
-                async with AsyncSessionLocal() as db_session:
-                    quest_stmt = select(UserQuest).where(
-                        UserQuest.user_id == uuid.UUID(user_id),
-                        UserQuest.quest_type == quest_id
-                    ).order_by(UserQuest.created_at.desc()).limit(1)
-                    
-                    quest_res = await db_session.execute(quest_stmt)
-                    quest = quest_res.scalar_one_or_none()
-                    
-                    if quest:
-                        quest.interactions = questionnaire_session.state["interactions"]
-                        await db_session.commit()
-                        logger.debug(f"💾 Synced {len(questionnaire_session.state['interactions'])} interactions to DB")
-
+                # [方案 A] 不在此處同步 interactions 到資料庫
+                # 因為 UserQuest 記錄尚未建立，interactions 保留在 session 中
+                # 將在 request_result 完成時一併寫入
 
                 # [平行處理] 啟動後台分析任務 (Non-blocking)
                 # 這允許分析與下一題生成同時進行，提升響應速度
@@ -200,62 +181,80 @@ async def quest_ws_endpoint(
                     )
                 )
                 manager.pending_tasks[sessionId].append(analysis_task)
-                
+
                 # 計算題號
                 current_num = question_index + 1
                 next_num = current_num + 1
-                
+
                 # 判斷是否為最後一題 (使用 session 中的 total_steps，如果沒有則重新計算)
-                total_steps = questionnaire_session.state.get("total_steps") or get_total_steps(quest_id, player_level)
-                
+                total_steps = questionnaire_session.state.get(
+                    "total_steps"
+                ) or get_total_steps(quest_id, player_level)
+
                 if current_num >= total_steps:
-                     instruction = (
-                         f"玩家 {display_name} (等級 {player_level}) 對於最後一題（第 {current_num} 題 / 共 {total_steps} 題）的回答是：{answer}。 "
-                         f"試煉已達上限，請務必使用 complete_trial 工具結束測驗，並給予一段感性的結語。"
-                     )
+                    instruction = (
+                        f"玩家 {display_name} (等級 {player_level}) 對於最後一題（第 {current_num} 題 / 共 {total_steps} 題）的回答是：{answer}。 "
+                        f"試煉已達上限，請務必使用 complete_trial 工具結束測驗，並給予一段感性的結語。"
+                    )
                 else:
-                     # 讀取当前 Session 中的對話歷程，作為上下文
-                     interactions = questionnaire_session.state.get("interactions", [])
-                     recent_context = ""
-                     if len(interactions) >= 2:
-                         # 取最近 2 題作為上下文
-                         recent = interactions[-2:]
-                         context_parts = []
-                         for i, item in enumerate(recent):
-                             q_text = item.get("question", {}).get("text", "")
-                             a_text = item.get("answer", "")
-                             if q_text:
-                                 context_parts.append(f"第{len(interactions)-1+i}題: {q_text} -> 回答: {a_text}")
-                         if context_parts:
-                             recent_context = f"\n[近期對話上下文]：" + "; ".join(context_parts) + "\n"
-                     
-                     instruction = (
-                         f"{recent_context}"
-                         f"玩家 {display_name} (等級 {player_level}) 對於第 {current_num} 題（共 {total_steps} 題）的回答是：{answer}。 "
-                         f"請生成下一題（第 {next_num} 題 / 共 {total_steps} 題）的情境與題目。"
-                     )
-                
+                    # 讀取当前 Session 中的對話歷程，作為上下文
+                    interactions = questionnaire_session.state.get("interactions", [])
+                    recent_context = ""
+                    if len(interactions) >= 2:
+                        # 取最近 2 題作為上下文
+                        recent = interactions[-2:]
+                        context_parts = []
+                        for i, item in enumerate(recent):
+                            q_text = item.get("question", {}).get("text", "")
+                            a_text = item.get("answer", "")
+                            if q_text:
+                                context_parts.append(
+                                    f"第{len(interactions) - 1 + i}題: {q_text} -> 回答: {a_text}"
+                                )
+                        if context_parts:
+                            recent_context = (
+                                f"\n[近期對話上下文]："
+                                + "; ".join(context_parts)
+                                + "\n"
+                            )
+
+                    instruction = (
+                        f"{recent_context}"
+                        f"玩家 {display_name} (等級 {player_level}) 對於第 {current_num} 題（共 {total_steps} 題）的回答是：{answer}。 "
+                        f"請生成下一題（第 {next_num} 題 / 共 {total_steps} 題）的情境與題目。"
+                    )
+
                 # 執行 Agent 生成下一題或結語
                 logger.info(f">>> Instruction: {instruction}")
                 result = await run_questionnaire_agent(user_id, sessionId, instruction)
                 logger.info(f"<<< Result: {result}")
-                
+
                 # 檢查 Agent 是否標記了測驗結束 (透過 complete_trial 工具)
-                updated_session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
-                
+                updated_session = await session_service.get_session(
+                    app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId
+                )
+
                 if updated_session.state.get("quest_completed"):
-                     # 發送完成訊號，前端將顯示等待轉場動畫
-                     await manager.send_event(sessionId, "quest_complete", {
-                        "message": updated_session.state.get("final_message", "Hero transformation in progress..."),
-                        "totalExp": 100
-                    })
+                    # 發送完成訊號，前端將顯示等待轉場動畫
+                    await manager.send_event(
+                        sessionId,
+                        "quest_complete",
+                        {
+                            "message": updated_session.state.get(
+                                "final_message", "Hero transformation in progress..."
+                            ),
+                            "totalExp": 100,
+                        },
+                    )
                 else:
                     # 發送下一題
                     result["questionIndex"] = question_index + 1
                     result["totalSteps"] = total_steps
                     if result.get("question") and not result["question"].get("id"):
-                        result["question"]["id"] = f"q_{result['questionIndex']}_{str(uuid.uuid4())[:8]}"
-                    
+                        result["question"]["id"] = (
+                            f"q_{result['questionIndex']}_{str(uuid.uuid4())[:8]}"
+                        )
+
                     await manager.send_event(sessionId, "next_question", result)
 
             # --- 處理：請求最終結果 (The Grand Mapping) ---
@@ -269,38 +268,44 @@ async def quest_ws_endpoint(
                 5. Summary Agent: 生成英雄史詩摘要
                 6. 寫入資料庫 & 升級
                 """
-                
+
                 # 1. 確保所有背景分析任務已完成
                 tasks = manager.pending_tasks.get(sessionId, [])
                 if tasks:
-                    logger.info(f"⏳ 1. Waiting for {len(tasks)} analytics tasks to finish")
+                    logger.info(
+                        f"⏳ 1. Waiting for {len(tasks)} analytics tasks to finish"
+                    )
                     await asyncio.gather(*tasks)
-                
+
                 # 2. 聚合 (Reduce) 所有分析結果
                 logger.info("⏳ 2. Aggregating all analysis results")
-                questionnaire_session = await session_service.get_session(app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId)
-                analytics_list = questionnaire_session.state.get("accumulated_analytics", [])
-                
+                questionnaire_session = await session_service.get_session(
+                    app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=sessionId
+                )
+                analytics_list = questionnaire_session.state.get(
+                    "accumulated_analytics", []
+                )
+
                 total_quality = 0
                 for item in analytics_list:
                     total_quality += item.get("quality_score", 1.0)
-                
-                avg_quality = total_quality / len(analytics_list) if analytics_list else 1.0
-                
+
+                avg_quality = (
+                    total_quality / len(analytics_list) if analytics_list else 1.0
+                )
+
                 # 3. 執行 Transformation Agent (核心映射邏輯)
                 logger.info("🧙‍♂️ 3. Running Transformation Agent...")
-                
+
                 # 設置 quest_type 供 callback 驗證使用
                 transformation_session = await get_or_create_session(
-                    app_name="transformation",
-                    user_id=user_id,
-                    session_id=sessionId
+                    app_name="transformation", user_id=user_id, session_id=sessionId
                 )
                 transformation_session.state["quest_type"] = quest_id
                 await session_service.update_session(transformation_session)
 
                 t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(analytics_list, ensure_ascii=False)}"
-                
+
                 logger.info(f">>> Instruction: {t_instruction}")
                 transformation_raw = await run_agent_async(
                     agent=transformation_agent,
@@ -308,7 +313,7 @@ async def quest_ws_endpoint(
                     user_id=user_id,
                     session_id=sessionId,
                     instruction=t_instruction,
-                    output_key="transformation_output"
+                    output_key="transformation_output",
                 )
                 logger.info(f"<<< Result: {transformation_raw}")
                 quest_report = transformation_raw
@@ -323,25 +328,29 @@ async def quest_ws_endpoint(
                     ]
                 )
                 s_instruction = f"玩家對話分析摘要：\n{history_text}"
-                
-                logger.info(f">>> Summary Instruction (using accumulated_analytics): {s_instruction[:200]}...")
+
+                logger.info(
+                    f">>> Summary Instruction (using accumulated_analytics): {s_instruction[:200]}..."
+                )
                 summary_result = await run_agent_async(
                     agent=summary_agent,
                     app_name="summary",
                     user_id=user_id,
                     session_id=sessionId,
                     instruction=s_instruction,
-                    output_key="summary_output"
+                    output_key="summary_output",
                 )
                 logger.info(f"<<< Result: {summary_result}")
-                
+
                 # 處理摘要結果 (應為 {"hero_chronicle": "..."})
                 hero_chronicle = ""
                 if isinstance(summary_result, dict):
                     hero_chronicle = summary_result.get("hero_chronicle", "")
-                
+
                 if not hero_chronicle:
-                    hero_chronicle = f"冒險者 {display_name} 在 {quest_id} 試煉中留下了足跡。"
+                    hero_chronicle = (
+                        f"冒險者 {display_name} 在 {quest_id} 試煉中留下了足跡。"
+                    )
 
                 # 5. 計算經驗值與升級 (Level Service - 累計制)
                 logger.info("5. Calculating experience and level up...")
@@ -359,15 +368,15 @@ async def quest_ws_endpoint(
 
                 # 計算等級進度資訊
                 progress_info = level_service.get_level_progress(new_total_exp)
-                
+
                 # 6. 持久化存入資料庫
                 logger.info("6. Persisting to database...")
                 async with AsyncSessionLocal() as db_session:
                     user_uuid = uuid.UUID(user_id)
-                    
+
                     # a) 更新 User Profile (等級、經驗值、新職業、完整英雄檔案)
                     hero_class_id = quest_report.get("class_id")
-                    
+
                     update_values = {
                         "level": new_lvl,
                         "exp": new_total_exp,  # 儲存累計總 EXP
@@ -377,47 +386,53 @@ async def quest_ws_endpoint(
                     if hero_class_id:
                         filename = hero_class_id.lower() + ".webp"
                         update_values["hero_class_id"] = hero_class_id
-                        update_values["hero_avatar_url"] = f"/assets/images/classes/{filename}"
-                    
+                        update_values["hero_avatar_url"] = (
+                            f"/assets/images/classes/{filename}"
+                        )
+
                     # 更新完整英雄檔案（合併策略）
                     user_stmt = select(User).where(User.id == user_uuid)
                     user_result = await db_session.execute(user_stmt)
                     user = user_result.scalar_one_or_none()
-                    
+
                     if user:
                         from app.models.schemas import merge_hero_profile
+
                         existing_profile = user.hero_profile or {}
-                        merged_profile = merge_hero_profile(existing_profile, quest_report)
+                        merged_profile = merge_hero_profile(
+                            existing_profile, quest_report
+                        )
                         update_values["hero_profile"] = merged_profile
 
                     await db_session.execute(
                         update(User).where(User.id == user_uuid).values(**update_values)
                     )
-                    
-                    # b) 存入 UserQuest 紀錄（quest_report 與 hero_chronicle）
-                    quest_stmt = select(UserQuest).where(
-                        UserQuest.user_id == user_uuid,
-                        UserQuest.quest_type == quest_id
-                    ).order_by(UserQuest.created_at.desc()).limit(1)
-                    quest_res = await db_session.execute(quest_stmt)
-                    quest = quest_res.scalar_one_or_none()
-                    
-                    if quest:
-                        # 構造 QuestReport（包含完整 level_info）
-                        db_report = quest_report.copy()
-                        db_report["quest_type"] = quest_id
-                        db_report["level_info"] = {
-                            "level": new_lvl,
-                            "exp": new_total_exp,
-                            "expToNextLevel": progress_info["next_threshold"],
-                            "expProgress": progress_info["progress"],
-                            "isLeveledUp": is_up,
-                            "earnedExp": earned_exp,
-                        }
-                        
-                        quest.quest_report = db_report
-                        quest.hero_chronicle = hero_chronicle
-                        quest.completed_at = func.now()
+
+                    # b) [方案 A] 新建 UserQuest 紀錄（不再查詢更新）
+                    # 構造 QuestReport（包含完整 level_info）
+                    db_report = quest_report.copy()
+                    db_report["quest_type"] = quest_id
+                    db_report["level_info"] = {
+                        "level": new_lvl,
+                        "exp": new_total_exp,
+                        "expToNextLevel": progress_info["next_threshold"],
+                        "expProgress": progress_info["progress"],
+                        "isLeveledUp": is_up,
+                        "earnedExp": earned_exp,
+                    }
+
+                    # 從 session 取得 interactions
+                    interactions = questionnaire_session.state.get("interactions", [])
+
+                    new_quest = UserQuest(
+                        user_id=user_uuid,
+                        quest_type=quest_id,
+                        interactions=interactions,
+                        quest_report=db_report,
+                        hero_chronicle=hero_chronicle,
+                        completed_at=func.now(),
+                    )
+                    db_session.add(new_quest)
                     
                     await db_session.commit()
 
