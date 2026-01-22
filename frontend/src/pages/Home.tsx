@@ -165,7 +165,7 @@ const Home = () => {
                   className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] md:hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold md:shadow-[0_0_20px_rgba(17,212,82,0.4)] md:hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] md:animate-breathing-glow group/btn font-body"
                 >
                   <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">map</span>
-                  <span>開啟冒險地圖</span>
+                  <span>開始旅程</span>
                 </button>
               ) : (
                   <CustomGoogleAuthButton className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] md:hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold md:shadow-[0_0_20px_rgba(17,212,82,0.4)] md:hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] md:animate-breathing-glow group/btn font-body">

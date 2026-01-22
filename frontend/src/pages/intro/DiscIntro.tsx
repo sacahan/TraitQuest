@@ -137,7 +137,7 @@ const DiscIntro: React.FC = () => {
             {renderStanceCard('掌控 - Dominance', '烈焰戰姿', '快速進攻,以力量壓制對手。在戰場上是衝鋒陷陣的先鋒,擅長短時間內解決威脅。', 'red')}
             {renderStanceCard('影響 - Influence', '潮汐之歌', '激勵隊友,以魅力掌控全場。你是戰場上的靈魂人物,擅長透過影響他人來掌控全局節奏。', 'yellow')}
             {renderStanceCard('穩守 - Steadiness', '大地磐石', '穩守陣地,以韌性保護夥伴。你是最可靠的後盾,能在持久戰中提供最穩定的支持與耐力。', 'green')}
-            {renderStanceCard('分析 - Conscientiousness', '星辰軌跡', '佈下陷阱,以邏輯解構威脅。擅長分析戰況細節,對你來說,每一個精確的數據都是獲勝的關鍵。', 'blue')}
+            {renderStanceCard('分析 - Compliance', '星辰軌跡', '佈下陷阱,以邏輯解構威脅。擅長分析戰況細節,對你來說,每一個精確的數據都是獲勝的關鍵。', 'blue')}
           </div>
         </div>
       </section>
