@@ -278,6 +278,7 @@
                 background: rgba(14, 31, 21, 0.6);
                   backdrop-filter: blur(12px);
             }
+                    }
         .bg-grid-pattern {
           background-image: linear-gradient(rgba(17, 212, 82, 0.03) 1px, transparent 1px),
             linear-gradient(90deg, rgba(17, 212, 82, 0.03) 1px, transparent 1px);
