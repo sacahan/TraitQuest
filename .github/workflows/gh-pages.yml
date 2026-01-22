@@ -48,6 +48,8 @@ jobs:
           VITE_API_BASE_URL: https://traitquest-api.brianhan.cc/v1
           VITE_WS_BASE_URL: wss://traitquest-api.brianhan.cc/v1/quests/ws
           VITE_GOOGLE_CLIENT_ID: 824374244473-06a44nrl7ramqnt270k86i74oe2npsn6.apps.googleusercontent.com
+          # 啟用 vConsole 用於手機瀏覽器偵錯（偵錯完成後改為 false 或移除）
+          VITE_ENABLE_VCONSOLE: "true"
 
       - name: 上傳建置產物
         uses: actions/upload-pages-artifact@v3
