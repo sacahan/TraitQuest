@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AppLayout from '../layout/AppLayout'
 import MapEffects from '../components/map/MapEffects'
 import RegionMarker from '../components/map/RegionMarker'
@@ -12,6 +13,7 @@ const ICON_MAP: Record<string, any> = {
 
 const MapPage: React.FC = () => {
     const { regions, fetchRegions } = useMapStore()
+    const navigate = useNavigate()
 
     useEffect(() => {
         fetchRegions(true)
@@ -76,7 +78,7 @@ const MapPage: React.FC = () => {
                             key={region.id}
                             onClick={() => {
                                 if (region.status !== 'LOCKED' && region.status !== 'CONQUERED') {
-                                    window.location.href = `/launch?type=${region.id}`
+                                    navigate(`/launch?type=${region.id}`)
                                 }
                             }}
                             className={`
@@ -127,7 +129,7 @@ const MapPage: React.FC = () => {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation()
-                                            window.location.href = `/launch?type=${region.id}`
+                                            navigate(`/launch?type=${region.id}`)
                                         }}
                                         className="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-white/5 transition-colors group/btn"
                                     >
@@ -138,7 +140,7 @@ const MapPage: React.FC = () => {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation()
-                                            window.location.href = `/analysis?region=${region.id}`
+                                            navigate(`/analysis?region=${region.id}`)
                                         }}
                                         className="flex flex-col items-center justify-center gap-1 py-3 px-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-white/5 transition-colors group/btn"
                                     >

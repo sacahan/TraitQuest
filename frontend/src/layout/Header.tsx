@@ -130,8 +130,8 @@ export const Header = () => {
                 </div>
                 <div
                   className="size-8 rounded-full bg-cover bg-center border border-primary/30"
-                  style={{ backgroundImage: `url(${user?.avatarUrl})` }}
-                  title={user?.displayName}
+                    style={{ backgroundImage: `url(${user?.avatarUrl || '/assets/images/classes/civilian.webp'})` }}
+                    title={user?.displayName || '冒險者'}
                 ></div>
                 <button
                   onClick={logout}
@@ -214,7 +214,7 @@ export const Header = () => {
               <div className="flex items-center gap-3 mb-6">
                 <div
                   className="size-10 rounded-full bg-cover bg-center border border-primary/30"
-                  style={{ backgroundImage: `url(${user?.avatarUrl})` }}
+                  style={{ backgroundImage: `url(${user?.avatarUrl || '/assets/images/classes/civilian.webp'})` }}
                 ></div>
                 <div className="flex flex-col">
                   <span className="text-white font-bold">{user?.displayName}</span>
