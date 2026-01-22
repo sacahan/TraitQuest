@@ -17,9 +17,11 @@ export const HomeQuestCard = ({ title, type, description, imageUrl, icon, route 
     <div className="w-full bg-[#1a3323] p-5 rounded-2xl border border-[#23482f] hover:border-primary hover:shadow-[0_0_30px_rgba(17,212,82,0.3)] transition-all duration-300 hover:-translate-y-2 group flex flex-col h-full animate-card-pulse hover:animate-none">
       {/* 圖片區 */}
       <div className="relative w-full aspect-[4/3] mb-4 rounded-xl overflow-hidden bg-[#102216]">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
-          style={{ backgroundImage: `url(${imageUrl})` }}
+        <img
+          src={imageUrl}
+          alt={title}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
         />
         <div
           className="absolute top-3 left-3 bg-[#102216]/80 backdrop-blur-sm text-primary border border-primary/30 text-xs font-bold w-8 h-8 rounded-lg shadow-md flex items-center justify-center group-hover:bg-primary group-hover:text-[#102216] transition-colors duration-300"

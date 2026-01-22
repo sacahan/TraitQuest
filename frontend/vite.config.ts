@@ -10,6 +10,19 @@ export default defineConfig(({ mode }) => {
       react(),
       tailwindcss(),
     ],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-motion': ['framer-motion'],
+            'vendor-charts': ['chart.js', 'react-chartjs-2'],
+            'vendor-auth': ['@react-oauth/google'],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 800,
+    },
     server: {
       port: parseInt(env.FRONTEND_PORT || env.PORT || '3000'),
     },

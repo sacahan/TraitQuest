@@ -68,16 +68,30 @@ const Home = () => {
         <section className="w-full px-4 md:px-10 py-8 flex justify-center">
           <div className="w-full max-w-[1200px]">
             <div
-              className="flex min-h-[560px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden group md:shadow-2xl md:shadow-primary/10 transition-all duration-500 md:hover:shadow-primary/30 hero-bg-responsive"
+              className="flex min-h-[560px] flex-col gap-6 rounded-2xl items-center justify-center p-8 relative overflow-hidden group md:shadow-2xl md:shadow-primary/10 transition-all duration-500 md:hover:shadow-primary/30"
             >
-              <div className="absolute top-4 left-4 text-white/20 transition-transform duration-700 group-hover:rotate-45">
+              {/* Optimized Hero Background */}
+              <picture className="absolute inset-0 z-0">
+                <source media="(min-width: 768px)" srcSet="/assets/images/hero_bg.webp" />
+                <img
+                  src="/assets/images/hero_bg_mobile.webp"
+                  alt="Hero Background"
+                  className="w-full h-full object-cover opacity-100 transition-transform duration-700 group-hover:scale-105"
+                  fetchPriority="high"
+                />
+              </picture>
+
+              {/* Background Overlay */}
+              <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#102216]/70 via-[#102216]/80 to-[#102216]/95"></div>
+
+              <div className="absolute top-4 left-4 text-white/20 transition-transform duration-700 group-hover:rotate-45 z-10">
                 <span className="material-symbols-outlined text-6xl rotate-12 font-variation-FILL-1">swords</span>
               </div>
-              <div className="absolute bottom-4 right-4 text-white/20 transition-transform duration-700 group-hover:-rotate-45">
+              <div className="absolute bottom-4 right-4 text-white/20 transition-transform duration-700 group-hover:-rotate-45 z-10">
                 <span className="material-symbols-outlined text-6xl -rotate-12 font-variation-FILL-1">explore</span>
               </div>
               
-              <div className="flex flex-col gap-4 text-center z-10 max-w-[800px]">
+              <div className="flex flex-col gap-4 text-center z-10 max-w-[800px] relative">
                 <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary w-fit mx-auto mb-2 md:backdrop-blur-sm md:animate-pulse">
                   <span className="material-symbols-outlined text-sm">auto_awesome</span>
                   <span className="text-xs font-bold uppercase tracking-wider">New Adventure Available</span>
@@ -104,7 +118,7 @@ const Home = () => {
                 </CustomGoogleAuthButton>
               )}
               
-              <div className="flex gap-4 mt-4 text-sm text-gray-400 font-body">
+              <div className="flex gap-4 mt-4 text-sm text-gray-400 font-body z-10 relative">
                 <span className="flex items-center gap-1 group/item">
                   <span className="material-symbols-outlined text-primary text-sm transition-all group-hover/item:scale-125 group-hover/item:text-white">check_circle</span>
                   免費測試

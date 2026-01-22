@@ -25,13 +25,12 @@ const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ variant = 'defaul
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
       {/* 頂部發光層 */}
       <div
-        className={`absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-[#059669] rounded-full blur-[150px] animate-pulse-slow ${
-          isSubtle ? 'opacity-15' : 'opacity-30'
+        className={`absolute -top-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-[#059669] rounded-full blur-[80px] md:blur-[150px] animate-pulse-slow ${isSubtle ? 'opacity-10 md:opacity-15' : 'opacity-20 md:opacity-30'
         }`}
       />
       {/* 底部發光層 */}
       <div
-        className={`absolute bottom-0 right-0 w-[50%] h-[50%] bg-primary rounded-full blur-[180px] ${
+        className={`absolute bottom-0 right-0 w-[50%] h-[50%] bg-primary rounded-full blur-[100px] md:blur-[180px] ${
           isSubtle ? 'opacity-5' : 'opacity-10'
         }`}
       />
