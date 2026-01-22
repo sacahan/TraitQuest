@@ -184,12 +184,12 @@
     
       .bg-obsidian-glass {
         background: linear-gradient(145deg, rgba(20, 40, 30, 0.9) 0%, rgba(5, 26, 16, 0.95) 100%);
-        @apply backdrop-blur-xl border border-white/10;
+        @apply backdrop-blur-md md:backdrop-blur-xl border border-white/10;
       }
     
       .option-button {
         background: linear-gradient(135deg, rgba(10, 20, 30, 0.4) 0%, rgba(20, 50, 40, 0.3) 100%);
-        @apply backdrop-blur-md border border-white/10 transition-all duration-300 animate-crystal-breathe;
+        @apply backdrop-blur-sm md:backdrop-blur-md border border-white/10 transition-all duration-300 animate-crystal-breathe;
       }
     
       .option-button:hover {
@@ -268,10 +268,16 @@
         }
       }
         .glass-panel {
-          background: rgba(14, 31, 21, 0.6);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(17, 212, 82, 0.1);
-        }
+          background: rgba(14, 31, 21, 0.75);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(17, 212, 82, 0.1);
+          }
+          
+          @media (min-width: 768px) {
+            .glass-panel {
+                background: rgba(14, 31, 21, 0.6);
+                  backdrop-filter: blur(12px);
+            }
         .bg-grid-pattern {
           background-image: linear-gradient(rgba(17, 212, 82, 0.03) 1px, transparent 1px),
             linear-gradient(90deg, rgba(17, 212, 82, 0.03) 1px, transparent 1px);

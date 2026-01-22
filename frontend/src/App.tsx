@@ -70,9 +70,12 @@ function App() {
       <div className="bg-background-dark min-h-screen relative overflow-hidden flex flex-col">
         {/* 背景發光層 (Nebula Layers) */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px]"></div>
-          <div className="absolute top-1/4 left-10 w-64 h-64 bg-magic-cyan/10 rounded-full blur-[80px] animate-pulse" style={{ animationDuration: '4s' }}></div>
-          <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-[#1a4031] rounded-full blur-[100px] opacity-60 animate-pulse" style={{ animationDuration: '6s' }}></div>
+          {/* Main Nebula - Reduced blur on mobile, full on desktop */}
+          <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl md:blur-[120px]"></div>
+
+          {/* Secondary Orbs - Disable animation on mobile, reduce blur */}
+          <div className="absolute top-1/4 left-10 w-64 h-64 bg-magic-cyan/10 rounded-full blur-2xl md:blur-[80px] md:animate-pulse" style={{ animationDuration: '4s' }}></div>
+          <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-[#1a4031] rounded-full blur-2xl md:blur-[100px] opacity-60 md:animate-pulse" style={{ animationDuration: '6s' }}></div>
         </div>
 
         <div className="relative z-10 flex-1 flex flex-col">
