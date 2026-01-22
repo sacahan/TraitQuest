@@ -68,7 +68,7 @@ const Home = () => {
         <section className="w-full px-4 md:px-10 py-8 flex justify-center">
           <div className="w-full max-w-[1200px]">
             <div
-              className="flex min-h-[560px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden group shadow-2xl shadow-primary/10 transition-all duration-500 hover:shadow-primary/30 hero-bg-responsive"
+              className="flex min-h-[560px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-2xl items-center justify-center p-8 relative overflow-hidden group md:shadow-2xl md:shadow-primary/10 transition-all duration-500 md:hover:shadow-primary/30 hero-bg-responsive"
             >
               <div className="absolute top-4 left-4 text-white/20 transition-transform duration-700 group-hover:rotate-45">
                 <span className="material-symbols-outlined text-6xl rotate-12 font-variation-FILL-1">swords</span>
@@ -78,27 +78,27 @@ const Home = () => {
               </div>
               
               <div className="flex flex-col gap-4 text-center z-10 max-w-[800px]">
-                <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary w-fit mx-auto mb-2 backdrop-blur-sm animate-pulse">
+                <div className="inline-flex items-center justify-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 text-primary w-fit mx-auto mb-2 md:backdrop-blur-sm md:animate-pulse">
                   <span className="material-symbols-outlined text-sm">auto_awesome</span>
                   <span className="text-xs font-bold uppercase tracking-wider">New Adventure Available</span>
                 </div>
-                <h1 className="text-white text-4xl font-black leading-tight tracking-tight font-display md:text-6xl md:leading-tight drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                <h1 className="text-white text-4xl font-black leading-tight tracking-tight font-display md:text-6xl md:leading-tight md:drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                   開啟你的心靈冒險
                 </h1>
-                <h2 className="text-gray-200 text-base font-medium leading-relaxed md:text-lg max-w-2xl mx-auto drop-shadow-md font-body">
+                <h2 className="text-gray-200 text-base font-medium leading-relaxed md:text-lg max-w-2xl mx-auto md:drop-shadow-md font-body">
                   從 MBTI 的核心職業到九型人格的靈魂神殿。選擇你的試煉，解鎖隱藏在內心深處的英雄屬性與專屬天賦！
                 </h2>
               </div>
               {isAuthenticated ? (
                 <button
                   onClick={() => navigate('/map')}
-                  className="group flex min-w-[180px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-primary text-[#112217] hover:scale-105 active:scale-95 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-glow"
+                  className="group flex min-w-[180px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-primary text-[#112217] md:hover:scale-105 active:scale-95 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 md:animate-breathing-glow"
                 >
                   <span className="material-symbols-outlined text-xl transition-transform group-hover:rotate-12">map</span>
                   <span className="truncate font-body">進入心靈大陸</span>
                 </button>
               ) : (
-                <CustomGoogleAuthButton className="group flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-white text-[#112217] hover:bg-gray-100 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 animate-breathing-white hover:scale-105 active:scale-95 active:ring-4 active:ring-white/50">
+                  <CustomGoogleAuthButton className="group flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-full h-12 px-8 bg-white text-[#112217] md:hover:bg-gray-100 transition-all duration-300 text-base font-bold shadow-lg z-10 mt-4 md:animate-breathing-white hover:scale-105 active:scale-95 active:ring-4 active:ring-white/50">
                   <span className="material-symbols-outlined text-xl transition-transform group-hover:rotate-12">login</span>
                   <span className="truncate font-body">使用 Google 帳號開始</span>
                 </CustomGoogleAuthButton>
@@ -138,7 +138,7 @@ const Home = () => {
 
         {/* CTA Banner */}
         <section className="w-full flex justify-center pb-20 px-4">
-          <div className="w-full max-w-[960px] bg-gradient-to-r from-[#1a3323] to-[#112217] rounded-3xl p-10 text-center border border-[#23482f] shadow-2xl relative overflow-hidden group hover:border-primary/50 transition-all duration-500">
+          <div className="w-full max-w-[960px] bg-gradient-to-r from-[#1a3323] to-[#112217] rounded-3xl p-10 text-center border border-[#23482f] md:shadow-2xl relative overflow-hidden group md:hover:border-primary/50 transition-all duration-500">
             <div className="absolute top-0 right-0 p-10 opacity-10 pointer-events-none transition-transform duration-700 group-hover:scale-110 group-hover:rotate-12">
               <span className="material-symbols-outlined text-9xl">stadia_controller</span>
             </div>
@@ -148,13 +148,13 @@ const Home = () => {
               {isAuthenticated ? (
                 <button
                   onClick={() => navigate('/map')}
-                  className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold shadow-[0_0_20px_rgba(17,212,82,0.4)] hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] animate-breathing-glow group/btn font-body"
+                  className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] md:hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold md:shadow-[0_0_20px_rgba(17,212,82,0.4)] md:hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] md:animate-breathing-glow group/btn font-body"
                 >
                   <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">map</span>
                   <span>開啟冒險地圖</span>
                 </button>
               ) : (
-                  <CustomGoogleAuthButton className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold shadow-[0_0_20px_rgba(17,212,82,0.4)] hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] animate-breathing-glow group/btn font-body">
+                  <CustomGoogleAuthButton className="flex cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full h-14 px-10 bg-primary text-[#112217] md:hover:scale-105 active:scale-95 active:brightness-125 transition-all duration-300 text-lg font-bold md:shadow-[0_0_20px_rgba(17,212,82,0.4)] md:hover:shadow-[0_0_30px_rgba(17,212,82,0.8)] md:animate-breathing-glow group/btn font-body">
                     <span className="material-symbols-outlined transition-transform group-hover/btn:translate-x-1">play_arrow</span>
                     <span>立即登入</span>
                   </CustomGoogleAuthButton>
