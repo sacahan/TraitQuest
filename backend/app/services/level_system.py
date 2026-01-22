@@ -2,6 +2,7 @@ import logging
 
 logger = logging.getLogger("app")
 
+
 class LevelSystemService:
     """
     等級系統服務 - 累計制經驗值
@@ -34,14 +35,23 @@ class LevelSystemService:
     @staticmethod
     def get_level_from_exp(total_exp: int) -> int:
         """
-        根據累計 EXP 計算當前等級。
-
-        等級 = 滿足 threshold(L) <= total_exp 的最大 L
+        利用求根公式計算等級：Threshold = 100 × L × (L+1) / 2
+        求解滿足 threshold(level) > total_exp 的最小 level
         """
-        level = 1
-        while LevelSystemService.get_exp_threshold(level) <= total_exp:
+        import math
+
+        if total_exp <= 0:
+            return 1
+
+        discriminant = 1 + 8 * total_exp / 100
+        level = int((-1 + math.sqrt(discriminant)) / 2)
+
+        while LevelSystemService.get_exp_threshold(level) > total_exp:
+            level -= 1
+        while LevelSystemService.get_exp_threshold(level + 1) <= total_exp:
             level += 1
-        return level
+
+        return max(1, level + 1)
 
     @staticmethod
     def calculate_exp(quality_score: float) -> int:
@@ -63,7 +73,10 @@ class LevelSystemService:
         base_per_question = 100
         completion_bonus = 150
         quality_multiplier = max(1.0, min(1.2, avg_quality))
-        total = round(base_per_question * num_questions * quality_multiplier) + completion_bonus
+        total = (
+            round(base_per_question * num_questions * quality_multiplier)
+            + completion_bonus
+        )
         return total
 
     @staticmethod
@@ -90,14 +103,14 @@ class LevelSystemService:
                 "mode": "SOUL_NARRATIVE",
                 "name": "靈魂對話",
                 "description": "解鎖開放式文字輸入，AI 語義解析",
-                "allowFreeText": True
+                "allowFreeText": True,
             }
         else:
             return {
                 "mode": "QUANTITATIVE",
-                "name": "量化試煉", 
+                "name": "量化試煉",
                 "description": "五段式選擇題",
-                "allowFreeText": False
+                "allowFreeText": False,
             }
 
     @staticmethod
@@ -155,10 +168,17 @@ class LevelSystemService:
         獲取等級里程碑資訊。
         """
         milestones = {
-            11: {"unlock": "靈魂對話模式", "message": "你的靈魂已足夠強大，現在你可以用自己的語言與艾比交談了。"},
-            16: {"unlock": "深邃試煉", "message": "你已準備好迎接更長的冒險，試煉題數增加至 15 題。"},
+            11: {
+                "unlock": "靈魂對話模式",
+                "message": "你的靈魂已足夠強大，現在你可以用自己的語言與艾比交談了。",
+            },
+            16: {
+                "unlock": "深邃試煉",
+                "message": "你已準備好迎接更長的冒險，試煉題數增加至 15 題。",
+            },
         }
         return milestones.get(level)
+
 
 level_service = LevelSystemService()
 

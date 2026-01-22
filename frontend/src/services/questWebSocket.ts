@@ -1,73 +1,95 @@
-// 考慮到 WebSocket 傳輸的資料多樣性，使用泛型來讓調用方定義資料型別
-type EventCallback<T = unknown> = (data: T) => void; 
+import type { Question, FinalResult } from "../types/quest";
+
+type EventCallback<T = unknown> = (data: T) => void;
+
+interface QuestUpdateData {
+  narrative?: string;
+  questionIndex?: number;
+  totalSteps?: number;
+  guideMessage?: string;
+  question?: Question;
+  message?: string;
+}
+
+interface QuestError {
+  message: string;
+  code?: string;
+}
+
+interface QuestEvents {
+  first_question: QuestUpdateData;
+  next_question: QuestUpdateData;
+  quest_complete: { message: string };
+  final_result: FinalResult;
+  error: QuestError;
+  guide_message: { message: string };
+}
+
+interface QuestWebSocketMessage {
+  event: keyof QuestEvents;
+  data: QuestEvents[keyof QuestEvents];
+}
 
 class QuestWebSocketClient {
   private socket: WebSocket | null = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private callbacks: Map<string, EventCallback<any>[]> = new Map();
+  private callbacks: Map<keyof QuestEvents, EventCallback[]> = new Map();
 
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000/v1/quests/ws';
+    this.baseUrl =
+      import.meta.env.VITE_WS_BASE_URL || "ws://localhost:8000/v1/quests/ws";
   }
 
   connect(sessionId: string, token: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      const url = `${this.baseUrl}?sessionId=${sessionId}&token=${token}`;
-      this.socket = new WebSocket(url);
+      const url = `${this.baseUrl}?sessionId=${sessionId}`;
+      this.socket = new WebSocket(url, ["Bearer", token]);
 
       this.socket.onopen = () => {
-        console.log('🔌 WebSocket Connected');
         resolve();
       };
 
-      this.socket.onmessage = (event) => {
+      this.socket.onmessage = (event: MessageEvent) => {
         try {
-          const message = JSON.parse(event.data);
+          const message = JSON.parse(event.data) as QuestWebSocketMessage;
           const { event: eventName, data } = message;
           this.trigger(eventName, data);
         } catch (error) {
-          console.error('Failed to parse WS message:', error);
+          console.error("Failed to parse WS message:", error);
         }
       };
 
       this.socket.onerror = (error) => {
-        console.error('WebSocket Error:', error);
+        console.error("WebSocket Error:", error);
         reject(error);
       };
 
-      this.socket.onclose = () => {
-        console.log('🔌 WebSocket Closed');
-      };
+      this.socket.onclose = () => {};
     });
   }
 
-  // 允許調用者指定 T，預設為 unknown
-  on<T = unknown>(event: string, callback: EventCallback<T>) {
-    if (!this.callbacks.has(event)) {
-      this.callbacks.set(event, []);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.callbacks.get(event)?.push(callback as EventCallback<any>);
+  on<K extends keyof QuestEvents>(
+    event: K,
+    callback: EventCallback<QuestEvents[K]>,
+  ) {
+    const handlers = this.callbacks.get(event) || [];
+    handlers.push(callback as EventCallback);
+    this.callbacks.set(event, handlers);
   }
 
-  private trigger(event: string, data: unknown) {
-    const eventCallbacks = this.callbacks.get(event);
-    if (eventCallbacks) {
-      // 這裡使用 safe cast 並配合 eslint-disable，因為這是底層 Dispatcher
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      eventCallbacks.forEach(callback => callback(data as any));
+  private trigger<K extends keyof QuestEvents>(event: K, data: QuestEvents[K]) {
+    const handlers = this.callbacks.get(event);
+    if (handlers) {
+      handlers.forEach((handler) => handler(data));
     }
   }
-
-
 
   send(event: string, data: unknown) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify({ event, data }));
     } else {
-      console.error('WebSocket is not open');
+      console.error("WebSocket is not open");
     }
   }
 
@@ -80,4 +102,3 @@ class QuestWebSocketClient {
 }
 
 export const questWsClient = new QuestWebSocketClient();
-

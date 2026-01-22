@@ -5,6 +5,7 @@ from app.core.agent import TraitQuestAgent as Agent
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.tool_context import ToolContext
 from app.core.config import settings
+from app.db.session import AsyncSessionLocal
 
 logger = logging.getLogger("app")
 
@@ -332,6 +333,7 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 5. **所有類型都必須輸出 destiny_guide 與 destiny_bonds**
 """
 
+
 def submit_transformation(
     race_id: Optional[str] = None,
     race: Optional[dict] = None,
@@ -344,7 +346,7 @@ def submit_transformation(
     talents: Optional[list[dict]] = None,
     destiny_guide: Optional[dict] = None,
     destiny_bonds: Optional[dict] = None,
-    tool_context: Optional[ToolContext] = None
+    tool_context: Optional[ToolContext] = None,
 ) -> dict:
     """
     提交最終的英雄轉生報告。
@@ -515,7 +517,7 @@ async def validate_transformation_output(
 
     # 4. 收集需要驗證的 ID
     ids_to_validate = []
-    
+
     if tool_response.get("class_id"):
         ids_to_validate.append(tool_response["class_id"])
     if tool_response.get("race_id"):
@@ -529,10 +531,12 @@ async def validate_transformation_output(
     if ids_to_validate:
         try:
             async with AsyncSessionLocal() as db_session:
-                stmt = select(GameDefinition.id).where(GameDefinition.id.in_(ids_to_validate))
+                stmt = select(GameDefinition.id).where(
+                    GameDefinition.id.in_(ids_to_validate)
+                )
                 result = await db_session.execute(stmt)
                 valid_ids = {row[0] for row in result}
-            
+
             invalid_ids = set(ids_to_validate) - valid_ids
             if invalid_ids:
                 logger.error(f"❌ DB 驗證失敗！無效的資產 ID: {invalid_ids}")
@@ -541,8 +545,10 @@ async def validate_transformation_output(
                 logger.info("✅ DB 驗證通過：所有 ID 皆存在於 game_definitions")
         except Exception as e:
             logger.error(f"❌ DB 驗證過程發生錯誤: {e}")
-    
-    logger.info(f"✅ Transformation 驗證完成: quest_type={quest_type}, fields={list(tool_response.keys())}")
+
+    logger.info(
+        f"✅ Transformation 驗證完成: quest_type={quest_type}, fields={list(tool_response.keys())}"
+    )
     return None  # 返回 None 表示使用原始結果
 
 
@@ -557,8 +563,8 @@ def create_transformation_agent() -> Agent:
             extra_headers=settings.GITHUB_COPILOT_HEADERS,
         ),
         tools=[submit_transformation],
-        after_tool_callback=validate_transformation_output
+        after_tool_callback=validate_transformation_output,
     )
 
-transformation_agent = create_transformation_agent()
 
+transformation_agent = create_transformation_agent()

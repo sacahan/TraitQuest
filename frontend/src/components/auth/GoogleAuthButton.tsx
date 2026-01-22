@@ -1,6 +1,6 @@
-import { GoogleLogin } from '@react-oauth/google';
-import { useAuthStore } from '../../stores/authStore';
-import { authService } from '../../services/authService';
+import { GoogleLogin } from "@react-oauth/google";
+import { useAuthStore } from "../../stores/authStore";
+import { authService } from "../../services/authService";
 
 const GoogleAuthButton = () => {
   const login = useAuthStore((state) => state.login);
@@ -11,7 +11,9 @@ const GoogleAuthButton = () => {
         onSuccess={async (credentialResponse) => {
           if (credentialResponse.credential) {
             try {
-              const userData = await authService.login(credentialResponse.credential);
+              const userData = await authService.login(
+                credentialResponse.credential,
+              );
               login(userData.accessToken, {
                 userId: userData.userId,
                 displayName: userData.displayName,
@@ -19,15 +21,12 @@ const GoogleAuthButton = () => {
                 level: userData.level,
                 exp: userData.exp,
               });
-              console.log('Login Success');
             } catch (error) {
-              console.error('Login Failed:', error);
+              console.error("Login Failed:", error);
             }
           }
         }}
-        onError={() => {
-          console.log('Login Failed');
-        }}
+        onError={() => {}}
         theme="filled_black"
         shape="pill"
       />

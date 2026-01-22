@@ -1,8 +1,8 @@
-import { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useGoogleLogin } from '@react-oauth/google';
-import { useAuthStore } from '../stores/authStore';
-import { authService } from '../services/authService';
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
+import { useAuthStore } from "../stores/authStore";
+import { authService } from "../services/authService";
 
 /**
  * 自定義 Hook：處理 Google 登入、AuthStore 更新以及自動重導向
@@ -16,7 +16,6 @@ export const useGoogleAuth = () => {
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        console.log('Google Login Success, fetching user data...');
         const userData = await authService.login(tokenResponse.access_token);
 
         loginStore(userData.accessToken, {
@@ -27,20 +26,17 @@ export const useGoogleAuth = () => {
           exp: userData.exp,
         });
 
-        console.log('User logged in successfully:', userData.displayName);
-
         // 如果有設定重導向路徑，則執行跳轉
         if (redirectPathRef.current) {
           const path = redirectPathRef.current;
           redirectPathRef.current = null; // 清除暫存
-          console.log(`Redirecting to: ${path}`);
           navigate(path);
         }
       } catch (error) {
-        console.error('TraitQuest Login Failed:', error);
+        console.error("TraitQuest Login Failed:", error);
       }
     },
-    onError: () => console.log('Google Login Failed'),
+    onError: () => {},
   });
 
   /**
@@ -57,6 +53,6 @@ export const useGoogleAuth = () => {
   };
 
   return {
-    login
+    login,
   };
 };

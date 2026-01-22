@@ -5,8 +5,13 @@ from sqlalchemy.future import select
 from sqlalchemy import func
 from app.db.session import get_db
 from app.db.models import User, UserQuest, GameDefinition
-from app.core.security import verify_google_token, create_access_token, decode_access_token
+from app.core.security import (
+    verify_google_token,
+    create_access_token,
+    decode_access_token,
+)
 from app.services.email_service import send_welcome_email
+from app.services.cache_service import CacheService
 from pydantic import BaseModel
 
 
@@ -90,6 +95,10 @@ async def get_me(
     user_id_str = payload.get("sub")
     user_id = uuid.UUID(user_id_str)
 
+    cached = await CacheService.get_user_profile(str(user_id))
+    if cached:
+        return cached
+
     # 獲取基礎用戶資料
     user_result = await db.execute(select(User).where(User.id == user_id))
     user = user_result.scalar_one_or_none()
@@ -148,7 +157,7 @@ async def get_me(
     # 計算等級進度
     exp_progress = max(0.0, min(1.0, current_exp / next_level_total_exp))
 
-    return {
+    response_data = {
         "userId": str(user.id),
         "displayName": user.display_name,
         "avatarUrl": user.hero_avatar_url or "/assets/images/classes/civilian.webp",
@@ -165,18 +174,22 @@ async def get_me(
             "race": {
                 "id": race_info.id if race_info else "",
                 "name": race_info.name if race_info else "尚未覺醒",
-                "description": race_info.metadata_info.get("description")
-                if race_info
-                else "",
+                "description": (
+                    race_info.metadata_info.get("description") if race_info else ""
+                ),
             },
             "class": {
                 "id": class_info.id if class_info else "",
                 "name": class_info.name if class_info else "平民",
-                "description": class_info.metadata_info.get("traits")
-                if class_info
-                else "",
+                "description": (
+                    class_info.metadata_info.get("traits") if class_info else ""
+                ),
             },
         },
         "heroProfile": hero_profile,
         "latestChronicle": latest_quest.hero_chronicle if latest_quest else "",
     }
+
+    await CacheService.set_user_profile(str(user_id), response_data)
+
+    return response_data

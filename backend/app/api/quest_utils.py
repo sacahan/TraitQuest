@@ -9,9 +9,11 @@ from sqlalchemy import select, update, func
 
 from app.core.session import session_service
 from app.core.redis_client import redis_client
+from app.services.cache_service import CacheService
 from app.agents.questionnaire import questionnaire_agent
 from app.agents.analytics import analytics_agent, create_analytics_agent
 from app.agents.transformation import transformation_agent
+
 # Removed validator_agent import
 from app.agents.summary import summary_agent
 from app.services.level_system import level_service
@@ -31,6 +33,7 @@ QUESTIONNAIRE_NAME = "questionnaire"
 # Connection Manager
 # =============================================================================
 
+
 class ConnectionManager:
     """管理 WebSocket 連線"""
 
@@ -39,7 +42,9 @@ class ConnectionManager:
         self.pending_tasks: Dict[str, List[asyncio.Task]] = {}
 
     async def connect(self, session_id: str, websocket: WebSocket):
-        await websocket.accept()
+        # Accept WebSocket connection with the Bearer subprotocol
+        # This is required because the frontend sends: ['Bearer', token]
+        await websocket.accept(subprotocol="Bearer")
         self.active_connections[session_id] = websocket
         self.pending_tasks[session_id] = []
         logger.info(f"🔌 WebSocket Connected: {session_id}")
@@ -54,11 +59,22 @@ class ConnectionManager:
 
     async def send_event(self, session_id: str, event: str, data: dict):
         if session_id in self.active_connections:
+            websocket = self.active_connections[session_id]
+            # Check if WebSocket is actually connected before sending
             try:
+                from starlette.websockets import WebSocketState
+
+                if websocket.client_state != WebSocketState.CONNECTED:
+                    logger.warning(
+                        f"⚠️ WebSocket {session_id} not in CONNECTED state, skipping send"
+                    )
+                    return
+
                 message = {"event": event, "data": data}
-                await self.active_connections[session_id].send_json(message)
+                await websocket.send_json(message)
             except Exception as e:
                 logger.error(f"Failed to send event to {session_id}: {e}")
+
 
 manager = ConnectionManager()
 
@@ -67,41 +83,46 @@ manager = ConnectionManager()
 # Display Name Query (玩家名稱查詢 - Redis 快取版本)
 # =============================================================================
 
+
 async def get_user_display_name(user_id: str) -> str:
     """
     查詢使用者的 display_name（使用 Redis 快取）
-    
+
     此函式會優先從 Redis 讀取，若快取未命中，則查詢資料庫並更新 Redis 快取。
     符合開發憲章第二條：使用 Redis 作為緩存策略，支援分散式部署。
-    
+
     Args:
         user_id: 使用者 ID (UUID 字串格式)
-        
+
     Returns:
         str: 使用者的 display_name，若未找到則返回 "Unknown User"
     """
     # 1. 嘗試從 Redis 快取讀取
     cached_name = await redis_client.get_display_name(user_id)
     if cached_name:
-        logger.debug(f"💾 [Redis Cache Hit] display_name for {user_id[:8]}... = {cached_name}")
+        logger.debug(
+            f"💾 [Redis Cache Hit] display_name for {user_id[:8]}... = {cached_name}"
+        )
         return cached_name
-    
+
     # 2. 快取未命中，查詢資料庫
     async with AsyncSessionLocal() as db_session:
         try:
             stmt = select(User.display_name).where(User.id == uuid.UUID(user_id))
             result = await db_session.execute(stmt)
             display_name = result.scalar_one_or_none()
-            
+
             if display_name:
                 # 3. 存入 Redis 快取（TTL: 30 分鐘）
                 await redis_client.set_display_name(user_id, display_name)
-                logger.debug(f"🗄️ [DB Query] display_name for {user_id[:8]}... = {display_name}")
+                logger.debug(
+                    f"🗄️ [DB Query] display_name for {user_id[:8]}... = {display_name}"
+                )
                 return display_name
             else:
                 logger.warning(f"⚠️ User {user_id} not found in database")
                 return "Noname"
-                
+
         except Exception as e:
             logger.error(f"❌ Error fetching display_name for {user_id}: {e}")
             return "Noname"
@@ -111,32 +132,42 @@ async def get_user_display_name(user_id: str) -> str:
 # Session 管理工具 (Session Helpers)
 # =============================================================================
 
-async def get_or_create_session(app_name: str, user_id: str, session_id: str) -> Session:
+
+async def get_or_create_session(
+    app_name: str, user_id: str, session_id: str
+) -> Session:
     """
     確保獲取有效的 Session。
-    
+
     流程：
     1. 嘗試 get_session。
     2. 若失敗（不存在），則執行 create_session。
-    
+
     符合開發憲章第七條：Agent Output Key 隔離原則，確保各 Agent 命名空間獨立。
     """
     try:
-        session = await session_service.get_session(app_name=app_name, user_id=user_id, session_id=session_id)
+        session = await session_service.get_session(
+            app_name=app_name, user_id=user_id, session_id=session_id
+        )
         if session:
             return session
     except Exception:
         # get_session 可能在 Session 不存在時拋出異常
         pass
-    
+
     # 建立新 Session
-    logger.info(f"🆕 Creating new session for app: {app_name}, session_id: {session_id}")
-    return await session_service.create_session(app_name=app_name, user_id=user_id, session_id=session_id)
+    logger.info(
+        f"🆕 Creating new session for app: {app_name}, session_id: {session_id}"
+    )
+    return await session_service.create_session(
+        app_name=app_name, user_id=user_id, session_id=session_id
+    )
 
 
 # =============================================================================
 # 通用 Agent 執行器 (Unified Agent Runner)
 # =============================================================================
+
 
 async def run_agent_async(
     agent,
@@ -144,13 +175,13 @@ async def run_agent_async(
     user_id: str,
     session_id: str,
     instruction: str,
-    output_key: str
+    output_key: str,
 ) -> dict:
     """
     通用 Agent 執行器：統一處理 Session 建立、Runner 執行與結果讀取
-    
+
     此函式封裝了所有 Agent 執行的共同邏輯，消除 quest_ws.py 中重複的程式碼。
-    
+
     Args:
         agent: Agent 實例（如 questionnaire_agent、analytics_agent 等）
         app_name: Session 命名空間（每個 Agent 應有獨立的 namespace）
@@ -158,42 +189,45 @@ async def run_agent_async(
         session_id: WebSocket Session ID
         instruction: 傳給 Agent 的指令文字
         output_key: Agent 將結果寫入 session.state 的 key 名稱
-        
+
     Returns:
         dict: Agent 執行後存入 session.state[output_key] 的結果
     """
     # 1. 確保 Session 存在
     session = await get_or_create_session(
-        app_name=app_name, 
-        user_id=user_id, 
-        session_id=session_id
+        app_name=app_name, user_id=user_id, session_id=session_id
     )
-    
+
     # 2. 建立 Runner 並準備訊息
     runner = Runner(agent=agent, app_name=app_name, session_service=session_service)
     user_msg = types.Content(role="user", parts=[types.Part(text=instruction)])
-    
+
     # 3. 執行 Agent 對話循環
-    async for event in runner.run_async(user_id=user_id, session_id=session_id, new_message=user_msg):
+    async for event in runner.run_async(
+        user_id=user_id, session_id=session_id, new_message=user_msg
+    ):
         if event.actions and event.actions.end_of_agent:
             break
-    
+
     # 4. 從 Session State 讀取結果
     # [Fix] 重新獲取 Session 以取得最新狀態，因為 Runner 執行過程中
     # tool_context.state 的變更可能未反映在原 session 物件引用上
-    session = await session_service.get_session(app_name=app_name, user_id=user_id, session_id=session_id)
+    session = await session_service.get_session(
+        app_name=app_name, user_id=user_id, session_id=session_id
+    )
     result = session.state.get(output_key, {})
-    
+
     # 5. 安全解析（防止 Agent 回傳字串而非物件）
     if isinstance(result, str):
         try:
             result = json.loads(result)
         except json.JSONDecodeError:
             result = {}
-    
+
     logger.debug(f"🚀 App: {app_name}, Agent: {agent.name}, Result: {result}")
 
     return result
+
 
 async def run_analytics_task(
     user_id: str,
@@ -222,7 +256,7 @@ async def run_analytics_task(
     """
     try:
         logger.debug(f"🧠 [Background] Starting AI analysis for session {session_id}")
-        
+
         # 組合指令
         instruction = f"題目：{question_text}\n"
         if options:
@@ -230,8 +264,9 @@ async def run_analytics_task(
         instruction += f"玩家回答：{answer}\n"
         instruction += f"測驗範疇：{test_category}\n"
         instruction += f"題型：{question_type}"
-        
-        logger.info(f"🧠 [Background] Instruction: {instruction}")   
+
+        logger.info(f"🧠 [Background] Instruction: {instruction}")
+
         # 使用通用執行器執行 Analytics Agent
         result = await run_agent_async(
             agent=analytics_agent,
@@ -239,30 +274,33 @@ async def run_analytics_task(
             user_id=user_id,
             session_id=session_id,
             instruction=instruction,
-            output_key="analytics_output"
+            output_key="analytics_output",
         )
         logger.info(f"🧠 [Background] Result: {result}")
-        
+
+        if result:
+            await CacheService.set_analytics_result(session_id, result)
+
         if result:
             # 將單次分析結果存回主 Session 以供後續聚合 (Aggregation)
             # 這是 "Map-Reduce" 模式中的 Map 階段結果收集
             # [Fix] 重新獲取最新 session 以避免 Race Condition
             # 因為多個 analytics task 可能同時執行，使用傳入的舊 session 引用會導致資料覆蓋
             main_session = await session_service.get_session(
-                app_name=QUESTIONNAIRE_NAME, 
-                user_id=user_id, 
-                session_id=session_id
+                app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=session_id
             )
-            
+
             if "accumulated_analytics" not in main_session.state:
                 main_session.state["accumulated_analytics"] = []
             main_session.state["accumulated_analytics"].append(result)
-            
+
             # 顯式保存 session state
             await session_service.update_session(main_session)
-            
-            logger.debug(f"✅ [Background] Analysis complete for {session_id}: {result.get('quality_score', 'N/A')}")
-            
+
+            logger.debug(
+                f"✅ [Background] Analysis complete for {session_id}: {result.get('quality_score', 'N/A')}"
+            )
+
     except Exception as e:
         logger.error(f"Error in background analytics task: {e}")
 
@@ -280,10 +318,11 @@ BASE_STEPS = {
     "gallup": 10,
 }
 
+
 def get_total_steps(quest_id: str, level: int = 1) -> int:
     """
     根據測驗類型與玩家等級動態計算總題數。
-    
+
     規則（由 level_service.get_question_count 統一管理）：
     - Lv.1-14: 10 題
     - Lv.15-19: 15 題
@@ -295,13 +334,13 @@ def get_total_steps(quest_id: str, level: int = 1) -> int:
 async def get_hero_chronicle(user_id: str) -> str:
     """
     從資料庫讀取玩家的 hero_chronicle（長期記憶摘要）
-    
+
     此摘要由 Summary Agent 生成，用於維持跨測驗的敘事連貫性。
     當 Questionnaire Agent 生成新題目時，會參考此摘要來維持角色的「靈魂一致性」。
-    
+
     Args:
         user_id: 玩家 ID
-        
+
     Returns:
         str: hero_chronicle 摘要文字，若無則返回空字串
     """
@@ -319,29 +358,78 @@ async def get_hero_chronicle(user_id: str) -> str:
         return chronicle if chronicle else ""
 
 
+async def get_analytics_for_quests(
+    db: AsyncSessionLocal, user_id: str, quest_types: list[str]
+) -> dict[str, list[UserQuest]]:
+    """
+    批量獲取指定類型測驗的分析結果，使用 IN 查詢取代迴圈中的多次查詢
+
+    此函式避免 N+1 查詢問題，透過單一 SQL 查詢獲取所有相關的 UserQuest 記錄。
+    使用 IN 子句過濾 quest_type，而非在 Python 迴圈中進行多次查詢。
+
+    Args:
+        db: 資料庫會話 (AsyncSession)
+        user_id: 使用者 ID (UUID 字串格式)
+        quest_types: 測驗類型列表 (例如: ["mbti", "bigfive", "enneagram"])
+
+    Returns:
+        dict[str, list[UserQuest]]: 按 quest_type 分組的測驗記錄字典
+
+    Example:
+        >>> analytics_by_type = await get_analytics_for_quests(
+        ...     db, user_id, ["mbti", "bigfive", "enneagram"]
+        ... )
+        >>> mbti_quests = analytics_by_type.get("mbti", [])
+    """
+    # 單一查詢獲取所有相關的 UserQuest 記錄
+    stmt = (
+        select(UserQuest)
+        .where(
+            UserQuest.user_id == uuid.UUID(user_id),
+            UserQuest.quest_type.in_(quest_types),
+            UserQuest.completed_at.isnot(None),
+        )
+        .order_by(UserQuest.completed_at.desc())
+    )
+
+    result = await db.execute(stmt)
+    all_quests = result.scalars().all()
+
+    # 在記憶體中按 quest_type 分組（避免在 DB 層級分組的複雜性）
+    grouped: dict[str, list[UserQuest]] = {}
+    for quest in all_quests:
+        quest_type = quest.quest_type
+        if quest_type not in grouped:
+            grouped[quest_type] = []
+        grouped[quest_type].append(quest)
+
+    return grouped
 
 
-
-async def run_questionnaire_agent(user_id: str, session_id: str, instruction: str) -> dict:
+async def run_questionnaire_agent(
+    user_id: str, session_id: str, instruction: str
+) -> dict:
     """
     [核心邏輯] 執行 Questionnaire Agent 對話循環
-    
+
     此函式封裝了 "User Input -> Agent Thinking -> Tool Execution -> Result Parsing" 的完整週期。
-    
+
     關鍵設計：Single Source of Truth
     - 我們不依賴 Agent 的直接文字回應 (return text)。
     - 而是依賴 Agent 執行工具後，寫入 Session State 的 `questionnaire_output` 結構化資料。
-    
+
     Args:
         user_id: 每個使用者的唯一標識 (Sub)
         session_id: 前端生成的 Session ID (用於追踪 WebSocket 連線與狀態)
         instruction: 輸入給 Agent 的文字指令 (User Message)，包含情境描述或玩家回答
-        
+
     Returns:
         dict: 包含 narrative (敘事), question (題目), guideMessage (引導) 的標準化字典
     """
-    logger.debug(f"🔄 [run_questionnaire_agent] Starting cycle for session {session_id}")
-    
+    logger.debug(
+        f"🔄 [run_questionnaire_agent] Starting cycle for session {session_id}"
+    )
+
     # 使用通用執行器直接呼叫 Questionnaire Agent
     questionnaire_output = await run_agent_async(
         agent=questionnaire_agent,
@@ -349,18 +437,18 @@ async def run_questionnaire_agent(user_id: str, session_id: str, instruction: st
         user_id=user_id,
         session_id=session_id,
         instruction=instruction,
-        output_key="questionnaire_output"
+        output_key="questionnaire_output",
     )
-    
+
     logger.debug(f"🏁 Questionnaire output: {questionnaire_output}")
-    
+
     # 格式化輸出
     narrative = questionnaire_output.get("narrative", "")
     question_data = questionnaire_output.get("question")
     guide_message = questionnaire_output.get("guideMessage", "")
-    
+
     return {
         "narrative": narrative,
         "question": question_data,
-        "guideMessage": guide_message
+        "guideMessage": guide_message,
     }

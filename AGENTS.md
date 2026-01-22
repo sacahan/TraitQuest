@@ -1,165 +1,172 @@
-# AGENTS.md - TraitQuest 專案開發總覽
+AGENTS.md — TraitQuest Agent Playbook (約 150 行)
 
-## 1. 專案簡介 (Project Introduction)
+目標：讓 AI 代理快速上手並遵守本庫規範。涵蓋建置/測試指令、程式風格、錯誤處理、命名慣例、代理與 UI/敘事禁律。若有疑問，優先遵守《開發憲章》與本文規範。
 
-**TraitQuest** 是一個將**深層心理學分析**與**黑暗奇幻 RPG (Dark Fantasy RPG)** 體驗深度結合的創新平台。本專案的核心目標是將枯燥的心理測評（MBTI, Big Five, DISC, Enneagram, Gallup）轉化為一場具有靈魂深度的覺醒之旅。
+==============================================================================
+0) 必讀憲章與規則來源
+------------------------------------------------------------------------------
+- 開發憲章（最高準則）: .agent/rules/development-constitution.md
+- 現有文件：README.md（root）、frontend/README.md、backend/README.md
+- 無 Cursor/Copilot 規則檔（未發現 .cursor/rules、.cursorrules、.github/copilot-instructions.md）。
 
-透過 AI Game Master (GM) 的敘事引導，玩家的心理特質將被映射為獨特的冒險角色，在探索自我的同時，也能與其他玩家的靈魂角色互動。
+==============================================================================
+1) 專案結構速覽
+------------------------------------------------------------------------------
+- frontend/ : React 19 + Vite + TS, Tailwind 4, Zustand, axios, Chart.js, Framer Motion.
+- backend/  : FastAPI (Python 3.11+), SQLAlchemy async, Redis, PostgreSQL, LiteLLM, Google OAuth/ADK。
+- spec/     : 規格與資產對照 (assets, contract, templates)。
+- tests/    : frontend/tests (Playwright)、backend/tests (pytest)。
 
----
+==============================================================================
+2) 環境與變數 (關鍵)
+------------------------------------------------------------------------------
+- 前端環境變數 (Docker/build-docker.sh 需求)：
+  - VITE_API_BASE_URL, VITE_WS_BASE_URL（協議匹配 http↔ws, https↔wss）
+  - VITE_GOOGLE_CLIENT_ID
+- 後端：.env（DATABASE_URL, LITELLM_URL 等）。
+- 嚴禁自創資產 ID；所有 ID 需出自 spec/assets.md 真值表。
 
-## 2. 開發憲章 (Development Constitution)
+==============================================================================
+3) 安裝 / Build / Lint / Test 指令
+------------------------------------------------------------------------------
+前端 (frontend/)
+- 安裝：npm install
+- 開發伺服：npm run dev
+- 構建：npm run build  (tsc -b && vite build)
+- Lint：npm run lint   (eslint .)
+- E2E/Playwright：npx playwright test
+- 單測/單檔：
+  - Playwright 單測：npx playwright test frontend/tests/quest-completion.spec.ts
+  - 以關鍵字：npx playwright test --grep "Quest Completion"
 
-本專案遵循《TraitQuest 開發憲章》作為最高指導準則，所有開發者（人類或 AI）務必嚴格遵守。
+後端 (backend/)
+- 安裝：uv sync
+- 開發伺服：uv run uvicorn app.main:app --reload
+- 測試：uv run pytest
+- 單測：uv run pytest backend/tests/agents/test_validator.py -k verify_ids
+- 注意 google.adk 在測試中以 mock 方式處理（見 backend/tests/agents/test_validator.py）。
 
-### 核心精神
+共通
+- 無 Makefile；無 monorepo 根級指令。於對應子目錄執行。
 
-- **主題**：心理學驅動的黑暗奇幻 RPG。
-- **視覺**：古老卷軸、深淵冒險、魔導技術。**嚴禁**使用現代、扁平化設計 (Flat Design)。
-- **交互**：打字機特效敘事、即時屬性感應、沉浸式體驗。
+==============================================================================
+4) TypeScript / 前端程式風格
+------------------------------------------------------------------------------
+- TS 5.9，ESNext modules，target ES2022。strict 開啟，noUnusedLocals/Parameters。
+- tsconfig: bundler moduleResolution, verbatimModuleSyntax, allowImportingTsExtensions, jsx: react-jsx, no emit。
+- ESLint (frontend/eslint.config.js): js+ts recommended, react-hooks recommended, react-refresh vite, globals.browser。
+- 格式化：未見 Prettier/biome；沿用專案現有風格與縮排（2 空格）。
+- Imports：使用 ESNext/絕對不隱式 any；保留擴展名由 bundler 處理；遵守 moduleDetection: force。
+- 命名：camelCase 函式/變數，PascalCase component/class，UPPER_SNAKE_CASE 常數。
+- 型別：避免 any；勿用 @ts-ignore/@ts-expect-error；hooks/props/state 全數標型別。
+- React：使用函式元件 + hooks；lazy + Suspense；路由使用 react-router-dom v6；狀態以 Zustand。
+- 狀態：authStore/questStore/mapStore；localStorage 儲存 token；axios 拦截器自動附帶 Authorization。
+- 風格/敘事：必須符合「黑暗奇幻 + 古老卷軸 + 魔導技術」，禁止扁平化設計；打字機效果、即時屬性感應需保留。
+- 視覺改動：若需純樣式/佈局/動效，委派前端 UI/UX 專員；本文件僅述規範。
 
-### 技術鐵律
+==============================================================================
+5) Python / 後端程式風格
+------------------------------------------------------------------------------
+- Python 3.11+；FastAPI；SQLAlchemy async；Redis；JWT；pydantic v2。
+- 型別：遵循 PEP8、4-space、行長 ≤180；公有函式/類/模組寫 docstring；函式/方法全數型別標註。
+- 配置：依 .env (pydantic-settings)；核心設定在 app/core/config.py。
+- Logging：app/core/logging_config.configure_logging；主 logger "app"；請沿用。
+- 安全：唯一登入流程為 Google OAuth；verify_google_token + create_access_token；decode_access_token 驗證。
+- DB：PostgreSQL；禁止對大型 JSONB 全量索引；需 functional/B-tree；Redis 用於 session/leaderboard。
+- 例外處理：FastAPI 全域 exception handlers 已定義（ValidationError, ResponseValidationError, global）。新增 handler 時務必回傳 JSON 結構；避免吞例外。
+- 測試：pytest；可用 uv run pytest；單測 -k；避免重寫業務邏輯於測試；僅 mock 外部依賴 (google.adk, I/O)。
 
-- **資料庫**：PostgreSQL (主要) + Redis (緩存)。
-- **索引**：禁止對大型 JSONB 欄位全量索引，必須提取常用查詢欄位 (Functional Index)。
-- **驗證**：唯一支持 Google OAuth。
-- **AI 權限**：AI GM 僅有「匹配權」與「描述權」，**嚴禁**「創造權」。所有資產 ID 必須來自預定義清單。
+==============================================================================
+6) 開發憲章強制條款（節選，務必遵守）
+------------------------------------------------------------------------------
+- 主題/視覺：黑暗奇幻、古老卷軸、深淵冒險、魔導技術；嚴禁扁平化。
+- 身份驗證：僅支援 Google OAuth；不得自建密碼流。
+- 資產 ID：AI 僅有匹配權/描述權，無創造權；ID 必須來自預定義清單。
+- Session 策略：Fresh Start；斷線不恢復；長期記憶由 Summary Agent 維護 hero_chronicle。
+- 大型 JSONB：禁全量 GIN；需抽取常用欄位建索引。
+- 生成文本/文件：預設使用正體中文。
+- 多 Agent：必須為各 Agent 設定獨立 output_key；避免覆蓋。
+- UI 互動：打字機效果；答題時側邊屬性能量槽需有即時視覺回饋。
 
-### 生產環境變數 (Docker Build)
+==============================================================================
+7) 代理/多代理實作提醒
+------------------------------------------------------------------------------
+- output_key/namespace 必須分離，避免覆蓋。
+- Validator Agent：負責校驗 AI 產出 ID 是否存在真值清單；發現幻覺需重試。
+- Summary Agent：定期 10 輪或測驗結束更新 hero_chronicle。
+- Transformation/Analytics/Questionnaire Agents：遵守映射五層結構。
 
-Docker 建置時需要在 `build-docker.sh` 中設定以下前端環境變數：
+==============================================================================
+8) 命名、錯誤處理與日誌
+------------------------------------------------------------------------------
+- 命名：snake_case (Python 函式/變數)、PascalCase (類)、UPPER_SNAKE_CASE (常數)。TS 採 camelCase/ PascalCase。
+- 錯誤處理：後端 API 回傳 JSON；避免裸 except；記錄 stack trace（已在全域 handler）。
+- 日誌：使用 app logger；關鍵啟動/連線檢查已在 lifespan；新增日誌請保持語系一致（中文描述）。
 
-| 變數名稱                | 說明                                      | 範例值                                                                         |
-| :---------------------- | :---------------------------------------- | :----------------------------------------------------------------------------- |
-| `VITE_API_BASE_URL`     | 後端 API 基礎 URL                         | `https://traitquest.brianhan.cc/v1`                                            |
-| `VITE_WS_BASE_URL`      | WebSocket 連線 URL（需對應 API URL 協議） | `wss://traitquest.brianhan.cc/v1/quests/ws`                                    |
-| `VITE_GOOGLE_CLIENT_ID` | Google OAuth Client ID                    | `824374244473-06a44nrl7ramqnt270k86i74oe2npsn6.apps.googleusercontent.com`     |
+==============================================================================
+9) 測試策略與案例
+------------------------------------------------------------------------------
+- 後端：pytest；mock 外部（google.adk、外部 I/O）；勿重寫業務邏輯；測試驗證實際訊息格式。
+- 前端：Playwright 端對端；可使用 route.fulfill mock API；在 beforeEach 設置 localStorage token。
+- 單測指令示例：
+  - 後端單案例：uv run pytest backend/tests/agents/test_validator.py -k verify_ids_with_valid_ids
+  - 前端單 spec：npx playwright test frontend/tests/mobile-navigation.spec.ts --headed
 
-> **注意**：WebSocket URL 協議需與 API URL 一致（`https` → `wss`，`http` → `ws`）。
+==============================================================================
+10) API/通訊要點
+------------------------------------------------------------------------------
+- 前端 axios 攔截器自動附帶 Bearer token；401 會觸發 logout 並重導首頁。
+- WebSocket：VITE_WS_BASE_URL (wss/http 對應)；quest_ws.py 為入口。
+- CORS：後端 CORSMiddleware 已設 allow_credentials=True；origins 由環境設定。
 
----
+==============================================================================
+11) 前端 UI/UX 禁忌與義務
+------------------------------------------------------------------------------
+- 保持打字機效果、霧化/光暈、深色系；色彩：背景 #102216，主色 #11D452，輔助 #D4AF37。
+- 保留即時屬性感應（回答時能量槽閃爍）。
+- 視覺調整請交由 UI/UX 專員；若需業務邏輯變更可自行處理。
 
-## 3. 系統架構 (System Architecture)
+==============================================================================
+12) 安全與資料約束
+------------------------------------------------------------------------------
+- 不得記錄或回傳敏感憑證；token 僅存 localStorage。
+- Hero/Quest 資料需符合映射：Enneagram→Race，MBTI→Class，Big Five→Stats，DISC→Stance，Gallup→Talent。
+- Fresh Start：斷線不恢復，重新挑戰；長期摘要供敘事一致性。
 
-### 3.1 前端 (Frontend)
+==============================================================================
+13) 產出語言與文件
+------------------------------------------------------------------------------
+- 代碼註解、文件、輸出預設使用正體中文。
+- 新文件/更新 README 時需同步反映變更。
 
-- **風格**：黑暗奇幻、擬物化 (Skeuomorphism)。
-- **配色**：
-  - 背景：深綠黑 `#102216`
-  - 主色：螢光綠 `#11D452` (能量、高亮)
-  - 輔助：古金 `#D4AF37` (邊框、稀有度)
+==============================================================================
+14) 快速檢查清單 (供代理執行任務前自檢)
+------------------------------------------------------------------------------
+[] 確認所需環境變數與資產 ID 來源 (spec/assets.md)
+[] 前端改動：遵循暗黑奇幻風格，避免扁平化；視覺改動委派 UI/UX 專員
+[] 後端改動：遵守憲章限制（OAuth 單一來源、JSONB 索引禁令）
+[] 型別安全：不得使用 any/@ts-ignore；Python 函式需型別與 docstring
+[] 測試：至少跑相關 pytest 或 Playwright；單檔指令可用 -k / --grep
+[] 日誌/錯誤：使用統一 logger，回傳 JSON，避免裸 except
+[] 多 Agent：output_key 隔離，Validator 校驗 ID
+[] 文件：必要時更新 README/本 AGENTS.md
 
-### 3.2 後端 (Backend)
+==============================================================================
+15) 常用指令備忘 (複製即用)
+------------------------------------------------------------------------------
+- 前端開發：cd frontend && npm run dev
+- 前端建置：cd frontend && npm run build
+- 前端 Lint：cd frontend && npm run lint
+- 前端單測 (Playwright)：cd frontend && npx playwright test --grep "Quest"
+- 後端開發：cd backend && uv run uvicorn app.main:app --reload
+- 後端測試：cd backend && uv run pytest -k validator
+- 後端單檔：cd backend && uv run pytest backend/tests/api/test_map.py
 
-- **API**：RESTful API (詳細定義於 `spec/contract.md`)。
-- **持久化**：
-  - `users`: 玩家基本資料。
-  - `traits`: 英雄面板與心理分析結果 (Incremental Update)。
-  - `user_quests`: 測驗歷程記錄。
-  - `game_definitions`: 唯讀的預定義資產庫。
+==============================================================================
+16) 如需新規範
+------------------------------------------------------------------------------
+- 若新增規則與《開發憲章》衝突，需先修訂憲章；否則以憲章為準。
+- 文檔預設中文；保持與現有語氣一致（黑暗奇幻、魔導科技）。
 
-### 3.3 多代理系統 (Multi-Agent System)
-
-TraitQuest 採用四大代理協作模型，由 **WebSocket Handler (`quest_ws.py`)** 統籌執行，確保從敘事引導到數據驗證的完整性。其運作流程可分為「循環對話階段」與「最終轉換階段」：
-
-#### 循環對話階段 (The Interaction Loop)
-
-此階段旨在透過 RPG 劇情採集玩家心理特徵：
-
-- **Questionnaire Agent (說書人)**：
-    作為引導者「艾比 (Abby)」，讀取玩家的 `hero_chronicle` (長期記憶) 與當前等級，動態生成包裹在 RPG 劇情中的情境題目。
-
-- **Analytics Agent (分析官)**：
-    接收玩家回答後，將非結構化的對話解析為結構化的心理標籤增量（如：`Openness +0.2`），並評估回答品質 (`quality_score`) 以決定經驗值加成。
-
-- **Summary Agent (史官)**：
-    將該輪對話歷程與性格趨勢壓縮為 300 字內的 `hero_chronicle` 摘要，確保 AI GM 在跨 Session 或跨題目時具備「長期記憶」能力。
-    - **成本優化**：每 10 輪對話或測驗結束時才執行一次更新。
-
-#### 最終轉換階段 (The Final Transformation)
-
-當測驗完成後，系統進入嚴格的資料寫入流程：
-
-- **Result Analysis Agent (AI Master)**：
-    執行「轉生儀式」，將測驗累積的所有心理標籤映射至預定義的遊戲資產 ID (如 `RACE_5`, `CLS_INTJ`)。同時生成「命運指引」與「命運羈絆」內容。
-
-- **Validator Agent (守望者)**：
-    系統的最後防線，負責「校對」AI Master 產出的 ID 是否存在於 `game_definitions` 真值清單中。若發現 AI 幻覺 (自創 ID) 或 JSON 語義矛盾，將強制執行重試機制。
-
-> Agent Prompt 詳細定義可見 [templates](spec/templates.md)。
-
----
-
-## 4. 遊戲化映射系統 (The Grand Mapping)
-
-本專案的核心數據結構，不可隨意更改：
-
-| 心理模型 (Source)        | 映射 RPG 要素 (Target) | 說明                                        |
-| :----------------------- | :--------------------- | :------------------------------------------ |
-| **Enneagram (九型人格)** | **種族 (Race)**        | 定義靈魂本質與動機 (如：鐵律族、聖靈族)     |
-| **MBTI (16 型人格)**     | **核心職業 (Class)**   | 定義行為原型 (如：深淵謀略家、流浪詩人)     |
-| **Big Five (五大性格)**  | **基礎屬性 (Stats)**   | O(智力), C(防禦), E(速度), A(魅力), N(洞察) |
-| **DISC (行為風格)**      | **戰略姿態 (Stance)**  | 定義戰鬥模式 (攻、援、守、算)               |
-| **Gallup (天賦優勢)**    | **傳奇技能 (Talent)**  | 定義主/被動技能                             |
-
-> **注意**：詳細 ID 對照表請參閱 [assets](spec/assets.md)。
-
----
-
-## 5. API 協議摘要 (API Contract)
-
-詳細規格請參閱 [contract](spec/contract.md)。
-
-- **Session 策略**：採取 **Fresh Start**。斷線不恢復當前進度，需重新挑戰副本。
-- **主要 Endpoints**：
-  - `POST /v1/auth/login`: Google 登入。
-  - `POST /v1/quests/interact`: 提交回答（支援量化按鈕與開放式文字）。
-  - `GET /v1/quests/{sessionId}/result`: 獲取英雄面板結果。
-
----
-
-## 6. 專案目錄結構 (Project Structure)
-
-```
-TraitQuest/
-├── .agent/
-│   └── rules/
-│       └── development-constitution.md  # 開發憲章 (最高準則)
-├── spec/                                # 技術規格文檔
-│   ├── spec.md                          # 系統需求說明書
-│   ├── contract.md                      # API 用戶端協議
-│   └── assets.md                        # 遊戲資產庫 (ID 對照表)
-├── demo/                                # 核心介面與原型 (原 demo)
-│   ├── index/                           # 首頁
-│   ├── enneagram/                       # 九型人格介紹
-│   ├── mbti/                            # MBTI 介紹
-│   ├── bigfive/                         # Big Five 介紹
-│   ├── disc/                            # DISC 介紹
-│   ├── gallup/                          # Gallup 介紹
-│   ├── questionnaire/                   # 測驗互動頁面
-│   ├── analysis/                        # 個人化結果分析
-│   ├── map/                             # 心靈大陸地圖
-│   └── bulletin_board/                  # 公會佈告欄
-├── src/                                 # 源代碼 (待開發)
-└── AGENTS.md                            # 本文件 (專案總覽)
-```
-
----
-
-## 7. 目前進度 (Current Status)
-
-目前專案處於 **原型設計優化與開發準備階段**。
-
-- **規格文檔 (Spec)**：已完成 V1.0 - V1.2 版 (`spec/`)。
-- **介面原型 (UI Prototype)**：
-  - 已將 `demo` 目錄遷移至 `traitquest` 並完成目錄結構標準化。
-  - **完成全頁面 UI 標準化**：所有頁面已統一採用一致的 Tailwind 配置、Header/Footer 組件與黑暗奇幻風格。
-  - 核心互動流（首頁 -> 介紹 -> 問卷 -> 結果）已具備完整的視覺體現。
-
----
-
-## 8. 開發者注意事項 (Developer Notes)
-
-1.  **修改規格**：若需修改資料結構或 API，請優先更新 `spec/` 下的對應文檔。
-2.  **資產引用**：在編寫程式碼或生成資料時，務必參考 `spec/assets.md` 中的預定義 ID，**不可憑空捏造 ID**。
-3.  **多語言**：所有文檔與輸出預設使用 **正體中文 (Traditional Chinese)**。
+==============================================================================
+（完）

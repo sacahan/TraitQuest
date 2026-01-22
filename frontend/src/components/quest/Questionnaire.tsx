@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useQuestStore } from '../../stores/questStore';
-import NarrativeDisplay from './NarrativeDisplay';
-import QuestionCard from './QuestionCard';
-import MagicHourglass from '../ui/MagicHourglass';
-import GlowEffect from '../effects/GlowEffect';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Zap, MoveRight } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuestStore } from "../../stores/questStore";
+import { useAuthStore } from "../../stores/authStore";
+import NarrativeDisplay from "./NarrativeDisplay";
+import QuestionCard from "./QuestionCard";
+import MagicHourglass from "../ui/MagicHourglass";
+import GlowEffect from "../effects/GlowEffect";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, Zap, MoveRight } from "lucide-react";
 
 const REGIONS_MAPPING: Record<string, string> = {
   mbti: "MBTI 聖殿",
@@ -17,22 +18,25 @@ const REGIONS_MAPPING: Record<string, string> = {
 };
 
 const Questionnaire = () => {
-  const { 
-    submitAnswer, 
-    currentQuestion, 
+  const {
+    submitAnswer,
+    currentQuestion,
     narrative,
     guideMessage,
-    isCompleted, 
+    isCompleted,
     isLoading,
     questionIndex,
     totalSteps,
     sessionId,
     questId,
     finalResult,
-    requestResult
+    requestResult,
+    setOnLevelUp,
   } = useQuestStore();
 
-  const regionName = questId ? REGIONS_MAPPING[questId as keyof typeof REGIONS_MAPPING] : "英雄殿堂";
+  const regionName = questId
+    ? REGIONS_MAPPING[questId as keyof typeof REGIONS_MAPPING]
+    : "英雄殿堂";
 
   // 控制 QuestionCard 是否可以顯示（等待 NarrativeDisplay 完成）
   const [narrativeComplete, setNarrativeComplete] = useState(false);
@@ -49,6 +53,20 @@ const Questionnaire = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setOnLevelUp((levelInfo) => {
+      useAuthStore.getState().updateUser({
+        level: levelInfo.level,
+        exp: levelInfo.exp,
+        heroClassId: levelInfo.classId,
+      });
+    });
+
+    return () => {
+      setOnLevelUp(null);
+    };
+  }, [setOnLevelUp]);
+
   // 當收到最終結果時，跳轉到分析頁面
   useEffect(() => {
     if (finalResult) {
@@ -64,11 +82,21 @@ const Questionnaire = () => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] bg-[radial-gradient(circle,rgba(17,212,82,0.15)_0%,rgba(16,34,22,0)_70%)] opacity-60"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-primary/20 rounded-full animate-spin-slow opacity-30 flex items-center justify-center">
             <div className="absolute w-[90%] h-[90%] border border-dashed border-primary/20 rounded-full animate-spin-reverse"></div>
-            <span className="absolute top-2 text-primary/30 text-xs transform -translate-x-1/2 font-mono">Ω</span>
-            <span className="absolute bottom-2 text-primary/30 text-xs transform -translate-x-1/2 font-mono">Σ</span>
+            <span className="absolute top-2 text-primary/30 text-xs transform -translate-x-1/2 font-mono">
+              Ω
+            </span>
+            <span className="absolute bottom-2 text-primary/30 text-xs transform -translate-x-1/2 font-mono">
+              Σ
+            </span>
           </div>
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/40 rounded-full animate-float" style={{ animationDelay: '0s' }}></div>
-          <div className="absolute top-3/4 left-1/3 w-3 h-3 bg-primary/20 rounded-full animate-float" style={{ animationDelay: '1s' }}></div>
+          <div
+            className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/40 rounded-full animate-float"
+            style={{ animationDelay: "0s" }}
+          ></div>
+          <div
+            className="absolute top-3/4 left-1/3 w-3 h-3 bg-primary/20 rounded-full animate-float"
+            style={{ animationDelay: "1s" }}
+          ></div>
         </div>
 
         {/* Content */}
@@ -79,16 +107,32 @@ const Questionnaire = () => {
             <div className="relative bg-gradient-to-br from-green-900 via-[#0a1510] to-black border-2 border-primary/50 w-24 h-24 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(17,212,82,0.3)]">
               <Sparkles className="w-12 h-12 text-primary drop-shadow-[0_0_10px_rgba(17,212,82,0.5)]" />
             </div>
-            <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 text-primary/20 pointer-events-none" fill="currentColor" viewBox="0 0 100 100">
-              <path d="M10,50 Q30,20 50,40 Q70,20 90,50" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2"></path>
-              <path d="M10,50 Q30,80 50,60 Q70,80 90,50" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2"></path>
+            <svg
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 text-primary/20 pointer-events-none"
+              fill="currentColor"
+              viewBox="0 0 100 100"
+            >
+              <path
+                d="M10,50 Q30,20 50,40 Q70,20 90,50"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="2"
+              ></path>
+              <path
+                d="M10,50 Q30,80 50,60 Q70,80 90,50"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeWidth="2"
+              ></path>
             </svg>
           </div>
 
           {/* Title */}
           <motion.h1
             initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }} 
+            animate={{ opacity: 1, scale: 1 }}
             className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-6 tracking-tight drop-shadow-lg font-display uppercase"
           >
             靈魂試煉完成
@@ -122,14 +166,18 @@ const Questionnaire = () => {
               {isLoading ? (
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
               ) : (
-                  <Zap className="w-6 h-6 animate-pulse text-primary" />
+                <Zap className="w-6 h-6 animate-pulse text-primary" />
               )}
-              <span>{isLoading ? '儀式進行中，請勿離開畫面 >>>' : '啟動轉生儀式'}</span>
-              {!isLoading && <MoveRight className="w-6 h-6 group-hover:translate-x-1 transition-transform bg-transparent" />}
+              <span>
+                {isLoading ? "儀式進行中，請勿離開畫面 >>>" : "啟動轉生儀式"}
+              </span>
+              {!isLoading && (
+                <MoveRight className="w-6 h-6 group-hover:translate-x-1 transition-transform bg-transparent" />
+              )}
             </motion.button>
           </div>
         </div>
-       </div>
+      </div>
     );
   }
 
@@ -139,13 +187,23 @@ const Questionnaire = () => {
       {/* 頂部進度條區域 */}
       <div className="w-full max-w-3xl mx-auto px-6 mt-2 mb-0">
         <div className="flex justify-between text-sm font-bold tracking-wide text-primary/80 mb-2 px-1">
-          <span className="uppercase text-xs tracking-widest text-white/50">Soul Resonance</span>
-          <span>{currentQuestion ? `${Math.min(100, Math.round(((questionIndex + 1) / totalSteps) * 100))}%` : '0%'}</span>
+          <span className="uppercase text-xs tracking-widest text-white/50">
+            Soul Resonance
+          </span>
+          <span>
+            {currentQuestion
+              ? `${Math.min(100, Math.round(((questionIndex + 1) / totalSteps) * 100))}%`
+              : "0%"}
+          </span>
         </div>
         <div className="h-6 w-full bg-[#08120d] rounded-full p-1 border border-white/10 shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)] relative overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-green-900 via-primary to-[#4fffb0] rounded-full transition-all duration-1000 relative overflow-hidden shadow-[0_0_15px_#0bda73]"
-            style={{ width: currentQuestion ? `${Math.min(100, Math.round(((questionIndex + 1) / totalSteps) * 100))}%` : '0%' }}
+            style={{
+              width: currentQuestion
+                ? `${Math.min(100, Math.round(((questionIndex + 1) / totalSteps) * 100))}%`
+                : "0%",
+            }}
           >
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMiIvPjwvc3ZnPg==')] opacity-30"></div>
           </div>
@@ -160,17 +218,20 @@ const Questionnaire = () => {
           {/* 左側 Abby 組件 */}
           <div className="hidden lg:flex lg:col-span-3 flex-col items-center justify-center relative animate-float z-20 sticky top-24">
             <div className="relative bg-[#11251c] border border-primary/30 p-5 rounded-2xl rounded-bl-sm mb-6 shadow-2xl max-w-[260px] backdrop-blur-sm min-h-[100px]">
-              <span className="text-primary text-xs font-bold uppercase block mb-2 tracking-wider not-italic">心靈嚮導 · Abby</span>
+              <span className="text-primary text-xs font-bold uppercase block mb-2 tracking-wider not-italic">
+                心靈嚮導 · Abby
+              </span>
               <AnimatePresence mode="wait">
                 <motion.p
-                  key={guideMessage || 'default'}
+                  key={guideMessage || "default"}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }}
                   className="text-white text-base font-medium leading-relaxed italic text-white/90"
                 >
-                  {guideMessage || "凝視這面心靈之鏡... 剥去表象的偽裝，那個在寂靜中凝視著你的，是怎樣的存在？"}
+                  {guideMessage ||
+                    "凝視這面心靈之鏡... 剥去表象的偽裝，那個在寂靜中凝視著你的，是怎樣的存在？"}
                 </motion.p>
               </AnimatePresence>
               <div className="absolute -bottom-2 left-6 w-4 h-4 bg-[#11251c] border-b border-l border-primary/30 transform -rotate-45"></div>
@@ -180,7 +241,7 @@ const Questionnaire = () => {
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
                 style={{
-                  backgroundImage: "url('/assets/images/quest_bg.webp')"
+                  backgroundImage: "url('/assets/images/quest_bg.webp')",
                 }}
               ></div>
             </div>
@@ -209,7 +270,6 @@ const Questionnaire = () => {
               </AnimatePresence>
             </div>
 
-
             {/* 問題卡片 - 等待敘事完成後顯示 */}
             <div className="px-4">
               <AnimatePresence mode="wait">
@@ -223,7 +283,7 @@ const Questionnaire = () => {
                     transition={{
                       type: "spring",
                       stiffness: 260,
-                      damping: 20
+                      damping: 20,
                     }}
                     className="w-full"
                   >
@@ -242,7 +302,7 @@ const Questionnaire = () => {
 
       <AnimatePresence>
         {(isLoading || !sessionId) && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -256,14 +316,14 @@ const Questionnaire = () => {
             </div>
 
             <div className="mt-8 flex flex-col items-center z-10">
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-primary text-sm font-black tracking-[0.4em] uppercase mb-2"
               >
                 Time Weaving
               </motion.p>
-              <motion.p 
+              <motion.p
                 animate={{ opacity: [0.4, 1, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 className="text-white/60 text-xs font-serif italic tracking-wider"
@@ -272,9 +332,13 @@ const Questionnaire = () => {
               </motion.p>
 
               <div className="mt-6 w-32 h-[1px] bg-white/10 relative overflow-hidden rounded-full">
-                <motion.div 
+                <motion.div
                   animate={{ left: ["-100%", "100%"] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                   className="absolute top-0 bottom-0 w-1/2 bg-gradient-to-r from-transparent via-primary/40 to-transparent"
                 />
               </div>
