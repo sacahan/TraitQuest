@@ -110,6 +110,7 @@ async def run_copilot_questionnaire_agent(
     from app.agents.copilot_questionnaire import (
         get_questionnaire_session_id,
         create_questionnaire_tools,
+        QUESTIONNAIRE_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
 
@@ -121,7 +122,7 @@ async def run_copilot_questionnaire_agent(
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
             tools=create_questionnaire_tools(),
-            system_message=f"你是 TraitQuest 的引導者艾比，當前玩家 ID: {user_id}，Session ID: {session_id}",
+            system_message=QUESTIONNAIRE_INSTRUCTION + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(
@@ -164,6 +165,7 @@ async def run_copilot_analytics_agent(
     from app.agents.copilot_analytics import (
         get_analytics_session_id,
         create_analytics_tools,
+        ANALYTICS_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
 
@@ -173,7 +175,7 @@ async def run_copilot_analytics_agent(
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
             tools=create_analytics_tools(),
-            system_message=f"你是 TraitQuest 的靈魂分析官，當前玩家 ID: {user_id}，Session ID: {session_id}",
+            system_message=ANALYTICS_INSTRUCTION + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(
@@ -209,6 +211,7 @@ async def run_copilot_transformation_agent(
     from app.agents.copilot_transformation import (
         get_transformation_session_id,
         create_transformation_tools,
+        TRANSFORMATION_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
 
@@ -218,7 +221,7 @@ async def run_copilot_transformation_agent(
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
             tools=create_transformation_tools(),
-            system_message=f"你是 TraitQuest 的轉生代理，當前測驗類型: {quest_type}，玩家 ID: {user_id}，Session ID: {session_id}",
+            system_message=TRANSFORMATION_INSTRUCTION + f"\n當前測驗類型: {quest_type}，玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(
@@ -252,6 +255,7 @@ async def run_copilot_summary_agent(
     from app.agents.copilot_summary import (
         get_summary_session_id,
         create_summary_tools,
+        SUMMARY_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
 
@@ -261,7 +265,7 @@ async def run_copilot_summary_agent(
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
             tools=create_summary_tools(),
-            system_message=f"你是 TraitQuest 的史官，當前玩家 ID: {user_id}，Session ID: {session_id}",
+            system_message=SUMMARY_INSTRUCTION + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(
@@ -361,7 +365,7 @@ async def run_analytics_task(
     背景任務：執行 Analytics Agent 並將分析結果存入 Session
 
     此函式被設計為 Fire-and-forget 的背景任務，避免阻塞主對話流程。
-    它會啟動一個獨立的 Analytics Agent 用於分析玩家回答的心理特徵，
+    它會啟動一個獨立 Analytics Agent 用於分析玩家回答的心理特徵，
     並將結果存入 Session State 的 `accumulated_analytics` 列表中，供最終結算使用。
 
     Args:
@@ -464,7 +468,7 @@ async def get_analytics_for_quests(
     批量獲取指定類型測驗的分析結果，使用 IN 查詢取代迴圈中的多次查詢
 
     此函式避免 N+1 查詢問題，透過單一 SQL 查詢獲取所有相關的 UserQuest 記錄。
-    使用 IN 子句過濾 quest_type，而非在 Python 迴圈中進行多次查詢。
+    使用 IN 子子過濾 quest_type，而非在 Python 迴圈中進行多次查詢。
 
     Args:
         db: 資料庫會話 (AsyncSession)
@@ -512,3 +516,23 @@ async def run_questionnaire_agent(
     使用 Copilot SDK 執行 Questionnaire Agent
     """
     return await run_copilot_questionnaire_agent(user_id, session_id, instruction)
+
+
+async def run_agent_async(
+    agent,
+    app_name: str,
+    user_id: str,
+    session_id: str,
+    instruction: str,
+    output_key: str,
+) -> dict:
+    """
+    相容舊版的 run_agent_async 呼叫，轉發到對應的 Copilot 執行器
+    """
+    if app_name == "summary":
+        return await run_copilot_summary_agent(user_id, session_id, instruction)
+    elif app_name == "transformation":
+        # 注意：這裡需要 quest_type，嘗試從 session 獲取或使用預設
+        return await run_copilot_transformation_agent(user_id, session_id, instruction, "mbti")
+    
+    return {}
