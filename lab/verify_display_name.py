@@ -19,7 +19,6 @@ sys.modules['app.agents.transformation'] = MagicMock()
 sys.modules['app.agents.validator'] = MagicMock()
 sys.modules['app.agents.summary'] = MagicMock()
 
-sys.modules['google.adk.runners'] = MagicMock()
 sys.modules['google.genai'] = MagicMock()
 
 # Mock redis_client

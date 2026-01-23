@@ -41,7 +41,7 @@
 - **非同步任務**: **asyncio.create_task** + **Redis Queue** (可選)
   - _用途_: Analytics Agent 的後台非同步分析
   - _保證機制_: 測驗結束時使用 `asyncio.gather` 等待所有任務完成
-- **AI Orchestration**: **Agent Development Kit (ADK)**
+- **AI Orchestration**: **GitHub Copilot SDK**
   - _用途_: 構建與管理 Summary Agent, Questionnaire Agent 等多代理協作流程。
 - **LLM 網關**: **LiteLLM**
   - _模型源_: 連接 **Github Copilot LLM Models**。
@@ -123,7 +123,7 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
   - 實作 `demo/questionnaire` (支持 `QUANTITATIVE` 與 `SOUL_NARRATIVE`)，需保留 demo 中的打字機與發光特效。
   - 實作 `demo/analysis` 基礎版 (雷達圖、英雄面板)。
 - **Backend**:
-  - 實作 FastAPI + ADK 基礎架構。
+  - 實作 FastAPI + Copilot SDK 基礎架構。
   - Google OAuth 整合。
   - **資料結構**: 實作 [contract.md](contract.md) V1.3 定義的基礎 Profile 格式。
   - **LLM**: 實作單一 Agent (Questionnaire Agent) 進行出題與基礎分析，參考 [template.md](template.md)。
@@ -173,9 +173,9 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 ### 4.1 冒險系統 (Quest System)
 
-- **敘事引擎**: 透過 ADK 調用 LiteLLM Library 生成回應，參考 [using-cloud-proprietary-models-via-litellm](https://google.github.io/adk-docs/agents/models/#using-cloud-proprietary-models-via-litellm)。
-- **容錯機制**: ADK 層需處理 LLM 格式錯誤重試。
-- **本地開發**: 開發者需確保 LiteLLM Library 正常運作。
+- **敘事引擎**: 透過 GitHub Copilot SDK 生成回應。
+- **容錯機制**: Copilot SDK 層需處理 LLM 格式錯誤重試。
+- **本地開發**: 開發者需確保 GitHub Copilot SDK 正常運作。
 
 ### 4.2 英雄面板 (Hero Profile)
 
@@ -184,14 +184,14 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 ### 4.3 後台與監控
 
-- **ADK 監控**: 利用 ADK 內建工具或日誌監控 Agent 狀態。
+- **Copilot 監控**: 利用 Copilot SDK 內建工具或日誌監控 Agent 狀態。
 - **資料庫管理**: 本地開發使用 Docker Compose 或直接安裝的 PGAdmin/DBeaver 管理數據。
 
 ---
 
 ## 5. 測試策略 (Testing Strategy)
 
-- **單元測試**: 針對 ADK Agent 的邏輯進行測試。
+- **單元測試**: 針對 Copilot Agent 的邏輯進行測試。
 - **整合測試**: 驗證 Local DB + API + LiteLLM 的完整鏈路。
 
 ---
@@ -200,5 +200,5 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 1.  確認此規格書 (v1.1) 無誤。
 2.  初始化 Vite + React 專案。
-3.  初始化 Python FastAPI 專案與 ADK 環境。
+3.  實作 Python FastAPI 專案與 Copilot SDK 環境。
 4.  開始 Phase 1 開發：移植首頁樣式與實作登入。

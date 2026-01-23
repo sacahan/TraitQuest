@@ -16,7 +16,7 @@
 
 - **核心框架**: FastAPI (Python)
 - **套件管理**: UV (高效能依賴管理)
-- **代理開發**: Google ADK (Agent Development Kit)
+- **代理開發**: GitHub Copilot SDK
 - **身份驗證**: Google OAuth (唯一支持)
 - **資料庫**:
   - PostgreSQL + JSONB (主資料結構)
@@ -40,6 +40,14 @@
    ```bash
    uv run uvicorn app.main:app --reload
    ```
+
+### Docker 容器化
+若需在隔離環境中運行：
+```bash
+# 確保已設置 GITHUB_COPILOT_TOKEN
+export GITHUB_COPILOT_TOKEN="your_token_here"
+./scripts/docker-run.sh up
+```
 
 ## 📂 卷軸目錄 (Folder Structure)
 

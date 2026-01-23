@@ -111,7 +111,7 @@ def setup_copilot_logging():
     2. 移除所有現有的 handler
     3. 添加統一格式的 handler
     """
-    from app.core.logging_config import logger
+    logger = logging.getLogger("app")
     
     copilot_logger = logging.getLogger("copilot")
     copilot_logger.setLevel(logging.INFO)

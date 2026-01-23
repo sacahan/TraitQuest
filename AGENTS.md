@@ -13,7 +13,7 @@ AGENTS.md — TraitQuest Agent Playbook (約 150 行)
 1) 專案結構速覽
 ------------------------------------------------------------------------------
 - frontend/ : React 19 + Vite + TS, Tailwind 4, Zustand, axios, Chart.js, Framer Motion.
-- backend/  : FastAPI (Python 3.11+), SQLAlchemy async, Redis, PostgreSQL, LiteLLM, Google OAuth/ADK。
+- backend/  : FastAPI (Python 3.11+), SQLAlchemy async, Redis, PostgreSQL, LiteLLM, Google OAuth / GitHub Copilot SDK。
 - spec/     : 規格與資產對照 (assets, contract, templates)。
 - tests/    : frontend/tests (Playwright)、backend/tests (pytest)。
 
@@ -42,9 +42,10 @@ AGENTS.md — TraitQuest Agent Playbook (約 150 行)
 後端 (backend/)
 - 安裝：uv sync
 - 開發伺服：uv run uvicorn app.main:app --reload
-- 測試：uv run pytest
-- 單測：uv run pytest backend/tests/agents/test_validator.py -k verify_ids
-- 注意 google.adk 在測試中以 mock 方式處理（見 backend/tests/agents/test_validator.py）。
+- 測試：pytest
+- 單測：pytest backend/tests/agents/test_validator.py -k verify_ids
+- Docker 啟動：./scripts/docker-run.sh up (需設置 GITHUB_COPILOT_TOKEN)
+- 注意 Copilot SDK 在測試中以 mock 方式處理（見 tests/conftest.py）。
 
 共通
 - 無 Makefile；無 monorepo 根級指令。於對應子目錄執行。
@@ -74,7 +75,7 @@ AGENTS.md — TraitQuest Agent Playbook (約 150 行)
 - 安全：唯一登入流程為 Google OAuth；verify_google_token + create_access_token；decode_access_token 驗證。
 - DB：PostgreSQL；禁止對大型 JSONB 全量索引；需 functional/B-tree；Redis 用於 session/leaderboard。
 - 例外處理：FastAPI 全域 exception handlers 已定義（ValidationError, ResponseValidationError, global）。新增 handler 時務必回傳 JSON 結構；避免吞例外。
-- 測試：pytest；可用 uv run pytest；單測 -k；避免重寫業務邏輯於測試；僅 mock 外部依賴 (google.adk, I/O)。
+- 測試：pytest；可用 uv run pytest；單測 -k；避免重寫業務邏輯於測試；僅 mock 外部依賴 (Copilot SDK, I/O)。
 
 ==============================================================================
 6) 開發憲章強制條款（節選，務必遵守）
@@ -106,7 +107,7 @@ AGENTS.md — TraitQuest Agent Playbook (約 150 行)
 ==============================================================================
 9) 測試策略與案例
 ------------------------------------------------------------------------------
-- 後端：pytest；mock 外部（google.adk、外部 I/O）；勿重寫業務邏輯；測試驗證實際訊息格式。
+- 後端：pytest；mock 外部（Copilot SDK、外部 I/O）；勿重寫業務邏輯；測試驗證實際訊息格式。
 - 前端：Playwright 端對端；可使用 route.fulfill mock API；在 beforeEach 設置 localStorage token。
 - 單測指令示例：
   - 後端單案例：uv run pytest backend/tests/agents/test_validator.py -k verify_ids_with_valid_ids
