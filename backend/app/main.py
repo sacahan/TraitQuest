@@ -11,6 +11,8 @@ from sqlalchemy import text
 
 from app.api import auth, quest, quest_ws, map
 from app.core.logging_config import configure_logging
+from app.core.copilot_logging import setup_copilot_logging
+from app.core.copilot_client import copilot_manager
 from app.db.session import engine
 from app.core.redis_client import redis_client
 from app.core.config import settings
@@ -25,8 +27,18 @@ logger = logging.getLogger("app")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: Test connections
+    # Startup
     logger.info("--- 🌌 TraitQuest 啟動中：正在檢測連線 ---")
+    
+    # Configure logging
+    configure_logging(log_file=settings.LOG_FILE_PATH)
+    
+    # Setup Copilot SDK logging
+    setup_copilot_logging()
+    
+    # Initialize Copilot Client
+    logger.info("🤖 初始化 Copilot SDK Client...")
+    await copilot_manager.initialize()
     
     # Test PostgreSQL
     try:
@@ -39,7 +51,6 @@ async def lifespan(app: FastAPI):
     # Test Redis
     try:
         await redis_client.connect()
-        # aioredis v2 ping()
         await redis_client._redis.ping()
         logger.info("✅ [Redis] 連線成功！")
     except Exception as e:
@@ -48,8 +59,14 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    await redis_client.disconnect()
     logger.info("--- 🌑 TraitQuest 已關閉 ---")
+    
+    # Shutdown Copilot Client
+    await copilot_manager.shutdown()
+    
+    # Shutdown Redis
+    await redis_client.disconnect()
+    logger.info("✅ Copilot SDK Client 已關閉")
 
 app = FastAPI(title="TraitQuest API", version="1.0.0", lifespan=lifespan)
 

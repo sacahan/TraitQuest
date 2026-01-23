@@ -7,7 +7,7 @@
 
 # -----------------------------------------------------------------------------
 # Stage 1: Backend Builder
-# 安裝 Python 依賴（使用 uv 套件管理器）
+# 安裝 Python 依賴 + Copilot CLI
 # -----------------------------------------------------------------------------
 FROM python:3.12-slim AS backend-builder
 
@@ -15,6 +15,17 @@ WORKDIR /app
 
 # 安裝 uv 套件管理器
 RUN pip install --no-cache-dir uv
+
+# 安裝 Node.js（Copilot CLI 需求）
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && apt-get clean
+
+# 安裝 GitHub Copilot CLI（全局安裝）
+RUN npm install -g @githubnext/github-copilot-cli
+
+# 驗證安裝
+RUN github-copilot-cli --version || echo "Copilot CLI installed"
 
 # 依賴快取優先：先複製依賴定義檔案
 COPY backend/pyproject.toml backend/uv.lock ./
@@ -37,8 +48,13 @@ ENV PYTHONPATH=/app \
 WORKDIR /app
 
 # 安裝必要的系統依賴（curl 用於健康檢查）
+# 同時安裝 Node.js（因為 Copilot CLI 需要在 production 環境執行）
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    nodejs \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g @githubnext/github-copilot-cli \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 

@@ -1,13 +1,25 @@
 """
 Pytest 配置檔案
 
-處理所有測試所需的通用 mock 設置，避免模組導入時的初始化問題。
+處理所有測試所需的通用 mock 設置，包含 Copilot SDK 遷移後的 mock。
 """
 
 import sys
+import os
 from unittest.mock import MagicMock
 
-# Mock google.adk 模組 - 必須在任何導入 app 模組之前設置
+# 將專案根目錄添加到 PYTHONPATH
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+# Mock Copilot SDK 模組
+mock_copilot = MagicMock()
+mock_copilot.CopilotClient = MagicMock
+mock_copilot.define_tool = MagicMock(side_effect=lambda **kwargs: lambda f: f)
+mock_copilot.Tool = MagicMock
+
+sys.modules["copilot"] = mock_copilot
+
+# Mock google.adk 模組 - 保留部分相容性
 mock_adk = MagicMock()
 mock_adk.agents = MagicMock()
 mock_adk.runners = MagicMock()
@@ -19,7 +31,6 @@ mock_adk.sessions = MagicMock()
 mock_adk.sessions.in_memory_session_service = MagicMock()
 mock_adk.sessions.session = MagicMock()
 
-# 設置 sys.modules - 必須在任何導入之前完成
 sys.modules["google.adk"] = mock_adk
 sys.modules["google.adk.agents"] = mock_adk.agents
 sys.modules["google.adk.runners"] = mock_adk.runners
@@ -38,7 +49,7 @@ mock_genai = MagicMock()
 sys.modules["google.genai"] = mock_genai
 sys.modules["google.genai.types"] = mock_genai.types
 
-# 設置 mock 類別 - 參考 test_request_result.py 的做法
+# 設置 mock 類別
 mock_adk.agents.Agent = MagicMock
 mock_adk.runners.Runner = MagicMock
 mock_adk.models.lite_llm.LiteLlm = MagicMock

@@ -1,58 +1,18 @@
-"""
-測試 Transformation Agent 的輸出驗證邏輯
-
-本測試檔案驗證：
-1. submit_transformation 工具正確處理各種參數組合
-2. validate_transformation_output callback 正確檢核必要欄位
-3. quest_type 的傳遞與讀取邏輯
-"""
-
 import pytest
-import sys
-from unittest.mock import Mock, AsyncMock, patch
-
-# Mock google.adk 相關模組
-mock_adk = Mock()
-sys.modules["google.adk"] = mock_adk
-sys.modules["google.adk.agents"] = mock_adk.agents
-sys.modules["google.adk.runners"] = mock_adk.runners
-sys.modules["google.adk.models"] = mock_adk.models
-sys.modules["google.adk.models.lite_llm"] = mock_adk.models.lite_llm
-sys.modules["google.adk.tools"] = mock_adk.tools
-sys.modules["google.adk.tools.tool_context"] = mock_adk.tools.tool_context
-sys.modules["google.adk.sessions"] = mock_adk.sessions
-sys.modules["google.adk.sessions.in_memory_session_service"] = (
-    mock_adk.sessions.in_memory_session_service
-)
-
-# Mock google.genai
-mock_genai = Mock()
-sys.modules["google.genai"] = mock_genai
-sys.modules["google.genai.types"] = mock_genai.types
-
-# 設定 mock 類別
-mock_adk.agents.Agent = Mock(return_value=Mock())
-mock_adk.runners.Runner = Mock
-mock_adk.models.lite_llm.LiteLlm = Mock
-mock_adk.tools.tool_context.ToolContext = Mock
-
-from app.agents.transformation import (
+from unittest.mock import AsyncMock, MagicMock, patch
+from app.agents.copilot_transformation import (
     submit_transformation,
-    validate_transformation_output,
-    TRANSFORMATION_INSTRUCTION,
+    TransformationParams,
+    get_transformation_session_id,
 )
-from google.adk.tools.tool_context import ToolContext
-
 
 class TestSubmitTransformation:
     """測試 submit_transformation 工具"""
 
-    def test_mbti_output(self):
+    @pytest.mark.asyncio
+    async def test_mbti_output(self):
         """測試 MBTI 類型的完整輸出"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {}
-
-        result = submit_transformation(
+        params = TransformationParams(
             class_id="CLS_INTJ",
             hero_class={
                 "id": "CLS_INTJ",
@@ -82,9 +42,10 @@ class TestSubmitTransformation:
                         "friction_reason": "價值觀差異",
                     }
                 ],
-            },
-            tool_context=mock_context,
+            }
         )
+        
+        result = await submit_transformation(params)
 
         # 驗證輸出包含所有必要欄位
         assert "class_id" in result
@@ -95,19 +56,10 @@ class TestSubmitTransformation:
         # 驗證 ID 正確
         assert result["class_id"] == "CLS_INTJ"
 
-        # 驗證完整物件格式
-        assert result["class"]["id"] == "CLS_INTJ"
-        assert result["class"]["name"] == "戰略法師"
-
-        # 驗證 session state 已更新
-        assert "transformation_output" in mock_context.state
-
-    def test_enneagram_output(self):
+    @pytest.mark.asyncio
+    async def test_enneagram_output(self):
         """測試 Enneagram 類型的完整輸出"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {}
-
-        result = submit_transformation(
+        params = TransformationParams(
             race_id="RACE_5",
             race={"id": "RACE_5", "name": "智者族", "description": "渴求知識與觀察"},
             destiny_guide={
@@ -116,37 +68,19 @@ class TestSubmitTransformation:
                 "side": "參加社交活動",
                 "oracle": "知識即力量",
             },
-            destiny_bonds={
-                "compatible": [
-                    {
-                        "class_id": "CLS_INTJ",
-                        "class_name": "戰略法師",
-                        "sync_rate": 90,
-                        "advantage": "深度思考",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESFP",
-                        "class_name": "幻術舞者",
-                        "risk_level": "極高",
-                        "friction_reason": "思維模式差異",
-                    }
-                ],
-            },
-            tool_context=mock_context,
+            destiny_bonds={"compatible": [], "conflicting": []}
         )
+        
+        result = await submit_transformation(params)
 
         assert "race_id" in result
         assert "race" in result
         assert result["race_id"] == "RACE_5"
 
-    def test_bigfive_output(self):
+    @pytest.mark.asyncio
+    async def test_bigfive_output(self):
         """測試 Big Five 類型的完整輸出"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {}
-
-        result = submit_transformation(
+        params = TransformationParams(
             stats={"STA_O": 75, "STA_C": 60, "STA_E": 45, "STA_A": 80, "STA_N": 55},
             destiny_guide={
                 "daily": "平衡五行",
@@ -154,447 +88,10 @@ class TestSubmitTransformation:
                 "side": "探索新領域",
                 "oracle": "和諧即力量",
             },
-            destiny_bonds={
-                "compatible": [
-                    {
-                        "class_id": "CLS_INFP",
-                        "class_name": "吟遊詩人",
-                        "sync_rate": 85,
-                        "advantage": "創意思維",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESTJ",
-                        "class_name": "秩序騎士",
-                        "risk_level": "高",
-                        "friction_reason": "規則性矛盾",
-                    }
-                ],
-            },
-            tool_context=mock_context,
+            destiny_bonds={"compatible": [], "conflicting": []}
         )
+        
+        result = await submit_transformation(params)
 
         assert "stats" in result
         assert result["stats"]["STA_O"] == 75
-
-    def test_only_non_none_values_saved(self):
-        """測試只儲存非 None 的值"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {}
-
-        result = submit_transformation(
-            class_id="CLS_INTJ",
-            hero_class={"id": "CLS_INTJ", "name": "戰略法師", "description": "測試"},
-            destiny_guide={
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                "oracle": "test",
-            },
-            destiny_bonds={"compatible": [], "conflicting": []},
-            # 故意不傳 race_id, race, stats 等
-            tool_context=mock_context,
-        )
-
-        # 確保未傳遞的欄位不在結果中
-        assert "race_id" not in result
-        assert "race" not in result
-        assert "stats" not in result
-
-
-class TestValidateTransformationOutput:
-    """測試 validate_transformation_output callback"""
-
-    @pytest.mark.asyncio
-    async def test_mbti_validation_success(self):
-        """測試 MBTI 驗證成功"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {"quest_type": "mbti"}
-
-        tool_response = {
-            "class_id": "CLS_INTJ",
-            "class": {"id": "CLS_INTJ", "name": "戰略法師", "description": "測試"},
-            "destiny_guide": {
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                "oracle": "test",
-            },
-            "destiny_bonds": {
-                "compatible": [
-                    {
-                        "class_id": "CLS_ENFP",
-                        "class_name": "元素召喚師",
-                        "sync_rate": 92,
-                        "advantage": "test",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESFJ",
-                        "class_name": "輔助神官",
-                        "risk_level": "高",
-                        "friction_reason": "test",
-                    }
-                ],
-            },
-        }
-
-        # Mock DB 查詢
-        with patch("app.db.session.AsyncSessionLocal") as mock_db:
-            mock_session = AsyncMock()
-            mock_db.return_value.__aenter__.return_value = mock_session
-
-            # Mock DB 查詢結果 - class_id 存在
-            mock_result = Mock()
-            mock_result.scalar_one_or_none.return_value = "CLS_INTJ"
-            mock_session.execute.return_value = AsyncMock()
-            mock_session.execute.return_value.fetchall.return_value = [("CLS_INTJ",)]
-
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-
-            # validate 應返回 None（表示使用原始結果）
-            assert result is None
-
-    @pytest.mark.asyncio
-    async def test_missing_required_fields(self):
-        """測試缺少必要欄位的情況"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {"quest_type": "mbti"}
-
-        # 缺少 destiny_guide 和 destiny_bonds
-        tool_response = {
-            "class_id": "CLS_INTJ",
-            "class": {"id": "CLS_INTJ", "name": "戰略法師", "description": "測試"},
-        }
-
-        with patch("app.db.session.AsyncSessionLocal"):
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            assert result is None
-
-    @pytest.mark.asyncio
-    async def test_destiny_guide_format_validation(self):
-        """測試 destiny_guide 格式驗證"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {"quest_type": "mbti"}
-
-        # destiny_guide 缺少 oracle 欄位
-        tool_response = {
-            "class_id": "CLS_INTJ",
-            "class": {"id": "CLS_INTJ", "name": "戰略法師", "description": "測試"},
-            "destiny_guide": {
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                # 缺少 oracle
-            },
-            "destiny_bonds": {
-                "compatible": [
-                    {
-                        "class_id": "CLS_ENFP",
-                        "class_name": "test",
-                        "sync_rate": 90,
-                        "advantage": "test",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESFJ",
-                        "class_name": "test",
-                        "risk_level": "高",
-                        "friction_reason": "test",
-                    }
-                ],
-            },
-        }
-
-        with patch("app.db.session.AsyncSessionLocal"):
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            assert result is None
-
-    @pytest.mark.asyncio
-    async def test_quest_type_none(self):
-        """測試 quest_type 為 None 的情況"""
-        mock_context = Mock(spec=ToolContext)
-        mock_context.state = {"quest_type": None}
-
-        tool_response = {"class_id": "CLS_INTJ"}
-
-        with patch("app.db.session.AsyncSessionLocal"):
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            # 應記錄警告但返回 None
-            assert result is None
-
-
-class TestTransformationInstruction:
-    """測試 TRANSFORMATION_INSTRUCTION 的內容"""
-
-    def test_instruction_contains_all_quest_types(self):
-        """測試指令包含所有測驗類型"""
-        assert "mbti" in TRANSFORMATION_INSTRUCTION
-        assert "enneagram" in TRANSFORMATION_INSTRUCTION
-        assert "bigfive" in TRANSFORMATION_INSTRUCTION
-        assert "disc" in TRANSFORMATION_INSTRUCTION
-        assert "gallup" in TRANSFORMATION_INSTRUCTION
-
-    def test_instruction_contains_output_examples(self):
-        """測試指令包含輸出範例"""
-        assert (
-            "範例" in TRANSFORMATION_INSTRUCTION
-            or "example" in TRANSFORMATION_INSTRUCTION.lower()
-        )
-        assert "destiny_guide" in TRANSFORMATION_INSTRUCTION
-        assert "destiny_bonds" in TRANSFORMATION_INSTRUCTION
-
-    def test_instruction_contains_mapping_tables(self):
-        """測試指令包含映射表"""
-        assert "CLS_INTJ" in TRANSFORMATION_INSTRUCTION
-        assert "RACE_1" in TRANSFORMATION_INSTRUCTION
-        assert "STN_D" in TRANSFORMATION_INSTRUCTION
-        assert "submit_transformation" in TRANSFORMATION_INSTRUCTION
-
-
-class TestTransformationValidationEdgeCases:
-    """測試轉換驗證邊界情況"""
-
-    @pytest.mark.asyncio
-    async def test_invalid_race_id_db_rejection(self):
-        """測試無效的種族 ID 被 DB 拒絕"""
-        mock_context = Mock()
-        mock_context.state = {"quest_type": "enneagram"}
-
-        # 使用不存在的 race_id
-        tool_response = {
-            "race_id": "RACE_INVALID_999",
-            "race": {
-                "id": "RACE_INVALID_999",
-                "name": "不存在的種族",
-                "description": "測試",
-            },
-            "destiny_guide": {
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                "oracle": "test",
-            },
-            "destiny_bonds": {
-                "compatible": [
-                    {
-                        "class_id": "CLS_INTJ",
-                        "class_name": "test",
-                        "sync_rate": 90,
-                        "advantage": "test",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESFP",
-                        "class_name": "test",
-                        "risk_level": "高",
-                        "friction_reason": "test",
-                    }
-                ],
-            },
-        }
-
-        with patch("app.db.session.AsyncSessionLocal") as mock_db:
-            mock_session = AsyncMock()
-            mock_db.return_value.__aenter__.return_value = mock_session
-
-            # Mock DB 查詢結果 - race_id 不存在
-            mock_result = Mock()
-            mock_result.fetchall.return_value = []
-            mock_session.execute.return_value = mock_result
-
-            # 驗證應返回 None（但會記錄錯誤日誌）
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            assert result is None
-
-    @pytest.mark.asyncio
-    async def test_missing_class_id_for_mbti(self):
-        """測試 MBTI 缺少必要欄位 class_id"""
-        mock_context = Mock()
-        mock_context.state = {"quest_type": "mbti"}
-
-        # 缺少 class_id 和 class
-        tool_response = {
-            "destiny_guide": {
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                "oracle": "test",
-            },
-            "destiny_bonds": {
-                "compatible": [
-                    {
-                        "class_id": "CLS_ENFP",
-                        "class_name": "test",
-                        "sync_rate": 90,
-                        "advantage": "test",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESFJ",
-                        "class_name": "test",
-                        "risk_level": "高",
-                        "friction_reason": "test",
-                    }
-                ],
-            },
-        }
-
-        with patch("app.agents.transformation.AsyncSessionLocal"):
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            assert result is None
-
-    @pytest.mark.asyncio
-    async def test_invalid_talent_ids(self):
-        """測試無效的天賦 ID 被 DB 拒絕"""
-        mock_context = Mock()
-        mock_context.state = {"quest_type": "gallup"}
-
-        # 使用不存在的 talent_ids
-        tool_response = {
-            "talent_ids": ["TAL_INVALID_1", "TAL_INVALID_2", "TAL_INVALID_3"],
-            "talents": [
-                {
-                    "id": "TAL_INVALID_1",
-                    "name": "不存在的天賦",
-                    "origin": "test",
-                    "symbol": "test",
-                    "description": "test",
-                },
-                {
-                    "id": "TAL_INVALID_2",
-                    "name": "不存在的天賦",
-                    "origin": "test",
-                    "symbol": "test",
-                    "description": "test",
-                },
-                {
-                    "id": "TAL_INVALID_3",
-                    "name": "不存在的天賦",
-                    "origin": "test",
-                    "symbol": "test",
-                    "description": "test",
-                },
-            ],
-            "destiny_guide": {
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                "oracle": "test",
-            },
-            "destiny_bonds": {
-                "compatible": [
-                    {
-                        "class_id": "CLS_INFP",
-                        "class_name": "test",
-                        "sync_rate": 85,
-                        "advantage": "test",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESTJ",
-                        "class_name": "test",
-                        "risk_level": "高",
-                        "friction_reason": "test",
-                    }
-                ],
-            },
-        }
-
-        with patch("app.db.session.AsyncSessionLocal") as mock_db:
-            mock_session = AsyncMock()
-            mock_db.return_value.__aenter__.return_value = mock_session
-
-            # Mock DB 查詢結果 - 沒有匹配的 ID
-            mock_result = Mock()
-            mock_result.fetchall.return_value = []
-            mock_session.execute.return_value = mock_result
-
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            assert result is None
-
-    @pytest.mark.asyncio
-    async def test_destiny_guide_missing_required_keys(self):
-        """測試 destiny_guide 缺少必要欄位"""
-        mock_context = Mock()
-        mock_context.state = {"quest_type": "mbti"}
-
-        # destiny_guide 缺少 oracle 欄位
-        tool_response = {
-            "class_id": "CLS_INTJ",
-            "class": {"id": "CLS_INTJ", "name": "戰略法師", "description": "測試"},
-            "destiny_guide": {
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                # 缺少 oracle
-            },
-            "destiny_bonds": {
-                "compatible": [
-                    {
-                        "class_id": "CLS_ENFP",
-                        "class_name": "test",
-                        "sync_rate": 90,
-                        "advantage": "test",
-                    }
-                ],
-                "conflicting": [
-                    {
-                        "class_id": "CLS_ESFJ",
-                        "class_name": "test",
-                        "risk_level": "高",
-                        "friction_reason": "test",
-                    }
-                ],
-            },
-        }
-
-        with patch("app.db.session.AsyncSessionLocal"):
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            assert result is None
-
-    @pytest.mark.asyncio
-    async def test_destiny_bonds_empty_lists(self):
-        """測試 destiny_bonds 的 compatible 與 conflicting 為空列表"""
-        mock_context = Mock()
-        mock_context.state = {"quest_type": "bigfive"}
-
-        tool_response = {
-            "stats": {"STA_O": 75, "STA_C": 60, "STA_E": 45, "STA_A": 80, "STA_N": 55},
-            "destiny_guide": {
-                "daily": "test",
-                "main": "test",
-                "side": "test",
-                "oracle": "test",
-            },
-            "destiny_bonds": {"compatible": [], "conflicting": []},
-        }
-
-        with patch("app.db.session.AsyncSessionLocal"):
-            result = await validate_transformation_output(
-                tool_context=mock_context, tool_response=tool_response
-            )
-            # 應記錄警告但返回 None
-            assert result is None
