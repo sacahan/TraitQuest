@@ -5,7 +5,7 @@ import './index.css'
 import App from './App'
 
 // 在開發環境或透過環境變數啟用 vConsole（用於手機瀏覽器偵錯）
-if (import.meta.env.DEV || import.meta.env.VITE_ENABLE_VCONSOLE === 'true') {
+if (import.meta.env.VITE_ENABLE_VCONSOLE === 'true') {
   import('vconsole').then((module) => {
     new module.default()
     console.log('vConsole 已啟用 - 用於手機瀏覽器偵錯')
