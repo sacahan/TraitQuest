@@ -21,6 +21,7 @@ from app.services.level_system import level_service
 from app.db.session import AsyncSessionLocal
 from app.db.models import User, UserQuest
 from app.services.cache_service import CacheService
+from app.core.session import session_service
 
 logger = logging.getLogger("app")
 

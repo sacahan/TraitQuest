@@ -71,12 +71,17 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="TraitQuest API", version="1.0.0", lifespan=lifespan)
 
 app.include_router(auth.router, prefix="/v1")
-app.include_router(quest.router, prefix="/v1")
+# [FIX] WebSocket 路由需優先掛載,避免 /{sessionId} 路徑參數誤匹配 /ws
 app.include_router(quest_ws.router, prefix="/v1")
+app.include_router(quest.router, prefix="/v1")
 app.include_router(map.router, prefix="/v1")
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
+    # Skip WebSocket requests - they use a different scope type
+    if request.scope.get("type") == "websocket":
+        return await call_next(request)
+
     # Filter out map polling logs to avoid spamming
     if request.url.path == "/v1/map/regions":
         return await call_next(request)

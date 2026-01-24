@@ -36,8 +36,9 @@ def create_copilot_tool(
     
     if params_model:
         return define_tool(
+            name=name,
             description=description,
-            parameters=params_model,
+            params_type=params_model,
         )(handler)
     else:
         # 手動定義 schema

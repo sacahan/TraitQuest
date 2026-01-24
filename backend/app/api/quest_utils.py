@@ -397,9 +397,18 @@ async def run_analytics_task(
         if result:
             await CacheService.set_analytics_result(session_id, result)
 
-        if result:
-            # 將單次分析結果存回主 Session 以供後續聚合 (Aggregation)
-            # 這是 "Map-Reduce" 模式中的 Map 階段結果收集
+            # [FIX] 將單次分析結果存回主 Session 以供後續聚合 (Aggregation)
+            from app.core.session import session_service
+
+            session = await session_service.get_session(
+                QUESTIONNAIRE_NAME, user_id, session_id
+            )
+            if session:
+                if "accumulated_analytics" not in session.state:
+                    session.state["accumulated_analytics"] = []
+                session.state["accumulated_analytics"].append(result)
+                await session_service.update_session(session)
+
             logger.debug(
                 f"✅ [Background] Analysis complete for {session_id}: {result.get('quality_score', 'N/A')}"
             )
