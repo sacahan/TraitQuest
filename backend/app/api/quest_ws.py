@@ -1,7 +1,7 @@
 import json
 import logging
 import uuid
-from fastapi import APIRouter, WebSocket, Query
+from fastapi import APIRouter, WebSocket, Query, WebSocketDisconnect
 from sqlalchemy import select
 
 from app.core.security import decode_access_token
@@ -128,6 +128,8 @@ async def quest_ws_endpoint(websocket: WebSocket, sessionId: str = Query(...)):
                     sessionId, handler_result["event"], handler_result["data"]
                 )
 
+    except WebSocketDisconnect:
+        logger.info(f"🔌 Client disconnected normally: {sessionId}")
     except Exception as e:
         logger.error(f"Error in WebSocket handler: {e}")
         # Only try to send error if session is still connected
