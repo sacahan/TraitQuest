@@ -33,28 +33,12 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ENV_FILE="${SCRIPT_DIR}/.env.docker"
 ENV_EXAMPLE_FILE="${SCRIPT_DIR}/.env.docker.example"
 
-# GitHub Copilot 認證資料路徑
-GITHUB_COPILOT_AUTH_DIR="${SCRIPT_DIR}/.copilot_auth"
+
 
 # -----------------------------------------------------------------------------
 # 工具函數
 # -----------------------------------------------------------------------------
-setup_copilot_auth() {
-	if [[ -n "$GITHUB_COPILOT_TOKEN" ]]; then
-		print_step "建立 Copilot CLI 認證配置..."
-		mkdir -p "$GITHUB_COPILOT_AUTH_DIR"
-		cat >"${GITHUB_COPILOT_AUTH_DIR}/auth.json" <<EOF
-{
-  "token": "$GITHUB_COPILOT_TOKEN",
-  "authType": "token",
-  "lastValidated": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-}
-EOF
-		print_success "Copilot CLI 認證配置已就緒"
-	else
-		print_warning "GITHUB_COPILOT_TOKEN 未設置，跳過認證配置"
-	fi
-}
+
 
 # 工具函數
 # -----------------------------------------------------------------------------
@@ -150,7 +134,7 @@ is_container_exists() {
 cmd_up() {
 	print_header
 	check_env_file
-	setup_copilot_auth
+
 	ensure_network
 
 	if is_container_running; then
@@ -176,7 +160,7 @@ cmd_up() {
 		"--add-host" "host.docker.internal:host-gateway"
 		"-p" "${HOST_PORT}:8000"
 		"-v" "$(realpath "$LOGS_DIR"):/app/logs"
-		"-v" "$(realpath "$GITHUB_COPILOT_AUTH_DIR"):/home/appuser/.config/github-copilot-cli"
+
 		"-e" "TZ=Asia/Taipei"
 		"--restart" "unless-stopped"
 	)
@@ -281,10 +265,7 @@ cmd_clean() {
 	print_step "移除未使用的網路..."
 	docker network prune -f
 
-	if [[ -d "$GITHUB_COPILOT_AUTH_DIR" ]]; then
-		print_step "清理 Copilot 認證快取..."
-		rm -rf "$GITHUB_COPILOT_AUTH_DIR"
-	fi
+
 
 	print_success "清理完成"
 }

@@ -1,15 +1,8 @@
-"""
-Copilot SDK 版本 - Analytics Agent
-
-使用 GitHub Copilot SDK
-"""
-
 import logging
-from typing import Dict, Any
-
-from pydantic import BaseModel, Field
-
-from app.core.tools import define_tool
+import json
+from app.core.agent import TraitQuestAgent as Agent
+from google.adk.models.lite_llm import LiteLlm
+from google.adk.tools.tool_context import ToolContext
 from app.core.config import settings
 
 logger = logging.getLogger("app")
@@ -78,52 +71,56 @@ ANALYTICS_INSTRUCTION = """你是極其嚴謹的「靈魂分析官」。你的�
 - 你唯一的輸出必須是調用 `submit_analysis` 工具
 - analysis_reason 必須使用正體中文，簡要說明評分理由
 - 輸出的維度標籤必須與測驗範疇對應
-- **嚴禁**輸出任何非工具調用的文字。不要解釋，不要輸出 JSON，直接調用工具。
 """
 
+def submit_analysis(
+    quality_score: float,
+    trait_deltas: dict,
+    analysis_reason: str,
+    tool_context: ToolContext
+) -> dict:
+    """
+    提交單次回答的分析結果。
 
-class SubmitAnalysisParams(BaseModel):
-    quality_score: float = Field(description="1.0 - 2.0 之間的評分")
-    trait_deltas: Dict[str, float] = Field(description="心理維度增量字典")
-    analysis_reason: str = Field(description="評分理由")
-
-
-@define_tool(
-    name="submit_analysis",
-    description="提交心理維度分析結果",
-    params_type=SubmitAnalysisParams,
-)
-async def submit_analysis(params: SubmitAnalysisParams) -> dict:
-    """提交單次回答的分析結果"""
-    quality_score = max(1.0, min(2.0, params.quality_score))
-
-    # 這裡可以加入 ToolsOutputCapture 以便測試，或者依賴 SDK 的事件回調
-    # 為了保持兼容原本的測試邏輯（如果有的話），我們可以保留 ToolOutputCapture
-    try:
-        from app.core.tools import ToolOutputCapture
-
-        ToolOutputCapture.capture(
-            "submit_analysis",
-            {
-                "quality_score": quality_score,
-                "trait_deltas": params.trait_deltas,
-                "analysis_reason": params.analysis_reason,
-            },
-        )
-    except ImportError:
-        pass
-
-    return {
+    Args:
+        quality_score: 1.0 - 2.0 之間的評分
+            - 選擇題：反映答案與題目的心理學一致性及性格傾向強度
+            - 開放式問答：反映回答的深度、情感流露、多維度思考
+        trait_deltas: 心理維度增量字典，根據測驗範疇輸出對應維度評分
+            - Enneagram: {"Type1": 0.3, "Type5": 0.4, "Type9": -0.2}
+            - MBTI: {"E": 0.5, "I": -0.5, "T": 0.3, "F": -0.3}
+            - Big Five: {"Openness": 0.4, "Conscientiousness": 0.2, "Extraversion": -0.1}
+            - DISC: {"D": 0.6, "I": -0.2, "S": -0.3}
+            - Gallup: {"ACH": 0.5, "STR": 0.4, "EMP": 0.3}
+        analysis_reason: 簡短解釋為何給予此分析結果（內部記錄用），使用正體中文。
+        tool_context: 工具上下文。
+    """
+    # 確保數值在範圍內
+    quality_score = max(1.0, min(2.0, quality_score))
+    
+    result = {
         "quality_score": quality_score,
-        "trait_deltas": params.trait_deltas,
-        "analysis_reason": params.analysis_reason,
+        "trait_deltas": trait_deltas,
+        "analysis_reason": analysis_reason
     }
+    
+    # 將分析結果存入 tool_context
+    tool_context.state["analytics_output"] = result
+    
+    logger.debug(f">>> Analytics Result: {result}")
+    return result
 
+def create_analytics_agent() -> Agent:
+    return Agent(
+        name="analytics_agent",
+        description="Soul Analyst - Parse user answers into trait scores and quality metrics",
+        instruction=ANALYTICS_INSTRUCTION,
+        model=LiteLlm(
+            model=settings.LLM_MODEL,
+            api_key=settings.GITHUB_COPILOT_TOKEN,
+            extra_headers=settings.GITHUB_COPILOT_HEADERS,
+        ),
+        tools=[submit_analysis]
+    )
 
-def get_analytics_tools() -> list:
-    """建立工具列表"""
-    return [submit_analysis]
-
-
-def get_analytics_session_id(user_id: str, session_id: str) -> str:
-    return f"analytics_{user_id}_{session_id}"
+analytics_agent = create_analytics_agent()

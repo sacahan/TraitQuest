@@ -6,8 +6,16 @@ from typing import Dict, Any, Optional
 
 from sqlalchemy import select, update, func
 
+from app.agents.transformation import transformation_agent
+from app.agents.summary import summary_agent
+from app.core.session import session_service
+from app.services.level_system import level_service
+from app.db.session import AsyncSessionLocal
+from app.db.models import User, UserQuest
+
 from app.api.quest_utils import (
     get_user_display_name,
+    run_agent_async,
     run_analytics_task,
     get_total_steps,
     get_hero_chronicle,
@@ -16,89 +24,9 @@ from app.api.quest_utils import (
     manager,
     QUESTIONNAIRE_NAME,
 )
-from app.core.copilot_client import copilot_manager
-from app.services.level_system import level_service
-from app.db.session import AsyncSessionLocal
-from app.db.models import User, UserQuest
 from app.services.cache_service import CacheService
-from app.core.session import session_service
 
 logger = logging.getLogger("app")
-
-
-# =============================================================================
-# Copilot Agent 執行函式
-# =============================================================================
-
-
-
-async def run_copilot_transformation_agent(
-    user_id: str,
-    session_id: str,
-    instruction: str,
-    quest_type: str,
-) -> Dict[str, Any]:
-    """
-    使用 Copilot SDK 執行 Transformation Agent
-    """
-    from app.agents.copilot_transformation import (
-        get_transformation_session_id,
-        get_transformation_tools,
-    )
-    from app.core.tools import ToolOutputCapture
-
-    copilot_session_id = get_transformation_session_id(user_id, session_id)
-
-    async def session_getter():
-        return await copilot_manager.get_session(
-            session_id=copilot_session_id,
-            tools=get_transformation_tools(),
-            system_message=f"你是 TraitQuest 的轉生代理，當前測驗類型: {quest_type}，玩家 ID: {user_id}，Session ID: {session_id}",
-        )
-
-    result = await copilot_manager.send_and_wait(
-        session_id=copilot_session_id,
-        instruction=instruction,
-        session_getter=session_getter,
-    )
-
-    ToolOutputCapture.clear()
-
-    return result
-
-
-async def run_copilot_summary_agent(
-    user_id: str,
-    session_id: str,
-    instruction: str,
-) -> Dict[str, Any]:
-    """
-    使用 Copilot SDK 執行 Summary Agent
-    """
-    from app.agents.copilot_summary import (
-        get_summary_session_id,
-        get_summary_tools,
-    )
-    from app.core.tools import ToolOutputCapture
-
-    copilot_session_id = get_summary_session_id(user_id, session_id)
-
-    async def session_getter():
-        return await copilot_manager.get_session(
-            session_id=copilot_session_id,
-            tools=get_summary_tools(),
-            system_message=f"你是 TraitQuest 的史官，當前玩家 ID: {user_id}，Session ID: {session_id}",
-        )
-
-    result = await copilot_manager.send_and_wait(
-        session_id=copilot_session_id,
-        instruction=instruction,
-        session_getter=session_getter,
-    )
-
-    ToolOutputCapture.clear()
-
-    return result
 
 
 async def handle_start_quest(
@@ -240,22 +168,15 @@ async def handle_submit_answer(
     result = await run_questionnaire_agent(user_id, session_id, instruction)
     logger.info(f"<<< Result: {result}")
 
-    if result.get("is_completed"):
-        # 更新 Session 狀態標記為完成
-        updated_session = await session_service.get_session(
-            app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=session_id
-        )
-        if updated_session:
-            updated_session.state["quest_completed"] = True
-            updated_session.state["final_message"] = result.get(
-                "final_message", "Trial completed."
-            )
-            await session_service.update_session(updated_session)
+    updated_session = await session_service.get_session(
+        app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=session_id
+    )
 
+    if updated_session.state.get("quest_completed"):
         return {
             "event": "quest_complete",
             "data": {
-                "message": result.get(
+                "message": updated_session.state.get(
                     "final_message", "Hero transformation in progress..."
                 ),
                 "totalExp": 100,
@@ -306,16 +227,25 @@ async def handle_request_result(
 
     logger.info("🧙‍♂️ 3. Running Transformation Agent...")
 
+    transformation_session = await get_or_create_session(
+        app_name="transformation", user_id=user_id, session_id=session_id
+    )
+    transformation_session.state["quest_type"] = quest_id
+    await session_service.update_session(transformation_session)
+
     t_instruction = f"當前測驗類型：{quest_id}\n累積心理數據：{json.dumps(analytics_list, ensure_ascii=False)}"
 
     logger.info(f">>> Instruction: {t_instruction}")
-    quest_report = await run_copilot_transformation_agent(
+    transformation_raw = await run_agent_async(
+        agent=transformation_agent,
+        app_name="transformation",
         user_id=user_id,
         session_id=session_id,
         instruction=t_instruction,
-        quest_type=quest_id,
+        output_key="transformation_output",
     )
-    logger.info(f"<<< Result: {quest_report}")
+    logger.info(f"<<< Result: {transformation_raw}")
+    quest_report = transformation_raw
 
     logger.info("📝 4. Running Summary Agent...")
     history_text = "\n".join(
@@ -327,10 +257,13 @@ async def handle_request_result(
     s_instruction = f"玩家對話分析摘要：\n{history_text}"
 
     logger.info(f">>> Summary Instruction: {s_instruction[:200]}...")
-    summary_result = await run_copilot_summary_agent(
+    summary_result = await run_agent_async(
+        agent=summary_agent,
+        app_name="summary",
         user_id=user_id,
         session_id=session_id,
         instruction=s_instruction,
+        output_key="summary_output",
     )
     logger.info(f"<<< Result: {summary_result}")
 

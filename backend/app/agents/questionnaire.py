@@ -1,17 +1,15 @@
-"""
-Copilot SDK 版本 - Questionnaire Agent
-
-使用 GitHub Copilot SDK
-"""
 import logging
-from typing import List
-
-from pydantic import BaseModel, Field
-
-from app.core.tools import define_tool
+from google.adk.agents import LlmAgent
+from app.core.agent import TraitQuestAgent as Agent
+from google.adk.models.lite_llm import LiteLlm
+from google.adk.tools.tool_context import ToolContext
+from google.adk.tools import FunctionTool
+from app.core.config import settings
 
 logger = logging.getLogger("app")
 
+
+# 定義 Questionnaire Agent 的 System Prompt
 QUESTIONNAIRE_INSTRUCTION = """你是 TraitQuest 的「引導者艾比 (Abby)」，一位充滿神祕感與智慧的靈魂導師。
 你的任務是根據測驗類別（MBTI, DISC, Big Five, Enneagram, Gallup），將心理測驗題目偽裝在 RPG 情境對話中。
 
@@ -59,96 +57,83 @@ QUESTIONNAIRE_INSTRUCTION = """你是 TraitQuest 的「引導者艾比 (Abby)」
     - 題目類型 (type) 只能是 QUANTITATIVE 或 SOUL_NARRATIVE。
     - 嚮導話語 (guide_message) 為可選，在開場或重要轉折點提供簡短鼓勵，最多 15 字。
     - 輸入字串使用正體中文。
-- 重要：**你唯一的輸出（The ONLY output）必須是調用工具 `submit_question` 或 `complete_trial`。**
-- 嚴禁在工具調用之前或之後輸出任何文字、解釋、確認訊息或 Markdown 區塊。
-- 如果你輸出了任何非工具調用的文字（如「好的，這是題目...」），系統將無法解析，導致試煉失敗。
-- 極端重要：**你唯一的輸出（The ONLY output）必須是調用工具 `submit_question` 或 `complete_trial`。**
-- 嚴禁在工具調用之前或之後輸出任何文字、解釋、確認訊息或 Markdown 區塊。
-- 絕對不要輸出 JSON 或 XML，必須直接調用工具。
-
-範例輸出（Example Output）：
-正確的工具調用：
-submit_question(
-    narrative="雖然這是一個範例，但它展示了正確的格式。",
-    question_text="這個範例是否清楚？",
-    options=["清楚", "不清楚", "非常清楚", "完全不清楚", "普通"],
-    type="QUANTITATIVE",
-    guide_message="很好。"
-)
-
-錯誤的輸出（嚴禁）：
-"好的，這是您的題目..."
-```json
-{
-  "narrative": "...",
-  "question_text": "..."
-}
-```
+- 重要：**你唯一的輸出（The ONLY output）必須是調用工具。** 嚴禁在工具調用之前或之後輸出任何文字、解釋、確認訊息或 Markdown 區塊。
+- 違反此規則將破壞系統解析。如果你已經調用了工具，請立即結束對話，不要在後面加任何「好的」或「已提交」。
 """
 
-
-class SubmitQuestionParams(BaseModel):
-    narrative: str = Field(description="RPG 情境敘述")
-    question_text: str = Field(description="題目內容")
-    options: List[str] = Field(description="選項列表")
-    type: str = Field(default="QUANTITATIVE", description="題目類型")
-    guide_message: str = Field(default="", description="嚮導話語")
-
-class CompleteTrialParams(BaseModel):
-    final_message: str = Field(description="結業語")
-
-
-@define_tool(
-    name="submit_question",
-    description="提交 RPG 情境敘述與題目",
-    params_type=SubmitQuestionParams,
-)
-async def submit_question(params: SubmitQuestionParams) -> dict:
-    """提交生成的 RPG 劇情與題目"""
-    from app.core.tools import ToolOutputCapture
-
-    logger.info(
-        f"📝 [Tool: submit_question] narrative: {params.narrative[:30]}..., question: {params.question_text}"
-    )
-
+def submit_question(
+    narrative: str, 
+    question_text: str, 
+    options: list[str], 
+    tool_context: ToolContext, 
+    type: str = "QUANTITATIVE",
+    guide_message: str = ""
+) -> dict:
+    """
+    提交生成的 RPG 劇情與題目給系統。
+    
+    Args:
+        narrative: RPG 情境敘述，請用優美的文字描述。
+        question_text: 題目內容，請融入情境。
+        options: 選項列表，可以是不同答案(例如 ["選項A", "選項B"])，也可以是由輕到重的程度區別(例如 ["不符合", "一般", "符合", "非常符合", "極度符合"])，最多5個選項。
+        tool_context: 工具上下文，用於存儲狀態。
+        type: 題目類型 (QUANTITATIVE 或 SOUL_NARRATIVE)。
+        guide_message: 可選的嚮導話語，Abby 給予玩家的簡短鼓勵或提示，最多 15 字。
+    """
     output = {
-        "narrative": params.narrative,
+        "narrative": narrative,
         "question": {
-            "text": params.question_text,
-            "options": [{"id": str(i+1), "text": opt} for i, opt in enumerate(params.options)],
-            "type": params.type
+            "text": question_text,
+            "options": [{"id": str(i+1), "text": opt} for i, opt in enumerate(options)],
+            "type": type
         }
     }
-    if params.guide_message:
-        output["guideMessage"] = params.guide_message
+    
+    # 如果有提供 guide_message，則加入輸出
+    if guide_message:
+        output["guideMessage"] = guide_message
 
-    ToolOutputCapture.capture("submit_question", output)
+    # 將 questionnaire_output 存入 tool_context
+    tool_context.state["questionnaire_output"] = output
+    logger.debug(f"<<< Questionnaire Agent: {output}")
+    
     return output
 
+def complete_trial(
+    final_message: str,
+    tool_context: ToolContext
+) -> dict:
+    """
+    當測驗完成，玩家已通過所有試煉時調用。這將開啟最終的英雄轉生儀式。
+    
+    Args:
+        final_message: 給予玩家的結業語，描述他們完成了試煉並即將覺醒。
+    """
+    output = {
+        "is_completed": True,
+        "message": final_message
+    }
+    tool_context.state["quest_completed"] = True
+    tool_context.state["final_message"] = final_message
+    
+    logger.info(f"✨ Quest Completed by Agent: {final_message}")
+    return output
+    
 
-@define_tool(
-    name="complete_trial",
-    description="完成所有測驗題目",
-    params_type=CompleteTrialParams,
-)
-async def complete_trial(params: CompleteTrialParams) -> dict:
-    """完成測驗"""
-    from app.core.tools import ToolOutputCapture
-
-    logger.info(
-        f"🏁 [Tool: complete_trial] final_message: {params.final_message[:30]}..."
+def create_questionnaire_agent() -> Agent:
+    return Agent(
+        name="questionnaire_agent",
+        description="Abby (AI GM) - Provide immersive RPG narrative and personality questions",
+        instruction=QUESTIONNAIRE_INSTRUCTION,
+        model=LiteLlm(
+            model=settings.LLM_MODEL,
+            api_key=settings.GITHUB_COPILOT_TOKEN,
+            extra_headers=settings.GITHUB_COPILOT_HEADERS,
+        ),
+        tools=[submit_question, complete_trial]
+        # 注意：不設定 output_key，避免 Agent 的文字回應覆蓋 Tool 寫入的 dict
+        # Tool 會透過 tool_context.state["questionnaire_output"] 自行管理輸出
     )
 
-    output = {"is_completed": True, "message": params.final_message}
-
-    ToolOutputCapture.capture("complete_trial", output)
-    return output
-
-
-def get_questionnaire_tools() -> list:
-    """建立工具列表"""
-    return [submit_question, complete_trial]
-
-
-def get_questionnaire_session_id(user_id: str, session_id: str) -> str:
-    return f"questionnaire_{user_id}_{session_id}"
+# 為了方便其他模組使用，預先建立一個實例 (或是由 Orchestrator 動態建立)
+questionnaire_agent = create_questionnaire_agent()

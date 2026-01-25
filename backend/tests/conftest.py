@@ -12,13 +12,7 @@ import pytest
 # 將專案根目錄添加到 PYTHONPATH
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-# Mock Copilot SDK 模組
-mock_copilot = MagicMock()
-mock_copilot.CopilotClient = MagicMock
-mock_copilot.define_tool = MagicMock(side_effect=lambda **kwargs: lambda f: f)
-mock_copilot.Tool = MagicMock
-
-sys.modules["copilot"] = mock_copilot
+# Removed Copilot Mock setup
 
 # Mock google.genai
 mock_genai = MagicMock()

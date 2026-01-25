@@ -2,11 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional, List
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env", 
-        env_file_encoding="utf-8",
-        extra="ignore"  # 允許環境變數中有多餘的舊變數
-    )
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://traitsuser:password@localhost:5432/traitquest"
@@ -17,20 +13,23 @@ class Settings(BaseSettings):
     REDIS_DB: int = 5
     REDIS_PASSWORD: Optional[str] = None
 
-    # Copilot SDK Configuration
-    LLM_MODEL: str = "gpt-4o"
-    COPILOT_CLI_PATH: Optional[str] = None
-    COPILOT_LOG_LEVEL: str = "info"
-
-    # Copilot CLI Authentication (必要）
-    GITHUB_COPILOT_TOKEN: str = ""
+    # LiteLLM / LLM
+    LITELLM_URL: str = "http://localhost:4000"
+    LLM_MODEL: str = "github_copilot/gpt-4o"
+    GITHUB_COPILOT_TOKEN: str = "your_token"
+    GITHUB_COPILOT_HEADERS: dict = {
+        "editor-version": "vscode/1.85.1",
+        "editor-plugin-version": "copilot/1.155.0",
+        "Copilot-Integration-Id": "vscode-chat",
+        "user-agent": "GithubCopilot/1.155.0"
+    }
 
     # Application
     APP_ENV: str = "development"
     SECRET_KEY: str = ""
     LOG_FILE_PATH: Optional[str] = "logs/app.log"
 
-    # CORS
+    # CORS - 開發環境預設，正式環境請透過環境變數設定
     CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
         "https://traitquest.brianhan.cc",

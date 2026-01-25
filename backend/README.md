@@ -16,7 +16,7 @@
 
 - **核心框架**: FastAPI (Python)
 - **套件管理**: UV (高效能依賴管理)
-- **代理開發**: GitHub Copilot SDK
+- **代理開發**: Google ADK
 - **身份驗證**: Google OAuth (唯一支持)
 - **資料庫**:
   - PostgreSQL + JSONB (主資料結構)

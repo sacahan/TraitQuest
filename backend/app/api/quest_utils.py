@@ -2,18 +2,25 @@ import json
 import logging
 import asyncio
 import uuid
-import re
-from typing import Dict, List, Any
+from typing import Dict, List, Optional, Any
 
 from fastapi import WebSocket
-from sqlalchemy import select
+from sqlalchemy import select, update, func
 
+from app.core.session import session_service
 from app.core.redis_client import redis_client
-from app.core.copilot_client import copilot_manager
 from app.services.cache_service import CacheService
+from app.agents.questionnaire import questionnaire_agent
+from app.agents.analytics import analytics_agent, create_analytics_agent
+# Removed unused agents
+
 from app.services.level_system import level_service
+from app.services.game_assets import game_assets_service
 from app.db.session import AsyncSessionLocal
-from app.db.models import User, UserQuest
+from app.db.models import User, UserQuest, GameDefinition
+from google.adk.runners import Runner
+from google.adk.sessions.session import Session
+from google.genai import types
 
 logger = logging.getLogger("app")
 
@@ -68,334 +75,6 @@ class ConnectionManager:
 
 
 manager = ConnectionManager()
-
-
-__all__ = [
-    "run_questionnaire_agent",
-    "run_analytics_task",
-    "run_copilot_transformation_agent",
-    "run_copilot_summary_agent",
-    "get_user_display_name",
-    "run_agent_async",
-    "get_or_create_session",
-    "manager",
-    "QUESTIONNAIRE_NAME",
-    "get_total_steps",
-    "get_hero_chronicle",
-]
-
-
-# =============================================================================
-# Copilot SDK Agent 執行器
-# =============================================================================
-
-
-async def run_copilot_questionnaire_agent(
-    user_id: str,
-    session_id: str,
-    instruction: str,
-) -> Dict[str, Any]:
-    """
-    使用 Copilot SDK 執行 Questionnaire Agent
-
-    Args:
-        user_id: 玩家 ID
-        session_id: WebSocket Session ID
-        instruction: 輸入給 Agent 的指令文字
-
-    Returns:
-        Dict: 包含 narrative (敘事), question (題目), guideMessage (引導) 的標準化字典
-    """
-
-    from app.agents.copilot_questionnaire import (
-        get_questionnaire_session_id,
-        get_questionnaire_tools,
-        QUESTIONNAIRE_INSTRUCTION,
-    )
-    from app.core.tools import ToolOutputCapture
-
-    logger.debug(
-        f"🔄 [run_copilot_questionnaire_agent] Starting cycle for session {session_id}"
-    )
-
-    copilot_session_id = get_questionnaire_session_id(user_id, session_id)
-
-    async def session_getter():
-        return await copilot_manager.get_session(
-            session_id=copilot_session_id,
-            tools=get_questionnaire_tools(),
-            system_message=QUESTIONNAIRE_INSTRUCTION
-            + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
-        )
-
-    result = await copilot_manager.send_and_wait(
-        session_id=copilot_session_id,
-        instruction=instruction,
-        session_getter=session_getter,
-    )
-
-    # [Fallback] 如果 result 為空，嘗試從 ToolOutputCapture 獲取
-    if not result or (not result.get("narrative") and not result.get("question")):
-        logger.info("🔍 Result dict is empty/incomplete, checking ToolOutputCapture...")
-        submit_output = ToolOutputCapture.get("submit_question")
-        complete_output = ToolOutputCapture.get("complete_trial")
-
-        if submit_output:
-            logger.info("✅ Found submit_question output in ToolOutputCapture")
-            result = submit_output
-        elif complete_output:
-            logger.info("✅ Found complete_trial output in ToolOutputCapture")
-            result = complete_output
-        elif result.get("content"):
-            # [Fallback] 如果 Agent 違反規則直接返回了文字內容（如 JSON 字串或對話）
-            content = result["content"]
-            logger.warning(
-                f"⚠️ Agent returned raw content without using tools. Length: {len(content)}"
-            )
-
-            # 嘗試檢測是否包含 JSON (支援 Markdown code block)
-            # 優先尋找 markdown json block
-            json_match = re.search(r"```json\s*(\{.*?\})\s*```", content, re.DOTALL)
-            if not json_match:
-                # 再次嘗試尋找裸 JSON
-                json_match = re.search(r"\{.*\}", content, re.DOTALL)
-
-            if json_match:
-                try:
-                    raw_json = (
-                        json_match.group(1)
-                        if "```json" in json_match.group(0)
-                        else json_match.group(0)
-                    )
-                    parsed = json.loads(raw_json)
-
-                    # 檢查是否為我們定義的 fallback 結構 {"tool": ..., "params": ...}
-                    if "tool" in parsed and "params" in parsed:
-                        logger.info(
-                            f"✅ Successfully recovered tool call '{parsed['tool']}' from JSON fallback"
-                        )
-
-                        if parsed["tool"] == "submit_question":
-                            # 模擬 submit_question 的回傳格式
-                            p = parsed["params"]
-                            result = {
-                                "narrative": p.get("narrative", ""),
-                                "question": {
-                                    "text": p.get("question_text", ""),
-                                    "options": [
-                                        {"id": str(i + 1), "text": opt}
-                                        for i, opt in enumerate(p.get("options", []))
-                                    ],
-                                    "type": p.get("type", "QUANTITATIVE"),
-                                },
-                                "guideMessage": p.get("guide_message", ""),
-                            }
-                        elif parsed["tool"] == "complete_trial":
-                            p = parsed["params"]
-                            result = {
-                                "is_completed": True,
-                                "message": p.get("final_message", ""),
-                            }
-
-                    # [NEW] 檢查是否為直接輸出的參數 (Direct Parameter Output)
-                    # 當 Agent 沒有調用工具，而是直接輸出了 JSON (且 key 是參數名稱)
-                    elif "question_text" in parsed or "narrative" in parsed:
-                        logger.info(
-                            "✅ Successfully recovered direct parameter JSON from raw content"
-                        )
-                        # 這是最常見的錯誤模式：Model 輸出了參數字典
-                        result = {
-                            "narrative": parsed.get("narrative", ""),
-                            "question": {
-                                "text": parsed.get(
-                                    "question_text", ""
-                                ),  # 注意這裡是 question_text
-                                "options": [
-                                    {"id": str(i + 1), "text": opt}
-                                    for i, opt in enumerate(parsed.get("options", []))
-                                ],
-                                "type": parsed.get("type", "QUANTITATIVE"),
-                            },
-                            "guideMessage": parsed.get("guide_message", ""),
-                        }
-
-                    elif "question" in parsed:
-                        logger.info(
-                            "✅ Successfully recovered direct result JSON from raw content"
-                        )
-                        result = parsed
-                    else:
-                        logger.warning(
-                            f"⚠️ Recovered JSON but it has unknown structure: {parsed.keys()}"
-                        )
-
-                except Exception as e:
-                    logger.warning(f"❌ Failed to parse JSON from content: {e}")
-            else:
-                logger.warning(
-                    "❌ Raw content does not appear to be JSON, cannot recover."
-                )
-
-    ToolOutputCapture.clear()
-
-    logger.info(f"🏁 Questionnaire output final processing: {result}")
-
-    narrative = result.get("narrative", "")
-    question_data = result.get("question")
-    guide_message = result.get("guideMessage", "")
-
-    # [FIX] 如果是完成測驗的結果，將其轉換為前端期望的格式
-    if result.get("is_completed"):
-        # 在這裡我們可以標記 session 為已完成（可選，通常在 handle_submit_answer 中處理）
-        pass
-
-    return {
-        "narrative": narrative,
-        "question": question_data,
-        "guideMessage": guide_message,
-        "is_completed": result.get("is_completed", False),
-        "final_message": result.get("message", ""),
-    }
-
-
-async def run_copilot_analytics_agent(
-    user_id: str,
-    session_id: str,
-    instruction: str,
-) -> Dict[str, Any]:
-    """
-    使用 Copilot SDK 執行 Analytics Agent
-
-    Args:
-        user_id: 玩家 ID
-        session_id: WebSocket Session ID
-        instruction: 輸入給 Agent 的指令文字
-
-    Returns:
-        Dict: Analytics 結果
-    """
-
-    from app.agents.copilot_analytics import (
-        get_analytics_session_id,
-        get_analytics_tools,
-        ANALYTICS_INSTRUCTION,
-    )
-    from app.core.tools import ToolOutputCapture
-
-    copilot_session_id = get_analytics_session_id(user_id, session_id)
-
-    async def session_getter():
-        return await copilot_manager.get_session(
-            session_id=copilot_session_id,
-            tools=get_analytics_tools(),
-            system_message=ANALYTICS_INSTRUCTION
-            + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
-        )
-
-    result = await copilot_manager.send_and_wait(
-        session_id=copilot_session_id,
-        instruction=instruction,
-        session_getter=session_getter,
-    )
-
-    ToolOutputCapture.clear()
-
-    logger.debug(f"🧠 Analytics output: {result}")
-    return result
-
-
-async def run_copilot_transformation_agent(
-    user_id: str,
-    session_id: str,
-    instruction: str,
-    quest_type: str,
-) -> Dict[str, Any]:
-    """
-    使用 Copilot SDK 執行 Transformation Agent
-
-    Args:
-        user_id: 玩家 ID
-        session_id: WebSocket Session ID
-        instruction: 輸入給 Agent 的指令文字
-        quest_type: 測驗類型
-
-    Returns:
-        Dict: Transformation 結果
-    """
-
-    from app.agents.copilot_transformation import (
-        get_transformation_session_id,
-        get_transformation_tools,
-        TRANSFORMATION_INSTRUCTION,
-    )
-    from app.core.tools import ToolOutputCapture
-
-    copilot_session_id = get_transformation_session_id(user_id, session_id)
-
-    async def session_getter():
-        return await copilot_manager.get_session(
-            session_id=copilot_session_id,
-            tools=get_transformation_tools(),
-            system_message=TRANSFORMATION_INSTRUCTION
-            + f"\n當前測驗類型: {quest_type}，玩家 ID: {user_id}，Session ID: {session_id}",
-        )
-
-    result = await copilot_manager.send_and_wait(
-        session_id=copilot_session_id,
-        instruction=instruction,
-        session_getter=session_getter,
-    )
-
-    ToolOutputCapture.clear()
-
-    logger.debug(f"🧙‍♂️ Transformation output: {result}")
-    return result
-
-
-async def run_copilot_summary_agent(
-    user_id: str,
-    session_id: str,
-    instruction: str,
-) -> Dict[str, Any]:
-    """
-    使用 Copilot SDK 執行 Summary Agent
-
-    Args:
-        user_id: 玩家 ID
-        session_id: WebSocket Session ID
-        instruction: 輸入給 Agent 的指令文字
-
-    Returns:
-        Dict: Summary 結果
-    """
-
-    from app.agents.copilot_summary import (
-        get_summary_session_id,
-        get_summary_tools,
-        SUMMARY_INSTRUCTION,
-    )
-    from app.core.tools import ToolOutputCapture
-
-    copilot_session_id = get_summary_session_id(user_id, session_id)
-
-    async def session_getter():
-        return await copilot_manager.get_session(
-            session_id=copilot_session_id,
-            tools=get_summary_tools(),
-            system_message=SUMMARY_INSTRUCTION
-            + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
-        )
-
-    result = await copilot_manager.send_and_wait(
-        session_id=copilot_session_id,
-        instruction=instruction,
-        session_getter=session_getter,
-    )
-
-    ToolOutputCapture.clear()
-
-    logger.debug(f"📜 Summary output: {result}")
-    return result
 
 
 # =============================================================================
@@ -454,20 +133,98 @@ async def get_user_display_name(user_id: str) -> str:
 
 async def get_or_create_session(
     app_name: str, user_id: str, session_id: str
-) -> Any:
+) -> Session:
     """
-    確保獲取有效的 Session（Copilot SDK 版本）
+    確保獲取有效的 Session。
 
-    Copilot SDK 的 session 由 copilot_manager 管理
+    流程：
+    1. 嘗試 get_session。
+    2. 若失敗（不存在），則執行 create_session。
+
+    符合開發憲章第七條：Agent Output Key 隔離原則，確保各 Agent 命名空間獨立。
     """
-    return await copilot_manager.get_session(
-        session_id=f"{app_name}_{user_id}_{session_id}",
+    try:
+        session = await session_service.get_session(
+            app_name=app_name, user_id=user_id, session_id=session_id
+        )
+        if session:
+            return session
+    except Exception:
+        # get_session 可能在 Session 不存在時拋出異常
+        pass
+
+    # 建立新 Session
+    logger.info(
+        f"🆕 Creating new session for app: {app_name}, session_id: {session_id}"
+    )
+    return await session_service.create_session(
+        app_name=app_name, user_id=user_id, session_id=session_id
     )
 
 
 # =============================================================================
-# Quest Logic Helpers
+# 通用 Agent 執行器 (Unified Agent Runner)
 # =============================================================================
+
+
+async def run_agent_async(
+    agent,
+    app_name: str,
+    user_id: str,
+    session_id: str,
+    instruction: str,
+    output_key: str,
+) -> dict:
+    """
+    通用 Agent 執行器：統一處理 Session 建立、Runner 執行與結果讀取
+
+    此函式封裝了所有 Agent 執行的共同邏輯，消除 quest_ws.py 中重複的程式碼。
+
+    Args:
+        agent: Agent 實例（如 questionnaire_agent、analytics_agent 等）
+        app_name: Session 命名空間（每個 Agent 應有獨立的 namespace）
+        user_id: 玩家 ID
+        session_id: WebSocket Session ID
+        instruction: 傳給 Agent 的指令文字
+        output_key: Agent 將結果寫入 session.state 的 key 名稱
+
+    Returns:
+        dict: Agent 執行後存入 session.state[output_key] 的結果
+    """
+    # 1. 確保 Session 存在
+    session = await get_or_create_session(
+        app_name=app_name, user_id=user_id, session_id=session_id
+    )
+
+    # 2. 建立 Runner 並準備訊息
+    runner = Runner(agent=agent, app_name=app_name, session_service=session_service)
+    user_msg = types.Content(role="user", parts=[types.Part(text=instruction)])
+
+    # 3. 執行 Agent 對話循環
+    async for event in runner.run_async(
+        user_id=user_id, session_id=session_id, new_message=user_msg
+    ):
+        if event.actions and event.actions.end_of_agent:
+            break
+
+    # 4. 從 Session State 讀取結果
+    # [Fix] 重新獲取 Session 以取得最新狀態，因為 Runner 執行過程中
+    # tool_context.state 的變更可能未反映在原 session 物件引用上
+    session = await session_service.get_session(
+        app_name=app_name, user_id=user_id, session_id=session_id
+    )
+    result = session.state.get(output_key, {})
+
+    # 5. 安全解析（防止 Agent 回傳字串而非物件）
+    if isinstance(result, str):
+        try:
+            result = json.loads(result)
+        except json.JSONDecodeError:
+            result = {}
+
+    logger.debug(f"🚀 App: {app_name}, Agent: {agent.name}, Result: {result}")
+
+    return result
 
 
 async def run_analytics_task(
@@ -483,7 +240,7 @@ async def run_analytics_task(
     背景任務：執行 Analytics Agent 並將分析結果存入 Session
 
     此函式被設計為 Fire-and-forget 的背景任務，避免阻塞主對話流程。
-    它會啟動一個獨立 Analytics Agent 用於分析玩家回答的心理特徵，
+    它會啟動一個獨立的 Analytics Agent 用於分析玩家回答的心理特徵，
     並將結果存入 Session State 的 `accumulated_analytics` 列表中，供最終結算使用。
 
     Args:
@@ -508,24 +265,35 @@ async def run_analytics_task(
 
         logger.info(f"🧠 [Background] Instruction: {instruction}")
 
-        # 使用 Copilot SDK 執行 Analytics Agent
-        result = await run_copilot_analytics_agent(user_id, session_id, instruction)
+        # 使用通用執行器執行 Analytics Agent
+        result = await run_agent_async(
+            agent=analytics_agent,
+            app_name="analytics",
+            user_id=user_id,
+            session_id=session_id,
+            instruction=instruction,
+            output_key="analytics_output",
+        )
         logger.info(f"🧠 [Background] Result: {result}")
 
         if result:
             await CacheService.set_analytics_result(session_id, result)
 
-            # [FIX] 將單次分析結果存回主 Session 以供後續聚合 (Aggregation)
-            from app.core.session import session_service
-
-            session = await session_service.get_session(
-                QUESTIONNAIRE_NAME, user_id, session_id
+        if result:
+            # 將單次分析結果存回主 Session 以供後續聚合 (Aggregation)
+            # 這是 "Map-Reduce" 模式中的 Map 階段結果收集
+            # [Fix] 重新獲取最新 session 以避免 Race Condition
+            # 因為多個 analytics task 可能同時執行，使用傳入的舊 session 引用會導致資料覆蓋
+            main_session = await session_service.get_session(
+                app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=session_id
             )
-            if session:
-                if "accumulated_analytics" not in session.state:
-                    session.state["accumulated_analytics"] = []
-                session.state["accumulated_analytics"].append(result)
-                await session_service.update_session(session)
+
+            if "accumulated_analytics" not in main_session.state:
+                main_session.state["accumulated_analytics"] = []
+            main_session.state["accumulated_analytics"].append(result)
+
+            # 顯式保存 session state
+            await session_service.update_session(main_session)
 
             logger.debug(
                 f"✅ [Background] Analysis complete for {session_id}: {result.get('quality_score', 'N/A')}"
@@ -595,7 +363,7 @@ async def get_analytics_for_quests(
     批量獲取指定類型測驗的分析結果，使用 IN 查詢取代迴圈中的多次查詢
 
     此函式避免 N+1 查詢問題，透過單一 SQL 查詢獲取所有相關的 UserQuest 記錄。
-    使用 IN 子子過濾 quest_type，而非在 Python 迴圈中進行多次查詢。
+    使用 IN 子句過濾 quest_type，而非在 Python 迴圈中進行多次查詢。
 
     Args:
         db: 資料庫會話 (AsyncSession)
@@ -640,26 +408,45 @@ async def run_questionnaire_agent(
     user_id: str, session_id: str, instruction: str
 ) -> dict:
     """
-    使用 Copilot SDK 執行 Questionnaire Agent
-    """
-    return await run_copilot_questionnaire_agent(user_id, session_id, instruction)
+    [核心邏輯] 執行 Questionnaire Agent 對話循環
 
+    此函式封裝了 "User Input -> Agent Thinking -> Tool Execution -> Result Parsing" 的完整週期。
 
-async def run_agent_async(
-    agent,
-    app_name: str,
-    user_id: str,
-    session_id: str,
-    instruction: str,
-    output_key: str,
-) -> dict:
+    關鍵設計：Single Source of Truth
+    - 我們不依賴 Agent 的直接文字回應 (return text)。
+    - 而是依賴 Agent 執行工具後，寫入 Session State 的 `questionnaire_output` 結構化資料。
+
+    Args:
+        user_id: 每個使用者的唯一標識 (Sub)
+        session_id: 前端生成的 Session ID (用於追踪 WebSocket 連線與狀態)
+        instruction: 輸入給 Agent 的文字指令 (User Message)，包含情境描述或玩家回答
+
+    Returns:
+        dict: 包含 narrative (敘事), question (題目), guideMessage (引導) 的標準化字典
     """
-    相容舊版的 run_agent_async 呼叫，轉發到對應的 Copilot 執行器
-    """
-    if app_name == "summary":
-        return await run_copilot_summary_agent(user_id, session_id, instruction)
-    elif app_name == "transformation":
-        # 注意：這裡需要 quest_type，嘗試從 session 獲取或使用預設
-        return await run_copilot_transformation_agent(user_id, session_id, instruction, "mbti")
-    
-    return {}
+    logger.debug(
+        f"🔄 [run_questionnaire_agent] Starting cycle for session {session_id}"
+    )
+
+    # 使用通用執行器直接呼叫 Questionnaire Agent
+    questionnaire_output = await run_agent_async(
+        agent=questionnaire_agent,
+        app_name=QUESTIONNAIRE_NAME,
+        user_id=user_id,
+        session_id=session_id,
+        instruction=instruction,
+        output_key="questionnaire_output",
+    )
+
+    logger.debug(f"🏁 Questionnaire output: {questionnaire_output}")
+
+    # 格式化輸出
+    narrative = questionnaire_output.get("narrative", "")
+    question_data = questionnaire_output.get("question")
+    guide_message = questionnaire_output.get("guideMessage", "")
+
+    return {
+        "narrative": narrative,
+        "question": question_data,
+        "guideMessage": guide_message,
+    }

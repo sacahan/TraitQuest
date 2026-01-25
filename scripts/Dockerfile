@@ -16,17 +16,6 @@ WORKDIR /app
 # 安裝 uv 套件管理器
 RUN pip install --no-cache-dir uv
 
-# 安裝 Node.js（Copilot CLI 需求）
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get clean
-
-# 安裝 GitHub Copilot CLI（全局安裝，固定版本）
-RUN npm install -g @githubnext/github-copilot-cli@0.0.392
-
-# 驗證安裝
-RUN github-copilot-cli --version
-
 # 依賴快取優先：先複製依賴定義檔案
 COPY backend/pyproject.toml backend/uv.lock ./
 
@@ -49,12 +38,8 @@ WORKDIR /app
 
 # 安裝必要的系統依賴
 # curl: 健康檢查用
-# nodejs: Copilot CLI 運行用
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g @githubnext/github-copilot-cli@0.0.392 \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 

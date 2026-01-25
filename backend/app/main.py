@@ -7,12 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from pydantic import ValidationError
-from sqlalchemy import text
-
 from app.api import auth, quest, quest_ws, map
 from app.core.logging_config import configure_logging
-from app.core.copilot_logging import setup_copilot_logging
-from app.core.copilot_client import copilot_manager
+from sqlalchemy import text
 from app.db.session import engine
 from app.core.redis_client import redis_client
 from app.core.config import settings
@@ -25,21 +22,15 @@ STATIC_DIR = Path("/app/static")
 configure_logging(log_file=settings.LOG_FILE_PATH)
 logger = logging.getLogger("app")
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     logger.info("--- 🌌 TraitQuest 啟動中：正在檢測連線 ---")
-    
+
     # Configure logging
     configure_logging(log_file=settings.LOG_FILE_PATH)
-    
-    # Setup Copilot SDK logging
-    setup_copilot_logging()
-    
-    # Initialize Copilot Client
-    logger.info("🤖 初始化 Copilot SDK Client...")
-    await copilot_manager.initialize()
-    
+
     # Test PostgreSQL
     try:
         async with engine.connect() as conn:
@@ -57,16 +48,13 @@ async def lifespan(app: FastAPI):
         logger.error(f"❌ [Redis] 連線失敗：{str(e)}")
 
     yield
-    
+
     # Shutdown
     logger.info("--- 🌑 TraitQuest 已關閉 ---")
-    
-    # Shutdown Copilot Client
-    await copilot_manager.shutdown()
-    
+
     # Shutdown Redis
     await redis_client.disconnect()
-    logger.info("✅ Copilot SDK Client 已關閉")
+
 
 app = FastAPI(title="TraitQuest API", version="1.0.0", lifespan=lifespan)
 
@@ -75,6 +63,7 @@ app.include_router(auth.router, prefix="/v1")
 app.include_router(quest_ws.router, prefix="/v1")
 app.include_router(quest.router, prefix="/v1")
 app.include_router(map.router, prefix="/v1")
+
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -199,9 +188,11 @@ async def root():
 
     return {"message": "Welcome to TraitQuest API", "status": "active"}
 
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
 
 @app.get("/api/health")
 async def api_health_check():
@@ -269,4 +260,5 @@ if STATIC_DIR.exists() and STATIC_DIR.is_dir():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
