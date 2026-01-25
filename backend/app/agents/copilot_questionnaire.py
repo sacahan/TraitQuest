@@ -4,12 +4,11 @@ Copilot SDK 版本 - Questionnaire Agent
 使用 GitHub Copilot SDK
 """
 import logging
-import json
-from typing import Dict, Any, Optional, List
+from typing import List
+
 from pydantic import BaseModel, Field
 
-from app.core.tools import create_copilot_tool
-from app.core.config import settings
+from app.core.tools import define_tool
 
 logger = logging.getLogger("app")
 
@@ -60,9 +59,14 @@ QUESTIONNAIRE_INSTRUCTION = """你是 TraitQuest 的「引導者艾比 (Abby)」
     - 題目類型 (type) 只能是 QUANTITATIVE 或 SOUL_NARRATIVE。
     - 嚮導話語 (guide_message) 為可選，在開場或重要轉折點提供簡短鼓勵，最多 15 字。
     - 輸入字串使用正體中文。
-- 重要：**你唯一的輸出（The ONLY output）必須是調用工具。** 嚴禁在工具調用之前或之後輸出任何文字、解釋、確認訊息或 Markdown 區塊。
-- 違反此規則將破壞系統解析。如果你已經調用了工具，請立即結束對話，不要在後面加任何「好的」或「已提交」。
+- 重要：**你唯一的輸出（The ONLY output）必須是調用工具 `submit_question` 或 `complete_trial`。**
+- 嚴禁在工具調用之前或之後輸出任何文字、解釋、確認訊息或 Markdown 區塊。
+- 如果你輸出了任何非工具調用的文字（如「好的，這是題目...」），系統將無法解析，導致試煉失敗。
+- 極端重要：**你唯一的輸出（The ONLY output）必須是調用工具 `submit_question` 或 `complete_trial`。**
+- 嚴禁在工具調用之前或之後輸出任何文字、解釋、確認訊息或 Markdown 區塊。
+- 絕對不要輸出 JSON 或 XML，必須直接調用工具。
 """
+
 
 class SubmitQuestionParams(BaseModel):
     narrative: str = Field(description="RPG 情境敘述")
@@ -75,8 +79,19 @@ class CompleteTrialParams(BaseModel):
     final_message: str = Field(description="結業語")
 
 
+@define_tool(
+    name="submit_question",
+    description="提交 RPG 情境敘述與題目",
+    params_type=SubmitQuestionParams,
+)
 async def submit_question(params: SubmitQuestionParams) -> dict:
     """提交生成的 RPG 劇情與題目"""
+    from app.core.tools import ToolOutputCapture
+
+    logger.info(
+        f"📝 [Tool: submit_question] narrative: {params.narrative[:30]}..., question: {params.question_text}"
+    )
+
     output = {
         "narrative": params.narrative,
         "question": {
@@ -87,33 +102,33 @@ async def submit_question(params: SubmitQuestionParams) -> dict:
     }
     if params.guide_message:
         output["guideMessage"] = params.guide_message
+
+    ToolOutputCapture.capture("submit_question", output)
     return output
 
 
+@define_tool(
+    name="complete_trial",
+    description="完成所有測驗題目",
+    params_type=CompleteTrialParams,
+)
 async def complete_trial(params: CompleteTrialParams) -> dict:
     """完成測驗"""
-    return {
-        "is_completed": True,
-        "message": params.final_message
-    }
+    from app.core.tools import ToolOutputCapture
+
+    logger.info(
+        f"🏁 [Tool: complete_trial] final_message: {params.final_message[:30]}..."
+    )
+
+    output = {"is_completed": True, "message": params.final_message}
+
+    ToolOutputCapture.capture("complete_trial", output)
+    return output
 
 
-def create_questionnaire_tools() -> list:
+def get_questionnaire_tools() -> list:
     """建立工具列表"""
-    return [
-        create_copilot_tool(
-            name="submit_question",
-            description="提交 RPG 情境敘述與題目",
-            handler=submit_question,
-            params_model=SubmitQuestionParams
-        ),
-        create_copilot_tool(
-            name="complete_trial",
-            description="完成所有測驗題目",
-            handler=complete_trial,
-            params_model=CompleteTrialParams
-        ),
-    ]
+    return [submit_question, complete_trial]
 
 
 def get_questionnaire_session_id(user_id: str, session_id: str) -> str:

@@ -2,19 +2,18 @@ import json
 import logging
 import asyncio
 import uuid
-from typing import Dict, List, Optional, Any
+import re
+from typing import Dict, List, Any
 
 from fastapi import WebSocket
-from sqlalchemy import select, update, func
+from sqlalchemy import select
 
 from app.core.redis_client import redis_client
 from app.core.copilot_client import copilot_manager
-from app.core.copilot_logging import setup_copilot_logging
 from app.services.cache_service import CacheService
 from app.services.level_system import level_service
-from app.services.game_assets import game_assets_service
 from app.db.session import AsyncSessionLocal
-from app.db.models import User, UserQuest, GameDefinition
+from app.db.models import User, UserQuest
 
 logger = logging.getLogger("app")
 
@@ -107,22 +106,26 @@ async def run_copilot_questionnaire_agent(
     Returns:
         Dict: 包含 narrative (敘事), question (題目), guideMessage (引導) 的標準化字典
     """
+
     from app.agents.copilot_questionnaire import (
         get_questionnaire_session_id,
-        create_questionnaire_tools,
+        get_questionnaire_tools,
         QUESTIONNAIRE_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
 
-    logger.debug(f"🔄 [run_copilot_questionnaire_agent] Starting cycle for session {session_id}")
+    logger.debug(
+        f"🔄 [run_copilot_questionnaire_agent] Starting cycle for session {session_id}"
+    )
 
     copilot_session_id = get_questionnaire_session_id(user_id, session_id)
 
     async def session_getter():
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
-            tools=create_questionnaire_tools(),
-            system_message=QUESTIONNAIRE_INSTRUCTION + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
+            tools=get_questionnaire_tools(),
+            system_message=QUESTIONNAIRE_INSTRUCTION
+            + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(
@@ -131,18 +134,105 @@ async def run_copilot_questionnaire_agent(
         session_getter=session_getter,
     )
 
+    # [Fallback] 如果 result 為空，嘗試從 ToolOutputCapture 獲取
+    if not result or (not result.get("narrative") and not result.get("question")):
+        logger.info("🔍 Result dict is empty/incomplete, checking ToolOutputCapture...")
+        submit_output = ToolOutputCapture.get("submit_question")
+        complete_output = ToolOutputCapture.get("complete_trial")
+
+        if submit_output:
+            logger.info("✅ Found submit_question output in ToolOutputCapture")
+            result = submit_output
+        elif complete_output:
+            logger.info("✅ Found complete_trial output in ToolOutputCapture")
+            result = complete_output
+        elif result.get("content"):
+            # [Fallback] 如果 Agent 違反規則直接返回了文字內容（如 JSON 字串或對話）
+            content = result["content"]
+            logger.warning(
+                f"⚠️ Agent returned raw content without using tools. Length: {len(content)}"
+            )
+
+            # 嘗試檢測是否包含 JSON (支援 Markdown code block)
+            # 優先尋找 markdown json block
+            json_match = re.search(r"```json\s*(\{.*?\})\s*```", content, re.DOTALL)
+            if not json_match:
+                # 再次嘗試尋找裸 JSON
+                json_match = re.search(r"\{.*\}", content, re.DOTALL)
+
+            if json_match:
+                try:
+                    raw_json = (
+                        json_match.group(1)
+                        if "```json" in json_match.group(0)
+                        else json_match.group(0)
+                    )
+                    parsed = json.loads(raw_json)
+
+                    # 檢查是否為我們定義的 fallback 結構 {"tool": ..., "params": ...}
+                    if "tool" in parsed and "params" in parsed:
+                        logger.info(
+                            f"✅ Successfully recovered tool call '{parsed['tool']}' from JSON fallback"
+                        )
+
+                        if parsed["tool"] == "submit_question":
+                            # 模擬 submit_question 的回傳格式
+                            p = parsed["params"]
+                            result = {
+                                "narrative": p.get("narrative", ""),
+                                "question": {
+                                    "text": p.get("question_text", ""),
+                                    "options": [
+                                        {"id": str(i + 1), "text": opt}
+                                        for i, opt in enumerate(p.get("options", []))
+                                    ],
+                                    "type": p.get("type", "QUANTITATIVE"),
+                                },
+                                "guideMessage": p.get("guide_message", ""),
+                            }
+                        elif parsed["tool"] == "complete_trial":
+                            p = parsed["params"]
+                            result = {
+                                "is_completed": True,
+                                "message": p.get("final_message", ""),
+                            }
+
+                    elif "question" in parsed:
+                        logger.info(
+                            "✅ Successfully recovered direct result JSON from raw content"
+                        )
+                        result = parsed
+                    else:
+                        logger.warning(
+                            f"⚠️ Recovered JSON but it has unknown structure: {parsed.keys()}"
+                        )
+
+                except Exception as e:
+                    logger.warning(f"❌ Failed to parse JSON from content: {e}")
+            else:
+                logger.warning(
+                    "❌ Raw content does not appear to be JSON, cannot recover."
+                )
+
     ToolOutputCapture.clear()
 
-    logger.debug(f"🏁 Questionnaire output: {result}")
+    logger.info(f"🏁 Questionnaire output final processing: {result}")
 
     narrative = result.get("narrative", "")
     question_data = result.get("question")
     guide_message = result.get("guideMessage", "")
 
+    # [FIX] 如果是完成測驗的結果，將其轉換為前端期望的格式
+    if result.get("is_completed"):
+        # 在這裡我們可以標記 session 為已完成（可選，通常在 handle_submit_answer 中處理）
+        pass
+
     return {
         "narrative": narrative,
         "question": question_data,
         "guideMessage": guide_message,
+        "is_completed": result.get("is_completed", False),
+        "final_message": result.get("message", ""),
     }
 
 
@@ -162,9 +252,10 @@ async def run_copilot_analytics_agent(
     Returns:
         Dict: Analytics 結果
     """
+
     from app.agents.copilot_analytics import (
         get_analytics_session_id,
-        create_analytics_tools,
+        get_analytics_tools,
         ANALYTICS_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
@@ -174,8 +265,9 @@ async def run_copilot_analytics_agent(
     async def session_getter():
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
-            tools=create_analytics_tools(),
-            system_message=ANALYTICS_INSTRUCTION + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
+            tools=get_analytics_tools(),
+            system_message=ANALYTICS_INSTRUCTION
+            + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(
@@ -208,9 +300,10 @@ async def run_copilot_transformation_agent(
     Returns:
         Dict: Transformation 結果
     """
+
     from app.agents.copilot_transformation import (
         get_transformation_session_id,
-        create_transformation_tools,
+        get_transformation_tools,
         TRANSFORMATION_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
@@ -220,8 +313,9 @@ async def run_copilot_transformation_agent(
     async def session_getter():
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
-            tools=create_transformation_tools(),
-            system_message=TRANSFORMATION_INSTRUCTION + f"\n當前測驗類型: {quest_type}，玩家 ID: {user_id}，Session ID: {session_id}",
+            tools=get_transformation_tools(),
+            system_message=TRANSFORMATION_INSTRUCTION
+            + f"\n當前測驗類型: {quest_type}，玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(
@@ -252,9 +346,10 @@ async def run_copilot_summary_agent(
     Returns:
         Dict: Summary 結果
     """
+
     from app.agents.copilot_summary import (
         get_summary_session_id,
-        create_summary_tools,
+        get_summary_tools,
         SUMMARY_INSTRUCTION,
     )
     from app.core.tools import ToolOutputCapture
@@ -264,8 +359,9 @@ async def run_copilot_summary_agent(
     async def session_getter():
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
-            tools=create_summary_tools(),
-            system_message=SUMMARY_INSTRUCTION + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
+            tools=get_summary_tools(),
+            system_message=SUMMARY_INSTRUCTION
+            + f"\n當前玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
     result = await copilot_manager.send_and_wait(

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     REDIS_PASSWORD: Optional[str] = None
 
     # Copilot SDK Configuration
-    COPILOT_MODEL: str = "gpt-5"
+    LLM_MODEL: str = "gpt-4o"
     COPILOT_CLI_PATH: Optional[str] = None
     COPILOT_LOG_LEVEL: str = "info"
 

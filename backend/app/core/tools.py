@@ -4,50 +4,26 @@ Copilot SDK 工具定義
 使用 Pydantic 模型
 """
 import logging
-from typing import Callable, Any, Dict, Type, Optional
-from pydantic import BaseModel, Field
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger("app")
 
 
-def create_copilot_tool(
-    name: str,
-    description: str,
-    handler: Callable,
-    params_model: Optional[Type[BaseModel]] = None,
-) -> Any:
-    """
-    建立 Copilot SDK 工具
-    
-    Args:
-        name: 工具名稱
-        description: 工具描述
-        handler: 非同步處理函式
-        params_model: 可選的 Pydantic 參數模型
-    
-    Returns:
-        Copilot SDK 工具物件
-    """
-    try:
-        from copilot import define_tool, Tool
-    except ImportError:
-        logger.warning("⚠️ Copilot SDK 未安裝，返回 Mock 工具")
-        return {"name": name, "description": description, "handler": handler}
-    
-    if params_model:
-        return define_tool(
-            name=name,
-            description=description,
-            params_type=params_model,
-        )(handler)
-    else:
-        # 手動定義 schema
-        return Tool(
-            name=name,
-            description=description,
-            parameters={"type": "object", "properties": {}, "required": []},
-            handler=handler
-        )
+try:
+    from copilot import define_tool
+except ImportError:
+    # Mock for local development without SDK
+    def define_tool(name, description, params_type):
+        def decorator(func):
+            func._tool_def = {
+                "name": name,
+                "description": description,
+                "parameters": params_type.model_json_schema() if params_type else {},
+                "handler": func,
+            }
+            return func
+
+        return decorator
 
 
 class ToolOutputCapture:

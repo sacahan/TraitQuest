@@ -9,3 +9,6 @@ __pycache__/
 # Docker secrets
 scripts/.env.docker
 scripts/github_copilot/
+
+# Skills
+.*/skills/

@@ -31,6 +31,7 @@ logger = logging.getLogger("app")
 # =============================================================================
 
 
+
 async def run_copilot_transformation_agent(
     user_id: str,
     session_id: str,
@@ -42,7 +43,7 @@ async def run_copilot_transformation_agent(
     """
     from app.agents.copilot_transformation import (
         get_transformation_session_id,
-        create_transformation_tools,
+        get_transformation_tools,
     )
     from app.core.tools import ToolOutputCapture
 
@@ -51,7 +52,7 @@ async def run_copilot_transformation_agent(
     async def session_getter():
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
-            tools=create_transformation_tools(),
+            tools=get_transformation_tools(),
             system_message=f"你是 TraitQuest 的轉生代理，當前測驗類型: {quest_type}，玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
@@ -76,7 +77,7 @@ async def run_copilot_summary_agent(
     """
     from app.agents.copilot_summary import (
         get_summary_session_id,
-        create_summary_tools,
+        get_summary_tools,
     )
     from app.core.tools import ToolOutputCapture
 
@@ -85,7 +86,7 @@ async def run_copilot_summary_agent(
     async def session_getter():
         return await copilot_manager.get_session(
             session_id=copilot_session_id,
-            tools=create_summary_tools(),
+            tools=get_summary_tools(),
             system_message=f"你是 TraitQuest 的史官，當前玩家 ID: {user_id}，Session ID: {session_id}",
         )
 
@@ -239,15 +240,22 @@ async def handle_submit_answer(
     result = await run_questionnaire_agent(user_id, session_id, instruction)
     logger.info(f"<<< Result: {result}")
 
-    updated_session = await session_service.get_session(
-        app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=session_id
-    )
+    if result.get("is_completed"):
+        # 更新 Session 狀態標記為完成
+        updated_session = await session_service.get_session(
+            app_name=QUESTIONNAIRE_NAME, user_id=user_id, session_id=session_id
+        )
+        if updated_session:
+            updated_session.state["quest_completed"] = True
+            updated_session.state["final_message"] = result.get(
+                "final_message", "Trial completed."
+            )
+            await session_service.update_session(updated_session)
 
-    if updated_session.state.get("quest_completed"):
         return {
             "event": "quest_complete",
             "data": {
-                "message": updated_session.state.get(
+                "message": result.get(
                     "final_message", "Hero transformation in progress..."
                 ),
                 "totalExp": 100,

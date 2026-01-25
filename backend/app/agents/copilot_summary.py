@@ -3,12 +3,11 @@ Copilot SDK 版本 - Summary Agent
 
 使用 GitHub Copilot SDK
 """
+
 import logging
-from typing import Dict, Any
 from pydantic import BaseModel, Field
 
-from app.core.tools import create_copilot_tool
-from app.core.config import settings
+from app.core.tools import define_tool
 
 logger = logging.getLogger("app")
 
@@ -20,31 +19,39 @@ SUMMARY_INSTRUCTION = """你是 TraitQuest 的「史官」。你的任務是將�
 3. **真實分析**： 你必須基於玩家在測驗中的表現進行真實的分析而不是隨便編造，並推論出玩家未來的預言或注意事項。
 4. **精煉長度**：摘要必須限制在 150 字以內，確保後續 Agent 能快速讀取。
 5. **輸出規範**：你唯一的輸出必須是調用 `submit_summary` 工具。使用正體中文。
+6. **嚴禁**輸出任何非工具調用的文字。不要解釋，不要輸出 JSON，直接調用工具。
 """
+
 
 class SubmitSummaryParams(BaseModel):
     hero_chronicle: str = Field(description="第三人稱敘事的傳奇史詩摘要")
 
 
+@define_tool(
+    name="submit_summary",
+    description="提交英雄史詩摘要",
+    params_type=SubmitSummaryParams,
+)
 async def submit_summary(params: SubmitSummaryParams) -> dict:
     """提交生成的英雄史詩摘要"""
     hero_chronicle = params.hero_chronicle
     if len(hero_chronicle) > 500:
         hero_chronicle = hero_chronicle[:497] + "..."
-    
+
+    # ToolOutputCapture for testing/debugging
+    try:
+        from app.core.tools import ToolOutputCapture
+
+        ToolOutputCapture.capture("submit_summary", {"hero_chronicle": hero_chronicle})
+    except ImportError:
+        pass
+
     return {"hero_chronicle": hero_chronicle}
 
 
-def create_summary_tools() -> list:
+def get_summary_tools() -> list:
     """建立工具列表"""
-    return [
-        create_copilot_tool(
-            name="submit_summary",
-            description="提交英雄史詩摘要",
-            handler=submit_summary,
-            params_model=SubmitSummaryParams
-        ),
-    ]
+    return [submit_summary]
 
 
 def get_summary_session_id(user_id: str, session_id: str) -> str:

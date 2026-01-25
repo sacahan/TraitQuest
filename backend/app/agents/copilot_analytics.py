@@ -3,11 +3,13 @@ Copilot SDK 版本 - Analytics Agent
 
 使用 GitHub Copilot SDK
 """
+
 import logging
 from typing import Dict, Any
+
 from pydantic import BaseModel, Field
 
-from app.core.tools import create_copilot_tool
+from app.core.tools import define_tool
 from app.core.config import settings
 
 logger = logging.getLogger("app")
@@ -76,7 +78,9 @@ ANALYTICS_INSTRUCTION = """你是極其嚴謹的「靈魂分析官」。你的�
 - 你唯一的輸出必須是調用 `submit_analysis` 工具
 - analysis_reason 必須使用正體中文，簡要說明評分理由
 - 輸出的維度標籤必須與測驗範疇對應
+- **嚴禁**輸出任何非工具調用的文字。不要解釋，不要輸出 JSON，直接調用工具。
 """
+
 
 class SubmitAnalysisParams(BaseModel):
     quality_score: float = Field(description="1.0 - 2.0 之間的評分")
@@ -84,27 +88,41 @@ class SubmitAnalysisParams(BaseModel):
     analysis_reason: str = Field(description="評分理由")
 
 
+@define_tool(
+    name="submit_analysis",
+    description="提交心理維度分析結果",
+    params_type=SubmitAnalysisParams,
+)
 async def submit_analysis(params: SubmitAnalysisParams) -> dict:
     """提交單次回答的分析結果"""
     quality_score = max(1.0, min(2.0, params.quality_score))
-    
+
+    # 這裡可以加入 ToolsOutputCapture 以便測試，或者依賴 SDK 的事件回調
+    # 為了保持兼容原本的測試邏輯（如果有的話），我們可以保留 ToolOutputCapture
+    try:
+        from app.core.tools import ToolOutputCapture
+
+        ToolOutputCapture.capture(
+            "submit_analysis",
+            {
+                "quality_score": quality_score,
+                "trait_deltas": params.trait_deltas,
+                "analysis_reason": params.analysis_reason,
+            },
+        )
+    except ImportError:
+        pass
+
     return {
         "quality_score": quality_score,
         "trait_deltas": params.trait_deltas,
-        "analysis_reason": params.analysis_reason
+        "analysis_reason": params.analysis_reason,
     }
 
 
-def create_analytics_tools() -> list:
+def get_analytics_tools() -> list:
     """建立工具列表"""
-    return [
-        create_copilot_tool(
-            name="submit_analysis",
-            description="提交心理維度分析結果",
-            handler=submit_analysis,
-            params_model=SubmitAnalysisParams
-        ),
-    ]
+    return [submit_analysis]
 
 
 def get_analytics_session_id(user_id: str, session_id: str) -> str:

@@ -3,12 +3,13 @@ Copilot SDK 版本 - Transformation Agent
 
 使用 GitHub Copilot SDK
 """
+
 import logging
-from typing import Optional, Dict, Any, List
+from typing import Optional, List
 from pydantic import BaseModel, Field
 
-from app.core.tools import create_copilot_tool
-from app.core.config import settings
+
+from app.core.tools import define_tool
 
 logger = logging.getLogger("app")
 
@@ -113,7 +114,15 @@ TRANSFORMATION_INSTRUCTION = """你是 TraitQuest 的「轉生代理」，負責
 | TAL_ITL | 思維 | psychology |
 | TAL_LEA | 學習 | school |
 | TAL_STR | 戰略 | route |
+| TAL_STR | 戰略 | route |
+
+## 限制與規範
+1. 嚴禁編造不存在的 ID。
+2. 必須嚴格遵照上述表格映射。
+3. **極端重要**：你唯一的輸出（The ONLY output）必須是調用工具 `submit_transformation`。
+4. **嚴禁**輸出任何非工具調用的文字。不要解釋，不要輸出 JSON，直接調用工具。
 """
+
 
 class TransformationParams(BaseModel):
     race_id: Optional[str] = Field(default=None, description="靈魂種族 ID")
@@ -123,42 +132,59 @@ class TransformationParams(BaseModel):
     stats: Optional[dict] = Field(default=None, description="五大屬性數值")
     stance_id: Optional[str] = Field(default=None, description="戰略姿態 ID")
     stance: Optional[dict] = Field(default=None, description="姿態完整物件")
-    talent_ids: Optional[List[str]] = Field(default=None, description="傳奇技能 ID 列表")
+    talent_ids: Optional[List[str]] = Field(
+        default=None, description="傳奇技能 ID 列表"
+    )
     talents: Optional[List[dict]] = Field(default=None, description="技能完整物件列表")
     destiny_guide: dict = Field(description="命運指引字典")
     destiny_bonds: dict = Field(description="命運羈絆字典")
 
 
+@define_tool(
+    name="submit_transformation",
+    description="提交英雄轉生結果",
+    params_type=TransformationParams,
+)
 async def submit_transformation(params: TransformationParams) -> dict:
     """提交最終的英雄轉生報告"""
     result = {}
-    
-    if params.stats is not None: result["stats"] = params.stats
-    if params.race_id is not None: result["race_id"] = params.race_id
-    if params.race is not None: result["race"] = params.race
-    if params.class_id is not None: result["class_id"] = params.class_id
-    if params.hero_class is not None: result["class"] = params.hero_class
-    if params.stance_id is not None: result["stance_id"] = params.stance_id
-    if params.stance is not None: result["stance"] = params.stance
-    if params.talent_ids is not None: result["talent_ids"] = params.talent_ids
-    if params.talents is not None: result["talents"] = params.talents
-    
+
+    if params.stats is not None:
+        result["stats"] = params.stats
+    if params.race_id is not None:
+        result["race_id"] = params.race_id
+    if params.race is not None:
+        result["race"] = params.race
+    if params.class_id is not None:
+        result["class_id"] = params.class_id
+    if params.hero_class is not None:
+        result["class"] = params.hero_class
+    if params.stance_id is not None:
+        result["stance_id"] = params.stance_id
+    if params.stance is not None:
+        result["stance"] = params.stance
+    if params.talent_ids is not None:
+        result["talent_ids"] = params.talent_ids
+    if params.talents is not None:
+        result["talents"] = params.talents
+
     result["destiny_guide"] = params.destiny_guide
     result["destiny_bonds"] = params.destiny_bonds
-    
+
+    # ToolOutputCapture for testing/debugging
+    try:
+        from app.core.tools import ToolOutputCapture
+
+        ToolOutputCapture.capture("submit_transformation", result)
+    except ImportError:
+        pass
+
     return result
 
 
-def create_transformation_tools() -> list:
+def get_transformation_tools() -> list:
     """建立工具列表"""
-    return [
-        create_copilot_tool(
-            name="submit_transformation",
-            description="提交英雄轉生結果",
-            handler=submit_transformation,
-            params_model=TransformationParams
-        ),
-    ]
+    return [submit_transformation]
 
 
 def get_transformation_session_id(user_id: str, session_id: str) -> str:
