@@ -197,6 +197,28 @@ async def run_copilot_questionnaire_agent(
                                 "message": p.get("final_message", ""),
                             }
 
+                    # [NEW] 檢查是否為直接輸出的參數 (Direct Parameter Output)
+                    # 當 Agent 沒有調用工具，而是直接輸出了 JSON (且 key 是參數名稱)
+                    elif "question_text" in parsed or "narrative" in parsed:
+                        logger.info(
+                            "✅ Successfully recovered direct parameter JSON from raw content"
+                        )
+                        # 這是最常見的錯誤模式：Model 輸出了參數字典
+                        result = {
+                            "narrative": parsed.get("narrative", ""),
+                            "question": {
+                                "text": parsed.get(
+                                    "question_text", ""
+                                ),  # 注意這裡是 question_text
+                                "options": [
+                                    {"id": str(i + 1), "text": opt}
+                                    for i, opt in enumerate(parsed.get("options", []))
+                                ],
+                                "type": parsed.get("type", "QUANTITATIVE"),
+                            },
+                            "guideMessage": parsed.get("guide_message", ""),
+                        }
+
                     elif "question" in parsed:
                         logger.info(
                             "✅ Successfully recovered direct result JSON from raw content"
