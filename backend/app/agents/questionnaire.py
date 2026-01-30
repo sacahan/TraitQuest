@@ -127,10 +127,10 @@ def create_questionnaire_agent() -> Agent:
         instruction=QUESTIONNAIRE_INSTRUCTION,
         model=LiteLlm(
             model=settings.LLM_MODEL,
-            api_key=settings.GITHUB_COPILOT_TOKEN,
-            extra_headers=settings.GITHUB_COPILOT_HEADERS,
+            api_base=settings.LITELLM_PROXY_URL,
+            api_key=settings.LITELLM_PROXY_API_KEY,
         ),
-        tools=[submit_question, complete_trial]
+        tools=[submit_question, complete_trial],
         # 注意：不設定 output_key，避免 Agent 的文字回應覆蓋 Tool 寫入的 dict
         # Tool 會透過 tool_context.state["questionnaire_output"] 自行管理輸出
     )

@@ -28,6 +28,12 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("--- 🌌 TraitQuest 啟動中：正在檢測連線 ---")
 
+    # Enable LiteLLM debug mode for troubleshooting
+    import litellm
+
+    litellm._turn_on_debug()
+    logger.info("🔧 [LiteLLM] Debug 模式已啟用")
+
     # Configure logging
     configure_logging(log_file=settings.LOG_FILE_PATH)
 

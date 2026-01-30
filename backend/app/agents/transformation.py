@@ -559,8 +559,8 @@ def create_transformation_agent() -> Agent:
         instruction=TRANSFORMATION_INSTRUCTION,
         model=LiteLlm(
             model=settings.LLM_MODEL,
-            api_key=settings.GITHUB_COPILOT_TOKEN,
-            extra_headers=settings.GITHUB_COPILOT_HEADERS,
+            api_base=settings.LITELLM_PROXY_URL,
+            api_key=settings.LITELLM_PROXY_API_KEY,
         ),
         tools=[submit_transformation],
         after_tool_callback=validate_transformation_output,

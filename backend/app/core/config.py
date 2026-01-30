@@ -1,6 +1,12 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional, List
 
+# 在任何 agent 載入前啟用 LiteLLM debug 模式
+import litellm
+
+litellm._turn_on_debug()
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -14,8 +20,10 @@ class Settings(BaseSettings):
     REDIS_PASSWORD: Optional[str] = None
 
     # LiteLLM / LLM
-    LITELLM_URL: str = "http://localhost:4000"
-    LLM_MODEL: str = "github_copilot/gpt-4o"
+    LITELLM_PROXY_URL: str = "https://litellm.brianhan.cc"
+    LITELLM_PROXY_API_KEY: str = ""
+    LLM_MODEL: str = "openai/gpt-4o"
+    # 以下保留供備用或直連模式使用
     GITHUB_COPILOT_TOKEN: str = "your_token"
     GITHUB_COPILOT_HEADERS: dict = {
         "editor-version": "vscode/1.85.1",
